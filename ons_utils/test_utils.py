@@ -25,13 +25,13 @@ class Case:
 
     Attributes
     ----------
-        label
-            Optional test ID. Will be displayed for each test when
-            running `pytest -v`.
-        marks
-            Optional pytest marks to denote any tests to skip etc.
-        kwargs
-            Parameters used for the test cases.
+    label
+        Optional test ID. Will be displayed for each test when
+        running `pytest -v`.
+    marks
+        Optional pytest marks to denote any tests to skip etc.
+    kwargs
+        Parameters used for the test cases.
 
     Examples
     --------
@@ -65,7 +65,6 @@ class Case:
         self.__dict__.update(kwargs)
 
     def __repr__(self) -> str:
-        """Return string."""
         return f"Case({self.label!r}, **{self.kwargs!r})"
 
 
