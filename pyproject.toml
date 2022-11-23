@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ons-utils"
+version = "0.1.0-dev0"
+description = ""
+authors = ["Reproducible Data Science & Analysis, ONS"]
+maintainers = [
+   "Matthew Price <Matthew.G.Price@ons.gov.uk>",
+]
+
+readme = "README.md"
+repository = "https://github.com/ONSdigital/ons-utils"
+documentation = "https://github.com/ONSdigital/ons-utils"
+
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
