@@ -9,7 +9,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `parametrize_cases` and `Case` code for use in test scripts.
-- Update Pull Request Workflow to Install Poetry and Run Tests.
+- Pull Request Workflow includes `test` which installs Poetry and Run Tests.
 
 ### Changed
 
