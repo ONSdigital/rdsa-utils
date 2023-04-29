@@ -11,6 +11,8 @@ This module contains Pytest unit tests for the following helper functions:
 
 As well as the main function:
     extract_table_information_hive: Extracts table information (table name, column name, data type, constraints, description, storage type, partition columns) from Hive DDL scripts.
+    read_ddl_scripts: Read the DDL scripts from a given file path.
+    replace_variables: Replace the f-string expressions in the DDL script with their values.
 
 Each of the functions is tested using various test cases to ensure they correctly extract the required information from Hive DDL scripts.
 """
@@ -27,9 +29,63 @@ from rdsa_utils.data_dic.extract import (
     _extract_partition_columns,
     _extract_storage_type,
     extract_table_information_hive,
+    read_ddl_scripts,
+    replace_variables,
 )
 
 patterns = RegexPatterns()
+
+
+def test_read_ddl_scripts(tmp_path):
+    """
+    Test the read_ddl_scripts function.
+
+    This test case creates a temporary file with sample DDL scripts and
+    checks if the read_ddl_scripts function reads the content correctly.
+
+    Parameters
+    ----------
+    tmp_path : Path
+        A pytest fixture that provides a temporary path for file operations.
+
+    Returns
+    -------
+    None
+    """
+    # Create a temporary DDL file with sample content
+    ddl_content = "CREATE TABLE test_table (id INT, name STRING);"
+    ddl_file = tmp_path / "sample_ddl.py"
+    ddl_file.write_text(ddl_content)
+
+    # Read the DDL file content using the function
+    result = read_ddl_scripts(str(ddl_file))
+
+    # Check if the content is read correctly
+    assert result == ddl_content
+
+
+def test_replace_variables():
+    """
+    Test the replace_variables function.
+
+    This test case checks if the replace_variables function correctly
+    replaces f-string expressions in a given DDL script with their values.
+
+    Returns
+    -------
+    None
+    """
+    # Define a sample DDL script with f-string expressions
+    ddl_script = "CREATE TABLE test_table (id INT, name {data_type});"
+
+    # Define the script_globals dictionary
+    script_globals = {"data_type": "STRING"}
+
+    # Replace the f-string expressions using the function
+    result = replace_variables(ddl_script, script_globals)
+
+    # Check if the f-string expressions are replaced correctly
+    assert result == "CREATE TABLE test_table (id INT, name STRING);"
 
 
 @pytest.mark.parametrize(

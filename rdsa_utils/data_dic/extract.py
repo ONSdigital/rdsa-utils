@@ -4,6 +4,8 @@ Hive Data Dictionary Generator Extraction Module
 This module allows users to create data dictionaries for Hive tables by parsing the DDL scripts and exporting the information in a structured format.
 
 Main function:
+    read_ddl_scripts: Read the DDL scripts from a given file path.
+    replace_variables: Replace the f-string expressions in the DDL script with their values.
     extract_table_information_hive: Extracts table information (table name, column name, data type, constraints, description, storage type, partition columns) from Hive DDL scripts.
 
 Helper functions:
@@ -84,6 +86,46 @@ class RegexPatterns:
     column_info: str = (
         r"(\w+)\s+(\w+)(?:\((.*?)\))?(?:\s+(NOT NULL))?(?:\s*,?\s*--\s*(.*))?"
     )
+
+
+def read_ddl_scripts(file_path: str) -> str:
+    """
+    Read the DDL scripts from a given file path.
+
+    Parameters
+    ----------
+    file_path : str
+        The file path containing the DDL scripts.
+
+    Returns
+    -------
+    str
+        The contents of the DDL scripts file.
+    """
+
+    with open(file_path, "r") as file:
+        sql_scripts = file.read()
+    return sql_scripts
+
+
+def replace_variables(ddl_script: str, script_globals: dict) -> str:
+    """
+    Replace the f-string expressions in the DDL script with their values.
+
+    Parameters
+    ----------
+    ddl_script : str
+        The DDL script containing f-string expressions.
+    script_globals : dict
+        A dictionary of global variables from the script.
+
+    Returns
+    -------
+    str
+        The DDL script with f-string expressions replaced by their values.
+    """
+    ddl_script_replaced = ddl_script.format(**script_globals)
+    return ddl_script_replaced
 
 
 def _extract_database_and_table_name(
