@@ -13,6 +13,8 @@ This Python module allows you to generate data dictionaries from DDL (Data Defin
 Here's an example of how to use the Data Dictionary module to generate a data dictionary from DDL scripts:
 
 ```python
+from ddl_scripts import *
+
 from rdsa_utils.data_dic.extract import read_ddl_scripts, replace_variables, extract_table_information_hive
 from rdsa_utils.data_dic.write import create_data_dictionary_excel, create_data_dictionary_markdown, markdown_file_to_html_with_theme
 
@@ -37,7 +39,7 @@ if __name__ == "__main__":
 ```
 
 1. Import the necessary functions from the `rdsa_utils.data_dic.extract` and 
-`rdsa_utils.data_dic.write` modules.
+`rdsa_utils.data_dic.write` modules; and import the DDL scripts file as a Python script with a **wildcard** `"*"`.
 2. Define a `main` function to:
     - Read DDL scripts from a file using `read_ddl_scripts`.
     - Replace variables in the DDL scripts with their actual values usng `replace_variables`.
@@ -48,3 +50,7 @@ if __name__ == "__main__":
 3. Execute the `main` function.
 
 This example will create a data dictionary in Excel, Markdown, and HTML formats from the DDL scripts provided in the `ddl_file_path`.
+
+## Notes
+- Make sure to import the DDL scripts file as a Python script with a wildcard "*".
+- The ddl_file_path should point to the DDL scripts file (e.g., ./ddl_scripts.py).
