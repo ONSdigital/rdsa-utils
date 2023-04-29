@@ -32,6 +32,7 @@ def create_data_dictionary_markdown(
     Create a data dictionary as a Markdown file using the extracted table information.
 
     This function generates a data dictionary in the Markdown format from the extracted table information.
+
     It creates a separate section for each table with a list of columns, their data types, constraints, and descriptions.
 
     Parameters
@@ -91,7 +92,8 @@ def create_data_dictionary_markdown(
 def markdown_file_to_html_with_theme(
     markdown_file: str, output_file: str = "data_dictionary.html"
 ) -> None:
-    """Convert a markdown file to themed HTML using a Jinja2 template.
+    """
+    Convert a markdown file to themed HTML using a Jinja2 template.
 
     Parameters
     ----------
