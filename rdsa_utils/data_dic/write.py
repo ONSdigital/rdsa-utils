@@ -1,5 +1,5 @@
 """
-Hive Data Dictionary Generator Module
+Hive Data Dictionary Generator Writer Module
 
 This module contains functions to create data dictionaries from extracted table information. 
 
