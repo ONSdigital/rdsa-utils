@@ -17,6 +17,7 @@ jobs:
     - uses: dangoslen/changelog-enforcer@v3
 
   test:
+    needs: changelog
     runs-on: ubuntu-latest
     strategy:
       matrix:
