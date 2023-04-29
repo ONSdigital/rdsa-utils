@@ -102,10 +102,10 @@ We welcome contributions. To contribute, please follow these guidelines:
 
 If you find a bug or would like to request a feature, please open an issue on the project's [GitHub page](https://github.com/ONSdigital/rdsa-utils/issues). When opening an issue, please provide as much detail as possible, including:
 
-- A clear and descriptive title
-- A description of the problem you're experiencing, including steps to reproduce it
-- Any error messages or logs related to the issue
-- Your operating system and Python version (if relevant)
+- A clear and descriptive title.
+- A description of the problem you're experiencing, including steps to reproduce it.
+- Any error messages or logs related to the issue.
+- Your operating system and Python version (if relevant).
 
 Please search through the existing issues before opening a new one to avoid duplicates. If you find an existing issue that covers your problem, please add any additional information as a comment. Issues will be triaged and prioritized by the project maintainers.
 
