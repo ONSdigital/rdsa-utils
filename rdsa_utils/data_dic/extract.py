@@ -1,5 +1,5 @@
 """
-Hive Data Dictionary Generator Module
+Hive Data Dictionary Generator Extraction Module
 
 This module allows users to create data dictionaries for Hive tables by parsing the DDL scripts and exporting the information in a structured format.
 

@@ -1,10 +1,91 @@
+"""
+Hive Data Dictionary Generator Module
+
+This module contains functions to create data dictionaries from extracted table information. 
+
+These data dictionaries can be created in either Markdown or Excel format. 
+
+Additionally, this module also provides a function to convert a Markdown file to themed HTML using a Jinja2 template.
+
+The main functions in this module are:
+    create_data_dictionary_markdown: Generates a data dictionary in Markdown format from a list of TableInformation objects.
+    markdown_file_to_html_with_theme: Converts a Markdown file to themed HTML using a Jinja2 template.
+    create_data_dictionary_excel: Generates a data dictionary in Excel format from a list of TableInformation objects.
+"""
+from dataclasses import asdict
 from pathlib import Path
+from typing import List
 
 import markdown
+import xlsxwriter
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 
 from rdsa_utils import PACKAGE_PATH
+from rdsa_utils.data_dic.extract import TableInformation
+
+
+def create_data_dictionary_markdown(
+    table_info: List[TableInformation], output_file: str
+):
+    """
+    Create a data dictionary as a Markdown file using the extracted table information.
+
+    This function generates a data dictionary in the Markdown format from the extracted table information.
+    It creates a separate section for each table with a list of columns, their data types, constraints, and descriptions.
+
+    Parameters
+    ----------
+    table_info : List[TableInformation]
+        A list of TableInformation objects containing table information
+        (database name, table name, column name, data type, constraints, description, storage type, partition columns).
+    output_file : str
+        The output Markdown file path.
+
+    Returns
+    -------
+    None
+    """
+    markdown_lines = []
+    current_table = None
+
+    markdown_lines.append("# Data Dictionary")
+
+    for table_entry in table_info:
+        full_table_name = (
+            f"{table_entry.database_name}.{table_entry.table_name}"
+            if table_entry.database_name
+            else table_entry.table_name
+        )
+
+        if full_table_name != current_table:
+            if current_table is not None:
+                markdown_lines.append("\n")
+
+            current_table = full_table_name
+            markdown_lines.append(
+                f"## Database: {table_entry.database_name} | Table: {table_entry.table_name}\n"
+            )
+            markdown_lines.append(f"**Storage Type:** {table_entry.storage_type}\n")
+            markdown_lines.append(
+                f"**Partition Columns:** {table_entry.partition_columns if table_entry.partition_columns else 'None'}\n"
+            )
+            markdown_lines.append(
+                "| Column Name | Data Type | Constraints | Description |"
+            )
+            markdown_lines.append(
+                "|-------------|-----------|-------------|-------------|"
+            )
+
+        markdown_lines.append(
+            f"| {table_entry.column_name} | {table_entry.data_type} | {table_entry.constraints} | {table_entry.description} |"
+        )
+
+    with open(output_file, "w") as f:
+        f.write("\n".join(markdown_lines))
+
+    output_file_path = Path(output_file).resolve()
+    print(f"Data dictionary saved to: {output_file_path}")
 
 
 def markdown_file_to_html_with_theme(
@@ -81,3 +162,67 @@ def markdown_file_to_html_with_theme(
     # Save the themed HTML to an output file
     with open(output_path, "w") as f:
         f.write(themed_html)
+
+
+def create_data_dictionary_excel(
+    table_information: List[TableInformation], output_file: str
+):
+    """
+    Create a data dictionary Excel file from the extracted table information.
+
+    This function generates a data dictionary in the Excel format from the extracted table information.
+
+    It creates a worksheet named "Data Dictionary" with a row for each table entry and columns for database name, table name,
+    column name, data type, constraints, description, storage type, and partition columns.
+
+    The column widths are autofitted based on the maximum length of the data in each column.
+
+    Parameters
+    ----------
+    table_information : List[TableInformation]
+        A list of TableInformation objects containing table information
+        (database name, table name, column name, data type, constraints, description, storage type, partition columns).
+    output_file : str
+        The path to the output Excel file.
+
+    Returns
+    -------
+    None
+    """
+    workbook = xlsxwriter.Workbook(output_file)
+    worksheet = workbook.add_worksheet("Data Dictionary")
+
+    header_format = workbook.add_format(
+        {
+            "bold": True,
+            "bg_color": "gray",
+            "border": 1,
+            "align": "center",
+            "text_wrap": True,
+        }
+    )
+
+    headers = list(asdict(table_information[0]).keys())
+
+    # Write the headers
+    for i, header in enumerate(headers):
+        worksheet.write(0, i, header, header_format)
+
+    # Initialize max_lengths with header lengths
+    max_lengths = [len(header) + 2 for header in headers]
+
+    # Write the table information and update max_lengths
+    for row, table_info in enumerate(table_information, start=1):
+        table_info_dict = asdict(table_info)
+        for col, (key, value) in enumerate(table_info_dict.items()):
+            worksheet.write(row, col, value)
+            max_lengths[col] = max(max_lengths[col], len(str(value)) + 2)
+
+    # Autofit the column widths based on max_lengths
+    for i, max_length in enumerate(max_lengths):
+        worksheet.set_column(i, i, max_length)
+
+    workbook.close()
+
+    output_file_path = Path(output_file).resolve()
+    print(f"Data dictionary saved to: {output_file_path}")
