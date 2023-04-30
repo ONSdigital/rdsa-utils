@@ -28,7 +28,7 @@ def main():
     ddl_scripts = read_ddl_scripts(ddl_file_path)
     ddl_scripts_replaced = replace_variables(ddl_scripts, globals())
 
-    table info = extract_data_dictionaries_from_multiple_tables(
+    table_info = extract_data_dictionaries_from_multiple_tables(
         ddl_scripts=ddl_scripts_replaced, is_hive=True
     )
 
