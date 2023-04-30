@@ -75,6 +75,42 @@ You can run tests (if any) using the following command:
 poetry run pytest
 ```
 
+### Installing Pre-commit Hooks in Your Development Environment
+
+To improve code quality and maintain a consistent coding style, we use pre-commit hooks in this repository. The following steps will guide you through the process of setting up pre-commit hooks in your development environment.
+
+#### Installation Steps
+
+1. **Install pre-commit**: Open a terminal and run the following command to install the `pre-commit` package:
+
+```
+pip install pre-commit
+```
+
+This command installs the pre-commit tool, which manages the pre-commit hooks for this repository.
+
+2. **Install pre-commit hooks**: Run the following command to install the pre-commit hooks defined in the `.pre-commit-config.yaml` file:
+
+```
+pre-commit install
+```
+
+This command sets up the pre-commit hooks to run automatically before each commit.
+
+#### Usage
+
+Now that you have installed the pre-commit hooks, they will run automatically before each commit. If any of the hooks fail, the commit will be aborted, and you will need to fix the issues before trying again.
+
+You can also run the pre-commit hooks manually at any time using the following command:
+
+```
+pre-commit run --all-files
+```
+
+This command runs all the pre-commit hooks on all the files in the repository, allowing you to check your code before committing.
+
+By following these steps, you can ensure that your development environment is set up to use the pre-commit hooks, helping to maintain a clean and consistent codebase.
+
 ## Contributing
 
 We welcome contributions. To contribute, please follow these guidelines:
