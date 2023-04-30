@@ -15,9 +15,9 @@ from rdsa_utils.data_dic.write import (
 )
 
 
-def test_create_data_dictionary_markdown(tmp_path):
+def test_create_data_dictionary_markdown_hive(tmp_path):
     """
-    Test the create_data_dictionary_markdown function.
+    Test the create_data_dictionary_markdown function with Hive table definitions.
 
     This test verifies if the function creates a Markdown file with the expected contents
     based on the provided table information.
@@ -55,6 +55,50 @@ def test_create_data_dictionary_markdown(tmp_path):
     assert "Database: test_db | Table: test_table" in content
     assert "**Storage Type:** managed" in content
     assert "**Partition Columns:** None" in content
+    assert "| Column Name | Data Type | Constraints | Description |" in content
+    assert "| id | int | NOT NULL | Unique identifier |" in content
+
+
+def test_create_data_dictionary_markdown_non_hive(tmp_path):
+    """
+    Test the create_data_dictionary_markdown function with Non-Hive table definitions.
+
+    This test verifies if the function creates a Markdown file with the expected contents
+    based on the provided table information.
+
+    Parameters
+    ----------
+    tmp_path : pytest fixture
+        A temporary directory provided by the pytest framework.
+
+    Returns
+    -------
+    None
+    """
+    table_info = [
+        TableInformation(
+            database_name="test_db",
+            table_name="test_table",
+            column_name="id",
+            data_type="int",
+            constraints="NOT NULL",
+            description="Unique identifier",
+            storage_type=None,
+            partition_columns=None,
+        )
+    ]
+
+    output_file = tmp_path / "data_dictionary.md"
+    create_data_dictionary_markdown(table_info, str(output_file), is_hive=False)
+
+    assert output_file.exists()
+
+    with open(output_file, "r") as f:
+        content = f.read()
+
+    assert "Database: test_db | Table: test_table" in content
+    assert "**Storage Type:** managed" not in content
+    assert "**Partition Columns:** None" not in content
     assert "| Column Name | Data Type | Constraints | Description |" in content
     assert "| id | int | NOT NULL | Unique identifier |" in content
 
