@@ -145,7 +145,8 @@ def extract_content_inside_parentheses(ddl_script: str) -> str:
             parenthesis_count -= 1
             if parenthesis_count == 0:
                 start_copying = False
-                continue  # Skip the closing parenthesis
+            else:
+                content += char
         elif start_copying and parenthesis_count > 0:
             content += char
     return content.strip(";")  # Remove any trailing semi-colon

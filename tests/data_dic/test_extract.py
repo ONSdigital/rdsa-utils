@@ -124,6 +124,37 @@ def test_extract_content_inside_parentheses():
     assert extract_content_inside_parentheses(input_ddl) == expected_output
 
 
+def test_extract_content_inside_parentheses_edge_case():
+    """
+    Test the extract_content_inside_parentheses function with an edge case.
+
+    This test checks whether the function correctly extracts the content inside the outermost parentheses from the input DDL script,
+    including nested parentheses within comments.
+    """
+    input_ddl = """
+    CREATE TABLE IF NOT EXISTS my_database.my_table(
+        id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for the record (integer with auto-increment) and primary key constraint
+        name VARCHAR(255) NOT NULL, -- Full name of the person, with not null constraint
+        age INT CHECK (age >= 0), -- Age of the person, with check constraint to ensure age is non-negative
+        city VARCHAR(255), -- City where the person lives
+        UNIQUE (name, city), -- Unique constraint on the combination of name and city
+        FOREIGN KEY (city) REFERENCES another_table(city) -- Foreign key constraint referencing another table (assuming another_table exists with a city column)
+    ) ENGINE=InnoDB;
+    """
+    expected_output = """
+        id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for the record (integer with auto-increment) and primary key constraint
+        name VARCHAR(255) NOT NULL, -- Full name of the person, with not null constraint
+        age INT CHECK (age >= 0), -- Age of the person, with check constraint to ensure age is non-negative
+        city VARCHAR(255), -- City where the person lives
+        UNIQUE (name, city), -- Unique constraint on the combination of name and city
+        FOREIGN KEY (city) REFERENCES another_table(city) -- Foreign key constraint referencing another table (assuming another_table exists with a city column)
+    """
+
+    output = extract_content_inside_parentheses(input_ddl)
+    # assert output.strip() == expected_output.strip()
+    assert output == expected_output
+
+
 def test_extract_column_description():
     """
     Test the extract_column_description function.
