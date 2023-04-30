@@ -4,7 +4,7 @@ This Python module allows you to generate data dictionaries from DDL (Data Defin
 
 ## Features
 
-- Extract table information from DDL scripts (currently supports Hive).
+- Extract table information from DDL scripts (supports Hive & Non-Hive DDL Scripts).
 - Create data dictionaries in Markdown and Excel formats.
 - Convert Markdown files to themed HTML using a Jinja2 template.
 
@@ -15,7 +15,7 @@ Here's an example of how to use the Data Dictionary module to generate a data di
 ```python
 from ddl_scripts import *
 
-from rdsa_utils.data_dic.extract import read_ddl_scripts, replace_variables, extract_table_information_hive
+from rdsa_utils.data_dic.extract import read_ddl_scripts, replace_variables, extract_data_dictionaries_from_multiple_tables
 from rdsa_utils.data_dic.write import create_data_dictionary_excel, create_data_dictionary_markdown, markdown_file_to_html_with_theme
 
 def main():
@@ -28,7 +28,9 @@ def main():
     ddl_scripts = read_ddl_scripts(ddl_file_path)
     ddl_scripts_replaced = replace_variables(ddl_scripts, globals())
 
-    table_info = extract_table_information_hive(ddl_scripts_replaced)
+    table info = extract_data_dictionaries_from_multiple_tables(
+        ddl_scripts=ddl_scripts_replaced, is_hive=True
+    )
 
     create_data_dictionary_excel(table_info, output_file)
     create_data_dictionary_markdown(table_info, "data_dictionary.md")
