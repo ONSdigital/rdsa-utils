@@ -151,7 +151,6 @@ def test_extract_content_inside_parentheses_edge_case():
     """
 
     output = extract_content_inside_parentheses(input_ddl)
-    # assert output.strip() == expected_output.strip()
     assert output == expected_output
 
 
