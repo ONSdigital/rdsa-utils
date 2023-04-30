@@ -165,6 +165,9 @@ def markdown_file_to_html_with_theme(
     with open(output_path, "w") as f:
         f.write(themed_html)
 
+    output_file_path = Path(output_file).resolve()
+    print(f"Data dictionary saved to: {output_file_path}")
+
 
 def create_data_dictionary_excel(
     table_information: List[TableInformation], output_file: str
