@@ -2,38 +2,31 @@
 This module contains pytest functions to test the behaviour of the functions
 contained within the rdsa_utils/data_dic/extract.py Module.
 
-This module contains Pytest unit tests for the following helper functions:
-    _extract_column_info: Extracts column information such as column name, data type, constraints, and description from a column line in a Hive DDL script.
-    _extract_columns_part: Extracts the columns part of a Hive DDL 'CREATE TABLE' statement.
-    _extract_database_and_table_name: Extracts the database and table names from a Hive DDL 'CREATE TABLE' statement.
-    _extract_partition_columns: Extracts partition column names from a Hive DDL 'CREATE TABLE' statement.
-    _extract_storage_type: Extracts the storage type from a Hive DDL 'CREATE TABLE' statement.
+This module contains pytest unit tests for the following helper functions:
+    remove_multiline_comments: Remove multiline comments from a DDL script.
+    extract_contents_inside_parentheses: Extract the content inside the outermost parentheses in a DDL script.
+    extract_column_description: Extract the column name and its description from a line in a DDL script. 
+    extract_column_descriptions: Extract column descriptions from a DDL script.
 
 As well as the main function:
-    extract_table_information_hive: Extracts table information (table name, column name, data type, constraints, description, storage type, partition columns) from Hive DDL scripts.
     read_ddl_scripts: Read the DDL scripts from a given file path.
     replace_variables: Replace the f-string expressions in the DDL script with their values.
+    extract_data_dictionary: Extracts table information from a DDL script and returns a list of TableInformation objects. 
+    extract_data_dictionaries_from_multiple_tables: Process multiple table definitions in a DDL script and return a list of TableInformation objects.
 
-Each of the functions is tested using various test cases to ensure they correctly extract the required information from Hive DDL scripts.
+Each of the functions is tested using various test cases to ensure they correctly extract the required information from Hive & Non-Hive DDL scripts.
 """
-import re
-
-import pytest
-
 from rdsa_utils.data_dic.extract import (
-    RegexPatterns,
     TableInformation,
-    _extract_column_info,
-    _extract_columns_part,
-    _extract_database_and_table_name,
-    _extract_partition_columns,
-    _extract_storage_type,
-    extract_table_information_hive,
+    extract_column_description,
+    extract_column_descriptions,
+    extract_content_inside_parentheses,
+    extract_data_dictionaries_from_multiple_tables,
+    extract_data_dictionary,
     read_ddl_scripts,
+    remove_multiline_comments,
     replace_variables,
 )
-
-patterns = RegexPatterns()
 
 
 def test_read_ddl_scripts(tmp_path):
@@ -88,250 +81,387 @@ def test_replace_variables():
     assert result == "CREATE TABLE test_table (id INT, name STRING);"
 
 
-@pytest.mark.parametrize(
-    "script, expected_output",
-    [
-        (
-            "CREATE TABLE test_db.sample_table (id INT, name STRING);",
-            ("test_db", "sample_table"),
-        ),
-        ("CREATE TABLE sample_table (id INT, name STRING);", (None, "sample_table")),
-    ],
-)
-def test_extract_database_and_table_name(script, expected_output):
+def test_remove_multiline_comments():
     """
-    Test the extract_database_and_table_name function with various input scripts.
+    Test the remove_multiline_comments function.
 
-    Test cases cover scenarios where:
-    1. Both the database and table names are present in the script.
-    2. Only the table name is present in the script.
+    This test checks whether the function correctly removes multiline comments from the input DDL script.
     """
-    database_name, table_name = _extract_database_and_table_name(script, patterns)
-    assert (database_name, table_name) == expected_output
-
-
-@pytest.mark.parametrize(
-    "script, expected_output",
-    [
-        (
-            "CREATE TABLE test_db.sample_table (id INT, name STRING);",
-            "id INT, name STRING",
-        ),
-        (
-            "CREATE TABLE test_db.sample_table (id INT, name STRING, age INT);",
-            "id INT, name STRING, age INT",
-        ),
-    ],
-)
-def test_extract_columns_part(script, expected_output):
-    """
-    Test the extract_columns_part function with various input scripts.
-
-    Test cases cover scenarios where:
-    1. The table has two columns.
-    2. The table has three columns.
-    """
-    columns_part = _extract_columns_part(script, patterns)
-    assert columns_part == expected_output
-
-
-@pytest.mark.parametrize(
-    "script, expected_output",
-    [
-        (
-            "CREATE TABLE test_db.sample_table (id INT, name STRING) STORED AS ORC;",
-            "orc",
-        ),
-        ("CREATE TABLE test_db.sample_table (id INT, name STRING);", None),
-    ],
-)
-def test_extract_storage_type(script, expected_output):
-    """
-    Test the extract_storage_type function with various input scripts.
-
-    Test cases cover scenarios where:
-    1. The table has a specified storage type.
-    2. The table does not have a specified storage type.
-    """
-    storage_type = _extract_storage_type(script, patterns)
-    assert storage_type == expected_output
-
-
-@pytest.mark.parametrize(
-    "script, expected_output",
-    [
-        (
-            "CREATE TABLE test_db.sample_table (id INT, name STRING) PARTITIONED BY (date STRING);",
-            "date",
-        ),
-        (
-            "CREATE TABLE test_db.sample_table (id INT, name STRING) PARTITIONED BY (date STRING, country STRING);",
-            "date, country",
-        ),
-        ("CREATE TABLE test_db.sample_table (id INT, name STRING);", ""),
-    ],
-)
-def test_extract_partition_columns(script, expected_output):
-    """
-    Test the extract_partition_columns function with various input scripts.
-
-    Test cases cover scenarios where:
-    1. The table has one partition column.
-    2. The table has multiple partition columns.
-    3. The table does not have any partition columns.
-    """
-    partition_columns = _extract_partition_columns(script, patterns)
-    assert partition_columns == expected_output
-
-
-@pytest.mark.parametrize(
-    "column_line, expected_output",
-    [
-        (
-            "id INT NOT NULL -- The ID of the item",
-            ("id", "INT", "NOT NULL", "The ID of the item"),
-        ),
-        ("id INT", ("id", "INT", "", "")),
-        ("id INT -- The ID of the item", ("id", "INT", "", "The ID of the item")),
-    ],
-)
-def test_extract_column_info(column_line, expected_output):
-    """
-    Test the extract_column_info function with various input column lines.
-
-    Test cases cover scenarios where:
-    1. The column has a data type, constraints, and a description.
-    2. The column has only a data type.
-    3. The column has a data type and a description.
-    """
-    column_match = re.search(patterns.column_info, column_line.strip(), re.IGNORECASE)
-    column_name, data_type, constraints, description = _extract_column_info(
-        column_match
+    ddl_script = (
+        "/*This is a multiline\n"
+        "comment*/\n"
+        "    CREATE TABLE IF NOT EXISTS my_database.my_table (\n"
+        "        id INT,\n"
+        "        name STRING\n"
+        "    );\n"
+        "    "
     )
-    assert (column_name, data_type, constraints, description) == expected_output
+
+    expected_output = (
+        "CREATE TABLE IF NOT EXISTS my_database.my_table ("
+        "    id INT,"
+        "    name STRING );"
+    )
+
+    output = remove_multiline_comments(ddl_script)
+
+    # Remove newline characters and extra spaces from both output and expected_output
+    output_no_newline = " ".join(output.split()).strip()
+    expected_output_no_newline = " ".join(expected_output.split()).strip()
+
+    assert output_no_newline == expected_output_no_newline
 
 
-def test_extract_table_information_hive():
+def test_extract_content_inside_parentheses():
     """
-    Test the `extract_table_information_hive()` function to ensure that it correctly
-    extracts table information from Hive DDL scripts.
+    Test the extract_content_inside_parentheses function.
 
-    This test covers the following scenarios:
-    - A basic Hive DDL script with a single table, multiple columns, and no partitioning.
-    - A Hive DDL script with multiple tables, each having different storage types and partition columns.
+    This test checks whether the function correctly extracts the content inside the parentheses from the input DDL script.
     """
-    # Test case 1: Basic Hive DDL script with a single table and multiple columns
-    ddl_script1 = """
-    CREATE TABLE test_db.test_table1 (
-        id INT -- Unique identifier,
-        name STRING -- Name of the person,
-        age INT -- Age of the person
-    ) STORED AS TEXTFILE;
+    input_ddl = "CREATE TABLE my_table (id INT, name STRING);"
+    expected_output = "id INT, name STRING"
+
+    assert extract_content_inside_parentheses(input_ddl) == expected_output
+
+
+def test_extract_column_description():
+    """
+    Test the extract_column_description function.
+
+    This test checks whether the function correctly extracts the column description from the input line of the DDL script.
+    """
+    line = "        id INT, -- Unique identifier for the record"
+    expected_output = {
+        "column_name": "id",
+        "column_description": "Unique identifier for the record",
+    }
+
+    assert extract_column_description(line) == expected_output
+
+
+def test_extract_column_descriptions():
+    """
+    Test the extract_column_descriptions function.
+
+    This test checks whether the function correctly extracts the column descriptions from the input DDL script.
+    """
+    ddl_script = """CREATE TABLE IF NOT EXISTS my_database.my_table (
+        id INT, -- Unique identifier for the record
+        name STRING, -- Full name of the person
+        age INT, -- Age of the person
+        city STRING -- City where the person lives
+    );
     """
 
-    table_info1 = extract_table_information_hive(ddl_script1)
-    expected_table_info1 = [
+    expected_output = [
+        {"column_name": "id", "column_description": "Unique identifier for the record"},
+        {"column_name": "name", "column_description": "Full name of the person"},
+        {"column_name": "age", "column_description": "Age of the person"},
+        {"column_name": "city", "column_description": "City where the person lives"},
+    ]
+
+    assert extract_column_descriptions(ddl_script) == expected_output
+
+
+def test_extract_data_dictionaries_from_multiple_tables_hive():
+    """
+    Test the extract_data_dictionaries_from_multiple_tables() function with Hive table definitions.
+    This test verifies that the function can process multiple table definitions in a DDL script and return a list
+    of TableInformation objects containing the correct data.
+    """
+    ddl_scripts = """
+        CREATE TABLE IF NOT EXISTS my_database.my_table1 (
+            id INT, -- Unique identifier for the record
+            name STRING, -- Full name of the person
+            age INT -- Age of the person
+        ) ROW FORMAT DELIMITED
+        FIELDS TERMINATED BY ','
+        STORED AS TEXTFILE;
+
+        CREATE TABLE IF NOT EXISTS my_database.my_table2 (
+            id INT, -- Unique identifier for the record
+            city STRING, -- City where the person lives
+            country STRING -- Country where the person lives
+        ) ROW FORMAT DELIMITED
+        FIELDS TERMINATED BY ','
+        STORED AS TEXTFILE;
+    """
+
+    result = extract_data_dictionaries_from_multiple_tables(ddl_scripts, is_hive=True)
+
+    expected_result = [
         TableInformation(
-            database_name="test_db",
-            table_name="test_table1",
+            database_name="my_database",
+            table_name="my_table1",
             column_name="id",
             data_type="INT",
             constraints="",
-            description="Unique identifier,",
-            storage_type="textfile",
+            description="Unique identifier for the record",
+            storage_type="TEXTFILE",
             partition_columns="",
         ),
         TableInformation(
-            database_name="test_db",
-            table_name="test_table1",
+            database_name="my_database",
+            table_name="my_table1",
             column_name="name",
             data_type="STRING",
             constraints="",
-            description="Name of the person,",
-            storage_type="textfile",
+            description="Full name of the person",
+            storage_type="TEXTFILE",
             partition_columns="",
         ),
         TableInformation(
-            database_name="test_db",
-            table_name="test_table1",
+            database_name="my_database",
+            table_name="my_table1",
             column_name="age",
             data_type="INT",
             constraints="",
             description="Age of the person",
-            storage_type="textfile",
+            storage_type="TEXTFILE",
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table2",
+            column_name="id",
+            data_type="INT",
+            constraints="",
+            description="Unique identifier for the record",
+            storage_type="TEXTFILE",
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table2",
+            column_name="city",
+            data_type="STRING",
+            constraints="",
+            description="City where the person lives",
+            storage_type="TEXTFILE",
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table2",
+            column_name="country",
+            data_type="STRING",
+            constraints="",
+            description="Country where the person lives",
+            storage_type="TEXTFILE",
             partition_columns="",
         ),
     ]
 
-    assert table_info1 == expected_table_info1
+    assert result == expected_result
 
-    # Test case 2: Hive DDL script with multiple tables, storage types, and partition columns
-    ddl_script2 = """
-    CREATE TABLE test_db.test_table2 (
-        id INT -- Unique identifier,
-        name STRING -- Name of the person,
-        age INT -- Age of the person,
-    ) STORED AS ORC
-    PARTITIONED BY (country STRING);
 
-    CREATE TABLE test_db.test_table3 (
-        id INT -- Unique identifier,
-        value DOUBLE -- Value of the record
-    ) STORED AS PARQUET;
+def test_extract_data_dictionaries_from_multiple_tables_non_hive():
+    """
+    Test the extract_data_dictionaries_from_multiple_tables() function with non-Hive table definitions.
+
+    This test verifies that the function can process multiple table definitions in a non-Hive DDL script and return a list
+    of TableInformation objects containing the correct data.
+    """
+    ddl_scripts = """
+        CREATE TABLE my_database.my_table1 (
+            id INT, -- Unique identifier for the record
+            name VARCHAR(255), -- Full name of the person
+            age INT -- Age of the person
+        );
+
+        CREATE TABLE my_database.my_table2 (
+            id INT, -- Unique identifier for the record
+            city VARCHAR(255), -- City where the person lives
+            country VARCHAR(255) -- Country where the person lives
+        );
     """
 
-    table_info2 = extract_table_information_hive(ddl_script2)
-    expected_table_info2 = [
+    result = extract_data_dictionaries_from_multiple_tables(ddl_scripts, is_hive=False)
+    result
+
+    expected_result = [
         TableInformation(
-            database_name="test_db",
-            table_name="test_table2",
+            database_name="my_database",
+            table_name="my_table1",
             column_name="id",
             data_type="INT",
             constraints="",
-            description="Unique identifier,",
-            storage_type="orc",
-            partition_columns="country",
+            description="Unique identifier for the record",
+            storage_type=None,
+            partition_columns="",
         ),
         TableInformation(
-            database_name="test_db",
-            table_name="test_table2",
+            database_name="my_database",
+            table_name="my_table1",
             column_name="name",
-            data_type="STRING",
+            data_type="VARCHAR",
             constraints="",
-            description="Name of the person,",
-            storage_type="orc",
-            partition_columns="country",
+            description="Full name of the person",
+            storage_type=None,
+            partition_columns="",
         ),
         TableInformation(
-            database_name="test_db",
-            table_name="test_table2",
+            database_name="my_database",
+            table_name="my_table1",
             column_name="age",
             data_type="INT",
             constraints="",
-            description="Age of the person,",
-            storage_type="orc",
-            partition_columns="country",
-        ),
-        TableInformation(
-            database_name="test_db",
-            table_name="test_table3",
-            column_name="id",
-            data_type="INT",
-            constraints="",
-            description="Unique identifier,",
-            storage_type="parquet",
+            description="Age of the person",
+            storage_type=None,
             partition_columns="",
         ),
         TableInformation(
-            database_name="test_db",
-            table_name="test_table3",
-            column_name="value",
-            data_type="DOUBLE",
+            database_name="my_database",
+            table_name="my_table2",
+            column_name="id",
+            data_type="INT",
             constraints="",
-            description="Value of the record",
-            storage_type="parquet",
+            description="Unique identifier for the record",
+            storage_type=None,
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table2",
+            column_name="city",
+            data_type="VARCHAR",
+            constraints="",
+            description="City where the person lives",
+            storage_type=None,
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table2",
+            column_name="country",
+            data_type="VARCHAR",
+            constraints="",
+            description="Country where the person lives",
+            storage_type=None,
             partition_columns="",
         ),
     ]
 
-    assert table_info2 == expected_table_info2
+    assert result == expected_result
+
+
+def test_extract_data_dictionary_hive():
+    """
+    Test the extract_data_dictionary() function for a single table definition with Hive table definitions.
+
+    This test verifies that the function can process a single table definition in a DDL script and return a list
+    of TableInformation objects containing the correct data.
+    """
+    ddl_script = """
+        CREATE TABLE my_database.my_table (
+            id INT, -- Unique identifier for the record
+            name STRING, -- Full name of the person
+            age INT -- Age of the person 
+        );
+    """
+
+    description_dict = [
+        {"column_name": "id", "column_description": "Unique identifier for the record"},
+        {"column_name": "name", "column_description": "Full name of the person"},
+        {"column_name": "age", "column_description": "Age of the person"},
+    ]
+
+    result = extract_data_dictionary(
+        ddl_script, is_hive=True, description_dict=description_dict
+    )
+
+    expected_result = [
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table",
+            column_name="id",
+            data_type="INT",
+            constraints="",
+            description="Unique identifier for the record",
+            storage_type=None,
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table",
+            column_name="name",
+            data_type="STRING",
+            constraints="",
+            description="Full name of the person",
+            storage_type=None,
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table",
+            column_name="age",
+            data_type="INT",
+            constraints="",
+            description="Age of the person",
+            storage_type=None,
+            partition_columns="",
+        ),
+    ]
+
+    assert result == expected_result
+
+
+def test_extract_data_dictionary_non_hive():
+    """
+    Test the extract_data_dictionary() function for a single table definition with non-Hive table definitions.
+
+    This test verifies that the function can process a single table definition in a DDL script and return a list
+    of TableInformation objects containing the correct data.
+    """
+    ddl_script = """
+        CREATE TABLE my_database.my_table (
+            id INT, -- Unique identifier for the record
+            name VARCHAR(255), -- Full name of the person
+            age INT -- Age of the person
+        );
+    """
+
+    description_dict = [
+        {"column_name": "id", "column_description": "Unique identifier for the record"},
+        {"column_name": "name", "column_description": "Full name of the person"},
+        {"column_name": "age", "column_description": "Age of the person"},
+    ]
+
+    result = extract_data_dictionary(
+        ddl_script, is_hive=False, description_dict=description_dict
+    )
+
+    expected_result = [
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table",
+            column_name="id",
+            data_type="INT",
+            constraints="",
+            description="Unique identifier for the record",
+            storage_type=None,
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table",
+            column_name="name",
+            data_type="VARCHAR",
+            constraints="",
+            description="Full name of the person",
+            storage_type=None,
+            partition_columns="",
+        ),
+        TableInformation(
+            database_name="my_database",
+            table_name="my_table",
+            column_name="age",
+            data_type="INT",
+            constraints="",
+            description="Age of the person",
+            storage_type=None,
+            partition_columns="",
+        ),
+    ]
+
+    assert result == expected_result

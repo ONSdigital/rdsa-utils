@@ -2,7 +2,7 @@
 This module contains pytest functions to test the behaviour of the functions
 contained within the rdsa_utils/data_dic/write.py Module.
 
-This module contains Pytest unit tests for the following functions:
+This module contains pytest unit tests for the following functions:
     create_data_dictionary_markdown: Create a data dictionary as a Markdown file using the extracted table information.
     markdown_file_to_html_with_theme: Convert a markdown file to themed HTML using a Jinja2 template.
     create_data_dictionary_excel: Create a data dictionary Excel file from the extracted table information.

@@ -1,23 +1,26 @@
 """
-Hive Data Dictionary Generator Extraction Module
+Data Dictionary Generator Extraction Module
 
-This module allows users to create data dictionaries for Hive tables by parsing the DDL scripts and exporting the information in a structured format.
+This module allows users to create data dictionaries for Hive & Non-Hive tables by parsing the DDL scripts 
+and exporting the information in a structured format.
 
 Main function:
     read_ddl_scripts: Read the DDL scripts from a given file path.
     replace_variables: Replace the f-string expressions in the DDL script with their values.
-    extract_table_information_hive: Extracts table information (table name, column name, data type, constraints, description, storage type, partition columns) from Hive DDL scripts.
+    extract_data_dictionary: Extracts table information from a DDL script and returns a list of TableInformation objects. 
+    extract_data_dictionaries_from_multiple_tables: Process multiple table definitions in a DDL script and return a list of TableInformation objects.
 
 Helper functions:
-    _extract_column_info: Extracts column information such as column name, data type, constraints, and description from a column line in a Hive DDL script.
-    _extract_columns_part: Extracts the columns part of a Hive DDL 'CREATE TABLE' statement.
-    _extract_database_and_table_name: Extracts the database and table names from a Hive DDL 'CREATE TABLE' statement.
-    _extract_partition_columns: Extracts partition column names from a Hive DDL 'CREATE TABLE' statement.
-    _extract_storage_type: Extracts the storage type from a Hive DDL 'CREATE TABLE' statement.
+    remove_multiline_comments: Remove multiline comments from a DDL script.
+    extract_contents_inside_parentheses: Extract the content inside the outermost parentheses in a DDL script.
+    extract_column_description: Extract the column name and its description from a line in a DDL script. 
+    extract_column_descriptions: Extract column descriptions from a DDL script.
 """
 import re
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional
+
+from simple_ddl_parser import DDLParser
 
 
 @dataclass
@@ -53,39 +56,6 @@ class TableInformation:
     description: str
     storage_type: Optional[str]
     partition_columns: str
-
-
-@dataclass
-class RegexPatterns:
-    """
-    A data class containing regex patterns for extracting table information from Hive DDL scripts.
-
-    Attributes
-    ----------
-    create_table : str
-        A regex pattern for matching 'CREATE TABLE' statements.
-    table_name : str
-        A regex pattern for extracting database and table names from 'CREATE TABLE' statements.
-    columns_part : str
-        A regex pattern for extracting the columns part from 'CREATE TABLE' statements.
-    storage_type : str
-        A regex pattern for extracting the storage type from 'CREATE TABLE' statements.
-    partition_columns : str
-        A regex pattern for extracting partition column names from 'CREATE TABLE' statements.
-    column_info : str
-        A regex pattern for extracting column information (name, data type, constraints, and description) from column lines.
-    """
-
-    create_table: str = r"CREATE TABLE (?:IF NOT EXISTS )?.*?(?:;|$)"
-    table_name: str = (
-        r"CREATE TABLE (?:IF NOT EXISTS )?(?:`?([^\s.]+?)`?\.)?`?([^\s.]+?)`?\s*\("
-    )
-    columns_part: str = r"\((.*?)\)"
-    storage_type: str = r"STORED AS\s+(\w+)"
-    partition_columns: str = r"PARTITION(?:ED)? BY\s*\((.+)\)"
-    column_info: str = (
-        r"(\w+)\s+(\w+)(?:\((.*?)\))?(?:\s+(NOT NULL))?(?:\s*,?\s*--\s*(.*))?"
-    )
 
 
 def read_ddl_scripts(file_path: str) -> str:
@@ -128,167 +98,240 @@ def replace_variables(ddl_script: str, script_globals: dict) -> str:
     return ddl_script_replaced
 
 
-def _extract_database_and_table_name(
-    script: str, patterns: RegexPatterns
-) -> Tuple[Optional[str], str]:
+def remove_multiline_comments(ddl_script: str) -> str:
     """
-    Extract the database and table name from a 'CREATE TABLE' statement.
+    Remove multiline comments from a DDL script.
 
     Parameters
     ----------
-    script : str
-        The 'CREATE TABLE' statement.
-    patterns : RegexPatterns
-        An instance of the RegexPatterns data class containing regex patterns for extraction.
-
-    Returns
-    -------
-    Tuple[Optional[str], str]
-        A tuple containing the database name (or None if not specified) and table name.
-    """
-    table_match = re.search(patterns.table_name, script, re.IGNORECASE)
-    if table_match:
-        database_name = table_match.group(1) if table_match.group(1) else None
-        table_name = table_match.group(2)
-        return database_name, table_name
-    return None, None
-
-
-def _extract_columns_part(script: str, patterns: RegexPatterns) -> str:
-    """
-    Extract the columns part of a 'CREATE TABLE' statement.
-
-    Parameters
-    ----------
-    script : str
-        The 'CREATE TABLE' statement.
-    patterns : RegexPatterns
-        An instance of the RegexPatterns data class containing regex patterns for extraction.
+    ddl_script : str
+        The DDL script from which multiline comments should be removed.
 
     Returns
     -------
     str
-        The columns part of the 'CREATE TABLE' statement.
+        The DDL script with multiline comments removed.
     """
-    return re.search(patterns.columns_part, script, re.DOTALL).group(1)
+    return re.sub(r"/\*.*?\*/", " ", ddl_script, flags=re.DOTALL)
 
 
-def _extract_storage_type(script: str, patterns: RegexPatterns) -> Optional[str]:
+def extract_content_inside_parentheses(ddl_script: str) -> str:
     """
-    Extract the storage type from a 'CREATE TABLE' statement.
+    Extract the content inside the outermost parentheses in a DDL script.
 
     Parameters
     ----------
-    script : str
-        The 'CREATE TABLE' statement.
-    patterns : RegexPatterns
-        An instance of the RegexPatterns data class containing regex patterns for extraction.
-
-    Returns
-    -------
-    Optional[str]
-        The storage type of the table, or None if not specified.
-    """
-    storage_type_match = re.search(patterns.storage_type, script, re.IGNORECASE)
-    return storage_type_match.group(1).lower() if storage_type_match else None
-
-
-def _extract_partition_columns(script: str, patterns: RegexPatterns) -> str:
-    """
-    Extract partition columns from a 'CREATE TABLE' statement.
-
-    Parameters
-    ----------
-    script : str
-        The 'CREATE TABLE' statement.
-    patterns : RegexPatterns
-        An instance of the RegexPatterns data class containing regex patterns for extraction.
+    ddl_script : str
+        The DDL script from which to extract the content inside parentheses.
 
     Returns
     -------
     str
-        A comma-separated string of partition column names, or an empty string if no partition columns are specified.
+        The content inside the outermost parentheses in the DDL script.
     """
-    partition_match = re.search(patterns.partition_columns, script, re.IGNORECASE)
-    if partition_match:
-        partition_columns = partition_match.group(1)
-        partition_columns_list = [
-            partition_col.strip().split()[0]
-            for partition_col in partition_columns.split(",")
-        ]
-        return ", ".join(partition_columns_list)
+    content = ""
+    parenthesis_count = 0
+    start_copying = False
+    for char in ddl_script:
+        if char == "(":
+            parenthesis_count += 1
+            if (
+                start_copying
+            ):  # Only copy the opening parenthesis if we've already started copying
+                content += char
+            else:
+                start_copying = True
+        elif char == ")":
+            parenthesis_count -= 1
+            if parenthesis_count == 0:
+                start_copying = False
+                continue  # Skip the closing parenthesis
+        elif start_copying and parenthesis_count > 0:
+            content += char
+    return content.strip(";")  # Remove any trailing semi-colon
+
+
+def extract_column_description(line: str) -> Optional[Dict[str, str]]:
+    """
+    Extract the column name and its description from a line in a DDL script.
+
+    Parameters
+    ----------
+    line : str
+        A line in a DDL script containing a column definition and its description.
+
+    Returns
+    -------
+    dict or None
+        A dictionary with keys 'column_name' and 'column_description' if the line
+        contains a valid column definition and description, None otherwise.
+    """
+    match = re.search(r"^\s*(\w+)\s+\w+.*?--(.*)", line)
+    if match:
+        column_name = match.group(1)
+        description = match.group(2).strip()
+        return {"column_name": column_name, "column_description": description}
+    return None
+
+
+def extract_column_descriptions(ddl_script: str) -> List[Dict[str, str]]:
+    """
+    Extract column descriptions from a DDL script.
+
+    Parameters
+    ----------
+    ddl_script : str
+        The DDL script from which to extract column descriptions.
+
+    Returns
+    -------
+    list of dict
+        A list of dictionaries, each containing the column name and its description
+        with keys 'column_name' and 'column_description'.
+    """
+    ddl_script = remove_multiline_comments(ddl_script)
+    content = extract_content_inside_parentheses(ddl_script)
+    lines = content.split("\n")
+
+    column_descriptions = []
+    for line in lines:
+        description = extract_column_description(line)
+        if description:
+            column_descriptions.append(description)
+
+    return column_descriptions
+
+
+def extract_data_dictionary(
+    ddl_script: str,
+    is_hive: bool = False,
+    description_dict: Optional[List[Dict[str, str]]] = None,
+) -> List[TableInformation]:
+    """
+    Extracts table information from a DDL script and returns a list of TableInformation objects.
+
+    Parameters
+    ----------
+    ddl_script : str
+        The DDL script to parse.
+    is_hive : bool, optional, default: False
+        If True, the DDL script is assumed to be in HiveQL format. If False, a SQL-like format is assumed.
+    description_dict : list of dict, optional, default: None
+        A list of dictionaries with column names as keys and descriptions as values. If not provided, the function attempts
+        to extract column descriptions from the DDL script itself.
+
+    Returns
+    -------
+    list of TableInformation
+        A list of TableInformation objects, each representing the extracted information for a single column in the table.
+
+    Examples
+    --------
+    >>> ddl_script = '''
+    ... CREATE TABLE IF NOT EXISTS my_database.my_table (
+    ...     id INT, -- Unique identifier for the record
+    ...     name STRING, -- Full name of the person
+    ...     age INT, -- Age of the person
+    ...     city STRING -- City where the person lives
+    ... ) ROW FORMAT DELIMITED
+    ... FIELDS TERMINATED BY ','
+    ... STORED AS TEXTFILE;
+    ... '''
+    >>> table_information_list = extract_data_dictionary(ddl_script, is_hive=True)
+    """
+    # Parse the DDL script using DDLParser with the appropriate output mode based on the is_hive flag
+    if is_hive:
+        parse_results = DDLParser(ddl_script).run(output_mode="hql")
     else:
-        return ""
+        parse_results = DDLParser(ddl_script).run()
+
+    # If no parse results are found, return an empty list
+    if not parse_results:
+        return []
+
+    result = parse_results[0]
+
+    # If no description dictionary is provided, extract column descriptions from the DDL script
+    if description_dict is None:
+        column_descriptions = extract_column_descriptions(ddl_script)
+        description_dict = {
+            desc["column_name"]: desc["column_description"]
+            for desc in column_descriptions
+        }
+    else:
+        description_dict = {
+            desc["column_name"]: desc["column_description"] for desc in description_dict
+        }
+
+    table_information_list = []
+
+    # Iterate through the columns in the parsed results
+    for column in result["columns"]:
+        # Create a list of constraints for each column
+        constraints_list = []
+        if column["unique"]:
+            constraints_list.append("unique")
+        if column["references"]:
+            constraints_list.append(
+                f"foreign_key({column['references']['table']}.{column['references']['column']})"
+            )
+        if column["check"]:
+            constraints_list.append(f"check({column['check']})")
+        constraints = ", ".join(constraints_list)
+
+        # Extract partition column names
+        partition_columns = ", ".join(
+            [col["name"] for col in result.get("partitioned_by", [])]
+        )
+
+        # Create a TableInformation object for each column and append it to the table_information_list
+        table_information = TableInformation(
+            database_name=result["schema"],
+            table_name=result["table_name"],
+            column_name=column["name"],
+            data_type=column["type"],
+            constraints=constraints,
+            description=description_dict.get(column["name"], None),
+            storage_type=result.get("stored_as", None),
+            partition_columns=partition_columns,
+        )
+
+        table_information_list.append(table_information)
+
+    return table_information_list
 
 
-def _extract_column_info(column_match: re.Match) -> Tuple[str, str, str, str]:
+def extract_data_dictionaries_from_multiple_tables(
+    ddl_scripts: str, is_hive: bool = False
+) -> List[TableInformation]:
     """
-    Extract column information (name, data type, constraints, and description) from a column match object.
+    Process multiple table definitions in a DDL script and return a list of TableInformation objects.
 
     Parameters
     ----------
-    column_match : re.Match
-        A Match object from the column line of a 'CREATE TABLE' statement.
-
-    Returns
-    -------
-    Tuple[str, str, str, str]
-        A tuple containing the column name, data type, constraints, and description.
-    """
-    column_name = column_match.group(1)
-    data_type = column_match.group(2)
-    constraints = column_match.group(4) if column_match.group(4) else ""
-    description = column_match.group(5) if column_match.group(5) else ""
-    return column_name, data_type, constraints, description
-
-
-def extract_table_information_hive(sql_scripts: str) -> List[TableInformation]:
-    """
-    Extract table information (table name, column name, data type, constraints, description, storage type, partition columns) from the Hive DDL scripts.
-
-    Parameters
-    ----------
-    sql_scripts : str
-        The Hive DDL scripts as a string.
+    ddl_scripts : str
+        The DDL script containing multiple table definitions.
+    is_hive : bool, optional
+        Set to True if the DDL script is in Hive syntax, by default False.
 
     Returns
     -------
     List[TableInformation]
-        A list of TableInformation instances containing table information (database name, table name, column name, data type, constraints, description, storage type, partition columns).
+        A list of TableInformation objects for all tables in the DDL script.
     """
-    patterns = RegexPatterns()
+    # Find all tables in script
+    create_table_regex = r"CREATE TABLE (?:IF NOT EXISTS )?.*?(?:;|$)"  # Find Tables
     table_scripts = re.findall(
-        patterns.create_table, sql_scripts, re.DOTALL | re.IGNORECASE
+        create_table_regex, ddl_scripts, re.DOTALL | re.IGNORECASE
     )
-    table_info = []
 
-    for script in table_scripts:
-        database_name, table_name = _extract_database_and_table_name(script, patterns)
-        columns_part = _extract_columns_part(script, patterns)
-        storage_type = _extract_storage_type(script, patterns)
-        partition_columns = _extract_partition_columns(script, patterns)
+    # Iterate through tables
+    all_tables = []
+    for table in table_scripts:
+        column_descriptions = extract_column_descriptions(table)
+        data_dic = extract_data_dictionary(
+            table, is_hive=is_hive, description_dict=column_descriptions
+        )
+        all_tables.extend(data_dic)
 
-        column_lines = columns_part.strip().split("\n")
-
-        for line in column_lines:
-            column_match = re.search(patterns.column_info, line.strip(), re.IGNORECASE)
-
-            if column_match:
-                column_name, data_type, constraints, description = _extract_column_info(
-                    column_match
-                )
-
-                table_info.append(
-                    TableInformation(
-                        database_name,
-                        table_name,
-                        column_name,
-                        data_type,
-                        constraints,
-                        description,
-                        storage_type,
-                        partition_columns,
-                    )
-                )
-
-    return table_info
+    return all_tables
