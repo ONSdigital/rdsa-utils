@@ -136,9 +136,9 @@ def test_markdown_file_to_html_with_theme(tmp_path):
     assert "<p>This is a test paragraph.</p>" in content
 
 
-def test_create_data_dictionary_excel(tmp_path):
+def test_create_data_dictionary_excel_hive(tmp_path):
     """
-    Test the create_data_dictionary_excel function.
+    Test the create_data_dictionary_excel function with Hive table definitions.
 
     This test verifies if the function creates an Excel file with the expected contents
     based on the provided table information.
@@ -183,3 +183,50 @@ def test_create_data_dictionary_excel(tmp_path):
     assert df.at[0, "description"] == "Unique identifier"
     assert df.at[0, "storage_type"] == "managed"
     assert pd.isna(df.at[0, "partition_columns"])
+
+
+def test_create_data_dictionary_excel_non_hive(tmp_path):
+    """
+    Test the create_data_dictionary_excel function with Non-Hive table definitions.
+
+    This test verifies if the function creates an Excel file with the expected contents
+    based on the provided table information.
+
+    Parameters
+    ----------
+    tmp_path : pytest fixture
+        A temporary directory provided by the pytest framework.
+
+    Returns
+    -------
+    None
+    """
+    table_info = [
+        TableInformation(
+            database_name="test_db",
+            table_name="test_table",
+            column_name="id",
+            data_type="int",
+            constraints="NOT NULL",
+            description="Unique identifier",
+            storage_type=None,
+            partition_columns=None,
+        )
+    ]
+
+    output_file = tmp_path / "data_dictionary.xlsx"
+    create_data_dictionary_excel(table_info, str(output_file), is_hive=False)
+
+    assert output_file.exists()
+
+    # Read the Excel file and verify the contents
+    import pandas as pd
+
+    df = pd.read_excel(output_file, sheet_name="Data Dictionary", engine="openpyxl")
+
+    assert df.at[0, "database_name"] == "test_db"
+    assert df.at[0, "table_name"] == "test_table"
+    assert df.at[0, "column_name"] == "id"
+    assert df.at[0, "data_type"] == "int"
+    assert df.at[0, "constraints"] == "NOT NULL"
+    assert df.at[0, "description"] == "Unique identifier"
