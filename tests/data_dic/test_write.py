@@ -45,7 +45,7 @@ def test_create_data_dictionary_markdown(tmp_path):
     ]
 
     output_file = tmp_path / "data_dictionary.md"
-    create_data_dictionary_markdown(table_info, str(output_file))
+    create_data_dictionary_markdown(table_info, str(output_file), is_hive=True)
 
     assert output_file.exists()
 
@@ -122,7 +122,7 @@ def test_create_data_dictionary_excel(tmp_path):
     ]
 
     output_file = tmp_path / "data_dictionary.xlsx"
-    create_data_dictionary_excel(table_info, str(output_file))
+    create_data_dictionary_excel(table_info, str(output_file), is_hive=True)
 
     assert output_file.exists()
 

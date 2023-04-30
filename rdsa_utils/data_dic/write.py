@@ -26,7 +26,9 @@ from rdsa_utils.data_dic.extract import TableInformation
 
 
 def create_data_dictionary_markdown(
-    table_info: List[TableInformation], output_file: str
+    table_info: List[TableInformation],
+    output_file: str,
+    is_hive: bool = False,
 ):
     """
     Create a data dictionary as a Markdown file using the extracted table information.
@@ -42,6 +44,8 @@ def create_data_dictionary_markdown(
         (database name, table name, column name, data type, constraints, description, storage type, partition columns).
     output_file : str
         The output Markdown file path.
+    is_hive : bool, optional
+        Set to True if the DDL script is in Hive syntax, by default False.
 
     Returns
     -------
@@ -67,10 +71,11 @@ def create_data_dictionary_markdown(
             markdown_lines.append(
                 f"## Database: {table_entry.database_name} | Table: {table_entry.table_name}\n"
             )
-            markdown_lines.append(f"**Storage Type:** {table_entry.storage_type}\n")
-            markdown_lines.append(
-                f"**Partition Columns:** {table_entry.partition_columns if table_entry.partition_columns else 'None'}\n"
-            )
+            if is_hive:
+                markdown_lines.append(f"**Storage Type:** {table_entry.storage_type}\n")
+                markdown_lines.append(
+                    f"**Partition Columns:** {table_entry.partition_columns if table_entry.partition_columns else 'None'}\n"
+                )
             markdown_lines.append(
                 "| Column Name | Data Type | Constraints | Description |"
             )
@@ -170,7 +175,9 @@ def markdown_file_to_html_with_theme(
 
 
 def create_data_dictionary_excel(
-    table_information: List[TableInformation], output_file: str
+    table_information: List[TableInformation],
+    output_file: str,
+    is_hive: bool = False,
 ):
     """
     Create a data dictionary Excel file from the extracted table information.
@@ -189,6 +196,8 @@ def create_data_dictionary_excel(
         (database name, table name, column name, data type, constraints, description, storage type, partition columns).
     output_file : str
         The path to the output Excel file.
+    is_hive : bool, optional
+        Set to True if the DDL script is in Hive syntax, by default False.
 
     Returns
     -------
@@ -209,6 +218,13 @@ def create_data_dictionary_excel(
 
     headers = list(asdict(table_information[0]).keys())
 
+    if not is_hive:
+        headers = [
+            col_name
+            for col_name in headers
+            if col_name not in ("storage_type", "partition_columns")
+        ]
+
     # Write the headers
     for i, header in enumerate(headers):
         worksheet.write(0, i, header, header_format)
@@ -219,6 +235,12 @@ def create_data_dictionary_excel(
     # Write the table information and update max_lengths
     for row, table_info in enumerate(table_information, start=1):
         table_info_dict = asdict(table_info)
+        if not is_hive:
+            table_info_dict = {
+                key: table_info_dict[key]
+                for key in table_info_dict.keys()
+                if key not in ["storage_type", "partition_columns"]
+            }
         for col, (key, value) in enumerate(table_info_dict.items()):
             worksheet.write(row, col, value)
             max_lengths[col] = max(max_lengths[col], len(str(value)) + 2)

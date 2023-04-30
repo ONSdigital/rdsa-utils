@@ -32,8 +32,8 @@ def main():
         ddl_scripts=ddl_scripts_replaced, is_hive=True
     )
 
-    create_data_dictionary_excel(table_info, output_file)
-    create_data_dictionary_markdown(table_info, "data_dictionary.md")
+    create_data_dictionary_excel(table_info, output_file, is_hive=True)
+    create_data_dictionary_markdown(table_info, "data_dictionary.md", is_hive=True)
     markdown_file_to_html_with_theme("./data_dictionary.md", "./data_dictionary.html")
 
 if __name__ == "__main__":
