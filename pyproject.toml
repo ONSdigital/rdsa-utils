@@ -19,6 +19,7 @@ jinja2 = "^3.1.2"
 xlsxwriter = "^3.1.0"
 pandas = ">=1.0.0"
 openpyxl = "^3.1.2"
+simple-ddl-parser = "^0.30.0"
 
 
 [tool.poetry.group.dev.dependencies]

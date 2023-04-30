@@ -397,6 +397,18 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "ply"
+version = "3.11"
+description = "Python Lex & Yacc"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
+    {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
+]
+
+[[package]]
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -516,6 +528,21 @@ files = [
 ]
 
 [[package]]
+name = "simple-ddl-parser"
+version = "0.30.0"
+description = "Simple DDL Parser to parse SQL & dialects like HQL, TSQL (MSSQL), Oracle, AWS Redshift, Snowflake, MySQL, PostgreSQL, etc ddl files to json/python dict with full information about columns: types, defaults, primary keys, etc.; sequences, alters, custom types & other entities from ddl."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "simple-ddl-parser-0.30.0.tar.gz", hash = "sha256:fc977e71b554d4d691c24f9b3fc29d45dbbf423df560142dcf3067c4b60f143a"},
+    {file = "simple_ddl_parser-0.30.0-py3-none-any.whl", hash = "sha256:96559177b911f8464b9b0e82f9a729f1c76369f847e971c959d0d9d3491d4988"},
+]
+
+[package.dependencies]
+ply = ">=3.11,<4.0"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -594,4 +621,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "809b98fabda55eb079a13ff6314e14b35c32fee6fafe24baa933caef4966c6c5"
+content-hash = "40748024187e210a540277d1f29d693ba33ea7d2689a031ee158867c20fd59bf"
