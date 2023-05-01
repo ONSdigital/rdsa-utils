@@ -90,10 +90,6 @@ def test_table_information_creation(
         The storage type of the table, e.g., 'textfile', 'orc', or None if not specified.
     partition_columns : str
         A comma-separated string of partition column names, if any.
-
-    Returns
-    -------
-    None
     """
     table_info = TableInformation(
         database_name=database_name,
@@ -127,10 +123,6 @@ def test_read_ddl_scripts(tmp_path):
     ----------
     tmp_path : Path
         A pytest fixture that provides a temporary path for file operations.
-
-    Returns
-    -------
-    None
     """
     # Create a temporary DDL file with sample content
     ddl_content = "CREATE TABLE test_table (id INT, name STRING);"
@@ -150,10 +142,6 @@ def test_replace_variables():
 
     This test case checks if the replace_variables function correctly
     replaces f-string expressions in a given DDL script with their values.
-
-    Returns
-    -------
-    None
     """
     # Define a sample DDL script with f-string expressions
     ddl_script = "CREATE TABLE test_table (id INT, name {data_type});"

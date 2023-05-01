@@ -26,10 +26,6 @@ def test_create_data_dictionary_markdown_hive(tmp_path):
     ----------
     tmp_path : pytest fixture
         A temporary directory provided by the pytest framework.
-
-    Returns
-    -------
-    None
     """
     table_info = [
         TableInformation(
@@ -70,10 +66,6 @@ def test_create_data_dictionary_markdown_non_hive(tmp_path):
     ----------
     tmp_path : pytest fixture
         A temporary directory provided by the pytest framework.
-
-    Returns
-    -------
-    None
     """
     table_info = [
         TableInformation(
@@ -114,10 +106,6 @@ def test_markdown_file_to_html_with_theme(tmp_path):
     ----------
     tmp_path : pytest fixture
         A temporary directory provided by the pytest framework.
-
-    Returns
-    -------
-    None
     """
     markdown_file = tmp_path / "test.md"
     html_output_file = tmp_path / "test.html"
@@ -147,10 +135,6 @@ def test_create_data_dictionary_excel_hive(tmp_path):
     ----------
     tmp_path : pytest fixture
         A temporary directory provided by the pytest framework.
-
-    Returns
-    -------
-    None
     """
     table_info = [
         TableInformation(
@@ -196,10 +180,6 @@ def test_create_data_dictionary_excel_non_hive(tmp_path):
     ----------
     tmp_path : pytest fixture
         A temporary directory provided by the pytest framework.
-
-    Returns
-    -------
-    None
     """
     table_info = [
         TableInformation(
