@@ -15,6 +15,9 @@ Helper functions:
     extract_contents_inside_parentheses: Extract the content inside the outermost parentheses in a DDL script.
     extract_column_description: Extract the column name and its description from a line in a DDL script. 
     extract_column_descriptions: Extract column descriptions from a DDL script.
+
+Data Class:
+    TableInformation: A data class representing table information extracted from Hive & Non-Hive DDL scripts.
 """
 import re
 from dataclasses import dataclass
@@ -26,7 +29,7 @@ from simple_ddl_parser import DDLParser
 @dataclass
 class TableInformation:
     """
-    A data class representing table information extracted from Hive DDL scripts.
+    A data class representing table information extracted from Hive & Non-Hive DDL scripts.
 
     Attributes
     ----------

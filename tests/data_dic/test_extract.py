@@ -14,8 +14,13 @@ As well as the main function:
     extract_data_dictionary: Extracts table information from a DDL script and returns a list of TableInformation objects. 
     extract_data_dictionaries_from_multiple_tables: Process multiple table definitions in a DDL script and return a list of TableInformation objects.
 
+And finally Data Class:
+    TableInformation: A data class representing table information extracted from Hive & Non-Hive DDL scripts.
+
 Each of the functions is tested using various test cases to ensure they correctly extract the required information from Hive & Non-Hive DDL scripts.
 """
+import pytest
+
 from rdsa_utils.data_dic.extract import (
     TableInformation,
     extract_column_description,
@@ -27,6 +32,88 @@ from rdsa_utils.data_dic.extract import (
     remove_multiline_comments,
     replace_variables,
 )
+
+
+@pytest.mark.parametrize(
+    "database_name, table_name, column_name, data_type, constraints, description, storage_type, partition_columns",
+    [
+        (
+            None,
+            "table1",
+            "column1",
+            "int",
+            "NOT NULL",
+            "A sample column",
+            "textfile",
+            "part_col1,part_col2",
+        ),
+        (
+            "db1",
+            "table2",
+            "column2",
+            "varchar(255)",
+            "NULL",
+            "Another column",
+            "orc",
+            "",
+        ),
+    ],
+)
+def test_table_information_creation(
+    database_name,
+    table_name,
+    column_name,
+    data_type,
+    constraints,
+    description,
+    storage_type,
+    partition_columns,
+):
+    """
+    Test the creation of TableInformation instances.
+
+    Parameters
+    ----------
+    database_name : Optional[str]
+        The name of the database, or None if not specified.
+    table_name : str
+        The name of the table.
+    column_name : str
+        The name of the column.
+    data_type : str
+        The data type of the column.
+    constraints : str
+        Column constraints, e.g., 'NOT NULL'.
+    description : str
+        The description of the column, if provided.
+    storage_type : Optional[str]
+        The storage type of the table, e.g., 'textfile', 'orc', or None if not specified.
+    partition_columns : str
+        A comma-separated string of partition column names, if any.
+
+    Returns
+    -------
+    None
+    """
+    table_info = TableInformation(
+        database_name=database_name,
+        table_name=table_name,
+        column_name=column_name,
+        data_type=data_type,
+        constraints=constraints,
+        description=description,
+        storage_type=storage_type,
+        partition_columns=partition_columns,
+    )
+
+    assert table_info.database_name == database_name
+    assert table_info.table_name == table_name
+    assert table_info.column_name == column_name
+    assert table_info.data_type == data_type
+    assert table_info.constraints == constraints
+    assert table_info.description == description
+    assert table_info.storage_type == storage_type
+    assert table_info.partition_columns == partition_columns
 
 
 def test_read_ddl_scripts(tmp_path):
