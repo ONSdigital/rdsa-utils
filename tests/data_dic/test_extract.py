@@ -570,3 +570,7 @@ def test_extract_data_dictionary_non_hive():
     ]
 
     assert result == expected_result
+
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

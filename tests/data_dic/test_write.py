@@ -7,6 +7,8 @@ This module contains pytest unit tests for the following functions:
     markdown_file_to_html_with_theme: Convert a markdown file to themed HTML using a Jinja2 template.
     create_data_dictionary_excel: Create a data dictionary Excel file from the extracted table information.
 """
+import pytest
+
 from rdsa_utils.data_dic.extract import TableInformation
 from rdsa_utils.data_dic.write import (
     create_data_dictionary_excel,
@@ -210,3 +212,7 @@ def test_create_data_dictionary_excel_non_hive(tmp_path):
     assert df.at[0, "data_type"] == "int"
     assert df.at[0, "constraints"] == "NOT NULL"
     assert df.at[0, "description"] == "Unique identifier"
+
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])
