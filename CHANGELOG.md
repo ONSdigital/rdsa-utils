@@ -10,6 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `parametrize_cases` and `Case` code for use in test scripts.
 - Add in PR template.
+- README with additional information and guidelines for contributors.
 
 ### Changed
 
