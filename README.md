@@ -118,39 +118,3 @@ pre-commit run --all-files
 This command runs all the pre-commit hooks on all the files in the repository, allowing you to check your code before committing.
 
 By following these steps, you can ensure that your development environment is set up to use the pre-commit hooks, helping to maintain a clean and consistent codebase.
-
-## Contributing
-
-We welcome contributions. To contribute, please follow these guidelines:
-
-### Pull Requests
-
-- All pull requests should be made to the `dev` branch, named `dev_<feature_name>`.
-- Please make sure that your code passes all unit tests before submitting a pull request.
-- Include unit tests with your code changes whenever possible, preferably written in [pytest](https://docs.pytest.org/en/stable/) format.
-- Make sure that all existing unit tests still pass with your code changes.
-- Please ensure that your code is compliant with the project's coding style guidelines, which include:
-  - Writing docstrings in [Scipy/numpy style format](https://numpydoc.readthedocs.io/en/latest/format.html).
-  - Using [type hints](https://docs.python.org/3/library/typing.html) in Python functions.
-  - Adhering to the [PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/) for Python code.
-  - No wildcard imports.
-  - Import PySpark functions as `F`.
-  - Providing well-documented and easy-to-understand code, including clear variable and function names, as well as explanatory comments where necessary.
-- If you are making a significant change to the codebase, please make sure to update the documentation to reflect the changes.
-- If you are adding new functionality, please provide examples of how to use it in the project's documentation or in a separate README file.
-- If you are fixing a bug, please include a description of the bug and how your changes address it.
-- If you are adding a new dependency, please include a brief explanation of why it is necessary and what it does.
-- If you are making significant changes to the project's architecture or design, please discuss your ideas with the project maintainers first to ensure they align with the project's goals and vision.
-
-### Issues
-
-If you find a bug or would like to request a feature, please open an issue on the project's [GitHub page](https://github.com/ONSdigital/rdsa-utils/issues). When opening an issue, please provide as much detail as possible, including:
-
-- A clear and descriptive title.
-- A description of the problem you're experiencing, including steps to reproduce it.
-- Any error messages or logs related to the issue.
-- Your operating system and Python version (if relevant).
-
-Please search through the existing issues before opening a new one to avoid duplicates. If you find an existing issue that covers your problem, please add any additional information as a comment. Issues will be triaged and prioritized by the project maintainers.
-
-If you would like to contribute to the project by fixing an existing issue, please leave a comment on the issue to let the maintainers know that you are working on it.
