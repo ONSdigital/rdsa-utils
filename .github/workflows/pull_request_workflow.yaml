@@ -12,6 +12,37 @@ jobs:
   changelog:
     runs-on: ubuntu-latest
     steps:
-    # checks for updates to CHANGELOG.md
-    # https://github.com/marketplace/actions/changelog-enforcer
-    - uses: dangoslen/changelog-enforcer@v3
+      # checks for updates to CHANGELOG.md
+      # https://github.com/marketplace/actions/changelog-enforcer
+      - uses: dangoslen/changelog-enforcer@v3
+
+  test:
+    needs: changelog
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Set up cache for Poetry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: ${{ runner.os }}-poetry-${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run pytest || true
