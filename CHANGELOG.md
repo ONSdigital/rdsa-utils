@@ -9,7 +9,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `parametrize_cases` and `Case` code for use in test scripts.
-- Add `.pre-commit-config.yaml` for pre-commit hooks
+- Add in PR template.
+- README with additional information and guidelines for contributors.
+- Pull Request Workflow includes `test` job which installs Poetry and Run Tests.
+- Add `.pre-commit-config.yaml` for pre-commit hooks.
 
 ### Changed
 
