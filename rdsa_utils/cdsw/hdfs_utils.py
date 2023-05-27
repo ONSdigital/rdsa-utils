@@ -25,7 +25,6 @@ The primary functions in the module include:
 - `read_dir_files()`: Reads the filenames in a directory in HDFS.
 - `read_dir_files_recursive()`: Recursively reads the contents of a directory in HDFS.
 - `rename()`: Renames (i.e., moves using full path) a file in the Hadoop filesystem.
-- `test()`: Tests if a file exists in HDFS.
 
 Note
 ----
@@ -468,24 +467,4 @@ def rename(from_path: str, to_path: str, overwrite: bool = False) -> bool:
         delete_file(to_path)
 
     command = ["hadoop", "fs", "-mv", from_path, to_path]
-    return _perform(command)
-
-
-def test(path: str) -> bool:
-    """
-    Tests if a file exists in the Hadoop Distributed File System (HDFS).
-
-    This function wraps the 'hadoop fs -test -e' command.
-
-    Parameters
-    ----------
-    path : str
-        The HDFS path to the file to be tested.
-
-    Returns
-    -------
-    bool
-        True if the operation is successful (file exists), otherwise False.
-    """
-    command = ["hadoop", "fs", "-test", "-e", path]
     return _perform(command)
