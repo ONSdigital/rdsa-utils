@@ -24,6 +24,7 @@ The primary functions are:
 There are also several helper functions, such as `_write_entry()` and `_get_run_ids()`.
 
 This module depends on PySpark to create DataFrames and interact with the Spark database.
+
 It also uses functionalities from the `rdsa_utils.cdsw.hdfs_utils` module to write strings 
 to a text file in Hadoop Distributed File System (HDFS).
 
