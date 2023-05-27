@@ -2,8 +2,10 @@
 HDFS Utils
 ==========
 
-This module provides utility functions for interacting with the Hadoop Distributed File System (HDFS). The utility functions 
-are Python wrappers for HDFS shell commands, facilitating the programmatic manipulation of files and directories within HDFS. 
+This module provides utility functions for interacting with the Hadoop Distributed File System (HDFS).
+
+The utility functions are Python wrappers for HDFS shell commands, facilitating the programmatic manipulation 
+of files and directories within HDFS. 
 
 The primary functions in the module include:
 
