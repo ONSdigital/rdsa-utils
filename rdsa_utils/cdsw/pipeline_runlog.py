@@ -44,6 +44,7 @@ from typing import Dict, List, Optional, Union
 
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
+from pyspark.sql.utils import AnalysisException
 
 from rdsa_utils.cdsw.hdfs_utils import create_txt_from_string
 
@@ -63,7 +64,10 @@ def _write_entry(entry_df: DataFrame, log_table: str) -> None:
     -------
     None
     """
-    entry_df.write.insertInto(log_table)
+    try:
+        entry_df.write.insertInto(log_table)
+    except AnalysisException as e:
+        print(f"Error writing entry to table {log_table}: {e}")
 
 
 def create_runlog_table(
