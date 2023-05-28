@@ -16,6 +16,7 @@ from rdsa_utils.cdsw.pipeline_runlog import (
     get_last_run_id,
     get_penultimate_run_id,
     reserve_id,
+    write_runlog_file,
 )
 
 
@@ -542,5 +543,58 @@ class TestAddRunlogEntry:
         assert result == entry_mock
 
 
+class TestWriteRunlogFile:
+    def test_write_runlog_file(self, mocker):
+        """
+        Tests that the function successfully creates a text file in HDFS with metadata
+        from a runlog entry.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        runlog_table = "test_log_table"
+        runlog_id = 1
+        path = "/test/path"
+
+        # Mock _parse_runlog_as_string and create_txt_from_string
+        parse_mock = mocker.patch(
+            "rdsa_utils.cdsw.pipeline_runlog._parse_runlog_as_string"
+        )
+        parse_mock.return_value = "test metadata"
+        create_mock = mocker.patch(
+            "rdsa_utils.cdsw.pipeline_runlog.create_txt_from_string"
+        )
+
+        # Call function
+        write_runlog_file(spark_mock, runlog_table, runlog_id, path)
+
+        # Assert functions were called correctly
+        parse_mock.assert_called_once_with(spark_mock, runlog_table, runlog_id)
+        create_mock.assert_called_once_with(path, "test metadata")
+
+    def test_write_runlog_file_edge_case(self, mocker):
+        """
+        Tests that the function raises FileNotFoundError when the specified path is not found.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        runlog_table = "test_log_table"
+        runlog_id = 1
+        path = "/nonexistent/path"
+
+        # Mock _parse_runlog_as_string
+        parse_mock = mocker.patch(
+            "rdsa_utils.cdsw.pipeline_runlog._parse_runlog_as_string"
+        )
+        parse_mock.return_value = "test metadata"
+
+        # Call function and assert FileNotFoundError is raised
+        with pytest.raises(FileNotFoundError):
+            write_runlog_file(spark_mock, runlog_table, runlog_id, path)
+
+
 if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+    pytest.main([__file__, "-vv"])
