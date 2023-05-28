@@ -391,18 +391,15 @@ def _parse_runlog_as_string(
     query = f"SELECT * FROM {runlog_table} WHERE run_id = {runlog_id}"
     df = spark.sql(query)
 
-    # Exclude the "config" column from the metadata section
-    columns = df.drop("config").columns
-    meta = "\n".join(
-        f"{col}: {df.select(col).first()[0]}" for col in columns if col != "config"
-    )
-
-    # Process the config dictionary
     config = literal_eval(df.select("config").first()[0])
+
+    meta = "\n".join(
+        f"{col}: {df.select(col).first()[0]}" for col in df.drop("config").columns
+    )
     config_str = "\n\n".join(
-        f"{section}:\n\n"
-        + "\n".join(f"{key}: {value}" for key, value in subsection.items())
-        for section, subsection in config.items()
+        f"{k.replace('_', ' ').title()}:\n\n"
+        + "\n".join(f"{key}: {value}" for key, value in v.items())
+        for k, v in config.items()
     )
 
     return f"Metadata:\n\n{meta}\n\n{config_str}\n".replace("$", "")
