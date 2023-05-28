@@ -2,12 +2,15 @@
 This module contains pytest functions to test the behaviour of the functions
 contained within the rdsa_utils/cdsw/pipeline_runlog.py Module.
 """
+from unittest.mock import patch
+
 import pytest
 from pyspark.sql import DataFrame
 
 from rdsa_utils.cdsw.pipeline_runlog import (
     _get_run_ids,
     _write_entry,
+    add_runlog_entry,
     create_runlog_entry,
     create_runlog_table,
     get_last_run_id,
@@ -459,6 +462,84 @@ class TestCreateRunlogEntry:
         # Call function and assert it raises a ValueError
         with pytest.raises(ValueError):
             create_runlog_entry(spark_mock, run_id, desc, version, config, pipeline)
+
+
+class TestAddRunlogEntry:
+    @patch("rdsa_utils.cdsw.pipeline_runlog.reserve_id")
+    @patch("rdsa_utils.cdsw.pipeline_runlog.create_runlog_entry")
+    @patch("rdsa_utils.cdsw.pipeline_runlog._write_entry")
+    def test_add_runlog_entry(
+        self, _write_entry_mock, create_runlog_entry_mock, reserve_id_mock, mocker
+    ):
+        """
+        Tests that the function adds an entry to the runlog with a newly reserved run_id.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        desc = "test description"
+        version = "1.0"
+        config = {"param1": "value1", "param2": "value2"}
+        pipeline = "test_pipeline"
+        log_table = "test_log_table"
+
+        # Mock reserve_id, create_runlog_entry, _write_entry
+        reserve_id_mock.return_value = 1
+        entry_mock = mocker.Mock()
+        create_runlog_entry_mock.return_value = entry_mock
+
+        # Call function
+        result = add_runlog_entry(
+            spark_mock, desc, version, config, pipeline, log_table
+        )
+
+        # Assert functions were called correctly
+        reserve_id_mock.assert_called_once_with(spark_mock, log_table)
+        create_runlog_entry_mock.assert_called_once_with(
+            spark_mock, 1, desc, version, config, pipeline
+        )
+        _write_entry_mock.assert_called_once_with(entry_mock, log_table)
+
+        # Assert function returned correct value
+        assert result == entry_mock
+
+    @patch("rdsa_utils.cdsw.pipeline_runlog.create_runlog_entry")
+    @patch("rdsa_utils.cdsw.pipeline_runlog._write_entry")
+    def test_add_runlog_entry_specified_id(
+        self, _write_entry_mock, create_runlog_entry_mock, mocker
+    ):
+        """
+        Tests that the function adds an entry to the runlog with a specified run_id.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        run_id = 2
+        desc = "test description"
+        version = "1.0"
+        config = {"param1": "value1", "param2": "value2"}
+        pipeline = "test_pipeline"
+        log_table = "test_log_table"
+
+        # Mock create_runlog_entry, _write_entry
+        entry_mock = mocker.Mock()
+        create_runlog_entry_mock.return_value = entry_mock
+
+        # Call function
+        result = add_runlog_entry(
+            spark_mock, desc, version, config, pipeline, log_table, run_id
+        )
+
+        # Assert functions were called correctly
+        create_runlog_entry_mock.assert_called_once_with(
+            spark_mock, run_id, desc, version, config, pipeline
+        )
+        _write_entry_mock.assert_called_once_with(entry_mock, log_table)
+
+        # Assert function returned correct value
+        assert result == entry_mock
 
 
 if __name__ == "__main__":
