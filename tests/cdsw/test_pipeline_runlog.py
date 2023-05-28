@@ -3,11 +3,12 @@ This module contains pytest functions to test the behaviour of the functions
 contained within the rdsa_utils/cdsw/pipeline_runlog.py Module.
 """
 import pytest
-from pyspark.sql import DataFrame, Row
+from pyspark.sql import DataFrame
 
 from rdsa_utils.cdsw.pipeline_runlog import (
     _get_run_ids,
     _write_entry,
+    create_runlog_entry,
     create_runlog_table,
     get_last_run_id,
     get_penultimate_run_id,
@@ -393,6 +394,71 @@ class TestGetPenultimateRunId:
         get_run_ids_mock.assert_called_once_with(
             spark_mock, 2, "test_pipeline", "pipeline_runlog"
         )
+
+
+class TestCreateRunlogEntry:
+    def test_create_runlog_entry(self, mocker):
+        """
+        Tests that the function returns a DataFrame with the log entry when provided
+        with valid inputs.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        run_id = 1
+        desc = "test description"
+        version = "1.0"
+        config = {"param1": "value1", "param2": "value2"}
+        pipeline = "test_pipeline"
+
+        # Mock createDataFrame function
+        mock_df = mocker.Mock()
+        mock_df.columns = [
+            "run_id",
+            "desc",
+            "user",
+            "datetime",
+            "pipeline_name",
+            "pipeline_version",
+            "config",
+        ]
+        spark_mock.createDataFrame.return_value = mock_df
+
+        # Call function
+        result = create_runlog_entry(
+            spark_mock, run_id, desc, version, config, pipeline
+        )
+
+        # Assert result is a DataFrame with the correct columns and values
+        assert result == mock_df
+        assert result.columns == [
+            "run_id",
+            "desc",
+            "user",
+            "datetime",
+            "pipeline_name",
+            "pipeline_version",
+            "config",
+        ]
+
+    def test_create_runlog_entry_edge_cases(self, mocker):
+        """
+        Tests that the function raises an error when provided with invalid inputs.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data with invalid config object
+        run_id = 1
+        desc = "test description"
+        version = "1.0"
+        config = object()
+        pipeline = "test_pipeline"
+
+        # Call function and assert it raises a ValueError
+        with pytest.raises(ValueError):
+            create_runlog_entry(spark_mock, run_id, desc, version, config, pipeline)
 
 
 if __name__ == "__main__":
