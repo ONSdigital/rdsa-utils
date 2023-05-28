@@ -9,6 +9,7 @@ from pyspark.sql import DataFrame
 
 from rdsa_utils.cdsw.pipeline_runlog import (
     _get_run_ids,
+    _parse_runlog_as_string,
     _write_entry,
     add_runlog_entry,
     create_runlog_entry,
@@ -541,6 +542,120 @@ class TestAddRunlogEntry:
 
         # Assert function returned correct value
         assert result == entry_mock
+
+
+class TestParseRunlogAsString:
+    def test_parse_runlog_as_string(self, mocker):
+        """
+        Tests the _parse_runlog_as_string function.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        runlog_table = "test_log_table"
+        runlog_id = 1
+
+        # Mock SparkSession.sql method
+        sql_mock = mocker.Mock()
+        sql_mock.return_value = mocker.Mock(
+            select=mocker.Mock(
+                return_value=mocker.Mock(
+                    first=mocker.Mock(return_value=("test_config",))
+                )
+            ),
+            drop=mocker.Mock(
+                return_value=mocker.Mock(
+                    columns=[
+                        "run_id",
+                        "desc",
+                        "user",
+                        "datetime",
+                        "pipeline_name",
+                        "pipeline_version",
+                        "config",
+                    ]
+                )
+            ),
+        )
+        spark_mock.sql = sql_mock
+
+        # Patch literal_eval to return a valid nested dictionary
+        mocker.patch(
+            "rdsa_utils.cdsw.pipeline_runlog.literal_eval",
+            return_value={
+                "user_settings": {"key1": "value1", "key2": "value2"},
+                "developer_settings": {"key3": "value3", "key4": "value4"},
+            },
+        )
+
+        # Call the function
+        result = _parse_runlog_as_string(spark_mock, runlog_table, runlog_id)
+
+        # Define the expected result
+        expected_result = (
+            "Metadata:\n\n"
+            "run_id: test_config\n"
+            "desc: test_config\n"
+            "user: test_config\n"
+            "datetime: test_config\n"
+            "pipeline_name: test_config\n"
+            "pipeline_version: test_config\n\n"
+            "user_settings:\n\n"
+            "key1: value1\n"
+            "key2: value2\n\n"
+            "developer_settings:\n\n"
+            "key3: value3\n"
+            "key4: value4\n"
+        )
+
+        # Assert the result
+        assert result == expected_result
+
+    def test_parse_runlog_as_string_edge_case(self, mocker):
+        """
+        Tests that the _parse_runlog_as_string function raises a ValueError if
+        the config object cannot be parsed.
+        """
+        # Mock SparkSession
+        spark_mock = mocker.Mock()
+
+        # Set up test data
+        runlog_table = "test_log_table"
+        runlog_id = 1
+
+        # Mock SparkSession.sql method
+        sql_mock = mocker.Mock()
+        sql_mock.return_value = mocker.Mock(
+            select=mocker.Mock(
+                return_value=mocker.Mock(
+                    first=mocker.Mock(return_value=("test_config",))
+                )
+            ),
+            drop=mocker.Mock(
+                return_value=mocker.Mock(
+                    columns=[
+                        "run_id",
+                        "desc",
+                        "user",
+                        "datetime",
+                        "pipeline_name",
+                        "pipeline_version",
+                        "config",
+                    ]
+                )
+            ),
+        )
+        spark_mock.sql = sql_mock
+
+        # Patch literal_eval to raise an exception
+        mocker.patch(
+            "rdsa_utils.cdsw.pipeline_runlog.literal_eval", side_effect=ValueError
+        )
+
+        # Call the function and expect a ValueError
+        with pytest.raises(ValueError):
+            _parse_runlog_as_string(spark_mock, runlog_table, runlog_id)
 
 
 class TestWriteRunlogFile:
