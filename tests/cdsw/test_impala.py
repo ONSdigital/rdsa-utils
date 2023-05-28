@@ -1,6 +1,6 @@
 """
 This module contains pytest functions to test the behaviour of the functions
-contained within the rdsa_utils/database/impala.py Module.
+contained within the rdsa_utils/cdsw/impala.py Module.
 
 Functions:
     test_invalidate_impala_metadata()
@@ -10,7 +10,7 @@ import subprocess
 
 import pytest
 
-from rdsa_utils.database.impala import invalidate_impala_metadata
+from rdsa_utils.cdsw.impala import invalidate_impala_metadata
 
 
 def test_invalidate_impala_metadata(mocker):

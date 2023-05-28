@@ -1,4 +1,7 @@
 """
+Impala Module
+=============
+
 This module provides utility functions for working with Impala, a SQL query engine for 
 data stored in a computer cluster running Apache Hadoop.
 
