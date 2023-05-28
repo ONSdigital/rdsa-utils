@@ -2,7 +2,6 @@
 This module contains pytest functions to test the behaviour of the functions
 contained within the rdsa_utils/cdsw/hdfs_utils.py Module.
 """
-
 import os
 import subprocess
 from unittest.mock import MagicMock, patch
