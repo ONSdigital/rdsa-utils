@@ -5,7 +5,7 @@ description = ""
 authors = ["Reproducible Data Science & Analysis, ONS"]
 maintainers = [
     "Matthew Price <Matthew.G.Price@ons.gov.uk>",
-    "Meg Scamell <Meg.Scammell@ons.gov.uk>",
+    "Meg Scammell <Meg.Scammell@ons.gov.uk>",
     "Dominic Bean <Dominic.Bean@ons.gov.uk>",
 ]
 
