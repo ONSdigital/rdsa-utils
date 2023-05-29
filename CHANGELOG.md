@@ -14,7 +14,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Pull Request Workflow includes `test` job which installs Poetry and Run Tests.
 - Add `.pre-commit-config.yaml` for pre-commit hooks.
 - Add CODEOWNERS file to repository.
-- Add deploy_mkdocs.yaml
+- Add `deploy_mkdocs.yaml` and `docs` Folder.
 
 ### Changed
 
