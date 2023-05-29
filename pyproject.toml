@@ -3,7 +3,11 @@ name = "rdsa-utils"
 version = "0.1.0-dev0"
 description = ""
 authors = ["Reproducible Data Science & Analysis, ONS"]
-maintainers = ["Matthew Price <Matthew.G.Price@ons.gov.uk>"]
+maintainers = [
+    "Matthew Price <Matthew.G.Price@ons.gov.uk>",
+    "Meg Scamell <Meg.Scammell@ons.gov.uk>",
+    "Dominic Bean <Dominic.Bean@ons.gov.uk>",
+]
 
 readme = "README.md"
 repository = "https://github.com/ONSdigital/rdsa-utils"
