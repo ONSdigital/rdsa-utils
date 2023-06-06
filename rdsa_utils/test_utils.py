@@ -12,8 +12,9 @@ Case
     A container case for better defining of parameters for a pytest params
     instance. To be used in conjunction with `parametrize_cases`.
 """
-from typing import Optional
+from typing import List, Optional, Tuple
 
+import pandas as pd
 import pytest
 from _pytest.mark.structures import MarkDecorator
 
@@ -51,6 +52,7 @@ class Case:
     Modified from https://github.com/ckp95/pytest-parametrize-cases to allow
     pytest mark usage.
     """
+
     def __init__(
         self,
         label: Optional[str] = None,
@@ -132,3 +134,8 @@ def parametrize_cases(*cases: Case):
     return pytest.mark.parametrize(
         argnames=argument_string, argvalues=case_list, ids=ids_list
     )
+
+
+def create_dataframe(data: List[Tuple[str]], **kwargs) -> pd.DataFrame:
+    """Create pandas df from tuple data with a header."""
+    return pd.DataFrame.from_records(data[1:], columns=data[0], **kwargs)
