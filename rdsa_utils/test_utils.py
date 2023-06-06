@@ -1,21 +1,38 @@
-"""Functions and fixtures used with test suites.
+"""Functions and fixtures used with test suites."""
+import datetime
+import logging
+from typing import List, Optional, Tuple
 
-Fixtures
---------
-parametrize_cases
-    A more user friendly wrapper for providing multiple parameterised tests to
-    a pytest test function. Used in conjunction with the `Case` class.
-
-Classes
--------
-Case
-    A container case for better defining of parameters for a pytest params
-    instance. To be used in conjunction with `parametrize_cases`.
-"""
-from typing import Optional
-
+import pandas as pd
+from pyspark.sql import SparkSession
 import pytest
 from _pytest.mark.structures import MarkDecorator
+
+
+def suppress_py4j_logging():
+    """Suppress spark logging."""
+    logger = logging.getLogger("py4j")
+    logger.setLevel(logging.WARN)
+
+
+@pytest.fixture(scope="session")
+def spark_session():
+    """Set up spark session fixture."""
+    print("Setting up test spark session")
+
+    suppress_py4j_logging()
+
+    return (
+        SparkSession.builder.master("local[2]")
+        .appName("cprices_test_context")
+        .config("spark.sql.shuffle.partitions", 1)
+        # This stops progress bars appearing in the console whilst running
+        .config("spark.ui.showConsoleProgress", "false")
+        # .config('spark.sql.execution.arrow.enabled', 'true')
+        .config("spark.executorEnv.ARROW_PRE_0_15_IPC_FORMAT", 1)
+        .config("spark.workerEnv.ARROW_PRE_0_15_IPC_FORMAT", 1)
+        .getOrCreate()
+    )
 
 
 class Case:
@@ -51,6 +68,7 @@ class Case:
     Modified from https://github.com/ckp95/pytest-parametrize-cases to allow
     pytest mark usage.
     """
+
     def __init__(
         self,
         label: Optional[str] = None,
@@ -132,3 +150,52 @@ def parametrize_cases(*cases: Case):
     return pytest.mark.parametrize(
         argnames=argument_string, argvalues=case_list, ids=ids_list
     )
+
+
+def create_dataframe(data: List[Tuple[str]], **kwargs) -> pd.DataFrame:
+    """Create pandas df from tuple data with a header."""
+    return pd.DataFrame.from_records(data[1:], columns=data[0], **kwargs)
+
+
+def to_date(dt: str) -> datetime.date:
+    """Convert date string to datetime.date type."""
+    return pd.to_datetime(dt).date()
+
+
+def to_datetime(dt: str) -> datetime.datetime:
+    """Convert datetime string to datetime.datetime type."""
+    return pd.to_datetime(dt).to_pydatetime()
+
+
+@pytest.fixture
+def create_spark_df(spark_session):
+    """Create Spark DataFrame from tuple data with first row as schema.
+
+    Example
+    -------
+    create_spark_df([
+        ('column1', 'column2', 'column3'),
+        ('aaaa', 1, 1.1)
+    ])
+
+    Can specify the schema alongside the column names:
+    create_spark_df([
+        ('column1 STRING, column2 INT, column3 DOUBLE'),
+        ('aaaa', 1, 1.1)
+    ])
+    """
+
+    def _(data):
+        return spark_session.createDataFrame(data[1:], schema=data[0])
+
+    return _
+
+
+@pytest.fixture
+def to_spark(spark_session):
+    """Convert pandas df to spark."""
+
+    def _(df: pd.DataFrame, *args, **kwargs):
+        return spark_session.createDataFrame(df, *args, **kwargs)
+
+    return _
