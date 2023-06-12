@@ -159,8 +159,7 @@ def overwrite_dictionary(
             if key in override_dict and type(override_dict[key]) == dict:
                 overwrite_dictionary(base_dict[key], override_dict[key])
             elif key in override_dict and type(override_dict[key]) != dict:
-                logger.warning(
-                    f"""
+                logger.warning(f"""
                 Not overriding key: {key} in base dictionary as the value type
                 for the base dictionary are of higher priority than the
                 override.
@@ -174,8 +173,7 @@ def overwrite_dictionary(
                 {type(override_dict[key])}
                 and have values:
                 {override_dict[key]}
-                """
-                )
+                """)
             else:
                 # Key in base_dict not present in override_dict so do nothing.
                 pass
