@@ -35,7 +35,6 @@ class TestSetDfColumnsNullable:
 
     def test_expected(self, create_spark_df):
         """Test expected functionality."""
-
         input_schema = T.StructType(
             [
                 T.StructField("code", T.StringType(), True),
@@ -150,41 +149,41 @@ class TestToSparkCol:
     @parametrize_cases(
         Case(
             label="null",
-            input=None,
+            func_input=None,
         ),
         Case(
             label="number",
-            input=67,
+            func_input=67,
         ),
         Case(
             label="bool",
-            input=True,
+            func_input=True,
         ),
         Case(
             label="decimal",
-            input=7.68574,
+            func_input=7.68574,
         ),
         Case(
             label="list",
-            input=["car", "van"],
+            func_input=["car", "van"],
         ),
         Case(
             label="tuple",
-            input=(10, "green", "bottles"),
+            func_input=(10, "green", "bottles"),
         ),
         Case(
             label="dict",
-            input={"ace": "spades", "queen": "hearts"},
+            func_input={"ace": "spades", "queen": "hearts"},
         ),
         Case(
             label="float",
-            input=float("nan"),
+            func_input=float("nan"),
         ),
     )
-    def test_value_errors_raised(self, input):
+    def test_value_errors_raised(self, func_input):
         """Test value errors raised for convert_to_spark_col."""
         with pytest.raises(ValueError):
-            _convert_to_spark_col(input)
+            _convert_to_spark_col(func_input)
 
 
 @pytest.mark.skip(reason="Already tested above as part of TestToSparkCol.")
@@ -206,7 +205,6 @@ class TestToList:
 
     def test_expected_two_columns(self, create_spark_df):
         """Test expected functionality for two columns."""
-
         input_data = create_spark_df(
             [
                 ("code", "values"),
@@ -629,7 +627,7 @@ class TestConvertColsToStructCol:
     unusual definition of the expected dataframe in these tests.
     """
 
-    @pytest.fixture
+    @pytest.fixture()
     def input_df_fixture(self, create_spark_df) -> SparkDF:
         """Provide a basic spark dataframe."""
         return create_spark_df(
@@ -837,7 +835,6 @@ class TestSelectFirstObsAppearingInGroup:
     )
     def test_expected(self, create_spark_df, ascending, expected_data):
         """Test expected outputs."""
-
         input_df = create_spark_df(
             [
                 ("group", "week_start_date", "price"),

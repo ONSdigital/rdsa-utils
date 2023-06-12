@@ -172,12 +172,12 @@ def to_spark_col(_func=None, *, exclude: Sequence[str] = None) -> Callable:
             varnames = func.__code__.co_varnames
             if args:
                 args = [
-                    _convert_to_spark_col(arg) if varnames[i] not in exclude else arg
+                    _convert_to_spark_col(arg) if varnames[i] not in exclude else arg # noqa: E501
                     for i, arg in enumerate(args)
                 ]
             if kwargs:
                 kwargs = {
-                    k: _convert_to_spark_col(kwarg) if k not in exclude else kwarg
+                    k: _convert_to_spark_col(kwarg) if k not in exclude else kwarg # noqa: E501
                     for k, kwarg in kwargs.items()
                 }
             return func(*args, **kwargs)
@@ -197,10 +197,11 @@ def _convert_to_spark_col(s: Union[str, SparkCol]) -> SparkCol:
     elif isinstance(s, SparkCol):
         return s
     else:
-        raise ValueError(
-            "expecting a string or pyspark column but received obj"
-            f" of type {type(s)}"
-        )
+        msg = f"""
+        expecting a string or pyspark column but received obj
+        of type {type(s)}
+        """
+        raise ValueError(msg)
 
 
 def to_list(df: SparkDF) -> List[Union[Any, List[Any]]]:
@@ -216,7 +217,7 @@ def to_list(df: SparkDF) -> List[Union[Any, List[Any]]]:
     if len(df.columns) == 1:
         return df.toPandas().squeeze().tolist()
     else:
-        return df.toPandas().values.tolist()
+        return df.toPandas().to_numpy().tolist()
 
 
 def map_column_names(df: SparkDF, mapper: Mapping[str, str]) -> SparkDF:
@@ -225,7 +226,8 @@ def map_column_names(df: SparkDF, mapper: Mapping[str, str]) -> SparkDF:
     If the column name is not in the mapper the name doesn't change.
     """
     cols = [
-        F.col(col_name).alias(mapper.get(col_name, col_name)) for col_name in df.columns
+        F.col(col_name).alias(mapper.get(col_name, col_name))
+        for col_name in df.columns
     ]
     return df.select(*cols)
 
@@ -340,7 +342,8 @@ def rank_numeric(
         Contains a rank for the row in its grouping level.
     """
     if ascending:
-        window = Window.partitionBy(group).orderBy(numeric)  # Defaults to ascending.
+        # Defaults to ascending.
+        window = Window.partitionBy(group).orderBy(numeric)
     else:
         if type(numeric) is list:
             message = f"""
@@ -430,11 +433,16 @@ def convert_cols_to_struct_col(
 
     if not struct_cols:
         df = df.withColumn(
-            f"no_{struct_col_name}", F.lit(no_struct_col_value).cast(no_struct_col_type)
+            f"no_{struct_col_name}",
+            F.lit(no_struct_col_value).cast(no_struct_col_type)
         )
         struct_cols = [f"no_{struct_col_name}"]
 
-    return df.withColumn(struct_col_name, F.struct(*struct_cols)).drop(*struct_cols)
+    return (
+        df
+        .withColumn(struct_col_name, F.struct(*struct_cols))
+        .drop(*struct_cols)
+    )
 
 
 def select_first_obs_appearing_in_group(
@@ -476,4 +484,9 @@ def select_first_obs_appearing_in_group(
         group=group,
         ascending=ascending,
     )
-    return df.withColumn("rank", rank_by_date).filter(F.col("rank") == 1).drop("rank")
+    return (
+        df
+        .withColumn("rank", rank_by_date)
+        .filter(F.col("rank") == 1)
+        .drop("rank")
+    )

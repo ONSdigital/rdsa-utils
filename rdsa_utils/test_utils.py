@@ -18,8 +18,6 @@ def suppress_py4j_logging():
 @pytest.fixture(scope="session")
 def spark_session():
     """Set up spark session fixture."""
-    print("Setting up test spark session")
-
     suppress_py4j_logging()
 
     return (
@@ -167,11 +165,11 @@ def to_datetime(dt: str) -> datetime.datetime:
     return pd.to_datetime(dt).to_pydatetime()
 
 
-@pytest.fixture
+@pytest.fixture()
 def create_spark_df(spark_session):
     """Create Spark DataFrame from tuple data with first row as schema.
 
-    Example
+    Example:
     -------
     create_spark_df([
         ('column1', 'column2', 'column3'),
@@ -191,7 +189,7 @@ def create_spark_df(spark_session):
     return _
 
 
-@pytest.fixture
+@pytest.fixture()
 def to_spark(spark_session):
     """Convert pandas df to spark."""
 
