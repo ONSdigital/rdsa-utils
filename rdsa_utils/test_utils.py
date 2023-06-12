@@ -51,6 +51,7 @@ class Case:
     Modified from https://github.com/ckp95/pytest-parametrize-cases to allow
     pytest mark usage.
     """
+
     def __init__(
         self,
         label: Optional[str] = None,

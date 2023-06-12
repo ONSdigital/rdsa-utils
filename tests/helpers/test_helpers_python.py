@@ -36,7 +36,7 @@ class TestTupleConvert:
 
     def test_converts_none_to_empty(self):
         """Test that when None passed tuple doesn't contain None value."""
-        assert tuple_convert(None) == tuple()
+        assert tuple_convert(None) == ()
 
     @pytest.mark.parametrize("obj", [67, 2.75])
     def test_wraps_other_objs_in_tuple_container(self, obj):
@@ -65,7 +65,7 @@ class TestListConvert:
 
     def test_converts_none_to_empty(self):
         """Test that when None passed list doesn't contain None value."""
-        assert list_convert(None) == list()
+        assert list_convert(None) == []
 
     @pytest.mark.parametrize("obj", [67, 2.75])
     def test_wraps_other_objs_in_list_container(self, obj):
@@ -91,7 +91,7 @@ class TestExtendLists:
 class TestOverwriteDictionary:
     """Tests for the overwrite_dictionary function."""
 
-    @pytest.fixture
+    @pytest.fixture()
     def base_dict(self):
         """Create base dictionary used across all tests."""
         return {
