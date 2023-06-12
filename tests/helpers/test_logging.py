@@ -39,7 +39,7 @@ class TestInitLoggerBasic:
 
 
 class TestTimerArgs:
-    "Tests for the timer_args function."
+    """Tests for the timer_args function."""
 
     @parametrize_cases(
         Case(
@@ -64,7 +64,7 @@ class TestTimerArgs:
         ),
     )
     def test_expected(self, logger, expected):
-        "Test expected outputs."
+        """Test expected outputs."""
         actual = timer_args(name="load configs", logger=logger)
         # Need to mock as function will be timer_args vs TestTimerArgs and Running load configs vs Running {name} will fail.
         with mock.patch.dict(
@@ -76,7 +76,7 @@ class TestTimerArgs:
 class TestPrintFullTables:
     """Tests for the print_full_table_and_raise_error."""
 
-    @pytest.fixture
+    @pytest.fixture()
     def input_df(self):
         """Input pandas dataframe."""
         return create_dataframe(
@@ -107,7 +107,7 @@ class TestPrintFullTables:
                 input_df, message, stop_pipeline, show_records
             )
 
-    def test_expected_with_no_errors_show_records_True(self, caplog, input_df):
+    def test_expected_with_no_errors_show_records_true(self, caplog, input_df):
         """Tests that the correct logger infomation is displayed."""
         stop_pipeline = False
         show_records = True

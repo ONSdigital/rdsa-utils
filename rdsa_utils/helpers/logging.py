@@ -18,8 +18,6 @@ logger = logging.getLogger(__name__)
 
 LOG_DEV_LEVEL_NUM = 15
 logging.addLevelName(LOG_DEV_LEVEL_NUM, "DEV")
-
-
 def log_dev(self, message, *args, **kwargs):  # noqa: E302
     """Create a custom log level between INFO and DEBUG named DEV.
 
@@ -28,8 +26,6 @@ def log_dev(self, message, *args, **kwargs):  # noqa: E302
     if self.isEnabledFor(LOG_DEV_LEVEL_NUM):
         # Yes, logger takes its '*args' as 'args'.
         self._log(LOG_DEV_LEVEL_NUM, message, args, **kwargs)  # noqa: W291
-
-
 logging.Logger.dev = log_dev  # noqa: E305
 
 
@@ -61,13 +57,11 @@ def init_logger_basic(log_level: int) -> None:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    logger.dev(
-        """
+    logger.dev("""
     Initialised logger for pipeline.
 
     Also have access to `logger.dev` by using this function.
-    """
-    )
+    """)
 
 
 def timer_args(
@@ -158,7 +152,7 @@ def log_spark_df_schema(
     *,
     log_schema_on_input: bool = True,
 ) -> Callable:
-    """Decorator to log dataframe schema before and after a function.
+    """Apply decorator to log dataframe schema before and after a function.
 
     If you use the `df.printSchema() method directly in a print/log statement
     the code is processed and printed regardless of logging leve. Instead you
@@ -231,7 +225,6 @@ def log_spark_df_schema(
     |-- expenditure: double (nullable = true)
     ```
     """  # noqa: E501
-
     def decorator_function(func):
         @functools.wraps(func)
         def wrapper_decorator(*args, **kwargs):
@@ -240,9 +233,7 @@ def log_spark_df_schema(
 
             if log_schema_on_input:
                 if not kwargs.get("df"):
-                    logger.warning(
-                        dedent(
-                            f"""
+                    logger.warning(dedent(f"""
                     Cannot find `df` in keyword named arguments.
 
                     To use the log_spark_df_schema decorator with the function
@@ -250,29 +241,19 @@ def log_spark_df_schema(
                     * it must have a parameter called df that is a spark dataframe.
                     * it must be called specifying the argument names e.g.
                     {func_name}(df=input_df, ... )
-                    """
-                        )
-                    )  # noqa: E501
+                    """))  # noqa: E501
                 elif isinstance(kwargs["df"], SparkDF):
                     schema = kwargs["df"]._jdf.schema().treeString()
-                    logger.info(
-                        f"Schema of dataframe before {func_name}:\n{schema}"
-                    )  # noqa: E501
+                    logger.info(f"Schema of dataframe before {func_name}:\n{schema}")  # noqa: E501
                 else:
-                    logger.warning(
-                        dedent(
-                            f"""
+                    logger.warning(dedent(f"""
                     {func_name} keyword argument `df` has type {type(kwargs['df'])}.
 
                     Cannot print spark schema for this type of object.
-                    """
-                        )
-                    )  # noqa: E501
+                    """))  # noqa: E501
 
             else:
-                logger.info(
-                    f"Not printing schema of dataframe before {func_name}"
-                )  # noqa: E501
+                logger.info(f"Not printing schema of dataframe before {func_name}")  # noqa: E501
 
             # Run the decorated function in its normal way, but catch its
             # output so its schema can be printed.
@@ -283,11 +264,9 @@ def log_spark_df_schema(
             # fail.
             if isinstance(df_return, SparkDF):
                 schema = df_return._jdf.schema().treeString()
-                logger.info(f"Schema of dataframe after {func_name}:\n{schema}")
+                logger.info(f"Schema of dataframe after {func_name}:\n{schema}")  # noqa: E501
             else:
-                logger.warning(
-                    f"{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}"  # noqa: E501
-                )
+                logger.warning(f"{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}")  # noqa: E501
 
             return df_return
 
@@ -300,7 +279,7 @@ def log_spark_df_schema(
 
 
 def log_rows_in_spark_df(func: Callable) -> Callable:
-    """Decorator to log dataframe row count before and after a function.
+    """Apply decorator to log dataframe row count before and after a function.
 
     Requires that the function being decorated has a parameter called `df` and
     that the function is called with `df` being a keyword argument (e.g.
@@ -325,7 +304,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
     >>> Rows in dataframe after my_func_that_changes_no_rows  : 6789
     ```
 
-    Warning
+    Warning:
     -------
     `.count()` is an expensive spark operation to perform. Overuse of this
     decorator can be detrimental to performance. This decorator will cache the
@@ -333,13 +312,11 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
     as persisting the output dataframe prior to counting. The input dataframe
     is also unpersisted from memory prior to the decorator completing.
     """
-    logger.debug(
-        """
+    logger.debug("""
     log_rows_in_spark_df caches and persists spark dataframes to memory.
     It also performs count operations. Both of these could have an adverse
     effect on pipelines if used incorrectly, so use as decorator with care.
-    """
-    )
+    """)
 
     @functools.wraps(func)
     def wrapper_decorator(*args, **kwargs):
@@ -347,9 +324,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
         func_name = func.__name__
 
         if not kwargs.get("df"):
-            logger.warning(
-                dedent(
-                    f"""
+            logger.warning(dedent(f"""
             Cannot find `df` in keyword named arguments.
 
             To use the log_rows_in_spark_df decorator with the function
@@ -357,9 +332,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
             * it must have a parameter called df that is a spark dataframe.
             * it must be called specifying the argument names e.g.
             {func_name}(df=input_df, ... )
-            """
-                )
-            )
+            """))
         elif isinstance(kwargs["df"], SparkDF):
             # If not already cached, cache the dataframe prior to counting to
             # allow more efficient processing in function. Is unpersisted at
@@ -367,19 +340,13 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
             if not kwargs["df"].is_cached:
                 kwargs["df"].cache()
 
-            logger.info(
-                f"Rows in dataframe before {func_name} : {kwargs['df'].count()}"
-            )  # noqa: E501
+            logger.info(f"Rows in dataframe before {func_name} : {kwargs['df'].count()}")  # noqa: E501
         else:
-            logger.warning(
-                dedent(
-                    f"""
+            logger.warning(dedent(f"""
             {func_name} keyword argument `df` has type {type(kwargs['df'])}.
 
             Cannot count rows for this type of object.
-            """
-                )
-            )
+            """))
 
         # Run the decorated function in its normal way, but catch its output
         # so it can be counted.
@@ -394,12 +361,10 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
             # decorator. Therefore, we don't want it to get pushed onto disk
             # (and incur an expensive swap operation).
             df_return.persist(StorageLevel.MEMORY_ONLY)
-            logger.info(f"Rows in dataframe after {func_name}  : {df_return.count()}")
+            logger.info(f"Rows in dataframe after {func_name}  : {df_return.count()}")  # noqa: E501
 
         else:
-            logger.warning(
-                f"{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}"  # noqa: E501
-            )
+            logger.warning(f"{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}")  # noqa: E501
 
         if kwargs.get("df"):
             # Unpersist the cached input df to manage memory.
@@ -415,7 +380,7 @@ def _add_warning_message_to_function(
     *,
     message: Optional[str] = None,
 ) -> Callable:
-    """Decorator to log a warning message.
+    """Apply decorator to log a warning message.
 
     If a message is passed, this decorator adds a warning log of the form
     function_name: message
@@ -443,7 +408,6 @@ def _add_warning_message_to_function(
     Warning my_func: here be dragons...
     ```
     """  # noqa: E501
-
     def decorator_function(func):
         @functools.wraps(func)
         def wrapper_decorator(*args, **kwargs):
@@ -467,5 +431,5 @@ def _add_warning_message_to_function(
 
 not_undergone_functional_test_warning = partial(
     _add_warning_message_to_function,
-    message="is unit tested, but not formally end-to-end tested.",
+    message="is unit tested, but not formally end-to-end tested."
 )
