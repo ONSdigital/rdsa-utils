@@ -101,7 +101,7 @@ def extend_lists(
 
 
 def overwrite_dictionary(
-    base_dict: Mapping[str, Any], override_dict: Mapping[str, Any]
+    base_dict: Mapping[str, Any], override_dict: Mapping[str, Any],
 ) -> Dict[str, Any]:
     """Overwrite dictionary values with user defined values.
 
@@ -230,4 +230,4 @@ def calc_product_of_dict_values(
     vals = kwargs.values()
 
     for instance in itertools.product(*vals):
-        yield dict(zip(keys, instance))
+        yield dict(zip(keys, instance, strict=True))

@@ -67,7 +67,7 @@ class Case:
 
     def __repr__(self) -> str:
         """Return string."""
-        return f"Case({self.label!r}, **{self.kwargs!r})"
+        return f'Case({self.label!r}, **{self.kwargs!r})'
 
 
 def parametrize_cases(*cases: Case):
@@ -101,11 +101,12 @@ def parametrize_cases(*cases: Case):
     all_args = set()
     for case in cases:
         if not isinstance(case, Case):
-            raise TypeError(f"{case!r} is not an instance of Case")
+            msg = f'{case!r} is not an instance of Case'
+            raise TypeError(msg)
 
         all_args.update(case.kwargs.keys())
 
-    argument_string = ",".join(sorted(all_args))
+    argument_string = ','.join(sorted(all_args))
 
     case_list = []
     ids_list = []
@@ -131,5 +132,5 @@ def parametrize_cases(*cases: Case):
         case_list = [i[0] for i in case_list]
 
     return pytest.mark.parametrize(
-        argnames=argument_string, argvalues=case_list, ids=ids_list
+        argnames=argument_string, argvalues=case_list, ids=ids_list,
     )
