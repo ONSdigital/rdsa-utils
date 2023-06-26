@@ -69,8 +69,8 @@ def melt(
     df: SparkDF,
     id_vars: Union[str, Sequence[str]],
     value_vars: Union[str, Sequence[str]],
-    var_name: str = "variable",
-    value_name: str = "value",
+    var_name: str = 'variable',
+    value_name: str = 'value',
 ) -> SparkDF:
     """Melt a spark dataframe in a pandas like fashion.
 
@@ -134,15 +134,15 @@ def melt(
         *(
             F.struct(F.lit(c).alias(var_name), F.col(c).alias(value_name))
             for c in value_vars
-        )
+        ),
     )
 
     # Add to the DataFrame and explode, which extends the dataframe
-    _tmp = df.withColumn("_vars_and_vals", F.explode(_vars_and_vals))
+    _tmp = df.withColumn('_vars_and_vals', F.explode(_vars_and_vals))
 
     # We only want to select certain columns
     cols = id_vars + [
-        F.col("_vars_and_vals")[x].alias(x) for x in [var_name, value_name]
+        F.col('_vars_and_vals')[x].alias(x) for x in [var_name, value_name]
     ]
 
     return _tmp.select(*cols)
@@ -360,7 +360,7 @@ def rank_numeric(
 
 def calc_median_price(
     groups: Union[str, Sequence[str]],
-    price_col: str = "price",
+    price_col: str = 'price',
 ) -> SparkCol:
     """Calculate the median price per grouping level.
 
@@ -377,7 +377,7 @@ def calc_median_price(
         A single entry for each grouping level, and its median price.
     """
     # Note median in [1,2,3,4] would return as 2 using below.
-    median = f"percentile_approx({price_col}, 0.5)"
+    median = f'percentile_approx({price_col}, 0.5)'
 
     return F.expr(median).over(Window.partitionBy(groups))
 
@@ -433,10 +433,10 @@ def convert_cols_to_struct_col(
 
     if not struct_cols:
         df = df.withColumn(
-            f"no_{struct_col_name}",
-            F.lit(no_struct_col_value).cast(no_struct_col_type)
+            f'no_{struct_col_name}',
+            F.lit(no_struct_col_value).cast(no_struct_col_type),
         )
-        struct_cols = [f"no_{struct_col_name}"]
+        struct_cols = [f'no_{struct_col_name}']
 
     return (
         df
@@ -486,7 +486,7 @@ def select_first_obs_appearing_in_group(
     )
     return (
         df
-        .withColumn("rank", rank_by_date)
-        .filter(F.col("rank") == 1)
-        .drop("rank")
+        .withColumn('rank', rank_by_date)
+        .filter(F.col('rank') == 1)
+        .drop('rank')
     )
