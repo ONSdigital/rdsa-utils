@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 LOG_DEV_LEVEL_NUM = 15
-logging.addLevelName(LOG_DEV_LEVEL_NUM, "DEV")
+logging.addLevelName(LOG_DEV_LEVEL_NUM, 'DEV')
 def log_dev(self, message, *args, **kwargs):  # noqa: E302
     """Create a custom log level between INFO and DEBUG named DEV.
 
@@ -53,8 +53,8 @@ def init_logger_basic(log_level: int) -> None:
     """
     logging.basicConfig(
         level=log_level,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        format='%(asctime)s %(levelname)s %(name)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
     )
 
     logger.dev("""
@@ -85,10 +85,10 @@ def timer_args(
         Dictionary of arguments to pass to specifc codetiming package Timer.
     """
     return {
-        "name": name,
-        "text": lambda secs: name + f": {format_timespan(secs)}",
-        "logger": logger,
-        "initial_text": "Running {name}",
+        'name': name,
+        'text': lambda secs: name + f': {format_timespan(secs)}',
+        'logger': logger,
+        'initial_text': 'Running {name}',
     }
 
 
@@ -232,7 +232,7 @@ def log_spark_df_schema(
             func_name = func.__name__
 
             if log_schema_on_input:
-                if not kwargs.get("df"):
+                if not kwargs.get('df'):
                     logger.warning(dedent(f"""
                     Cannot find `df` in keyword named arguments.
 
@@ -242,9 +242,9 @@ def log_spark_df_schema(
                     * it must be called specifying the argument names e.g.
                     {func_name}(df=input_df, ... )
                     """))  # noqa: E501
-                elif isinstance(kwargs["df"], SparkDF):
-                    schema = kwargs["df"]._jdf.schema().treeString()
-                    logger.info(f"Schema of dataframe before {func_name}:\n{schema}")  # noqa: E501
+                elif isinstance(kwargs['df'], SparkDF):
+                    schema = kwargs['df']._jdf.schema().treeString()
+                    logger.info(f'Schema of dataframe before {func_name}:\n{schema}')  # noqa: E501
                 else:
                     logger.warning(dedent(f"""
                     {func_name} keyword argument `df` has type {type(kwargs['df'])}.
@@ -253,7 +253,7 @@ def log_spark_df_schema(
                     """))  # noqa: E501
 
             else:
-                logger.info(f"Not printing schema of dataframe before {func_name}")  # noqa: E501
+                logger.info(f'Not printing schema of dataframe before {func_name}')  # noqa: E501
 
             # Run the decorated function in its normal way, but catch its
             # output so its schema can be printed.
@@ -264,9 +264,9 @@ def log_spark_df_schema(
             # fail.
             if isinstance(df_return, SparkDF):
                 schema = df_return._jdf.schema().treeString()
-                logger.info(f"Schema of dataframe after {func_name}:\n{schema}")  # noqa: E501
+                logger.info(f'Schema of dataframe after {func_name}:\n{schema}')  # noqa: E501
             else:
-                logger.warning(f"{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}")  # noqa: E501
+                logger.warning(f'{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}')  # noqa: E501
 
             return df_return
 
@@ -323,7 +323,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
         # Define the name of the function being decorated for use in logs.
         func_name = func.__name__
 
-        if not kwargs.get("df"):
+        if not kwargs.get('df'):
             logger.warning(dedent(f"""
             Cannot find `df` in keyword named arguments.
 
@@ -333,12 +333,12 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
             * it must be called specifying the argument names e.g.
             {func_name}(df=input_df, ... )
             """))
-        elif isinstance(kwargs["df"], SparkDF):
+        elif isinstance(kwargs['df'], SparkDF):
             # If not already cached, cache the dataframe prior to counting to
             # allow more efficient processing in function. Is unpersisted at
             # end of decorator.
-            if not kwargs["df"].is_cached:
-                kwargs["df"].cache()
+            if not kwargs['df'].is_cached:
+                kwargs['df'].cache()
 
             logger.info(f"Rows in dataframe before {func_name} : {kwargs['df'].count()}")  # noqa: E501
         else:
@@ -361,14 +361,14 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
             # decorator. Therefore, we don't want it to get pushed onto disk
             # (and incur an expensive swap operation).
             df_return.persist(StorageLevel.MEMORY_ONLY)
-            logger.info(f"Rows in dataframe after {func_name}  : {df_return.count()}")  # noqa: E501
+            logger.info(f'Rows in dataframe after {func_name}  : {df_return.count()}')  # noqa: E501
 
         else:
-            logger.warning(f"{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}")  # noqa: E501
+            logger.warning(f'{func_name} should return a spark dataframe for decorator, but returned {type(df_return)}')  # noqa: E501
 
-        if kwargs.get("df"):
+        if kwargs.get('df'):
             # Unpersist the cached input df to manage memory.
-            kwargs["df"].unpersist()
+            kwargs['df'].unpersist()
 
         return df_return
 
@@ -414,7 +414,7 @@ def _add_warning_message_to_function(
             # Define the name of the function being decorated for use in logs.
             func_name = func.__name__
             if message:
-                logger.warning(f"{func_name}: {message}")
+                logger.warning(f'{func_name}: {message}')
 
             # Run the decorated function in its normal way.
             output = func(*args, **kwargs)
@@ -431,5 +431,5 @@ def _add_warning_message_to_function(
 
 not_undergone_functional_test_warning = partial(
     _add_warning_message_to_function,
-    message="is unit tested, but not formally end-to-end tested."
+    message='is unit tested, but not formally end-to-end tested.',
 )

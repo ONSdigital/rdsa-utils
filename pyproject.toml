@@ -15,10 +15,12 @@ documentation = "https://github.com/ONSdigital/rdsa-utils"
 [tool.poetry.dependencies]
 python = "^3.8"
 humanfriendly = "^9.1"
+more-itertools = "^9.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pandas = "1.5.3"
+pre-commit = "^2.6.0"
 pyspark = "3.3.1"
 pytest = "^7.1.0"
 pytest-cov = "^4.0.0"
@@ -34,25 +36,26 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 select = [
-   "A",
-   "B",
-   "C4",
-   "D",
-   "DTZ",
-   "E",
-   "EM",
-   "F",
-   "ISC",
-   "N",
-   "NPY",
-   "PD",
-   "PT",
-   "PTH",
-   "Q",
-   "T10",
-   "T20",
-   "W",
-   "YTT",
+   "A",    # https://beta.ruff.rs/docs/rules/#flake8-builtins-a
+   "B",    # https://beta.ruff.rs/docs/rules/#flake8-bugbear-b
+   "C4",   # https://beta.ruff.rs/docs/rules/#flake8-comprehensions-c4
+   "COM",  # https://beta.ruff.rs/docs/rules/#flake8-commas-com
+   "D",    # https://beta.ruff.rs/docs/rules/#pydocstyle-d
+   "DTZ",  # https://beta.ruff.rs/docs/rules/#flake8-datetimez-dtz
+   "E",    # https://beta.ruff.rs/docs/rules/#error-e
+   "EM",   # https://beta.ruff.rs/docs/rules/#flake8-errmsg-em
+   "F",    # https://beta.ruff.rs/docs/rules/#pyflakes-f
+   "ISC",  # https://beta.ruff.rs/docs/rules/#flake8-implicit-str-concat-isc
+   "N",    # https://beta.ruff.rs/docs/rules/#pep8-naming-n
+   "NPY",  # https://beta.ruff.rs/docs/rules/#numpy-specific-rules-npy
+   "PD",   # https://beta.ruff.rs/docs/rules/#pandas-vet-pd
+   "PT",   # https://beta.ruff.rs/docs/rules/#flake8-pytest-style-pt
+   "PTH",  # https://beta.ruff.rs/docs/rules/#flake8-use-pathlib-pth
+   "Q",    # https://beta.ruff.rs/docs/rules/#flake8-quotes-q
+   "T10",  # https://beta.ruff.rs/docs/rules/#flake8-debugger-t10
+   "T20",  # https://beta.ruff.rs/docs/rules/#flake8-print-t20
+   "W",    # https://beta.ruff.rs/docs/rules/#warning-w
+   "YTT",  # https://beta.ruff.rs/docs/rules/#flake8-2020-ytt
 ]
 
 # Ignore these rules everywhere.
@@ -63,9 +66,17 @@ ignore = [
    # PD901: pandas-df-variable-name
    # This complains about anything called df.
    "PD901",
+   # Clashes with Pyspark comparison with False.
+   "E712",
 ]
 line-length = 80
 
+fix = true
+
+exclude = ["dev_utils/*"]
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
 
 [tool.ruff.per-file-ignores]
 # D104 Missing docstring in public package.
@@ -74,16 +85,15 @@ line-length = 80
 # E501 is line too long.
 # F403 and F405 relate to importing using *. It is usually useful to
 # do so in test scripts.
-"*/test_utils.py" = [
-   "EM102"
-]
 "*/__init__.py" = [
    "D104",
 ]
 "tests/*" = [
+   "ANN",
    "D100",
    # "E202", "E203",
    "E501",
    "F403", "F405",
-   "PT011"
+   "PT011",
+   "B017"
 ]
