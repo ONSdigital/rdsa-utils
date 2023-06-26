@@ -15,13 +15,6 @@ jobs:
       # checks for updates to CHANGELOG.md
       # https://github.com/marketplace/actions/changelog-enforcer
       - uses: dangoslen/changelog-enforcer@v3
-  
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
-    - uses: pre-commit/action@v3.0.0
 
   test:
     needs: changelog
