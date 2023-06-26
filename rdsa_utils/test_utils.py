@@ -11,24 +11,24 @@ from _pytest.mark.structures import MarkDecorator
 
 def suppress_py4j_logging():
     """Suppress spark logging."""
-    logger = logging.getLogger("py4j")
+    logger = logging.getLogger('py4j')
     logger.setLevel(logging.WARN)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def spark_session():
     """Set up spark session fixture."""
     suppress_py4j_logging()
 
     return (
-        SparkSession.builder.master("local[2]")
-        .appName("cprices_test_context")
-        .config("spark.sql.shuffle.partitions", 1)
+        SparkSession.builder.master('local[2]')
+        .appName('cprices_test_context')
+        .config('spark.sql.shuffle.partitions', 1)
         # This stops progress bars appearing in the console whilst running
-        .config("spark.ui.showConsoleProgress", "false")
+        .config('spark.ui.showConsoleProgress', 'false')
         # .config('spark.sql.execution.arrow.enabled', 'true')
-        .config("spark.executorEnv.ARROW_PRE_0_15_IPC_FORMAT", 1)
-        .config("spark.workerEnv.ARROW_PRE_0_15_IPC_FORMAT", 1)
+        .config('spark.executorEnv.ARROW_PRE_0_15_IPC_FORMAT', 1)
+        .config('spark.workerEnv.ARROW_PRE_0_15_IPC_FORMAT', 1)
         .getOrCreate()
     )
 
@@ -82,7 +82,7 @@ class Case:
 
     def __repr__(self) -> str:
         """Return string."""
-        return f"Case({self.label!r}, **{self.kwargs!r})"
+        return f'Case({self.label!r}, **{self.kwargs!r})'
 
 
 def parametrize_cases(*cases: Case):
@@ -116,11 +116,12 @@ def parametrize_cases(*cases: Case):
     all_args = set()
     for case in cases:
         if not isinstance(case, Case):
-            raise TypeError(f"{case!r} is not an instance of Case")
+            msg = f'{case!r} is not an instance of Case'
+            raise TypeError(msg)
 
         all_args.update(case.kwargs.keys())
 
-    argument_string = ",".join(sorted(all_args))
+    argument_string = ','.join(sorted(all_args))
 
     case_list = []
     ids_list = []
@@ -146,7 +147,7 @@ def parametrize_cases(*cases: Case):
         case_list = [i[0] for i in case_list]
 
     return pytest.mark.parametrize(
-        argnames=argument_string, argvalues=case_list, ids=ids_list
+        argnames=argument_string, argvalues=case_list, ids=ids_list,
     )
 
 
