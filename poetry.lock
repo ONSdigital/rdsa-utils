@@ -118,6 +118,17 @@ files = [
 ]
 
 [[package]]
+name = "chispa"
+version = "0.9.2"
+description = "Pyspark test helper library"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "chispa-0.9.2-py3-none-any.whl", hash = "sha256:c6eae922f5c3ccd08f4dc3707202291bb249e68e319d0641795d92d80cfb1cad"},
+    {file = "chispa-0.9.2.tar.gz", hash = "sha256:621ad2e64fd27e7372c7b90ab2d5ad1f8dd69b737a3421ba5b6f84b113a18b84"},
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -1265,5 +1276,5 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.8, < 3.11"
-content-hash = "e3b3768d17b34be91f001e490148a15a122af4db023dbdff2adf1ed8cfb8927c"
+python-versions = ">=3.8, <3.11"
+content-hash = "75a4fe90790a7e51769e9e9b4247bacee35eca2be644dae8fe10d9fdb494886e"

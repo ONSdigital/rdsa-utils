@@ -13,12 +13,13 @@ documentation = "https://github.com/ONSdigital/rdsa-utils"
 
 
 [tool.poetry.dependencies]
-python = ">=3.8, < 3.11" 
+python = ">=3.8, <3.11"
 humanfriendly = "^9.1"
 more-itertools = "^9.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
+chispa = "^0.9.2"
 google-cloud-bigquery = "3.3.5"
 google-cloud-storage = "2.5.0"
 pandas = "1.5.3"
@@ -84,6 +85,8 @@ inline-quotes = "single"
 # D104 Missing docstring in public package.
 # B006 Need to set {} as default argument.
 # PTH123 Need to set to open().
+# B008 relates to T.BooleanType(). This is required in the
+# convert_cols_to_struct_col function in helpers_spark.py.
 # E202, E203 is whitespace before/after (), which is sometimes
 # broken when aligning data in test scripts. Not implemented in Ruff.
 # E501 is line too long.
@@ -95,6 +98,7 @@ inline-quotes = "single"
 "*/" = [
    "B006",
    "PTH123",
+   "B008",
 ]
 "tests/*" = [
    "ANN",
@@ -103,5 +107,5 @@ inline-quotes = "single"
    "E501",
    "F403", "F405",
    "PT011",
-   "B017"
+   "B017",
 ]
