@@ -34,7 +34,7 @@ def set_df_columns_nullable(
 
     Sometimes find that spark creates columns that have the nullable attribute
     set to False, which can cause issues if this dataframe is saved to a table
-    as it will set the scheme for that column to not allow missing values.
+    as it will set the schema for that column to not allow missing values.
 
     Changing this parameter for a column appears to be very difficult (and also
     potentially costly [see so answer comments] - SO USE ONLY IF NEEDED).

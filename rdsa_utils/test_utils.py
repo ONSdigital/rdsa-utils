@@ -22,7 +22,7 @@ def spark_session():
 
     return (
         SparkSession.builder.master('local[2]')
-        .appName('cprices_test_context')
+        .appName('rdsa_test_context')
         .config('spark.sql.shuffle.partitions', 1)
         # This stops progress bars appearing in the console whilst running
         .config('spark.ui.showConsoleProgress', 'false')
