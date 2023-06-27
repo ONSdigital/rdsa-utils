@@ -13,12 +13,14 @@ documentation = "https://github.com/ONSdigital/rdsa-utils"
 
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8, < 3.11" 
 humanfriendly = "^9.1"
 more-itertools = "^9.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
+google-cloud-bigquery = "3.3.5"
+google-cloud-storage = "2.5.0"
 pandas = "1.5.3"
 pre-commit = "^2.6.0"
 pyspark = "3.3.1"
@@ -80,6 +82,8 @@ inline-quotes = "single"
 
 [tool.ruff.per-file-ignores]
 # D104 Missing docstring in public package.
+# B006 Need to set {} as default argument.
+# PTH123 Need to set to open().
 # E202, E203 is whitespace before/after (), which is sometimes
 # broken when aligning data in test scripts. Not implemented in Ruff.
 # E501 is line too long.
@@ -87,6 +91,10 @@ inline-quotes = "single"
 # do so in test scripts.
 "*/__init__.py" = [
    "D104",
+]
+"*/" = [
+   "B006",
+   "PTH123",
 ]
 "tests/*" = [
    "ANN",
