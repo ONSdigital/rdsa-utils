@@ -14,6 +14,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Pull Request Workflow includes `test` job which installs Poetry and Run Tests.
 - Add `.pre-commit-config.yaml` for pre-commit hooks.
 - Add CODEOWNERS file to repository.
+- Add the helpers_spark.py and test_helpers_spark.py modules from cprices-utils.
 - Add logging.py and test_logging.py module from cprices-utils.
 - Add the helpers_python.py and test_helpers_python.py modules from cprices-utils.
 
