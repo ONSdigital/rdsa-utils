@@ -1,6 +1,6 @@
 name: "Pull Request Workflow Tests"
 on:
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   test:
