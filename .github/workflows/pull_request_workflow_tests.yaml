@@ -4,7 +4,6 @@ on:
 
 jobs:
   test:
-    needs: changelog
     runs-on: ubuntu-latest
     strategy:
       matrix:
