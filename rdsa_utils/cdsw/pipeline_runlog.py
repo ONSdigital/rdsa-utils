@@ -1,40 +1,4 @@
-"""
-Runlog Module
-=============
-
-This module provides a set of utilities to create, manage, and retrieve entries from a pipeline runlog.
-
-The runlog is a set of tables in a Spark database that track the execution of pipelines. This includes
-information about each run, such as the user who executed the run, the datetime of the run, the name and 
-version of the pipeline, and configuration details.
-
-This module provides functions to create runlog tables, reserve run IDs, create and add runlog entries, 
-retrieve the last and penultimate run IDs, and write runlog metadata to a file.
-
-The primary functions are:
-
-- `create_runlog_table()`: Creates a runlog table and an associated _reserved_ids table in the target database.
-- `reserve_id()`: Reserves a run ID in the reserved IDs table associated with the pipeline runlog table.
-- `get_last_run_id()`: Retrieves the last run ID, either in general or for a specific pipeline.
-- `get_penultimate_run_id()`: Retrieves the penultimate run ID, either in general or for a specific pipeline.
-- `create_runlog_entry()`: Creates an entry for the runlog.
-- `add_runlog_entry()`: Adds an entry to a target runlog.
-- `write_runlog_file()`: Writes metadata from a runlog entry to a text file.
-
-There are also several helper functions, such as `_write_entry()` and `_get_run_ids()`.
-
-This module depends on PySpark to create DataFrames and interact with the Spark database.
-
-It also uses functionalities from the `rdsa_utils.cdsw.hdfs_utils` module to write strings 
-to a text file in Hadoop Distributed File System (HDFS).
-
-Example
--------
-    >>> spark = SparkSession.builder.appName("test_session").getOrCreate()
-    >>> config = {"param1": "value1", "param2": "value2"}
-    >>> create_runlog_table(spark, "test_db", "test_table")
-    >>> add_runlog_entry(spark, "test description", "1.0", config)
-"""
+"""Utilities to create, manage, and retrieve entries from a pipeline runlog."""
 import json
 import os
 from ast import literal_eval
@@ -55,9 +19,9 @@ def _write_entry(entry_df: DataFrame, log_table: str) -> None:
 
     Parameters
     ----------
-    entry_df : DataFrame
+    entry_df
         The DataFrame containing the data to be written to the table.
-    log_table : str
+    log_table
         The name of the table into which the data should be written.
 
     Returns
@@ -85,11 +49,11 @@ def create_runlog_table(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running spark session which will be used to execute SQL queries.
-    database : str
+    database
         The name of the target database where tables will be created.
-    tablename : str, optional
+    tablename
         The name of the main table to be created (default is "pipeline_runlog").
         The associated _reserved_ids table will be suffixed with this name.
 
@@ -140,9 +104,9 @@ def reserve_id(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running SparkSession instance.
-    log_table : str, optional
+    log_table
         The name of the main pipeline runlog table associated with this reserved id table,
         by default "pipeline_runlog".
 
@@ -178,13 +142,13 @@ def _get_run_ids(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running Spark session.
-    limit : int
+    limit
         The number of recent run ids to retrieve.
-    pipeline : str, optional
+    pipeline
         If specified, the result will be for the listed pipeline only.
-    log_table : str
+    log_table
         The target runlog table. If the database is not set, this should include the database.
 
     Returns
@@ -214,11 +178,11 @@ def get_last_run_id(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running Spark session.
-    pipeline : str, optional
+    pipeline
         If specified, the result will be for the listed pipeline only.
-    log_table : str
+    log_table
         The target runlog table. If the database is not set, this should include the database.
 
     Returns
@@ -244,11 +208,11 @@ def get_penultimate_run_id(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running Spark session.
-    pipeline : str, optional
+    pipeline
         If specified, the result will be for the listed pipeline only.
-    log_table : str
+    log_table
         The target runlog table. If the database is not set, this should include the database.
 
     Returns
@@ -277,22 +241,22 @@ def create_runlog_entry(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running spark session.
-    run_id : int
+    run_id
         Entry run id.
-    desc : str
+    desc
         Description to attach to the log entry.
-    version : str
+    version
         Version of the pipeline.
-    config : ConfigParser or dict
+    config
         Configuration object for the run.
-    pipeline : str, optional
+    pipeline
         Pipeline name. If None, derives from spark app name.
 
     Returns
     -------
-    pyspark.sql.dataframe.DataFrame
+    DataFrame
         The log entry returned as a spark dataframe.
     """
     cols = [
@@ -340,24 +304,24 @@ def add_runlog_entry(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running spark session.
-    desc : str
+    desc
         Description to attach to the log entry.
-    version : str
+    version
         Version of the pipeline.
-    config : ConfigParser or dict
+    config
         Configuration object for the run.
-    pipeline : str, optional
+    pipeline
         Pipeline name. If None, uses the spark application name.
-    log_table : str, optional
+    log_table
         Target runlog table. If database not set, this should include the database.
-    run_id : int, optional
+    run_id
         Run id to use if already reserved. If not specified, a new one is generated.
 
     Returns
     -------
-    pyspark.sql.dataframe.DataFrame
+    DataFrame
         The log entry returned as a spark dataframe.
     """
     if not run_id:
@@ -376,11 +340,11 @@ def _parse_runlog_as_string(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running spark session.
-    runlog_table : str
+    runlog_table
         Table containing the runlog entries.
-    runlog_id : int
+    runlog_id
         ID of the desired entry.
 
     Returns
@@ -413,13 +377,13 @@ def write_runlog_file(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         A running SparkSession instance.
-    runlog_table : str
+    runlog_table
         The name of the table containing the runlog entries.
-    runlog_id : int
+    runlog_id
         The id of the desired entry.
-    path : str
+    path
         The HDFS path where the file will be written.
 
     Returns

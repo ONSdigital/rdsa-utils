@@ -1,7 +1,3 @@
-"""
-This module contains pytest functions to test the behaviour of the functions
-contained within the rdsa_utils/cdsw/pipeline_runlog.py Module.
-"""
 from unittest.mock import patch
 
 import pytest

@@ -1,59 +1,4 @@
-"""
-HDFS Utils
-==========
-
-This module provides utility functions for interacting with the Hadoop Distributed File System (HDFS).
-
-The utility functions are Python wrappers for HDFS shell commands, facilitating the programmatic manipulation 
-of files and directories within HDFS. 
-
-The primary functions in the module include:
-
-- `_perform()`: Execute a system command using a subprocess, capturing the standard output and error.
-- `change_permissions()`: Changes directory and file permissions in HDFS.
-- `copy()`: Copies a file in the Hadoop filesystem.
-- `copy_local_to_hdfs()`: Copies a local file to HDFS.
-- `create_dir()`: Creates a directory in HDFS.
-- `create_txt_from_string()`: Create a new text file and populate it with a given string in HDFS.
-- `delete_dir()`: Deletes a directory from HDFS.
-- `delete_file()`: Deletes a file in the Hadoop filesystem.
-- `file_exists()`: Checks whether a file exists in HDFS.
-- `get_date_modified()`: Returns the last modified date of a file in HDFS.
-- `isdir()`: Tests if a directory exists in HDFS.
-- `move_local_to_hdfs()`: Moves a local file to HDFS.
-- `read_dir()`: Reads the contents of a directory in HDFS.
-- `read_dir_files()`: Reads the filenames in a directory in HDFS.
-- `read_dir_files_recursive()`: Recursively reads the contents of a directory in HDFS.
-- `rename()`: Renames (i.e., moves using full path) a file in the Hadoop filesystem.
-
-Note
-----
-1. This module assumes that the 'hadoop' command is available on the system path where Python is being run, which means 
-   Hadoop must be correctly installed on the system.
-
-2. It's important to note that HDFS shell commands exhibit certain behaviors under specific conditions. For instance, 
-   'hadoop fs -put' command will overwrite existing files. These behaviors are also reflected in this utility module.
-
-3. Each function communicates with a subprocess to execute the required HDFS command, capturing the standard output and 
-   error. The return codes from these subprocesses determine the success or failure of these operations, with a zero 
-   return code indicating success. 
-
-4. Timeouts are incorporated to ensure robustness. If a process does not complete within the specified timeout, a 
-   subprocess.TimeoutExpired exception is raised.
-
-Examples
---------
-Here are a few examples on how these functions can be used:
-
-1. Test if a file exists in HDFS:
-    >>> test("/path/to/hdfs/file")
-
-2. List files in a directory in HDFS:
-    >>> read_dir("/path/to/hdfs/directory")
-
-3. Change permissions of a file in HDFS:
-    >>> change_permissions("/path/to/hdfs/file", "777")
-"""
+"""Utility functions for interacting with the Hadoop Distributed File System (HDFS)."""
 import os
 import subprocess
 from typing import List, Optional
@@ -69,7 +14,7 @@ def _perform(command: List[str]) -> bool:
 
     Parameters
     ----------
-    command : List[str]
+    command
         A list of command elements representing the system command to be executed.
         For example, ['ls', '-l', '/home/user'].
 
@@ -103,11 +48,11 @@ def change_permissions(path: str, permission: str, recursive: bool = False) -> b
 
     Parameters
     ----------
-    path : str
+    path
         The path to the file or directory in HDFS.
-    permission : str
+    permission
         The permission to be set, e.g., 'go+rwx' or '777'.
-    recursive : bool, optional
+    recursive
         If True, changes permissions for all subdirectories and files within a directory.
 
     Returns
@@ -131,11 +76,11 @@ def copy(from_path: str, to_path: str, overwrite: bool = False) -> bool:
 
     Parameters
     ----------
-    from_path : str
+    from_path
         The source path of the file in HDFS.
-    to_path : str
+    to_path
         The target path of the file in HDFS.
-    overwrite : bool, optional
+    overwrite
         If True, the existing file at the target path will be overwritten,
         default is False.
 
@@ -163,9 +108,9 @@ def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
 
     Parameters
     ----------
-    from_path : str
+    from_path
         The path to the local file.
-    to_path : str
+    to_path
         The path to the HDFS directory where the file will be copied.
 
     Returns
@@ -185,7 +130,7 @@ def create_dir(path: str) -> bool:
 
     Parameters
     ----------
-    path : str
+    path
         The HDFS path where the directory should be created.
 
     Returns
@@ -205,11 +150,11 @@ def create_txt_from_string(
 
     Parameters
     ----------
-    path : str
+    path
         The path to the new file to be created, for example, '/some/directory/newfile.txt'.
-    string_to_write : str
+    string_to_write
         The string that will populate the new text file.
-    replace : bool, optional
+    replace
         Flag determining whether an existing file should be replaced. Defaults to False.
 
     Returns
@@ -240,7 +185,7 @@ def delete_dir(path: str) -> bool:
 
     Parameters
     ----------
-    path : str
+    path
         The HDFS path to the directory to be deleted.
 
     Returns
@@ -261,7 +206,7 @@ def delete_file(path: str) -> bool:
 
     Parameters
     ----------
-    path : str
+    path
         The path to the file in HDFS to be deleted.
 
     Returns
@@ -288,7 +233,7 @@ def file_exists(path: str) -> bool:
 
     Parameters
     ----------
-    path : str
+    path
         The path to the file in HDFS to be checked for existence.
 
     Returns
@@ -311,7 +256,7 @@ def get_date_modified(filepath: str) -> str:
 
     Parameters
     ----------
-    filepath : str
+    filepath
         The path to the file in HDFS.
 
     Returns
@@ -333,7 +278,7 @@ def isdir(path: str) -> bool:
 
     Parameters
     ----------
-    path : str
+    path
         The HDFS path to the directory to be tested.
 
     Returns
@@ -351,9 +296,9 @@ def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
 
     Parameters
     ----------
-    from_path : str
+    from_path
         The path to the local file.
-    to_path : str
+    to_path
         The path to the HDFS directory where the file will be moved.
 
     Returns
@@ -371,7 +316,7 @@ def read_dir(path: str) -> List[str]:
 
     Parameters
     ----------
-    path : str
+    path
         The path to the directory in HDFS.
 
     Returns
@@ -394,7 +339,7 @@ def read_dir_files(path: str) -> List[str]:
 
     Parameters
     ----------
-    path : str
+    path
         The path to the directory in HDFS.
 
     Returns
@@ -412,9 +357,9 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
 
     Parameters
     ----------
-    path : str
+    path
         The path to the directory in HDFS.
-    return_path : bool, optional
+    return_path
         If True, returns the full path of the files, otherwise just the filename.
 
     Returns
@@ -444,11 +389,11 @@ def rename(from_path: str, to_path: str, overwrite: bool = False) -> bool:
 
     Parameters
     ----------
-    from_path : str
+    from_path
         The source path of the file in HDFS.
-    to_path : str
+    to_path
         The target path of the file in HDFS.
-    overwrite : bool, optional
+    overwrite
         If True, the existing file at the target path will be overwritten,
         default is False.
 
