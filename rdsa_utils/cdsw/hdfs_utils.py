@@ -1,5 +1,4 @@
-"""Utility functions for interacting with the Hadoop Distributed File System
-(HDFS)."""
+"""Utility functions for interacting with the Hadoop Distributed File System (HDFS)."""
 import os
 import subprocess
 from typing import List, Optional
