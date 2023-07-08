@@ -1,3 +1,4 @@
+"""Tests for hdfs_utils.py module."""
 import os
 import subprocess
 from unittest.mock import MagicMock, patch
@@ -25,7 +26,8 @@ from rdsa_utils.cdsw.hdfs_utils import (
 
 
 class BaseTest:
-    """BaseTest provides common pytest fixtures for mocking subprocess.Popen.
+    """
+    BaseTest provides common pytest fixtures for mocking subprocess.Popen.
 
     The class contains two fixtures:
     1. mock_subprocess_popen: Replaces subprocess.Popen function with a mock that
@@ -94,15 +96,15 @@ class TestPerform(BaseTest):
         """Test checks the behavior of the _perform function when the command
         execution is successful."""
         command = ["ls", "-l", "/home/user"]
-        assert _perform(command) is True
+        assert _perform(command) == True
 
 
 class TestChangePermissons(BaseTest):
     """Tests for change_permissions function."""
 
     def test_change_permissions(self, mock_subprocess_popen):
-        """Test verifies that the change_permissions function properly
-        constructs and executes the 'hadoop fs -chmod' command.
+        """Test verifies that the change_permissions function properly constructs
+        and executes the 'hadoop fs -chmod' command.
 
         It checks if the command is constructed correctly based on the
         provided arguments.
@@ -133,8 +135,8 @@ class TestCopy(BaseTest):
     """Tests for copy function."""
 
     def test_copy(self, mock_subprocess_popen):
-        """Test verifies that the copy function properly constructs and
-        executes the 'hadoop fs -cp' command.
+        """Test verifies that the copy function properly constructs and executes
+        the 'hadoop fs -cp' command.
 
         It checks if the command is constructed correctly based on the
         provided arguments.
@@ -162,9 +164,11 @@ class TestCopy(BaseTest):
 
 
 class TestCopyLocalToHDFS(BaseTest):
+    """Tests for copy_local_to_hdfs function."""
+
     def test_copy_local_to_hdfs(self, mock_subprocess_popen):
-        """Test verifies that the copy_local_to_hdfs function properly
-        constructs and executes the 'hadoop fs -copyFromLocal' command.
+        """Test verifies that the copy_local_to_hdfs function properly constructs
+        and executes the 'hadoop fs -copyFromLocal' command.
 
         It checks if the command is constructed correctly based on the
         provided arguments.
@@ -192,6 +196,8 @@ class TestCopyLocalToHDFS(BaseTest):
 
 
 class TestCreateDir(BaseTest):
+    """Tests for create_dir function."""
+
     def test_create_dir(self, mock_subprocess_popen):
         """Test verifies that the create_dir function properly constructs and
         executes the 'hadoop fs -mkdir' command.
@@ -206,6 +212,8 @@ class TestCreateDir(BaseTest):
 
 
 class TestCreateTxtFromString:
+    """Tests for create_txt_from_string function."""
+
     @pytest.mark.parametrize(
         "path, string_to_write, replace, expected_call",
         [
@@ -227,7 +235,8 @@ class TestCreateTxtFromString:
         self, path, string_to_write, replace, expected_call
     ):
         """Test verifies that the create_txt_from_string function properly
-        constructs and executes the 'echo | hadoop fs -put -' command."""
+        constructs and executes the 'echo | hadoop fs -put -' command.
+        """
 
         with patch("subprocess.call") as subprocess_mock, patch(
             "rdsa_utils.cdsw.hdfs_utils.file_exists"
@@ -263,6 +272,8 @@ class TestCreateTxtFromString:
 
 
 class TestDeleteDir(BaseTest):
+    """Tests for delete_dir function."""
+
     def test_delete_dir(self, mock_subprocess_popen):
         """Test verifies that the delete_dir function properly constructs and
         executes the 'hadoop fs -rmdir' command.
@@ -277,6 +288,8 @@ class TestDeleteDir(BaseTest):
 
 
 class TestDeleteFile(BaseTest):
+    """Tests for delete_file function."""
+
     def test_delete_file(self, mock_subprocess_popen):
         """Test verifies that the delete_file function properly constructs and
         executes the 'hadoop fs -rm' command.
@@ -291,6 +304,8 @@ class TestDeleteFile(BaseTest):
 
 
 class TestFileExits(BaseTest):
+    """Tests for file_exists function."""
+
     def test_file_exists(self, mock_subprocess_popen):
         """Test verifies that the file_exists function properly constructs and
         executes the 'hadoop fs -test -e' command.
@@ -310,9 +325,11 @@ class TestFileExits(BaseTest):
 
 
 class TestDateModified(BaseTest):
+    """Tests for get_date_modified function."""
+
     def test_get_date_modified(self, mock_subprocess_popen_date_modifed):
-        """Test verifies that the get_date_modified function properly
-        constructs and executes the 'hadoop fs -stat %y' command.
+        """Test verifies that the get_date_modified function properly constructs
+        and executes the 'hadoop fs -stat %y' command.
 
         It checks if the command is constructed correctly based on the
         provided path.
@@ -329,9 +346,11 @@ class TestDateModified(BaseTest):
 
 
 class TestIsDir(BaseTest):
+    """Tests for isdir function."""
+
     def test_isdir(self, mock_subprocess_popen):
-        """Test verifies that the isdir function properly constructs and
-        executes the 'hadoop fs -test -d' command.
+        """Test verifies that the isdir function properly constructs and executes
+        the 'hadoop fs -test -d' command.
 
         It checks if the command is constructed correctly based on the
         provided path.
@@ -348,9 +367,11 @@ class TestIsDir(BaseTest):
 
 
 class TestMoveLocalToHDFS(BaseTest):
+    """Tests for move_local_to_hdfs function."""
+
     def test_move_local_to_hdfs(self, mock_subprocess_popen):
-        """Test verifies that the move_local_to_hdfs function properly
-        constructs and executes the 'hadoop fs -moveFromLocal' command.
+        """Test verifies that the move_local_to_hdfs function properly constructs
+        and executes the 'hadoop fs -moveFromLocal' command.
 
         It checks if the command is constructed correctly based on the
         provided arguments.
@@ -377,6 +398,8 @@ class TestMoveLocalToHDFS(BaseTest):
 
 
 class TestReadDir(BaseTest):
+    """Tests for read_dir function."""
+
     def test_read_dir(self, mock_subprocess_popen):
         """Test verifies that the read_dir function properly constructs and
         executes the 'hadoop fs -ls' command.
@@ -396,6 +419,8 @@ class TestReadDir(BaseTest):
 
 
 class TestReadDirFiles(BaseTest):
+    """Tests for read_dir_files function."""
+
     def test_read_dir_files(mself, mock_subprocess_popen):
         """Test verifies that the read_dir_files function properly extracts
         filenames from the list of paths returned by read_dir."""
@@ -406,6 +431,8 @@ class TestReadDirFiles(BaseTest):
 
 
 class TestReadDirFilesRecursive(BaseTest):
+    """Tests for read_dir_files_recursive function."""
+
     def test_read_dir_files_recursive(self, mock_subprocess_popen):
         """Test verifies that the read_dir_files_recursive function properly
         constructs and executes the 'hadoop fs -ls -R' command.
@@ -434,9 +461,11 @@ class TestReadDirFilesRecursive(BaseTest):
 
 
 class TestRename(BaseTest):
+    """Tests for rename function."""
+
     def test_rename(self, mock_subprocess_popen):
-        """Test verifies that the rename function properly constructs and
-        executes the 'hadoop fs -mv' command.
+        """Test verifies that the rename function properly constructs and executes
+        the 'hadoop fs -mv' command.
 
         It checks if the command is constructed correctly based on the
         provided arguments.
