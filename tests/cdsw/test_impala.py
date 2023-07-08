@@ -8,13 +8,10 @@ from rdsa_utils.cdsw.impala import invalidate_impala_metadata
 
 
 class TestInvalidateImpalaMetadata:
-    """
-    Tests for invalidate_impala_metadata function.
-    """
+    """Tests for invalidate_impala_metadata function."""
 
     def test_invalidate_impala_metadata(mocker):
-        """
-        Test the invalidate_impala_metadata function.
+        """Test the invalidate_impala_metadata function.
 
         Parameters
         ----------
