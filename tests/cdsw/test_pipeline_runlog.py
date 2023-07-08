@@ -1,3 +1,4 @@
+"""Tests for pipeline_runlog.py module."""
 from unittest.mock import patch
 
 import pytest
@@ -18,6 +19,7 @@ from rdsa_utils.cdsw.pipeline_runlog import (
 
 class TestWriteEntry:
     """Tests for _write_entry function."""
+
     def test_write_entry_non_empty(self, mocker):
         """Test that the function successfully writes data to the specified
         table."""
@@ -47,6 +49,7 @@ class TestWriteEntry:
 
 class TestCreateRunlogTable:
     """Tests for create_runlog_entry function."""
+
     def test_create_runlog_table_default_tablename(self, mocker):
         """Test that the function creates a runlog table with default
         tablename."""
@@ -118,6 +121,7 @@ class TestCreateRunlogTable:
 
 class TestReserveId:
     """Tests for reserve_id function."""
+
     def test_reserve_id_non_empty(self, mocker):
         """Tests that the function successfully reads the last run id from the
         reserved ids table and increments it to create a new id, and writes the
@@ -183,6 +187,7 @@ class TestReserveId:
 
 class TestGetRunIds:
     """Tests for _get_run_ids function."""
+
     def test_get_run_ids_returns_non_empty(self, mocker):
         """Tests that the function returns the correct list of most recent run
         ids for a given pipeline and for all pipelines."""
@@ -273,6 +278,7 @@ class TestGetRunIds:
 
 class TestGetLastRunId:
     """Tests for get_last_run_id function."""
+
     def test_get_last_run_id_general_pipeline_non_empty(self, mocker):
         """Test retrieving the last run ID for a general pipeline with at least
         one entry in the log table."""
@@ -318,6 +324,7 @@ class TestGetLastRunId:
 
 class TestGetPenultimateRunId:
     """Tests for get_penultimate_run_id function."""
+
     def test_penultimate_run_id_non_empty(self, mocker):
         """Test retrieving the penultimate run ID for a pipeline with at least
         two entries in the log table."""
@@ -387,6 +394,7 @@ class TestGetPenultimateRunId:
 
 class TestCreateRunlogEntry:
     """Tests for create_runlog_entry function."""
+
     def test_create_runlog_entry(self, mocker):
         """Tests that the function returns a DataFrame with the log entry when
         provided with valid inputs."""
@@ -450,6 +458,7 @@ class TestCreateRunlogEntry:
 
 class TestAddRunlogEntry:
     """Tests for add_runlog_entry function."""
+
     @patch("rdsa_utils.cdsw.pipeline_runlog.reserve_id")
     @patch("rdsa_utils.cdsw.pipeline_runlog.create_runlog_entry")
     @patch("rdsa_utils.cdsw.pipeline_runlog._write_entry")
@@ -527,6 +536,7 @@ class TestAddRunlogEntry:
 
 class TestWriteRunlogFile:
     """Tests for write_runlog_file function."""
+
     def test_write_runlog_file(self, mocker):
         """Tests that the function successfully creates a text file in HDFS
         with metadata from a runlog entry."""

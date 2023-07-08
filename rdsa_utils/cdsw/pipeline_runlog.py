@@ -1,4 +1,5 @@
-"""Utilities to create, manage, and retrieve entries from a pipeline runlog."""
+"""Utilities to create, manage, and retrieve entries from a pipeline runlog
+using Hive Tables."""
 import json
 import os
 from ast import literal_eval
