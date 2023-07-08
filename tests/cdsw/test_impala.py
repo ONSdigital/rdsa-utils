@@ -1,10 +1,4 @@
-"""
-This module contains pytest functions to test the behaviour of the functions
-contained within the rdsa_utils/cdsw/impala.py Module.
-
-Functions:
-    test_invalidate_impala_metadata()
-"""
+"""Tests for impala.py module."""
 
 import subprocess
 
@@ -15,7 +9,7 @@ from rdsa_utils.cdsw.impala import invalidate_impala_metadata
 
 class TestInvalidateImpalaMetadata:
     """
-    Class containing tests for the invalidate_impala_metadata function.
+    Tests for invalidate_impala_metadata function.
     """
 
     def test_invalidate_impala_metadata(mocker):
