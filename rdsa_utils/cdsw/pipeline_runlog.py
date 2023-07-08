@@ -14,8 +14,7 @@ from rdsa_utils.cdsw.hdfs_utils import create_txt_from_string
 
 
 def _write_entry(entry_df: DataFrame, log_table: str) -> None:
-    """
-    Write a DataFrame entry into a specified table.
+    """Write a DataFrame entry into a specified table.
 
     Parameters
     ----------
@@ -37,8 +36,7 @@ def _write_entry(entry_df: DataFrame, log_table: str) -> None:
 def create_runlog_table(
     spark: SparkSession, database: str, tablename: Optional[str] = "pipeline_runlog"
 ) -> None:
-    """
-    Creates a runlog table and an associated (suffixed) _reserved_ids table
+    """Creates a runlog table and an associated (suffixed) _reserved_ids table
     in the target database if they do not already exist.
 
     This function executes two SQL queries to create two tables, if they do
@@ -96,8 +94,8 @@ def create_runlog_table(
 def reserve_id(
     spark: SparkSession, log_table: Optional[str] = "pipeline_runlog"
 ) -> int:
-    """
-    Reserve a run id in the reserved ids table associated with the pipeline runlog table.
+    """Reserve a run id in the reserved ids table associated with the pipeline
+    runlog table.
 
     The function reads the last run id from the reserved ids table, increments it to create a new id,
     and writes the new id with the current timestamp to the reserved ids table.
@@ -137,8 +135,7 @@ def _get_run_ids(
     pipeline: Optional[str] = None,
     log_table: str = "pipeline_runlog",
 ) -> List[int]:
-    """
-    Helper function to retrieve the most recent run ids.
+    """Helper function to retrieve the most recent run ids.
 
     Parameters
     ----------
@@ -173,8 +170,7 @@ def get_last_run_id(
     pipeline: Optional[str] = None,
     log_table: str = "pipeline_runlog",
 ) -> Optional[int]:
-    """
-    Retrieves the last run_id, either in general or for a specific pipeline.
+    """Retrieves the last run_id, either in general or for a specific pipeline.
 
     Parameters
     ----------
@@ -203,8 +199,8 @@ def get_penultimate_run_id(
     pipeline: Optional[str] = None,
     log_table: str = "pipeline_runlog",
 ) -> Optional[int]:
-    """
-    Retrieves the penultimate run_id, either in general or for a specific pipeline.
+    """Retrieves the penultimate run_id, either in general or for a specific
+    pipeline.
 
     Parameters
     ----------
@@ -236,8 +232,7 @@ def create_runlog_entry(
     config: Union[ConfigParser, Dict[str, str]],
     pipeline: Optional[str] = None,
 ) -> DataFrame:
-    """
-    Create an entry for the runlog.
+    """Create an entry for the runlog.
 
     Parameters
     ----------
@@ -299,8 +294,7 @@ def add_runlog_entry(
     log_table: str = "pipeline_runlog",
     run_id: Optional[int] = None,
 ) -> DataFrame:
-    """
-    Add an entry to a target runlog.
+    """Add an entry to a target runlog.
 
     Parameters
     ----------
@@ -335,8 +329,7 @@ def add_runlog_entry(
 def _parse_runlog_as_string(
     spark: SparkSession, runlog_table: str, runlog_id: int
 ) -> str:
-    """
-    Parse a single runlog entry as a string.
+    """Parse a single runlog entry as a string.
 
     Parameters
     ----------
@@ -372,8 +365,7 @@ def _parse_runlog_as_string(
 def write_runlog_file(
     spark: SparkSession, runlog_table: str, runlog_id: int, path: str
 ) -> None:
-    """
-    Write metadata from runlog entry to a text file.
+    """Write metadata from runlog entry to a text file.
 
     Parameters
     ----------

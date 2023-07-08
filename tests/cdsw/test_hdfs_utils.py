@@ -26,8 +26,7 @@ from rdsa_utils.cdsw.hdfs_utils import (
 
 @pytest.fixture
 def mock_subprocess_popen(monkeypatch):
-    """
-    Fixture to mock the subprocess.Popen function.
+    """Fixture to mock the subprocess.Popen function.
 
     This fixture replaces the subprocess.Popen function with a mock implementation.
     The mock implementation returns a MagicMock object that simulates the behavior
@@ -57,8 +56,8 @@ def mock_subprocess_popen(monkeypatch):
 
 @pytest.fixture
 def mock_subprocess_popen_date_modifed():
-    """
-    Fixture to mock the subprocess.Popen function for testing get_date_modified function.
+    """Fixture to mock the subprocess.Popen function for testing
+    get_date_modified function.
 
     This fixture patches the subprocess.Popen function using the patch decorator from the unittest.mock module.
     It configures the mock implementation to return a MagicMock object for mocking the Popen object.
@@ -78,21 +77,18 @@ def mock_subprocess_popen_date_modifed():
 
 
 def test__perform(mock_subprocess_popen):
-    """
-    Test _perform function.
-
-    This test checks the behavior of the _perform function when the command execution is successful.
-    """
+    """Test checks the behavior of the _perform function when the command
+    execution is successful."""
     command = ["ls", "-l", "/home/user"]
     assert _perform(command) == True
 
 
 def test_change_permissions(mock_subprocess_popen):
-    """
-    Test change_permissions function.
+    """Test verifies that the change_permissions function properly constructs
+    and executes the 'hadoop fs -chmod' command.
 
-    This test verifies that the change_permissions function properly constructs and executes the 'hadoop fs -chmod' command.
-    It checks if the command is constructed correctly based on the provided arguments.
+    It checks if the command is constructed correctly based on the
+    provided arguments.
     """
     # Test case 1: Test change_permissions without recursive option
     path = "/user/example"
@@ -117,11 +113,11 @@ def test_change_permissions(mock_subprocess_popen):
 
 
 def test_copy(mock_subprocess_popen):
-    """
-    Test copy function.
+    """Test verifies that the copy function properly constructs and executes
+    the 'hadoop fs -cp' command.
 
-    This test verifies that the copy function properly constructs and executes the 'hadoop fs -cp' command.
-    It checks if the command is constructed correctly based on the provided arguments.
+    It checks if the command is constructed correctly based on the
+    provided arguments.
     """
     # Test case 1: Test copy without overwrite option
     from_path = "/user/example/file.txt"
@@ -146,11 +142,11 @@ def test_copy(mock_subprocess_popen):
 
 
 def test_copy_local_to_hdfs(mock_subprocess_popen):
-    """
-    Test copy_local_to_hdfs function.
+    """Test verifies that the copy_local_to_hdfs function properly constructs
+    and executes the 'hadoop fs -copyFromLocal' command.
 
-    This test verifies that the copy_local_to_hdfs function properly constructs and executes the 'hadoop fs -copyFromLocal' command.
-    It checks if the command is constructed correctly based on the provided arguments.
+    It checks if the command is constructed correctly based on the
+    provided arguments.
     """
     # Test case 1: Test copy_local_to_hdfs without overwrite option
     from_path = "/local/path/file.txt"
@@ -175,11 +171,11 @@ def test_copy_local_to_hdfs(mock_subprocess_popen):
 
 
 def test_create_dir(mock_subprocess_popen):
-    """
-    Test create_dir function.
+    """Test verifies that the create_dir function properly constructs and
+    executes the 'hadoop fs -mkdir' command.
 
-    This test verifies that the create_dir function properly constructs and executes the 'hadoop fs -mkdir' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test create_dir with a valid path
     path = "/user/new_directory"
@@ -189,8 +185,7 @@ def test_create_dir(mock_subprocess_popen):
 
 @pytest.fixture
 def subprocess_mock():
-    """
-    Fixture for mocking the subprocess.call function.
+    """Fixture for mocking the subprocess.call function.
 
     Yields
     ------
@@ -204,8 +199,8 @@ def subprocess_mock():
 
 @pytest.fixture
 def file_exists_mock():
-    """
-    Fixture for mocking the file_exists function from rdsa_utils.cdsw.hdfs_utils module.
+    """Fixture for mocking the file_exists function from
+    rdsa_utils.cdsw.hdfs_utils module.
 
     Yields
     ------
@@ -219,8 +214,8 @@ def file_exists_mock():
 
 @pytest.fixture
 def delete_file_mock():
-    """
-    Fixture for mocking the delete_file function from rdsa_utils.cdsw.hdfs_utils module.
+    """Fixture for mocking the delete_file function from
+    rdsa_utils.cdsw.hdfs_utils module.
 
     Yields
     ------
@@ -258,10 +253,9 @@ def test_create_txt_from_string(
     file_exists_mock,
     delete_file_mock,
 ):
-    """
-    Test create_txt_from_string function.
+    """Test verifies that the create_txt_from_string function properly
+    constructs and executes the 'echo | hadoop fs -put -' command.
 
-    This test verifies that the create_txt_from_string function properly constructs and executes the 'echo | hadoop fs -put -' command.
     It checks if the command is constructed correctly based on the provided arguments.
 
     Parameters
@@ -314,11 +308,11 @@ def test_create_txt_from_string(
 
 
 def test_delete_dir(mock_subprocess_popen):
-    """
-    Test delete_dir function.
+    """Test verifies that the delete_dir function properly constructs and
+    executes the 'hadoop fs -rmdir' command.
 
-    This test verifies that the delete_dir function properly constructs and executes the 'hadoop fs -rmdir' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test delete_dir with a valid path
     path = "/user/directory"
@@ -327,11 +321,11 @@ def test_delete_dir(mock_subprocess_popen):
 
 
 def test_delete_file(mock_subprocess_popen):
-    """
-    Test delete_file function.
+    """Test verifies that the delete_file function properly constructs and
+    executes the 'hadoop fs -rm' command.
 
-    This test verifies that the delete_file function properly constructs and executes the 'hadoop fs -rm' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test delete_file with a valid path
     path = "/user/file.txt"
@@ -340,11 +334,11 @@ def test_delete_file(mock_subprocess_popen):
 
 
 def test_file_exists(mock_subprocess_popen):
-    """
-    Test file_exists function.
+    """Test verifies that the file_exists function properly constructs and
+    executes the 'hadoop fs -test -e' command.
 
-    This test verifies that the file_exists function properly constructs and executes the 'hadoop fs -test -e' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test file_exists with an existing file
     path = "/user/file.txt"
@@ -358,11 +352,11 @@ def test_file_exists(mock_subprocess_popen):
 
 
 def test_get_date_modified(mock_subprocess_popen_date_modifed):
-    """
-    Test get_date_modified function.
+    """Test verifies that the get_date_modified function properly constructs
+    and executes the 'hadoop fs -stat %y' command.
 
-    This test verifies that the get_date_modified function properly constructs and executes the 'hadoop fs -stat %y' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case: Test get_date_modified with a valid path
     filepath = "/user/file.txt"
@@ -376,11 +370,11 @@ def test_get_date_modified(mock_subprocess_popen_date_modifed):
 
 
 def test_isdir(mock_subprocess_popen):
-    """
-    Test isdir function.
+    """Test verifies that the isdir function properly constructs and executes
+    the 'hadoop fs -test -d' command.
 
-    This test verifies that the isdir function properly constructs and executes the 'hadoop fs -test -d' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test isdir with an existing directory
     path = "/user/directory"
@@ -394,11 +388,11 @@ def test_isdir(mock_subprocess_popen):
 
 
 def test_move_local_to_hdfs(mock_subprocess_popen):
-    """
-    Test move_local_to_hdfs function.
+    """Test verifies that the move_local_to_hdfs function properly constructs
+    and executes the 'hadoop fs -moveFromLocal' command.
 
-    This test verifies that the move_local_to_hdfs function properly constructs and executes the 'hadoop fs -moveFromLocal' command.
-    It checks if the command is constructed correctly based on the provided arguments.
+    It checks if the command is constructed correctly based on the
+    provided arguments.
     """
     # Test case 1: Test move_local_to_hdfs without overwrite option
     from_path = "/local/path/file.txt"
@@ -422,11 +416,11 @@ def test_move_local_to_hdfs(mock_subprocess_popen):
 
 
 def test_read_dir(mock_subprocess_popen):
-    """
-    Test read_dir function.
+    """Test verifies that the read_dir function properly constructs and
+    executes the 'hadoop fs -ls' command.
 
-    This test verifies that the read_dir function properly constructs and executes the 'hadoop fs -ls' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test read_dir with a valid path
     path = "/user/directory"
@@ -440,11 +434,8 @@ def test_read_dir(mock_subprocess_popen):
 
 
 def test_read_dir_files(mock_subprocess_popen):
-    """
-    Test read_dir_files function.
-
-    This test verifies that the read_dir_files function properly extracts filenames from the list of paths returned by read_dir.
-    """
+    """Test verifies that the read_dir_files function properly extracts
+    filenames from the list of paths returned by read_dir."""
     # Test case 1: Test read_dir_files with a valid path
     path = "/user/directory"
     expected_files = [os.path.basename(path) for path in read_dir(path)]
@@ -452,11 +443,11 @@ def test_read_dir_files(mock_subprocess_popen):
 
 
 def test_read_dir_files_recursive(mock_subprocess_popen):
-    """
-    Test read_dir_files_recursive function.
+    """Test verifies that the read_dir_files_recursive function properly
+    constructs and executes the 'hadoop fs -ls -R' command.
 
-    This test verifies that the read_dir_files_recursive function properly constructs and executes the 'hadoop fs -ls -R' command.
-    It checks if the command is constructed correctly based on the provided path.
+    It checks if the command is constructed correctly based on the
+    provided path.
     """
     # Test case 1: Test read_dir_files_recursive without return_path option
     path = "/user/directory"
@@ -477,11 +468,11 @@ def test_read_dir_files_recursive(mock_subprocess_popen):
 
 
 def test_rename(mock_subprocess_popen):
-    """
-    Test rename function.
+    """Test verifies that the rename function properly constructs and executes
+    the 'hadoop fs -mv' command.
 
-    This test verifies that the rename function properly constructs and executes the 'hadoop fs -mv' command.
-    It checks if the command is constructed correctly based on the provided arguments.
+    It checks if the command is constructed correctly based on the
+    provided arguments.
     """
     # Test case 1: Test rename without overwrite option
     from_path = "/user/old_file.txt"

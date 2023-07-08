@@ -18,9 +18,8 @@ from rdsa_utils.cdsw.pipeline_runlog import (
 
 class TestWriteEntry:
     def test_write_entry_non_empty(self, mocker):
-        """
-        Test that the function successfully writes data to the specified table.
-        """
+        """Test that the function successfully writes data to the specified
+        table."""
         # Mock DataFrame and write method
         mock_df = mocker.Mock(spec=DataFrame)
         mock_df.write.insertInto.return_value = None
@@ -32,10 +31,8 @@ class TestWriteEntry:
         mock_df.write.insertInto.assert_called_once_with("test_table")
 
     def test_write_entry_edge_cases(self, mocker):
-        """
-        Test that the function does not raise any exceptions when entry_df is empty or
-        log_table is an empty string.
-        """
+        """Test that the function does not raise any exceptions when entry_df
+        is empty or log_table is an empty string."""
         # Mock empty DataFrame and write method
         mock_df = mocker.Mock(spec=DataFrame)
         mock_df.write.insertInto.return_value = None
@@ -49,9 +46,8 @@ class TestWriteEntry:
 
 class TestCreateRunlogTable:
     def test_create_runlog_table_default_tablename(self, mocker):
-        """
-        Test that the function creates a runlog table with default tablename.
-        """
+        """Test that the function creates a runlog table with default
+        tablename."""
         # Mock SparkSession
         mock_spark = mocker.Mock()
 
@@ -84,9 +80,8 @@ class TestCreateRunlogTable:
         )
 
     def test_create_runlog_table_custom_tablename(self, mocker):
-        """
-        Test that the function creates a runlog table with a custom tablename.
-        """
+        """Test that the function creates a runlog table with a custom
+        tablename."""
         # Mock SparkSession
         mock_spark = mocker.Mock()
 
@@ -121,11 +116,9 @@ class TestCreateRunlogTable:
 
 class TestReserveId:
     def test_reserve_id_non_empty(self, mocker):
-        """
-        Tests that the function successfully reads the last run id from the reserved ids
-        table and increments it to create a new id, and writes the new id with the
-        current timestamp to the reserved ids table.
-        """
+        """Tests that the function successfully reads the last run id from the
+        reserved ids table and increments it to create a new id, and writes the
+        new id with the current timestamp to the reserved ids table."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
         spark_mock.read.table.return_value.select.return_value.first.return_value = (1,)
@@ -153,10 +146,9 @@ class TestReserveId:
         )
 
     def test_reserve_id_edge_case(self, mocker):
-        """
-        Tests that the function handles the case where the reserved ids table is empty,
-        does not exist, has no "run_id" column, or has no "reserved_date" column.
-        """
+        """Tests that the function handles the case where the reserved ids
+        table is empty, does not exist, has no "run_id" column, or has no
+        "reserved_date" column."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
         spark_mock.read.table.return_value.select.return_value.first.return_value = [
@@ -188,10 +180,8 @@ class TestReserveId:
 
 class TestGetRunIds:
     def test_get_run_ids_returns_non_empty(self, mocker):
-        """
-        Tests that the function returns the correct list of most recent run ids for a
-        given pipeline and for all pipelines.
-        """
+        """Tests that the function returns the correct list of most recent run
+        ids for a given pipeline and for all pipelines."""
         # Mock SparkSession and log table
         spark_mock = mocker.Mock()
         log_table = "test_log_table"
@@ -246,9 +236,8 @@ class TestGetRunIds:
         test_df.limit.assert_called_with(2)
 
     def test_get_run_ids_empty_table(self, mocker):
-        """
-        Tests that the function returns an empty list if the log table is empty.
-        """
+        """Tests that the function returns an empty list if the log table is
+        empty."""
         # Mock SparkSession and log table
         spark_mock = mocker.Mock()
         log_table = "test_log_table"
@@ -280,10 +269,8 @@ class TestGetRunIds:
 
 class TestGetLastRunId:
     def test_get_last_run_id_general_pipeline_non_empty(self, mocker):
-        """
-        Test retrieving the last run ID for a general pipeline with at least one entry
-        in the log table.
-        """
+        """Test retrieving the last run ID for a general pipeline with at least
+        one entry in the log table."""
         # Mock SparkSession and _get_run_ids function
         spark_mock = mocker.Mock()
 
@@ -302,9 +289,8 @@ class TestGetLastRunId:
         get_run_ids_mock.assert_called_once_with(spark_mock, 1, None, "pipeline_runlog")
 
     def test_get_last_run_id_specific_pipeline_empty(self, mocker):
-        """
-        Test retrieving the last run ID for a specific pipeline with no entries in the log table.
-        """
+        """Test retrieving the last run ID for a specific pipeline with no
+        entries in the log table."""
         # Mock SparkSession and _get_run_ids function
         spark_mock = mocker.Mock()
 
@@ -327,10 +313,8 @@ class TestGetLastRunId:
 
 class TestGetPenultimateRunId:
     def test_penultimate_run_id_non_empty(self, mocker):
-        """
-        Test retrieving the penultimate run ID for a pipeline with at least two entries
-        in the log table.
-        """
+        """Test retrieving the penultimate run ID for a pipeline with at least
+        two entries in the log table."""
         # Mock SparkSession and _get_run_ids function
         spark_mock = mocker.Mock()
 
@@ -351,11 +335,10 @@ class TestGetPenultimateRunId:
         )
 
     def test_penultimate_run_id_edge_cases(self, mocker):
-        """
-        Test retrieving the penultimate run ID for a pipeline with only one entry in the log table,
-        for a pipeline with no entries in the log table, for the general log table with only one entry,
-        and for the general log table with no entries.
-        """
+        """Test retrieving the penultimate run ID for a pipeline with only one
+        entry in the log table, for a pipeline with no entries in the log
+        table, for the general log table with only one entry, and for the
+        general log table with no entries."""
         # Mock SparkSession and _get_run_ids function
         spark_mock = mocker.Mock()
 
@@ -398,10 +381,8 @@ class TestGetPenultimateRunId:
 
 class TestCreateRunlogEntry:
     def test_create_runlog_entry(self, mocker):
-        """
-        Tests that the function returns a DataFrame with the log entry when provided
-        with valid inputs.
-        """
+        """Tests that the function returns a DataFrame with the log entry when
+        provided with valid inputs."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 
@@ -443,9 +424,8 @@ class TestCreateRunlogEntry:
         ]
 
     def test_create_runlog_entry_edge_cases(self, mocker):
-        """
-        Tests that the function raises an error when provided with invalid inputs.
-        """
+        """Tests that the function raises an error when provided with invalid
+        inputs."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 
@@ -468,9 +448,8 @@ class TestAddRunlogEntry:
     def test_add_runlog_entry(
         self, _write_entry_mock, create_runlog_entry_mock, reserve_id_mock, mocker
     ):
-        """
-        Tests that the function adds an entry to the runlog with a newly reserved run_id.
-        """
+        """Tests that the function adds an entry to the runlog with a newly
+        reserved run_id."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 
@@ -506,9 +485,8 @@ class TestAddRunlogEntry:
     def test_add_runlog_entry_specified_id(
         self, _write_entry_mock, create_runlog_entry_mock, mocker
     ):
-        """
-        Tests that the function adds an entry to the runlog with a specified run_id.
-        """
+        """Tests that the function adds an entry to the runlog with a specified
+        run_id."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 
@@ -541,10 +519,8 @@ class TestAddRunlogEntry:
 
 class TestWriteRunlogFile:
     def test_write_runlog_file(self, mocker):
-        """
-        Tests that the function successfully creates a text file in HDFS with metadata
-        from a runlog entry.
-        """
+        """Tests that the function successfully creates a text file in HDFS
+        with metadata from a runlog entry."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 
@@ -570,9 +546,8 @@ class TestWriteRunlogFile:
         create_mock.assert_called_once_with(path, "test metadata")
 
     def test_write_runlog_file_edge_case(self, mocker):
-        """
-        Tests that the function raises FileNotFoundError when the specified path is not found.
-        """
+        """Tests that the function raises FileNotFoundError when the specified
+        path is not found."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 

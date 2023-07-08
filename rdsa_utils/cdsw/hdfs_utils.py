@@ -1,12 +1,13 @@
-"""Utility functions for interacting with the Hadoop Distributed File System (HDFS)."""
+"""Utility functions for interacting with the Hadoop Distributed File System
+(HDFS)."""
 import os
 import subprocess
 from typing import List, Optional
 
 
 def _perform(command: List[str]) -> bool:
-    """
-    Execute a system command using a subprocess, capturing the standard output and error.
+    """Execute a system command using a subprocess, capturing the standard
+    output and error.
 
     This function creates a subprocess with the provided command list, then communicates with it
     to retrieve the stdout and stderr. After the command execution, it checks the process's
@@ -27,7 +28,6 @@ def _perform(command: List[str]) -> bool:
     ------
     subprocess.TimeoutExpired
         If the process does not complete within the default timeout.
-
     """
     try:
         process = subprocess.Popen(
@@ -43,8 +43,7 @@ def _perform(command: List[str]) -> bool:
 
 
 def change_permissions(path: str, permission: str, recursive: bool = False) -> bool:
-    """
-    Changes directory and file permissions in HDFS.
+    """Changes directory and file permissions in HDFS.
 
     Parameters
     ----------
@@ -68,8 +67,7 @@ def change_permissions(path: str, permission: str, recursive: bool = False) -> b
 
 
 def copy(from_path: str, to_path: str, overwrite: bool = False) -> bool:
-    """
-    Copy a file in the Hadoop filesystem.
+    """Copy a file in the Hadoop filesystem.
 
     This function uses the Hadoop File System (HDFS) command 'cp'
     to copy a file from the specified source path to the target path.
@@ -103,8 +101,7 @@ def copy(from_path: str, to_path: str, overwrite: bool = False) -> bool:
 
 
 def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
-    """
-    Copies a local file to HDFS.
+    """Copies a local file to HDFS.
 
     Parameters
     ----------
@@ -123,8 +120,7 @@ def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
 
 
 def create_dir(path: str) -> bool:
-    """
-    Creates a directory in the Hadoop Distributed File System (HDFS).
+    """Creates a directory in the Hadoop Distributed File System (HDFS).
 
     This function wraps the 'hadoop fs -mkdir' command.
 
@@ -145,8 +141,8 @@ def create_dir(path: str) -> bool:
 def create_txt_from_string(
     path: str, string_to_write: str, replace: Optional[bool] = False
 ) -> None:
-    """
-    Create a new text file and populate with a given string in HDFS using subprocess call to execute Hadoop commands.
+    """Create a new text file and populate with a given string in HDFS using
+    subprocess call to execute Hadoop commands.
 
     Parameters
     ----------
@@ -178,8 +174,7 @@ def create_txt_from_string(
 
 
 def delete_dir(path: str) -> bool:
-    """
-    Deletes a directory from the Hadoop Distributed File System (HDFS).
+    """Deletes a directory from the Hadoop Distributed File System (HDFS).
 
     This function wraps the 'hadoop fs -rmdir' command.
 
@@ -198,8 +193,7 @@ def delete_dir(path: str) -> bool:
 
 
 def delete_file(path: str) -> bool:
-    """
-    Delete a file in the Hadoop filesystem.
+    """Delete a file in the Hadoop filesystem.
 
     This function uses the Hadoop File System (HDFS) command 'rm'
     to delete a file at the specified path.
@@ -225,8 +219,7 @@ def delete_file(path: str) -> bool:
 
 
 def file_exists(path: str) -> bool:
-    """
-    Checks whether a file exists in the Hadoop filesystem.
+    """Checks whether a file exists in the Hadoop filesystem.
 
     This function uses the Hadoop File System (HDFS) command 'test -e'
     to check the existence of a file at the specified path.
@@ -251,8 +244,7 @@ def file_exists(path: str) -> bool:
 
 
 def get_date_modified(filepath: str) -> str:
-    """
-    Returns the last modified date of a file in HDFS.
+    """Returns the last modified date of a file in HDFS.
 
     Parameters
     ----------
@@ -271,8 +263,8 @@ def get_date_modified(filepath: str) -> str:
 
 
 def isdir(path: str) -> bool:
-    """
-    Tests if a directory exists in the Hadoop Distributed File System (HDFS).
+    """Tests if a directory exists in the Hadoop Distributed File System
+    (HDFS).
 
     This function wraps the 'hadoop fs -test -d' command.
 
@@ -291,8 +283,7 @@ def isdir(path: str) -> bool:
 
 
 def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
-    """
-    Moves a local file to HDFS.
+    """Moves a local file to HDFS.
 
     Parameters
     ----------
@@ -311,8 +302,7 @@ def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
 
 
 def read_dir(path: str) -> List[str]:
-    """
-    Reads the contents of a directory in HDFS.
+    """Reads the contents of a directory in HDFS.
 
     Parameters
     ----------
@@ -334,8 +324,7 @@ def read_dir(path: str) -> List[str]:
 
 
 def read_dir_files(path: str) -> List[str]:
-    """
-    Reads the filenames in a directory in HDFS.
+    """Reads the filenames in a directory in HDFS.
 
     Parameters
     ----------
@@ -352,8 +341,7 @@ def read_dir_files(path: str) -> List[str]:
 
 
 def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
-    """
-    Recursively reads the contents of a directory in HDFS.
+    """Recursively reads the contents of a directory in HDFS.
 
     Parameters
     ----------
@@ -381,8 +369,7 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
 
 
 def rename(from_path: str, to_path: str, overwrite: bool = False) -> bool:
-    """
-    Rename (i.e., move using full path) a file in the Hadoop filesystem.
+    """Rename (i.e., move using full path) a file in the Hadoop filesystem.
 
     This function uses the Hadoop File System (HDFS) command 'mv'
     to rename a file from the specified source path to the target path.
