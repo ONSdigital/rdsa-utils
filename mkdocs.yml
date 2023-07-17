@@ -4,6 +4,10 @@ theme:
   name: "material"
   palette:
     primary: black
+    accent: light blue
+
+extra_css:
+  - "custom.css"
 
 plugins:
   - mkdocstrings:
