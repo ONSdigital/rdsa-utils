@@ -828,3 +828,137 @@ def find_spark_dataframes(
             )
 
     return frames
+
+
+def create_spark_session(size: str, extra_configs: dict = None) -> SparkSession:
+    """Create a PySpark Session based on the specified size.
+
+    This function creates a PySpark session with different configurations
+    based on the size specified. The size can be 'default', 'small', 'medium',
+    'large', or 'extra-large'. Extra Spark configurations can be passed as
+    a dictionary.
+
+    Parameters
+    ----------
+    size
+        The size of the spark session to be created. It can be 'default',
+        'small', 'medium', 'large', or 'extra-large'.
+    extra_configs
+        Dictionary of extra Spark configurations to override the defaults.
+
+    Returns
+    -------
+    SparkSession
+        The created PySpark session.
+
+    Raises
+    ------
+    ValueError
+        If the 'size' parameter is not one of the valid options.
+
+    Examples
+    --------
+    >>> spark = create_spark_session('medium', {'spark.ui.enabled': 'false'})
+
+    Session Details:
+    ---------------
+    'default':
+        As a starting point you can create a Spark session with all the default
+        options. This is the bare minimum you need to create a Spark session and
+        will work fine for many users. It's recommended for users who are unsure
+        of their requirements or are dealing with unfamiliar data sources.
+    'small':
+        This is the smallest session that will realistically be used. It uses
+        only 1g of memory and 3 executors, and only 1 core. The number of
+        partitions are limited to 12, which can improve performance with
+        smaller data. It's recommended for simple data exploration of small
+        survey data or for training and demonstrations when several people
+        need to run Spark sessions simultaneously.
+    'medium':
+        A standard session used for analysing survey or synthetic datasets.
+        Also used for some Production pipelines based on survey and/or smaller
+        administrative data.It uses 6g of memory and 3 executors, and 3 cores.
+        The number of partitions are limited to 18, which can improve
+        performance with smaller data.
+    'large':
+        Session designed for running Production pipelines on large
+        administrative data, rather than just survey data. It uses 10g of
+        memory and 5 executors, 1g of memory overhead, and 5 cores. It uses the
+        default number of 200 partitions.
+    'extra-large':
+        Used for the most complex pipelines, with huge administrative
+        data sources and complex calculations. It uses 20g of memory and
+        12 executors, 2g of memory overhead, and 5 cores. It uses 240
+        partitions; not significantly higher than the default of 200,
+        but it is best for these to be a multiple of cores and executors.
+
+    References
+    ----------
+    The session sizes and their details are taken directly
+    from the following resource:
+    "https://best-practice-and-impact.github.io/ons-spark/spark-overview/example-spark-sessions.html"
+    """
+    try:
+        size = size.lower()
+        valid_sizes = ['default', 'small', 'medium', 'large', 'extra-large']
+        if size not in valid_sizes:
+            msg = f"Invalid size '{size}'. It must be one of {valid_sizes}."
+            raise ValueError(msg)
+
+        logger.info(f"Creating a '{size}' Spark session...")
+
+        logger.info('Stopping any existing Spark session...')
+        SparkSession.builder.getOrCreate().stop()
+
+        builder = SparkSession.builder.appName(f'{size}-session')
+
+        # fmt: off
+        if size == 'small':
+            builder = builder.config(
+                'spark.executor.memory', '1g',
+                'spark.executor.cores', 1,
+                'spark.dynamicAllocation.maxExecutors', 3,
+                'spark.sql.shuffle.partitions', 12,
+            )
+        elif size == 'medium':
+            builder = builder.config(
+                'spark.executor.memory', '6g',
+                'spark.executor.cores', 3,
+                'spark.dynamicAllocation.maxExecutors', 3,
+                'spark.sql.shuffle.partitions', 18,
+            )
+        elif size == 'large':
+            builder = builder.config(
+                'spark.executor.memory', '10g',
+                'spark.yarn.executor.memoryOverhead', '1g',
+                'spark.executor.cores', 5,
+                'spark.dynamicAllocation.maxExecutors', 5,
+                'spark.sql.shuffle.partitions', 200,
+            )
+        elif size == 'extra-large':
+            builder = builder.config(
+                'spark.executor.memory', '20g',
+                'spark.yarn.executor.memoryOverhead', '2g',
+                'spark.executor.cores', 5,
+                'spark.dynamicAllocation.maxExecutors', 12,
+                'spark.sql.shuffle.partitions', 240,
+            )
+
+        # Common configurations for all sizes
+        builder = builder.config(
+            'spark.dynamicAllocation.enabled', 'true',
+            'spark.shuffle.service.enabled', 'true',
+            'spark.ui.showConsoleProgress', 'false',
+        ).enableHiveSupport()
+        # fmt: on
+
+        # Apply extra configurations
+        if extra_configs:
+            for key, value in extra_configs.items():
+                builder = builder.config(key, value)
+
+        logger.info('Spark session created successfully!')
+        return builder.getOrCreate()
+    except Exception as e:
+        logger.error(f'An error occurred while creating the Spark session: {e}')
+        raise
