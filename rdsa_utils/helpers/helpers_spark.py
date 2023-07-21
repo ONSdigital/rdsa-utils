@@ -779,8 +779,8 @@ def load_and_validate_table(
 
 
 def find_spark_dataframes(
-    locals_dict: Dict[str, Union[SparkDF, dict]],
-) -> Dict[str, Union[SparkDF, dict]]:
+    locals_dict: Dict[str, Union[SparkDF, Dict]],
+) -> Dict[str, Union[SparkDF, Dict]]:
     """Extract SparkDF's objects from a given dictionary.
 
     This function scans the dictionary and returns another containing only
@@ -798,7 +798,7 @@ def find_spark_dataframes(
 
     Returns
     -------
-    dict
+    Dict
         A dictionary with entries from locals_dict where the value is a
         SparkDF or a dictionary with a SparkDF as its first item.
 
@@ -830,7 +830,7 @@ def find_spark_dataframes(
     return frames
 
 
-def create_spark_session(size: str, extra_configs: dict = None) -> SparkSession:
+def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
     """Create a PySpark Session based on the specified size.
 
     This function creates a PySpark session with different configurations
