@@ -2,7 +2,17 @@
 import functools
 import itertools
 import logging
-from typing import Any, Callable, List, Mapping, Optional, Sequence, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 
 from pyspark.sql import (
     Column as SparkCol,
@@ -13,7 +23,7 @@ from pyspark.sql import (
     Window,
     WindowSpec,
 )
-
+from pyspark.sql.utils import AnalysisException
 
 logger = logging.getLogger()
 
@@ -490,3 +500,331 @@ def select_first_obs_appearing_in_group(
         .filter(F.col('rank') == 1)
         .drop('rank')
     )
+
+
+def cut_lineage(df: SparkDF) -> SparkDF:
+    """Convert the SparkDF to a Java RDD and back again.
+
+    This function is helpful in instances where Catalyst optimizer is causing
+    memory errors or problems, as it only tries to optimize till the conversion
+    point.
+
+    Note: This uses internal members and may break between versions.
+
+    Parameters
+    ----------
+    df
+        SparkDF to convert.
+
+    Returns
+    -------
+    SparkDF
+        New SparkDF created from Java RDD.
+
+    Examples
+    --------
+    >>> df = rdd.toDF()
+    >>> new_df = cut_lineage(df)
+    >>> new_df.count()
+    3
+    """
+    logger.info('Converting SparkDF to Java RDD.')
+
+    try:
+        jrdd = df._jdf.toJavaRDD()
+        jschema = df._jdf.schema()
+        jrdd.cache()
+        sql_ctx = df.sql_ctx
+        try:
+            java_sql_ctx = sql_ctx._jsqlContext
+        except AttributeError:
+            java_sql_ctx = sql_ctx._ssql_ctx
+
+        logger.info('Creating new SparkDF from Java RDD.')
+        new_java_df = java_sql_ctx.createSparkDF(jrdd, jschema)
+        new_df = SparkDF(new_java_df, sql_ctx)
+        return new_df
+    except Exception:
+        logger.error('An error occurred during the lineage cutting process.')
+        raise
+
+
+def insert_df_to_hive_table(
+    spark: SparkSession,
+    df: SparkDF,
+    table_name: str,
+    overwrite: bool = False,
+    fill_missing_cols: bool = False,
+) -> None:
+    """Write the SparkDF contents to a Hive table.
+
+    This function writes data from a SparkDF into a Hive table, allowing
+    optional handling of missing columns. The table's column order is ensured to
+    match that of the DataFrame.
+
+    Parameters
+    ----------
+    spark
+        Active SparkSession.
+    df
+        SparkDF containing data to be written.
+    table_name
+        Name of the Hive table to write data into.
+    overwrite
+        If True, existing data in the table will be overwritten,
+        by default False.
+    fill_missing_cols
+        If True, missing columns will be filled with nulls, by default False.
+    """
+    logger.info(f'Preparing to write data to {table_name}.')
+
+    # Validate SparkDF before writing
+    assert_df_is_not_empty(df, f'Cannot write an empty SparkDF to {table_name}')
+
+    try:
+        table_columns = spark.read.table(table_name).columns
+    except AnalysisException:
+        logger.error(
+            (
+                f'Error reading table {table_name}. '
+                f'Make sure the table exists and you have access to it.'
+            ),
+        )
+
+        raise
+
+    if fill_missing_cols:
+        missing_columns = list(set(table_columns) - set(df.columns))
+
+        for col in missing_columns:
+            df = df.withColumn(col, F.lit(None))
+    else:
+        # Validate schema before writing
+        if set(table_columns) != set(df.columns):
+            msg = (
+                f"SparkDF schema does not match table {table_name} "
+                f"schema and 'fill_missing_cols' is False."
+            )
+            raise ValueError(msg)
+
+    df = df.select(table_columns)
+
+    try:
+        df.write.insertInto(table_name, overwrite)
+        logger.info(f'Successfully wrote data to {table_name}.')
+    except Exception:
+        logger.error(f'Error writing data to {table_name}.')
+        raise
+
+
+def assert_df_is_not_empty(df: SparkDF, err_msg: str) -> SparkDF:
+    """Raise an error if the SparkDF is empty.
+
+    Parameters
+    ----------
+    df
+        SparkDF to check.
+    err_msg
+        Error message to raise if SparkDF is empty.
+
+    Returns
+    -------
+    SparkDF
+        Returns the input SparkDF if not empty.
+
+    Raises
+    ------
+    ValueError
+        If SparkDF is empty.
+    """
+    if df.limit(1).count() == 0:
+        err_msg += f'. SparkDF schema: {df.schema}'
+        raise ValueError(err_msg)
+    else:
+        num_rows = df.count()
+        logger.info(
+            (
+                f'SparkDF is not empty. It contains {num_rows} rows '
+                f'and has the following schema: {df.schema}'
+            ),
+        )
+        return df
+
+
+def extract_database_name(
+    spark: SparkSession,
+    long_table_name: str,
+) -> Tuple[str, str]:
+    """Extract the database component and table name from a compound table name.
+
+    Parameters
+    ----------
+    spark
+        Active SparkSession.
+    long_table_name
+        Full name of the table including the database name.
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing the name of the database and the table name.
+
+    Raises
+    ------
+    ValueError
+        If the table name is incorrectly formatted.
+    """
+    table_name = ''
+    if '.' in long_table_name:
+        parts = long_table_name.split('.', 1)
+        if len(parts) != 2:
+            logger.error(
+                f'Table name {long_table_name} is incorrectly formatted. '
+                f'Expected format: db_name.table_name',
+            )
+
+            msg = (
+                f'Table name {long_table_name} is incorrectly formatted. '
+                f'Expected format: db_name.table_name'
+            )
+            raise ValueError(msg)
+        db_name, table_name = parts
+    else:
+        try:
+            db_name = spark.sql('SELECT current_database()').collect()[0][
+                'current_database()'
+            ]
+        except Exception as e:
+            logger.error(f'Failed to get the current database. Error: {e}')
+            raise
+
+    logger.info(
+        (
+            f'Extracted database name: {db_name}, '
+            f'table name: {table_name} from {long_table_name}'
+        ),
+    )
+
+    return db_name, table_name
+
+
+def load_and_validate_table(
+    spark: SparkSession,
+    table_name: str,
+    skip_validation: bool = False,
+    err_msg: str = None,
+    filter_cond: str = None,
+) -> SparkDF:
+    """Load a table and validate if it is not empty after applying a filter.
+
+    Parameters
+    ----------
+    spark
+        Active SparkSession.
+    table_name
+        Name of the table to load.
+    skip_validation
+        If True, skips validation step, by default False.
+    err_msg
+        Error message to return if table is empty, by default None.
+    filter_cond
+        Condition to apply to SparkDF once read, by default None.
+
+    Returns
+    -------
+    SparkDF
+        Loaded SparkDF if validated, subject to options above.
+
+    Raises
+    ------
+    PermissionError
+        If accessing the table fails.
+    """
+    try:
+        df = spark.read.table(table_name)
+        logger.info(f'Successfully loaded table {table_name}.')
+    except Exception as e:
+        db_name, _ = extract_database_name(spark, table_name)
+        db_err = (
+            f'Error accessing {table_name} in the {db_name} database. '
+            'Check you have access to the database and that '
+            'the table name is correct.'
+        )
+        logger.error(db_err)
+        raise PermissionError(db_err) from e
+
+    if not skip_validation:
+        if df.rdd.isEmpty():
+            err_msg = err_msg or f'Table {table_name} is empty.'
+            raise ValueError(err_msg)
+
+    if filter_cond:
+        df = df.filter(filter_cond)
+        if not skip_validation and df.rdd.isEmpty():
+            err_msg = (
+                err_msg
+                or f'Table {table_name} is empty after applying '
+                f'filter condition [{filter_cond}].'
+            )
+            raise ValueError(err_msg)
+
+    logger.info(
+        (
+            f'Loaded and validated table {table_name}. '
+            f'Filter condition applied: {filter_cond}'
+        ),
+    )
+
+    return df
+
+
+def find_spark_dataframes(
+    locals_dict: Dict[str, Union[SparkDF, dict]],
+) -> Dict[str, Union[SparkDF, dict]]:
+    """Extract SparkDF's objects from a given dictionary.
+
+    This function scans the dictionary and returns another containing only
+    entries where the value is a SparkDF. It also handles dictionaries within
+    the input, including them in the output if their first item is a SparkDF.
+
+    Designed to be used with locals() in Python, allowing extraction of
+    all SparkDF variables in a function's local scope.
+
+    Parameters
+    ----------
+    locals_dict
+        A dictionary usually returned by locals(), with variable names
+        as keys and their corresponding objects as values.
+
+    Returns
+    -------
+    dict
+        A dictionary with entries from locals_dict where the value is a
+        SparkDF or a dictionary with a SparkDF as its first item.
+
+    Examples
+    --------
+    >>> dfs = find_spark_dataframes(locals())
+    """
+    frames = {}
+
+    for key, value in locals_dict.items():
+        if key in ['_', '__', '___']:
+            continue
+
+        if isinstance(value, SparkDF):
+            frames[key] = value
+            logger.info(f'SparkDF found: {key}')
+        elif (
+            isinstance(value, dict)
+            and value
+            and isinstance(next(iter(value.values())), SparkDF)
+        ):
+            frames[key] = value
+            logger.info(f'Dictionary of SparkDFs found: {key}')
+        else:
+            logger.debug(
+                f'Skipping non-SparkDF item: {key}, Type: {type(value)}',
+            )
+
+    return frames
