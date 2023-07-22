@@ -109,4 +109,5 @@ inline-quotes = "single"
    "F403", "F405",
    "PT011",
    "B017",
+   "D205"
 ]
