@@ -1,12 +1,13 @@
 """Tests for spark_helpers module."""
+from unittest.mock import MagicMock, patch
+
 import pytest
-
 from chispa import assert_df_equality
-from pyspark.sql import (
-    DataFrame as SparkDF,
-    types as T,
-)
+from pyspark.sql import DataFrame as SparkDF
+from pyspark.sql import types as T
 
+from rdsa_utils.helpers.helpers_spark import *
+from rdsa_utils.helpers.helpers_spark import _convert_to_spark_col
 from tests.conftest import (
     Case,
     create_dataframe,
@@ -14,8 +15,6 @@ from tests.conftest import (
     to_date,
     to_datetime,
 )
-from rdsa_utils.helpers.helpers_spark import *
-from rdsa_utils.helpers.helpers_spark import _convert_to_spark_col
 
 
 @to_spark_col
@@ -859,3 +858,385 @@ class TestSelectFirstObsAppearingInGroup:
             actual,
             expected,
         )
+
+
+class TestCutLineage:
+    """Tests for cut_lineage function."""
+
+    def test_cut_lineage(self, spark_session: SparkSession) -> None:
+        """Test that cut_lineage returns a DataFrame and doesn't raise any
+        exceptions during the process.
+        """
+        # Create a mock DataFrame with all necessary attributes
+        df = MagicMock(spec=SparkDF)
+        df._jdf = MagicMock()
+        df._jdf.toJavaRDD.return_value = MagicMock()
+        df._jdf.schema.return_value = MagicMock()
+        df.sql_ctx = spark_session
+        spark_session._jsqlContext = MagicMock()
+        spark_session._jsqlContext.createDataFrame.return_value = MagicMock()
+        try:
+            new_df = cut_lineage(df)
+            assert isinstance(new_df, SparkDF)
+        except Exception:
+            pytest.fail('cut_lineage raised Exception unexpectedly!')
+
+    def test_cut_lineage_error(self) -> None:
+        """Test that cut_lineage raises an exception when an error occurs
+        during the lineage cutting process.
+        """
+        # Create a mock DataFrame with all necessary attributes
+        df = MagicMock(spec=SparkDF)
+        df._jdf = MagicMock()
+        df._jdf.toJavaRDD.side_effect = Exception(
+            'An error occurred during the lineage cutting process.',
+        )
+        with pytest.raises(
+            Exception,
+            match='An error occurred during the lineage cutting process.',
+        ):
+            cut_lineage(df)
+
+
+class TestFindSparkDataFrames:
+    """Tests find_spark_dataframes function."""
+
+    def test_find_spark_dataframes(
+        self,
+        spark_session: SparkSession,
+        create_spark_df: Callable,
+    ) -> None:
+        """Test that find_spark_dataframes correctly identifies DataFrames and
+        dictionaries containing DataFrames.
+        """
+        input_schema = T.StructType(
+            [
+                T.StructField('name', T.StringType(), True),
+                T.StructField('department', T.StringType(), True),
+                T.StructField('salary', T.IntegerType(), True),
+            ],
+        )
+        df = create_spark_df(
+            [
+                (input_schema),
+                ('John', 'Sales', 20),
+                ('Jane', 'Marketing', 21),
+            ],
+        )
+        locals_dict = {
+            'df': df,
+            'not_df': "I'm not a DataFrame",
+            'df_dict': {'df1': df, 'df2': df},
+        }
+
+        result = find_spark_dataframes(locals_dict)
+
+        assert 'df' in result
+        assert 'df_dict' in result
+        assert 'not_df' not in result
+
+        assert isinstance(result['df'], SparkDF)
+        assert isinstance(result['df_dict'], dict)
+        assert all(isinstance(val, SparkDF) for val in result['df_dict'].values())
+
+
+class TestAssertDataFrameIsNotEmpty:
+    """Tests for assert_df_is_not_empty function."""
+
+    def test_assert_df_is_not_empty_with_empty_df(
+        self,
+        spark_session: SparkSession,
+    ) -> None:
+        """Test that assert_df_is_not_empty raises a ValueError when the input
+        DataFrame is empty.
+        """
+        empty_df = spark_session.createDataFrame([], 'name STRING, age INT')
+
+        err_msg = 'DataFrame is empty'
+        with pytest.raises(ValueError):
+            assert_df_is_not_empty(empty_df, err_msg)
+
+    def test_assert_df_is_not_empty_with_non_empty_df(
+        self,
+        spark_session: SparkSession,
+        create_spark_df: Callable,
+    ) -> None:
+        """Test that assert_df_is_not_empty returns the input DataFrame when it
+        is not empty.
+        """
+        input_schema = T.StructType(
+            [
+                T.StructField('name', T.StringType(), True),
+                T.StructField('department', T.StringType(), True),
+                T.StructField('salary', T.IntegerType(), True),
+            ],
+        )
+        non_empty_df = create_spark_df(
+            [
+                (input_schema),
+                ('John', 'Sales', 20),
+                ('Jane', 'Marketing', 21),
+            ],
+        )
+
+        err_msg = 'DataFrame is empty'
+        returned_df = assert_df_is_not_empty(non_empty_df, err_msg)
+
+        assert isinstance(returned_df, SparkDF)
+        assert returned_df.count() == 2
+        assert returned_df.columns == ['name', 'department', 'salary']
+
+
+class TestExtractDatabaseName:
+    """Tests for extract_database_name function."""
+
+    @pytest.fixture()
+    def dummy_database_and_table(self, spark_session: SparkSession) -> str:
+        """Fixture that creates a dummy Spark database and table for testing.
+
+        This fixture creates a test database named 'test_db' and a test table named 'test_table' in that database.
+        The table is simple and contains two columns: 'name' (a string) and 'age' (an integer).
+
+        The name of the table in the form 'database.table' is then yielded for use in the tests.
+
+        After the tests using this fixture are completed, it cleans up by dropping the test table and the test database.
+
+        Parameters
+        ----------
+        spark_session
+            Active SparkSession to use for creating and deleting the test database and table.
+
+        Yields
+        ------
+        str
+            The name of the test table in the form 'database.table'.
+        """
+        spark_session.sql('CREATE DATABASE IF NOT EXISTS test_db')
+        spark_session.sql(
+            'CREATE TABLE IF NOT EXISTS test_db.test_table (name STRING, age INT)',
+        )
+        yield 'test_db.test_table'
+        spark_session.sql('DROP TABLE IF EXISTS test_db.test_table')
+        spark_session.sql('DROP DATABASE IF EXISTS test_db')
+
+    def test_extract_database_name_correct_format(
+        self,
+        spark_session: SparkSession,
+        dummy_database_and_table: str,
+    ) -> None:
+        """Test that extract_database_name correctly identifies the database
+        and table name from a correctly formatted input.
+        """
+        long_table_name = dummy_database_and_table
+        db_name, table_name = extract_database_name(spark_session, long_table_name)
+        assert db_name == 'test_db'
+        assert table_name == 'test_table'
+
+    def test_extract_database_name_incorrect_format(
+        self,
+        spark_session: SparkSession,
+    ) -> None:
+        """Test that extract_database_name raises a ValueError when the input
+        is incorrectly formatted.
+        """
+        long_table_name = 'incorrect.format.table'
+        with pytest.raises(ValueError):
+            db_name, table_name = extract_database_name(spark_session, long_table_name)
+
+    def test_extract_database_name_no_specified_database(
+        self,
+        spark_session: SparkSession,
+    ) -> None:
+        """Test that extract_database_name correctly identifies the current
+        database when no database is specified in the input.
+        """
+        long_table_name = 'test_table'
+        db_name, table_name = extract_database_name(spark_session, long_table_name)
+        current_db = spark_session.sql('SELECT current_database()').collect()[0][
+            'current_database()'
+        ]
+        assert db_name == current_db
+        assert table_name == 'test_table'
+
+
+class TestLoadAndValidateTable:
+    """Tests for load_and_validate_table function."""
+
+    def test_load_and_validate_table_with_empty_table(self) -> None:
+        """Test that load_and_validate_table raises a ValueError when the table
+        is empty and skip_validation is False.
+        """
+        table_name = 'empty_table'
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.rdd.isEmpty.return_value = True
+        spark_session.read.table.return_value = df
+        with pytest.raises(ValueError):
+            load_and_validate_table(spark_session, table_name)
+
+    def test_load_and_validate_table_with_non_existing_table(self) -> None:
+        """Test that load_and_validate_table raises a PermissionError when the
+        table doesn't exist.
+        """
+        table_name = 'non_existing_table'
+        # Mock SparkSession
+        spark_session = MagicMock(spec=SparkSession)
+        spark_session.read.table.side_effect = Exception('Table not found.')
+        with pytest.raises(PermissionError):
+            load_and_validate_table(spark_session, table_name)
+
+    def test_load_and_validate_table_with_filter(self) -> None:
+        """Test that load_and_validate_table applies the filter condition and
+        raises a ValueError when the DataFrame is empty after filtering.
+        """
+        table_name = 'test_table'
+        filter_cond = 'age > 30'
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.rdd.isEmpty.side_effect = [False, True]
+        spark_session.read.table.return_value = df
+        with pytest.raises(ValueError):
+            load_and_validate_table(spark_session, table_name, filter_cond=filter_cond)
+
+    def test_load_and_validate_table_with_skip_validation(self) -> None:
+        """Test that load_and_validate_table doesn't raise any exceptions when
+        skip_validation is True even if the table is empty.
+        """
+        table_name = 'empty_table'
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.rdd.isEmpty.return_value = True
+        spark_session.read.table.return_value = df
+        # No exception is expected to be raised here
+        load_and_validate_table(spark_session, table_name, skip_validation=True)
+
+    def test_load_and_validate_table_with_normal_table(self) -> None:
+        """Test that load_and_validate_table works correctly when the table exists,
+        is not empty, and doesn't need a filter.
+        """
+        table_name = 'normal_table'
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.rdd.isEmpty.return_value = False
+        spark_session.read.table.return_value = df
+        # No exception is expected to be raised here
+        result = load_and_validate_table(spark_session, table_name)
+        # Check that the returned DataFrame is our mock DataFrame
+        assert result == df
+
+
+class TestInsertDataFrameToHiveTable:
+    """Tests for insert_df_to_hive_table function."""
+
+    @pytest.fixture()
+    def test_df(self, spark_session: SparkSession, create_spark_df: Callable):
+        """Fixture to create a test DataFrame with the help of
+        `create_spark_df` callable.
+
+        This fixture uses the `create_spark_df` callable to generate
+        a DataFrame for testing.
+
+        The created DataFrame has three columns: 'id' (an integer),
+        'name' (a string), and 'age' (an integer).
+
+        It has two rows of data with values (1, 'Alice', 25)
+        and (2, 'Bob', 30).
+
+        Parameters
+        ----------
+        spark_session
+            Active SparkSession to use for creating the DataFrame.
+        create_spark_df
+            A callable function to create a DataFrame.
+
+        Returns
+        -------
+        SparkDF
+            A DataFrame with specified schema and data.
+        """
+        input_schema = T.StructType(
+            [
+                T.StructField('id', T.IntegerType(), True),
+                T.StructField('name', T.StringType(), True),
+                T.StructField('age', T.IntegerType(), True),
+            ],
+        )
+        df = create_spark_df(
+            [
+                (input_schema),
+                (1, 'Alice', 25),
+                (2, 'Bob', 30),
+            ],
+        )
+
+        return df
+
+    @patch('pyspark.sql.DataFrameWriter.insertInto')
+    @patch('pyspark.sql.DataFrameReader.table')
+    def test_insert_df_to_hive_table_with_missing_columns(
+        self,
+        mock_table,
+        mock_insert_into,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that insert_df_to_hive_table correctly inserts data into a Hive
+        table when 'fill_missing_cols' is True.
+        """
+        table_name = 'test_table'
+        # Mock the table columns
+        mock_table.return_value.columns = ['id', 'name', 'age', 'address']
+        # Mock the DataFrameWriter insertInto
+        mock_insert_into.return_value = None
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+            overwrite=True,
+            fill_missing_cols=True,
+        )
+        # Assert that insertInto was called with correct arguments
+        mock_insert_into.assert_called_with(table_name, True)
+
+    @patch('pyspark.sql.DataFrameReader.table')
+    def test_insert_df_to_hive_table_without_missing_columns(
+        self,
+        mock_table,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that insert_df_to_hive_table raises a ValueError when
+        'fill_missing_cols' is False and DataFrame schema doesn't match with
+        the table schema.
+        """
+        table_name = 'test_table'
+        # Mock the table columns
+        mock_table.return_value.columns = ['id', 'name', 'age', 'address']
+        with pytest.raises(ValueError):
+            insert_df_to_hive_table(
+                spark_session,
+                test_df,
+                table_name,
+                fill_missing_cols=False,
+            )
+
+    @patch('pyspark.sql.DataFrameReader.table')
+    def test_insert_df_to_hive_table_with_non_existing_table(
+        self,
+        mock_table,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that insert_df_to_hive_table raises an AnalysisException when
+        the table doesn't exist.
+        """
+        table_name = 'non_existing_table'
+        # Create an AnalysisException with a stack trace
+        exc = AnalysisException(f'Table {table_name} not found.', stackTrace='')
+        mock_table.side_effect = exc
+        with pytest.raises(AnalysisException):
+            insert_df_to_hive_table(spark_session, test_df, table_name)
