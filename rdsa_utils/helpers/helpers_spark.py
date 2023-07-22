@@ -932,41 +932,41 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
 
         # fmt: off
         if size == 'small':
-            builder = builder.config(
-                'spark.executor.memory', '1g',
-                'spark.executor.cores', 1,
-                'spark.dynamicAllocation.maxExecutors', 3,
-                'spark.sql.shuffle.partitions', 12,
+            builder = (
+                builder.config('spark.executor.memory', '1g')
+                .config('spark.executor.cores', 1)
+                .config('spark.dynamicAllocation.maxExecutors', 3)
+                .config('spark.sql.shuffle.partitions', 12)
             )
         elif size == 'medium':
-            builder = builder.config(
-                'spark.executor.memory', '6g',
-                'spark.executor.cores', 3,
-                'spark.dynamicAllocation.maxExecutors', 3,
-                'spark.sql.shuffle.partitions', 18,
+            builder = (
+                builder.config('spark.executor.memory', '6g')
+                .config('spark.executor.cores', 3)
+                .config('spark.dynamicAllocation.maxExecutors', 3)
+                .config('spark.sql.shuffle.partitions', 18)
             )
         elif size == 'large':
-            builder = builder.config(
-                'spark.executor.memory', '10g',
-                'spark.yarn.executor.memoryOverhead', '1g',
-                'spark.executor.cores', 5,
-                'spark.dynamicAllocation.maxExecutors', 5,
-                'spark.sql.shuffle.partitions', 200,
+            builder = (
+                builder.config('spark.executor.memory', '10g')
+                .config('spark.yarn.executor.memoryOverhead', '1g')
+                .config('spark.executor.cores', 5)
+                .config('spark.dynamicAllocation.maxExecutors', 5)
+                .config('spark.sql.shuffle.partitions', 200)
             )
         elif size == 'extra-large':
-            builder = builder.config(
-                'spark.executor.memory', '20g',
-                'spark.yarn.executor.memoryOverhead', '2g',
-                'spark.executor.cores', 5,
-                'spark.dynamicAllocation.maxExecutors', 12,
-                'spark.sql.shuffle.partitions', 240,
+            builder = (
+                builder.config('spark.executor.memory', '20g')
+                .config('spark.yarn.executor.memoryOverhead', '2g')
+                .config('spark.executor.cores', 5)
+                .config('spark.dynamicAllocation.maxExecutors', 12)
+                .config('spark.sql.shuffle.partitions', 240)
             )
 
         # Common configurations for all sizes
-        builder = builder.config(
-            'spark.dynamicAllocation.enabled', 'true',
-            'spark.shuffle.service.enabled', 'true',
-            'spark.ui.showConsoleProgress', 'false',
+        builder = (
+            builder.config('spark.dynamicAllocation.enabled', 'true')
+            .config('spark.shuffle.service.enabled', 'true')
+            .config('spark.ui.showConsoleProgress', 'false')
         ).enableHiveSupport()
         # fmt: on
 
