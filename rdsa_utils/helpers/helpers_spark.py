@@ -657,6 +657,19 @@ def extract_database_name(
 ) -> Tuple[str, str]:
     """Extract the database component and table name from a compound table name.
 
+    This function can handle three scenarios:
+
+    1. If the long_table_name is correctly formatted as 'db_name.table_name',
+       the function will extract and return the database name (db_name)
+       and table name.
+
+    2. If the long_table_name contains only the table name (e.g., 'table_name'),
+       the function will use the current database of the SparkSession and
+       the provided table name.
+
+    3. If the long_table_name is incorrectly formatted (contains more
+       than one dot), the function will raise a ValueError.
+
     Parameters
     ----------
     spark
@@ -672,31 +685,36 @@ def extract_database_name(
     Raises
     ------
     ValueError
-        If the table name is incorrectly formatted.
+        If the table name is incorrectly formatted (contains more than one dot).
+        Expected format: db_name.table_name
     """
-    table_name = ''
     if '.' in long_table_name:
-        parts = long_table_name.split('.', 1)
-        if len(parts) != 2:
+        parts = long_table_name.split('.')
+        if len(parts) > 2:
             logger.error(
                 f'Table name {long_table_name} is incorrectly formatted. '
                 f'Expected format: db_name.table_name',
             )
-
             msg = (
                 f'Table name {long_table_name} is incorrectly formatted. '
                 f'Expected format: db_name.table_name'
             )
             raise ValueError(msg)
-        db_name, table_name = parts
+        db_name, table_name = (
+            parts
+            if len(parts) == 2
+            else (
+                spark.sql('SELECT current_database()').collect()[0][
+                    'current_database()'
+                ],
+                parts[0],
+            )
+        )
     else:
-        try:
-            db_name = spark.sql('SELECT current_database()').collect()[0][
-                'current_database()'
-            ]
-        except Exception as e:
-            logger.error(f'Failed to get the current database. Error: {e}')
-            raise
+        db_name = spark.sql('SELECT current_database()').collect()[0][
+            'current_database()'
+        ]
+        table_name = long_table_name
 
     logger.info(
         (
