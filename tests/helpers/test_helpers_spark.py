@@ -1243,34 +1243,32 @@ class TestInsertDataFrameToHiveTable:
 
 
 class TestCreateSparkSession:
-    """
-    Tests for create_spark_session function.
-    """
+    """Tests for create_spark_session function."""
 
     @pytest.mark.parametrize(
-        "session_size", ["default", "small", "medium", "large", "extra-large"]
+        'session_size', ['default', 'small', 'medium', 'large', 'extra-large'],
     )
     def test_create_spark_session_valid_sizes(self, session_size: str) -> None:
-        """Test create_spark_session with valid sizes"""
+        """Test create_spark_session with valid sizes."""
         spark = create_spark_session(session_size)
         assert isinstance(
-            spark, SparkSession
-        ), "The function should return a SparkSession instance."
+            spark, SparkSession,
+        ), 'The function should return a SparkSession instance.'
         spark.stop()
 
-    @pytest.mark.parametrize("session_size", ["tiny", "huge", "invalid"])
+    @pytest.mark.parametrize('session_size', ['tiny', 'huge', 'invalid'])
     def test_create_spark_session_invalid_sizes(self, session_size: str) -> None:
-        """Test create_spark_session with invalid sizes"""
+        """Test create_spark_session with invalid sizes."""
         with pytest.raises(ValueError):
             create_spark_session(session_size)
 
     def test_create_spark_session_with_extra_configs(
         self,
     ) -> None:
-        """Test create_spark_session with extra configurations"""
-        extra_configs = {"spark.ui.enabled": "false"}
-        spark = create_spark_session("default", extra_configs)
+        """Test create_spark_session with extra configurations."""
+        extra_configs = {'spark.ui.enabled': 'false'}
+        spark = create_spark_session('default', extra_configs)
         assert (
-            spark.conf.get("spark.ui.enabled") == "false"
-        ), "Extra configurations should be applied."
+            spark.conf.get('spark.ui.enabled') == 'false'
+        ), 'Extra configurations should be applied.'
         spark.stop()
