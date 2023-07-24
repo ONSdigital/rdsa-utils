@@ -162,28 +162,28 @@ class TestInitLoggerAdvanced:
         """Test whether a logger is properly initialized with no handlers."""
         caplog.set_level(logging.DEBUG)
         init_logger_advanced(logging.DEBUG)
-        assert caplog.records[0].levelname == "DEBUG"
+        assert caplog.records[0].levelname == 'DEBUG'
 
     def test_logger_with_handlers(self, caplog):
         """Test whether a logger is properly initialized with a valid handler."""
         caplog.set_level(logging.DEBUG)
-        handler = logging.FileHandler("logfile.log")
+        handler = logging.FileHandler('logfile.log')
         handlers = [handler]
         init_logger_advanced(logging.DEBUG, handlers)
 
-        logger = logging.getLogger("rdsa_utils.helpers.logging")
+        logger = logging.getLogger('rdsa_utils.helpers.logging')
 
-        assert caplog.records[0].levelname == "DEBUG"
+        assert caplog.records[0].levelname == 'DEBUG'
         assert any(isinstance(h, type(handler)) for h in logger.handlers)
 
     def test_logger_with_invalid_handler(self):
         """Test whether a ValueError is raised when an invalid handler is provided."""
         log_level = logging.DEBUG
-        invalid_handler = "I am not a handler"
+        invalid_handler = 'I am not a handler'
         handlers = [invalid_handler]
         with pytest.raises(ValueError) as exc_info:
             init_logger_advanced(log_level, handlers)
         assert (
             str(exc_info.value)
-            == f"Handler {invalid_handler} is not an instance of logging.Handler or its subclasses"
+            == f'Handler {invalid_handler} is not an instance of logging.Handler or its subclasses'
         )
