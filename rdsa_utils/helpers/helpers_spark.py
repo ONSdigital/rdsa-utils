@@ -541,7 +541,7 @@ def cut_lineage(df: SparkDF) -> SparkDF:
             java_sql_ctx = sql_ctx._ssql_ctx
 
         logger.info('Creating new SparkDF from Java RDD.')
-        new_java_df = java_sql_ctx.createSparkDF(jrdd, jschema)
+        new_java_df = java_sql_ctx.createDataFrame(jrdd, jschema)
         new_df = SparkDF(new_java_df, sql_ctx)
         return new_df
     except Exception:
