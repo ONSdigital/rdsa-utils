@@ -1,4 +1,4 @@
-"""Useful I/O functions which are platform agnostic."""
+"""Useful I/O functions."""
 import json
 import logging
 import textwrap
