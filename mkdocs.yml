@@ -1,0 +1,20 @@
+site_name: rdsa-utils
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            # All options can be found at: https://mkdocstrings.github.io/python/usage/#globallocal-options
+            docstring_style: numpy
+            show_signature_annotations: True
+            show_source: False
+            show_root_heading: True
+            merge_init_into_class: True
+
+nav:
+  - rdsa-utils: index.md
+  - API reference: reference.md
