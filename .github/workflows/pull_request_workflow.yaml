@@ -52,4 +52,4 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run pytest || true
+        run: poetry run pytest tests/ -m "not slow" || true
