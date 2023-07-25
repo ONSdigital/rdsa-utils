@@ -1,13 +1,10 @@
 site_name: rdsa-utils
 
 theme:
-  name: "material"
-  palette:
-    primary: black
-    accent: light blue
+  name: tech_docs_template
 
-extra_css:
-  - "custom.css"
+repo_name: rdsa-utils
+repo_url: https://github.com/ONSdigital/rdsa-utils
 
 plugins:
   - mkdocstrings:
@@ -20,7 +17,7 @@ plugins:
             show_source: False
             show_root_heading: True
             merge_init_into_class: True
-  - search
+  - material/search
 
 nav:
   - rdsa-utils: index.md
