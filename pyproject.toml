@@ -81,8 +81,6 @@ ignore = [
 ]
 line-length = 80
 
-fix = true
-
 exclude = ["dev_utils/*"]
 
 [tool.ruff.flake8-quotes]

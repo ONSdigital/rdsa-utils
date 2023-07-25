@@ -1,9 +1,12 @@
 """A selection of helper functions for building in pyspark."""
+from datetime import datetime, time
 import functools
 import itertools
 import logging
 from typing import Any, Callable, List, Mapping, Optional, Sequence, Union
 
+import pandas as pd
+from pandas.tseries.offsets import MonthEnd
 from pyspark.sql import (
     Column as SparkCol,
     DataFrame as SparkDF,
@@ -14,6 +17,9 @@ from pyspark.sql import (
     WindowSpec,
 )
 
+from rdsa_utils.helpers.logging import (
+    log_spark_df_schema,
+)
 
 logger = logging.getLogger()
 
@@ -489,4 +495,119 @@ def select_first_obs_appearing_in_group(
         .withColumn('rank', rank_by_date)
         .filter(F.col('rank') == 1)
         .drop('rank')
+    )
+
+
+@log_spark_df_schema
+def convert_struc_col_to_columns(
+    df: SparkDF,
+    convert_nested_structs: bool = False,
+) -> SparkDF:
+    """Flatten struct columns in pyspark dataframe to individual columns.
+
+    Parameters
+    ----------
+    df
+        Dataframe that may or may not contain struct type columns.
+    convert_nested_structs
+        If true, function will recursively call until no structs are left.
+        Inversely, when false, only top level structs are flattened; if these
+        contain subsequent structs they would remain.
+
+    Returns
+    -------
+        The input dataframe but with any struct type columns dropped, and in
+        its place the individual fields within the struct column as individual
+        columns.
+    """
+    struct_cols = []
+    for field in df.schema.fields:
+        if type(field.dataType) == T.StructType:
+            struct_cols.append(field.name)
+
+    df = df.select(
+        # Select all columns in df not identified as being struct type.
+        *[col for col in df.columns if col not in struct_cols],
+        # All columns identified as being struct type, but expand the struct
+        # to individual columns using .* notation.
+        *[f'{col}.*' for col in struct_cols],
+    )
+
+    if (
+        convert_nested_structs and
+        any(isinstance(field.dataType, T.StructType)
+        for field in df.schema.fields)
+    ):
+        df = convert_struc_col_to_columns(df=df)
+
+    return df
+
+
+def filter_dates_to_analysis_period(
+    df: SparkDF,
+    dates: str,
+    start_date: Union[datetime.date, str],
+    end_date: Union[datetime.date, str],
+) -> SparkDF:
+    """Exclude dates outside of analysis period.
+
+    Parameters
+    ----------
+    df
+        Spark dataframe to be filtered.
+    dates
+        Name of column containing dates to be filtered.
+    start_date
+        Datetime like object which is used to define the start date for filter.
+        Acceptable string formats include (but not limited to): MMMM YYYY,
+        YYYY-MM, YYYY-MM-DD, DD MMM YYYY etc. If only month and year specified
+        the start_date is set as first day of month
+    end_date
+        Datetime like object which is used to define the start date for filter.
+        Acceptable string formats include (but not limited to): MMMM YYYY,
+        YYYY-MM, YYYY-MM-DD, DD MMM YYYY etc. If only month and year specified
+        the end_date is set as final day of month
+    """
+    shift_end_date_to_month_end = False
+
+    year_month_formats = [
+        '%B %Y',  # January 2020
+        '%b %Y',  # Jan 2020
+
+        '%Y %B',  # 2020 January
+        '%Y %b',  # 2020 Jan
+
+        # '%Y-%m',  # 2020-01 - also matches 2020-01-01
+        # '%Y-%-m',  # 2020-1 - also matches 2020-01-01
+        # '%Y %m',  # 2020 01 - also matches 2020-01-01
+        # '%Y %-m',  # 2020 1 - also matches 2020-01-01
+
+        '%m-%Y',  # 01-2020
+        '%-m-%Y',  # 1-2020
+        '%m %Y',  # 01 2020
+        '%-m %Y',  # 1 2020
+    ]
+
+    # if the end_date format matches one of the above then it is assumed the
+    # used wants to use all days in that month.
+    for date_format in year_month_formats:
+        try:
+            pd.to_datetime(end_date, format=date_format)
+            shift_end_date_to_month_end = True
+
+        except ValueError:
+            pass
+
+    if shift_end_date_to_month_end:
+        end_date = pd.to_datetime(end_date) + MonthEnd(0)
+
+    # Obtain the last "moment" of the end_date to ensure any hourly data for
+    # the date is included
+    # https://medium.com/@jorlugaqui/how-to-get-the-latest-earliest-moment-from-a-day-in-python-aa8999bea945  # noqa: E501
+    end_date = datetime.combine(pd.to_datetime(end_date), time.max)
+
+    # Ensure dates are timestamp to enable inclusive filtering of provided end
+    # date, see https://stackoverflow.com/a/43403904 for info.
+    return df.filter(
+        F.col(dates).between(pd.Timestamp(start_date), pd.Timestamp(end_date)),
     )
