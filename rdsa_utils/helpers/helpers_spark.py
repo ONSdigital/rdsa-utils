@@ -637,7 +637,7 @@ def assert_df_is_not_empty(df: SparkDF, err_msg: str) -> SparkDF:
     ValueError
         If SparkDF is empty.
     """
-    if df.limit(1).count() == 0:
+    if not df.head():
         err_msg += f'. SparkDF schema: {df.schema}'
         raise ValueError(err_msg)
     else:
