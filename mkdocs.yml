@@ -1,7 +1,9 @@
-site_name: rdsa-utils
+site_name: rdsa-utils Documentation
 
 theme:
   name: tech_docs_template
+  logo: assets/ons_logo_white.svg
+  favicon: assets/ons_favicon.svg
 
 repo_name: rdsa-utils
 repo_url: https://github.com/ONSdigital/rdsa-utils
