@@ -9,35 +9,32 @@ def invalidate_impala_metadata(
     impalad_ca_cert: str,
     keep_stderr: Optional[bool] = False,
 ):
-    """Invalidate the metadata of a specified table using the impala-shell
-    command.
+    """Automate the invalidation of a table's metadata using impala-shell.
 
-    This function runs the impala-shell command with the provided impalad_address_port and impalad_ca_cert, and
-    invalidates the metadata of the given table.
+    This function uses the impala-shell command with the given
+    impalad_address_port and impalad_ca_cert, to invalidate a specified
+    table's metadata.
 
-    The invalidate_impala_metadata function is particularly useful during the execution of a
-    data pipeline after writing to an intermediate Hive table. When using the Impala Query Editor in Hue,
-    it is common for end-users and analysts to run the "INVALIDATE METADATA" command on a given table
-    to ensure that the table's metadata is up-to-date. However, this step can be easily forgotten,
-    leading to the use of outdated metadata and potentially incorrect results.
+    It proves useful during a data pipeline's execution after writing to an
+    intermediate Hive table. Using Impala Query Editor in Hue, end-users often
+    need to run "INVALIDATE METADATA" command to refresh a table's metadata.
+    However, this manual step can be missed, leading to potential use of
+    outdated metadata.
 
-    The invalidate_impala_metadata function automates this step by running the "INVALIDATE METADATA"
-    command on the specified table, ensuring that the table's metadata is up-to-date for subsequent queries.
-
-    This saves time for end-users and analysts by eliminating the need to manually execute
-    the command in Hue's Impala Query Editor, making it less likely for them to encounter issues
-    related to outdated metadata.
+    The function automates the "INVALIDATE METADATA" command for a given table,
+    ensuring up-to-date metadata for future queries. This reduces manual
+    intervention, making outdated metadata issues less likely to occur.
 
     Parameters
     ----------
     table
-        Name of the table whose metadata needs to be invalidated.
+        Name of the table for metadata invalidation.
     impalad_address_port
-        The address and port of the impalad instance in the format 'address:port'.
+        Impalad instance's 'address:port'.
     impalad_ca_cert
-        Path to the impalad Certificate Authority (CA) certificate file.
+        Path to impalad's CA certificate file.
     keep_stderr
-        If True, the function will print the standard error output of the impala-shell command.
+        If True, will print impala-shell command's stderr output.
 
     Returns
     -------
@@ -45,10 +42,18 @@ def invalidate_impala_metadata(
 
     Examples
     --------
-    >>> invalidate_impala_metadata('my_table', 'localhost:21050', '/path/to/ca_cert.pem')
-    >>> invalidate_impala_metadata('my_table', 'localhost:21050', '/path/to/ca_cert.pem', keep_stderr=True)
+    >>> invalidate_impala_metadata(
+    ...     'my_table',
+    ...     'localhost:21050',
+    ...     '/path/to/ca_cert.pem'
+    ... )
+    >>> invalidate_impala_metadata(
+    ...     'my_table',
+    ...     'localhost:21050',
+    ...     '/path/to/ca_cert.pem',
+    ...     keep_stderr=True
+    ... )
     """
-
     result = subprocess.run(
         [
             "impala-shell",
