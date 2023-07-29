@@ -34,7 +34,9 @@ def _write_entry(entry_df: DataFrame, log_table: str) -> None:
 
 
 def create_runlog_table(
-    spark: SparkSession, database: str, tablename: Optional[str] = "pipeline_runlog"
+    spark: SparkSession,
+    database: str,
+    tablename: Optional[str] = "pipeline_runlog"
 ) -> None:
     """Creates a runlog table and an associated (suffixed) _reserved_ids table
     in the target database if they do not already exist.
