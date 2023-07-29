@@ -1,5 +1,5 @@
 """Tests for spark_helpers module."""
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 from chispa import assert_df_equality
@@ -1272,3 +1272,84 @@ class TestCreateSparkSession:
             spark.conf.get('spark.ui.enabled') == 'false'
         ), 'Extra configurations should be applied.'
         spark.stop()
+
+
+class TestWriteAndReadHiveTable:
+    """Tests for write_and_read_hive_table function."""
+
+    @pytest.fixture()
+    def mock_spark(self):
+        """Fixture for mocked SparkSession."""
+        return Mock(spec=SparkSession)
+
+    @pytest.fixture()
+    def mock_df(self):
+        """Fixture for mocked DataFrame with 'run_id' and 'data' columns."""
+        mock_df = Mock(spec=SparkDF)
+        mock_df.columns = ['run_id', 'data']
+        return mock_df
+
+    @patch('rdsa_utils.helpers.helpers_spark.load_and_validate_table')
+    @patch('rdsa_utils.helpers.helpers_spark.insert_df_to_hive_table')
+    def test_write_and_read_hive_table_success(
+        self, mock_insert, mock_load_and_validate, mock_spark, mock_df,
+    ):
+        """Test that write_and_read_hive_table function successfully writes SparkDF
+        to the Hive table and reads it back when all arguments are valid.
+        """
+        # Mock the functions
+        mock_insert.return_value = None
+        mock_load_and_validate.return_value = mock_df
+
+        # Call the function
+        result_df = write_and_read_hive_table(
+            mock_spark, mock_df, 'test_table', 'test_database', 'test_run',
+        )
+
+        # Verify the calls
+        mock_insert.assert_called_once_with(
+            mock_spark,
+            mock_df,
+            'test_database.test_table',
+            fill_missing_cols=False,
+        )
+        mock_load_and_validate.assert_called_once_with(
+            mock_spark,
+            'test_database.test_table',
+            skip_validation=False,
+            err_msg=None,
+            filter_cond="run_id = 'test_run'",
+        )
+
+        # Check the result
+        assert result_df == mock_df
+
+    def test_hive_table_does_not_exist(self, mock_spark, mock_df):
+        """Check exception handling when the Hive table does not exist."""
+        mock_spark.catalog.tableExists.return_value = False
+        with pytest.raises(
+            ValueError,
+            match='The specified Hive table test_database.test_table does not exist.',
+        ):
+            write_and_read_hive_table(
+                mock_spark,
+                mock_df,
+                'test_table',
+                'test_database',
+                'test_run',
+            )
+
+    def test_df_missing_filter_column(self, mock_spark, mock_df):
+        """Check exception handling when the DataFrame is missing the filter column."""
+        mock_df.columns = ['col1', 'col2']
+        with pytest.raises(
+            ValueError,
+            match="The provided DataFrame doesn't contain the specified filter column: run_id",
+        ):
+            write_and_read_hive_table(
+                mock_spark,
+                mock_df,
+                'test_table',
+                'test_database',
+                'test_run',
+            )
