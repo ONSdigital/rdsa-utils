@@ -1,4 +1,4 @@
-"""Utilities to create, manage, and retrieve entries from a pipeline runlog using Hive Tables."""
+"""Utilities for managing a Pipeline Runlog using Hive Tables."""
 import json
 import os
 from ast import literal_eval
@@ -36,7 +36,7 @@ def _write_entry(entry_df: DataFrame, log_table: str) -> None:
 def create_runlog_table(
     spark: SparkSession,
     database: str,
-    tablename: Optional[str] = "pipeline_runlog"
+    tablename: Optional[str] = "pipeline_runlog",
 ) -> None:
     """Creates a runlog table and an associated (suffixed) _reserved_ids table
     in the target database if they do not already exist.
@@ -99,16 +99,17 @@ def reserve_id(
     """Reserve a run id in the reserved ids table associated with the pipeline
     runlog table.
 
-    The function reads the last run id from the reserved ids table, increments it to create a new id,
-    and writes the new id with the current timestamp to the reserved ids table.
+    The function reads the last run id from the reserved ids table,
+    increments it to create a new id,and writes the new id with the
+    current timestamp to the reserved ids table.
 
     Parameters
     ----------
     spark
         A running SparkSession instance.
     log_table
-        The name of the main pipeline runlog table associated with this reserved id table,
-        by default "pipeline_runlog".
+        The name of the main pipeline runlog table associated with
+        this reserved id table, by default "pipeline_runlog".
 
     Returns
     -------
@@ -118,7 +119,9 @@ def reserve_id(
     current_time = datetime.now()
 
     last_id = (
-        spark.read.table(f"{log_table}_reserved_ids").select(F.max("run_id")).first()[0]
+        spark.read.table(f"{log_table}_reserved_ids")
+        .select(F.max("run_id"))
+        .first()[0]
     )
 
     new_id = last_id + 1 if last_id else 1
@@ -148,12 +151,14 @@ def _get_run_ids(
     pipeline
         If specified, the result will be for the listed pipeline only.
     log_table
-        The target runlog table. If the database is not set, this should include the database.
+        The target runlog table. If the database is not set, this should
+        include the database.
 
     Returns
     -------
     list
-        List of the most recent run ids. Returns an empty list if the log table is empty.
+        List of the most recent run ids. Returns an empty list
+        if the log table is empty.
     """
     log = spark.read.table(log_table)
 
@@ -161,7 +166,10 @@ def _get_run_ids(
         log = log.filter(log.pipeline_name == pipeline)
 
     result = (
-        log.orderBy("datetime", ascending=False).select("run_id").limit(limit).collect()
+        log.orderBy("datetime", ascending=False)
+        .select("run_id")
+        .limit(limit)
+        .collect()
     )
 
     return [row[0] for row in result]
@@ -181,7 +189,8 @@ def get_last_run_id(
     pipeline
         If specified, the result will be for the listed pipeline only.
     log_table
-        The target runlog table. If the database is not set, this should include the database.
+        The target runlog table. If the database is not set, this should
+        include the database.
 
     Returns
     -------
@@ -211,12 +220,14 @@ def get_penultimate_run_id(
     pipeline
         If specified, the result will be for the listed pipeline only.
     log_table
-        The target runlog table. If the database is not set, this should include the database.
+        The target runlog table. If the database is not set, this should
+        include the database.
 
     Returns
     -------
     int or None
-        The id of the penultimate run. Returns None if the log table is empty or has less than two entries.
+        The id of the penultimate run. Returns None if the log table is empty
+        or has less than two entries.
     """
     result = _get_run_ids(spark, 2, pipeline, log_table)
 
@@ -311,9 +322,11 @@ def add_runlog_entry(
     pipeline
         Pipeline name. If None, uses the spark application name.
     log_table
-        Target runlog table. If database not set, this should include the database.
+        Target runlog table. If database not set, this should 
+        include the database.
     run_id
-        Run id to use if already reserved. If not specified, a new one is generated.
+        Run id to use if already reserved. If not specified, 
+        a new one is generated.
 
     Returns
     -------
@@ -353,7 +366,8 @@ def _parse_runlog_as_string(
     config = literal_eval(df.select("config").first()[0])
 
     meta = "\n".join(
-        f"{col}: {df.select(col).first()[0]}" for col in df.drop("config").columns
+        f"{col}: {df.select(col).first()[0]}"
+        for col in df.drop("config").columns
     )
     config_str = "\n\n".join(
         f"{k.replace('_', ' ').title()}:\n\n"
@@ -383,7 +397,8 @@ def write_runlog_file(
     Returns
     -------
     None
-        This function doesn't return anything; it's used for its side effect of creating a text file.
+        This function doesn't return anything; it's used for its
+        side effect of creating a text file.
     """
     string_to_write = _parse_runlog_as_string(spark, runlog_table, runlog_id)
     create_txt_from_string(path, string_to_write)

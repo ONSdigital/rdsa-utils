@@ -1,27 +1,28 @@
-"""Utility functions for interacting with the Hadoop Distributed File System (HDFS)."""
+"""Utility functions for interacting with HDFS."""
 import os
 import subprocess
 from typing import List, Optional
 
 
 def _perform(command: List[str]) -> bool:
-    """Execute a system command using a subprocess, capturing the standard
-    output and error.
+    """Execute a command via subprocess, capturing stdout and stderr.
 
-    This function creates a subprocess with the provided command list, then communicates with it
-    to retrieve the stdout and stderr. After the command execution, it checks the process's
-    return code to determine success or failure. A zero return code indicates success.
+    This function creates a subprocess with the provided command list, then
+    communicates with it to retrieve the stdout and stderr. After the
+    command execution, it checks the process's return code to determine success
+    or failure. A zero return code indicates success.
 
     Parameters
     ----------
     command
-        A list of command elements representing the system command to be executed.
-        For example, ['ls', '-l', '/home/user'].
+        A list of command elements representing the system
+        command to be executed. For example, ['ls', '-l', '/home/user'].
 
     Returns
     -------
     bool
-        True if the command execution is successful (return code 0), otherwise False.
+        True if the command execution is successful (return code 0),
+        otherwise False.
 
     Raises
     ------
@@ -41,7 +42,9 @@ def _perform(command: List[str]) -> bool:
     return process.returncode == 0
 
 
-def change_permissions(path: str, permission: str, recursive: bool = False) -> bool:
+def change_permissions(
+    path: str, permission: str, recursive: bool = False
+) -> bool:
     """Changes directory and file permissions in HDFS.
 
     Parameters
@@ -51,12 +54,14 @@ def change_permissions(path: str, permission: str, recursive: bool = False) -> b
     permission
         The permission to be set, e.g., 'go+rwx' or '777'.
     recursive
-        If True, changes permissions for all subdirectories and files within a directory.
+        If True, changes permissions for all subdirectories and
+        files within a directory.
 
     Returns
     -------
     bool
-        True if the operation was successful (command return code 0), otherwise False.
+        True if the operation was successful (command return code 0),
+        otherwise False.
     """
     command = ["hadoop", "fs", "-chmod"]
     if recursive:
@@ -112,7 +117,8 @@ def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
     Returns
     -------
     bool
-        True if the operation was successful (command return code 0), otherwise False.
+        True if the operation was successful (command return code 0),
+        otherwise False.
     """
     command = ["hadoop", "fs", "-copyFromLocal", from_path, to_path]
     return _perform(command)
@@ -131,16 +137,15 @@ def create_dir(path: str) -> bool:
     Returns
     -------
     bool
-        True if the operation is successful (directory created), otherwise False.
+        True if the operation is successful (directory created),
+        otherwise False.
     """
     command = ["hadoop", "fs", "-mkdir", path]
     return _perform(command)
 
 
 def create_txt_from_string(
-    path: str,
-    string_to_write: str,
-    replace: Optional[bool] = False
+    path: str, string_to_write: str, replace: Optional[bool] = False
 ) -> None:
     """Create a new text file and populate with a given string in HDFS using
     subprocess call to execute Hadoop commands.
@@ -148,16 +153,19 @@ def create_txt_from_string(
     Parameters
     ----------
     path
-        The path to the new file to be created, for example, '/some/directory/newfile.txt'.
+        The path to the new file to be created, for example,
+        '/some/directory/newfile.txt'.
     string_to_write
         The string that will populate the new text file.
     replace
-        Flag determining whether an existing file should be replaced. Defaults to False.
+        Flag determining whether an existing file should be replaced.
+        Defaults to False.
 
     Returns
     -------
     None
-        This function doesn't return anything; it's used for its side effect of creating a text file.
+        This function doesn't return anything; it's used for its side effect
+        of creating a text file.
 
     Raises
     ------
@@ -171,7 +179,9 @@ def create_txt_from_string(
             f"File {path} already exists and replace is set to False."
         )
 
-    subprocess.call([f'echo "{string_to_write}" | hadoop fs -put - {path}'], shell=True)
+    subprocess.call(
+        [f'echo "{string_to_write}" | hadoop fs -put - {path}'], shell=True
+    )
 
 
 def delete_dir(path: str) -> bool:
@@ -187,7 +197,8 @@ def delete_dir(path: str) -> bool:
     Returns
     -------
     bool
-        True if the operation is successful (directory deleted), otherwise False.
+        True if the operation is successful (directory deleted),
+        otherwise False.
     """
     command = ["hadoop", "fs", "-rmdir", path]
     return _perform(command)
@@ -296,7 +307,8 @@ def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
     Returns
     -------
     bool
-        True if the operation was successful (command return code 0), otherwise False.
+        True if the operation was successful (command return code 0),
+        otherwise False.
     """
     command = ["hadoop", "fs", "-moveFromLocal", from_path, to_path]
     return _perform(command)
@@ -349,7 +361,8 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
     path
         The path to the directory in HDFS.
     return_path
-        If True, returns the full path of the files, otherwise just the filename.
+        If True, returns the full path of the files, otherwise
+        just the filename.
 
     Returns
     -------
@@ -361,7 +374,9 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
         stdout=subprocess.PIPE,
         shell=True,
     )
-    object_list = [obj.decode("utf-8") for obj in command.stdout.read().splitlines()]
+    object_list = [
+        obj.decode("utf-8") for obj in command.stdout.read().splitlines()
+    ]
 
     if not return_path:
         return [os.path.basename(path) for path in object_list]
