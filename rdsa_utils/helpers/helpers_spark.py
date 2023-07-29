@@ -1066,11 +1066,12 @@ def write_and_read_hive_table(
         )
 
         # Read DataFrame back from Hive with filter condition
-        filter_cond = f"{filter_col} = '{filter_id}'"
         df_read = load_and_validate_table(
             spark,
             f'{database}.{table_name}',
-            filter_cond=filter_cond,
+            skip_validation=False,
+            err_msg=None,
+            filter_cond=f"{filter_col} = '{filter_id}'",
         )
         return df_read
 
