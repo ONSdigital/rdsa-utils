@@ -138,7 +138,9 @@ def create_dir(path: str) -> bool:
 
 
 def create_txt_from_string(
-    path: str, string_to_write: str, replace: Optional[bool] = False
+    path: str,
+    string_to_write: str,
+    replace: Optional[bool] = False
 ) -> None:
     """Create a new text file and populate with a given string in HDFS using
     subprocess call to execute Hadoop commands.
