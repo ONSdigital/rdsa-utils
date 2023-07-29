@@ -38,8 +38,7 @@ def create_runlog_table(
     database: str,
     tablename: Optional[str] = "pipeline_runlog",
 ) -> None:
-    """Creates a runlog table and an associated (suffixed) _reserved_ids table
-    in the target database if they do not already exist.
+    """Create runlog and _reserved_ids tables in the target database if needed.
 
     This function executes two SQL queries to create two tables, if they do
     not already exist in the target database. The first table's structure
@@ -66,7 +65,6 @@ def create_runlog_table(
     >>> spark = SparkSession.builder.appName("test_session").getOrCreate()
     >>> create_runlog_table(spark, "test_db", "test_table")
     """
-
     # Create the main table if it does not exist
     runlog_sql_str = f"""
         CREATE TABLE IF NOT EXISTS {database}.{tablename} (
@@ -96,8 +94,7 @@ def create_runlog_table(
 def reserve_id(
     spark: SparkSession, log_table: Optional[str] = "pipeline_runlog"
 ) -> int:
-    """Reserve a run id in the reserved ids table associated with the pipeline
-    runlog table.
+    """Reserve a run id in the reserved ids table linked to the runlog table.
 
     The function reads the last run id from the reserved ids table,
     increments it to create a new id,and writes the new id with the
@@ -140,7 +137,7 @@ def _get_run_ids(
     pipeline: Optional[str] = None,
     log_table: str = "pipeline_runlog",
 ) -> List[int]:
-    """Helper function to retrieve the most recent run ids.
+    """Retrieve the most recent run ids.
 
     Parameters
     ----------
@@ -180,7 +177,7 @@ def get_last_run_id(
     pipeline: Optional[str] = None,
     log_table: str = "pipeline_runlog",
 ) -> Optional[int]:
-    """Retrieves the last run_id, either in general or for a specific pipeline.
+    """Retrieve the last run_id, either in general or for a specific pipeline.
 
     Parameters
     ----------
@@ -210,8 +207,7 @@ def get_penultimate_run_id(
     pipeline: Optional[str] = None,
     log_table: str = "pipeline_runlog",
 ) -> Optional[int]:
-    """Retrieves the penultimate run_id, either in general or for a specific
-    pipeline.
+    """Retrieve penultimate run_id in general or a specific pipeline.
 
     Parameters
     ----------
@@ -322,10 +318,10 @@ def add_runlog_entry(
     pipeline
         Pipeline name. If None, uses the spark application name.
     log_table
-        Target runlog table. If database not set, this should 
+        Target runlog table. If database not set, this should
         include the database.
     run_id
-        Run id to use if already reserved. If not specified, 
+        Run id to use if already reserved. If not specified,
         a new one is generated.
 
     Returns

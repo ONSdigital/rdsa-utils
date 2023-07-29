@@ -45,7 +45,7 @@ def _perform(command: List[str]) -> bool:
 def change_permissions(
     path: str, permission: str, recursive: bool = False
 ) -> bool:
-    """Changes directory and file permissions in HDFS.
+    """Change directory and file permissions in HDFS.
 
     Parameters
     ----------
@@ -71,10 +71,7 @@ def change_permissions(
 
 
 def copy(from_path: str, to_path: str, overwrite: bool = False) -> bool:
-    """Copy a file in the Hadoop filesystem.
-
-    This function uses the Hadoop File System (HDFS) command 'cp'
-    to copy a file from the specified source path to the target path.
+    """Copy a file in HDFS.
 
     Parameters
     ----------
@@ -105,7 +102,7 @@ def copy(from_path: str, to_path: str, overwrite: bool = False) -> bool:
 
 
 def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
-    """Copies a local file to HDFS.
+    """Copy a local file to HDFS.
 
     Parameters
     ----------
@@ -125,9 +122,7 @@ def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
 
 
 def create_dir(path: str) -> bool:
-    """Creates a directory in the Hadoop Distributed File System (HDFS).
-
-    This function wraps the 'hadoop fs -mkdir' command.
+    """Create a directory in HDFS.
 
     Parameters
     ----------
@@ -147,8 +142,7 @@ def create_dir(path: str) -> bool:
 def create_txt_from_string(
     path: str, string_to_write: str, replace: Optional[bool] = False
 ) -> None:
-    """Create a new text file and populate with a given string in HDFS using
-    subprocess call to execute Hadoop commands.
+    """Create and populate a text file in HDFS.
 
     Parameters
     ----------
@@ -185,9 +179,7 @@ def create_txt_from_string(
 
 
 def delete_dir(path: str) -> bool:
-    """Deletes a directory from the Hadoop Distributed File System (HDFS).
-
-    This function wraps the 'hadoop fs -rmdir' command.
+    """Delete a directory from HDFS.
 
     Parameters
     ----------
@@ -205,10 +197,7 @@ def delete_dir(path: str) -> bool:
 
 
 def delete_file(path: str) -> bool:
-    """Delete a file in the Hadoop filesystem.
-
-    This function uses the Hadoop File System (HDFS) command 'rm'
-    to delete a file at the specified path.
+    """Delete a file in HDFS.
 
     Parameters
     ----------
@@ -231,10 +220,7 @@ def delete_file(path: str) -> bool:
 
 
 def file_exists(path: str) -> bool:
-    """Checks whether a file exists in the Hadoop filesystem.
-
-    This function uses the Hadoop File System (HDFS) command 'test -e'
-    to check the existence of a file at the specified path.
+    """Check whether a file exists in HDFS.
 
     Parameters
     ----------
@@ -256,7 +242,7 @@ def file_exists(path: str) -> bool:
 
 
 def get_date_modified(filepath: str) -> str:
-    """Returns the last modified date of a file in HDFS.
+    """Return the last modified date of a file in HDFS.
 
     Parameters
     ----------
@@ -275,10 +261,7 @@ def get_date_modified(filepath: str) -> str:
 
 
 def isdir(path: str) -> bool:
-    """Tests if a directory exists in the Hadoop Distributed File System
-    (HDFS).
-
-    This function wraps the 'hadoop fs -test -d' command.
+    """Test if a directory exists in HDFS.
 
     Parameters
     ----------
@@ -295,7 +278,7 @@ def isdir(path: str) -> bool:
 
 
 def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
-    """Moves a local file to HDFS.
+    """Move a local file to HDFS.
 
     Parameters
     ----------
@@ -315,7 +298,7 @@ def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
 
 
 def read_dir(path: str) -> List[str]:
-    """Reads the contents of a directory in HDFS.
+    """Read the contents of a directory in HDFS.
 
     Parameters
     ----------
@@ -337,7 +320,7 @@ def read_dir(path: str) -> List[str]:
 
 
 def read_dir_files(path: str) -> List[str]:
-    """Reads the filenames in a directory in HDFS.
+    """Read the filenames in a directory in HDFS.
 
     Parameters
     ----------
@@ -385,10 +368,7 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
 
 
 def rename(from_path: str, to_path: str, overwrite: bool = False) -> bool:
-    """Rename (i.e., move using full path) a file in the Hadoop filesystem.
-
-    This function uses the Hadoop File System (HDFS) command 'mv'
-    to rename a file from the specified source path to the target path.
+    """Rename (i.e., move using full path) a file in HDFS.
 
     Parameters
     ----------
