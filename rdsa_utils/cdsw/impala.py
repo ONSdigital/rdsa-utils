@@ -30,7 +30,7 @@ def invalidate_impala_metadata(
     table
         Name of the table for metadata invalidation.
     impalad_address_port
-        Impalad instance's 'address:port'.
+        'address:port' of the impalad instance.
     impalad_ca_cert
         Path to impalad's CA certificate file.
     keep_stderr
