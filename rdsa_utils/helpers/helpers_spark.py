@@ -980,3 +980,100 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
     except Exception as e:
         logger.error(f'An error occurred while creating the Spark session: {e}')
         raise
+
+
+def write_and_read_hive_table(
+    spark: SparkSession,
+    df: SparkDF,
+    table_name: str,
+    database: str,
+    filter_id: Union[int, str],
+    filter_col: str = 'run_id',
+    fill_missing_cols: bool = False,
+) -> SparkDF:
+    """Write a SparkDF to an existing Hive table and then read it back.
+
+    Parameters
+    ----------
+    spark
+        Active SparkSession.
+    df
+        The SparkDF to be written to the Hive table.
+    table_name
+        The name of the Hive table to write to and read from.
+    database
+        The Hive database name.
+    filter_id : Union[int, str]
+        The identifier to filter on when reading data back from the Hive table.
+    filter_col
+        The column name to use for filtering data when reading back from
+        the Hive table, by default 'run_id'.
+    fill_missing_cols
+        If True, missing columns in the DataFrame will be filled with nulls
+        when writing to the Hive table, by default False.
+
+    Returns
+    -------
+    SparkDF
+        The DataFrame read from the Hive table.
+
+    Notes
+    -----
+    This function assumes the Hive table already exists. The DataFrame `df`
+    should have the same schema as the Hive table for the write to succeed.
+
+    The function allows for more effective memory management when dealing
+    with large PySpark DataFrames by leveraging Hive's on-disk storage.
+
+    Predicate pushdown is used when reading the data back into a PySpark
+    DataFrame, minimizing the memory usage and optimizing the read
+    operation.
+
+    As part of the design, there is always a column called filter_col in the
+    DataFrame and Hive table to track pipeline runs.
+
+    The Hive table contains all the runs, and we only read back the run that we
+    just wrote to the Hive Table using the `filter_id` parameter. If no
+    `filter_col` is specified, 'run_id' is used as default.
+    """
+    try:
+        # Check for existence of the Hive table
+        if not spark.catalog.tableExists(database, table_name):
+            msg = (
+                f'The specified Hive table {database}.'
+                f'{table_name} does not exist.'
+            )
+            raise ValueError(
+                msg,
+            )
+
+        # Ensure the filter_col exists in DataFrame
+        if filter_col not in df.columns:
+            msg = (
+                "The provided DataFrame doesn't contain the "
+                f"specified filter column: {filter_col}"
+            )
+            raise ValueError(
+                msg,
+            )
+
+        # Write DataFrame to Hive using the helper function
+        insert_df_to_hive_table(
+            spark,
+            df,
+            f'{database}.{table_name}',
+            fill_missing_cols=fill_missing_cols,
+        )
+
+        # Read DataFrame back from Hive with filter condition
+        filter_cond = f"{filter_col} = '{filter_id}'"
+        df_read = load_and_validate_table(
+            spark,
+            f'{database}.{table_name}',
+            filter_cond=filter_cond,
+        )
+        return df_read
+
+    except Exception as e:
+        logger.error(f'An error occurred: {e}')
+        raise
