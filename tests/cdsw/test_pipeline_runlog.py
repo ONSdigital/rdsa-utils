@@ -34,8 +34,8 @@ class TestWriteEntry:
         mock_df.write.insertInto.assert_called_once_with("test_table")
 
     def test_write_entry_edge_cases(self, mocker):
-        """Test that the function does not raise any exceptions when entry_df
-        is empty or log_table is an empty string."""
+        """Test that the function does not raise any exceptions when entry_df is
+        empty or log_table is an empty string."""
         # Mock empty DataFrame and write method
         mock_df = mocker.Mock(spec=DataFrame)
         mock_df.write.insertInto.return_value = None
@@ -156,8 +156,8 @@ class TestReserveId:
         )
 
     def test_reserve_id_edge_case(self, mocker):
-        """Tests that the function handles the case where the reserved ids
-        table is empty, does not exist, has no "run_id" column, or has no
+        """Tests that the function handles the case where the reserved ids table
+        is empty, does not exist, has no "run_id" column, or has no
         "reserved_date" column."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
@@ -352,9 +352,9 @@ class TestGetPenultimateRunId:
 
     def test_penultimate_run_id_edge_cases(self, mocker):
         """Test retrieving the penultimate run ID for a pipeline with only one
-        entry in the log table, for a pipeline with no entries in the log
-        table, for the general log table with only one entry, and for the
-        general log table with no entries."""
+        entry in the log table, for a pipeline with no entries in the log table,
+        for the general log table with only one entry, and for the general log
+        table with no entries."""
         # Mock SparkSession and _get_run_ids function
         spark_mock = mocker.Mock()
 
@@ -541,8 +541,8 @@ class TestWriteRunlogFile:
     """Tests for write_runlog_file function."""
 
     def test_write_runlog_file(self, mocker):
-        """Tests that the function successfully creates a text file in HDFS
-        with metadata from a runlog entry."""
+        """Tests that the function successfully creates a text file in HDFS with
+        metadata from a runlog entry."""
         # Mock SparkSession
         spark_mock = mocker.Mock()
 

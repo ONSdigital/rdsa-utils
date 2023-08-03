@@ -26,8 +26,7 @@ from rdsa_utils.cdsw.hdfs_utils import (
 
 
 class BaseTest:
-    """
-    BaseTest provides common pytest fixtures for mocking subprocess.Popen.
+    """BaseTest provides common pytest fixtures for mocking subprocess.Popen.
 
     The class contains two fixtures:
     1. mock_subprocess_popen: Replaces subprocess.Popen function with a mock that
@@ -111,11 +110,11 @@ class TestChangePermissons(BaseTest):
     """Tests for change_permissions function."""
 
     def test_change_permissions(self, mock_subprocess_popen):
-        """Test verifies that the change_permissions function properly constructs
-        and executes the 'hadoop fs -chmod' command.
+        """Test verifies that the change_permissions function properly
+        constructs and executes the 'hadoop fs -chmod' command.
 
-        It checks if the command is constructed correctly based on the
-        provided arguments.
+        It checks if the command is constructed correctly based on the provided
+        arguments.
         """
         # Test case 1: Test change_permissions without recursive option
         path = "/user/example"
@@ -146,8 +145,8 @@ class TestCopy(BaseTest):
         """Test verifies that the copy function properly constructs and executes
         the 'hadoop fs -cp' command.
 
-        It checks if the command is constructed correctly based on the
-        provided arguments.
+        It checks if the command is constructed correctly based on the provided
+        arguments.
         """
         # Test case 1: Test copy without overwrite option
         from_path = "/user/example/file.txt"
@@ -175,11 +174,11 @@ class TestCopyLocalToHDFS(BaseTest):
     """Tests for copy_local_to_hdfs function."""
 
     def test_copy_local_to_hdfs(self, mock_subprocess_popen):
-        """Test verifies that the copy_local_to_hdfs function properly constructs
-        and executes the 'hadoop fs -copyFromLocal' command.
+        """Test verifies that the copy_local_to_hdfs function properly
+        constructs and executes the 'hadoop fs -copyFromLocal' command.
 
-        It checks if the command is constructed correctly based on the
-        provided arguments.
+        It checks if the command is constructed correctly based on the provided
+        arguments.
         """
         # Test case 1: Test copy_local_to_hdfs without overwrite option
         from_path = "/local/path/file.txt"
@@ -210,8 +209,8 @@ class TestCreateDir(BaseTest):
         """Test verifies that the create_dir function properly constructs and
         executes the 'hadoop fs -mkdir' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test create_dir with a valid path
         path = "/user/new_directory"
@@ -243,8 +242,7 @@ class TestCreateTxtFromString:
         self, path, string_to_write, replace, expected_call
     ):
         """Test verifies that the create_txt_from_string function properly
-        constructs and executes the 'echo | hadoop fs -put -' command.
-        """
+        constructs and executes the 'echo | hadoop fs -put -' command."""
 
         with patch("subprocess.call") as subprocess_mock, patch(
             "rdsa_utils.cdsw.hdfs_utils.file_exists"
@@ -287,8 +285,8 @@ class TestDeleteDir(BaseTest):
         """Test verifies that the delete_dir function properly constructs and
         executes the 'hadoop fs -rmdir' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test delete_dir with a valid path
         path = "/user/directory"
@@ -303,8 +301,8 @@ class TestDeleteFile(BaseTest):
         """Test verifies that the delete_file function properly constructs and
         executes the 'hadoop fs -rm' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test delete_file with a valid path
         path = "/user/file.txt"
@@ -319,8 +317,8 @@ class TestFileExits(BaseTest):
         """Test verifies that the file_exists function properly constructs and
         executes the 'hadoop fs -test -e' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test file_exists with an existing file
         path = "/user/file.txt"
@@ -340,8 +338,8 @@ class TestDateModified(BaseTest):
         """Test verifies that the get_date_modified function properly constructs
         and executes the 'hadoop fs -stat %y' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case: Test get_date_modified with a valid path
         filepath = "/user/file.txt"
@@ -358,11 +356,11 @@ class TestIsDir(BaseTest):
     """Tests for isdir function."""
 
     def test_isdir(self, mock_subprocess_popen):
-        """Test verifies that the isdir function properly constructs and executes
-        the 'hadoop fs -test -d' command.
+        """Test verifies that the isdir function properly constructs and
+        executes the 'hadoop fs -test -d' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test isdir with an existing directory
         path = "/user/directory"
@@ -379,11 +377,11 @@ class TestMoveLocalToHDFS(BaseTest):
     """Tests for move_local_to_hdfs function."""
 
     def test_move_local_to_hdfs(self, mock_subprocess_popen):
-        """Test verifies that the move_local_to_hdfs function properly constructs
-        and executes the 'hadoop fs -moveFromLocal' command.
+        """Test verifies that the move_local_to_hdfs function properly
+        constructs and executes the 'hadoop fs -moveFromLocal' command.
 
-        It checks if the command is constructed correctly based on the
-        provided arguments.
+        It checks if the command is constructed correctly based on the provided
+        arguments.
         """
         # Test case 1: Test move_local_to_hdfs without overwrite option
         from_path = "/local/path/file.txt"
@@ -413,8 +411,8 @@ class TestReadDir(BaseTest):
         """Test verifies that the read_dir function properly constructs and
         executes the 'hadoop fs -ls' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test read_dir with a valid path
         path = "/user/directory"
@@ -446,8 +444,8 @@ class TestReadDirFilesRecursive(BaseTest):
         """Test verifies that the read_dir_files_recursive function properly
         constructs and executes the 'hadoop fs -ls -R' command.
 
-        It checks if the command is constructed correctly based on the
-        provided path.
+        It checks if the command is constructed correctly based on the provided
+        path.
         """
         # Test case 1: Test read_dir_files_recursive without return_path option
         path = "/user/directory"
@@ -473,11 +471,11 @@ class TestRename(BaseTest):
     """Tests for rename function."""
 
     def test_rename(self, mock_subprocess_popen):
-        """Test verifies that the rename function properly constructs and executes
-        the 'hadoop fs -mv' command.
+        """Test verifies that the rename function properly constructs and
+        executes the 'hadoop fs -mv' command.
 
-        It checks if the command is constructed correctly based on the
-        provided arguments.
+        It checks if the command is constructed correctly based on the provided
+        arguments.
         """
         # Test case 1: Test rename without overwrite option
         from_path = "/user/old_file.txt"
