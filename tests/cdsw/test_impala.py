@@ -21,9 +21,11 @@ class TestInvalidateImpalaMetadata:
         Notes
         -----
         This test verifies the following:
-        1. The correct impala-shell command is executed with the correct arguments.
+        1. The correct impala-shell command is executed with
+           the correct arguments.
         2. The function does not raise any exceptions.
-        3. The function correctly handles and prints the stderr output when keep_stderr is True.
+        3. The function correctly handles and prints the stderr output
+           when keep_stderr is True.
         """
 
         # Mock the subprocess.run() call
@@ -63,7 +65,8 @@ class TestInvalidateImpalaMetadata:
             table, impalad_address_port, impalad_ca_cert, keep_stderr=True
         )
 
-        # Check that subprocess.run() was called with the correct arguments and print() was called
+        # Check that subprocess.run() was called with the correct arguments 
+        # and print() was called.
         mock_subprocess_run.assert_called_with(
             [
                 "impala-shell",
