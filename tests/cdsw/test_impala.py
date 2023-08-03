@@ -83,7 +83,3 @@ class TestInvalidateImpalaMetadata:
             stderr=subprocess.PIPE,
         )
         assert print.called
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
