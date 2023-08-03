@@ -882,8 +882,8 @@ class TestCutLineage:
             pytest.fail('cut_lineage raised Exception unexpectedly!')
 
     def test_cut_lineage_error(self) -> None:
-        """Test that cut_lineage raises an exception when an error occurs
-        during the lineage cutting process.
+        """Test that cut_lineage raises an exception when an error occurs during
+        the lineage cutting process.
         """
         # Create a mock DataFrame with all necessary attributes
         df = MagicMock(spec=SparkDF)
@@ -994,17 +994,21 @@ class TestExtractDatabaseName:
     def dummy_database_and_table(self, spark_session: SparkSession) -> str:
         """Fixture that creates a dummy Spark database and table for testing.
 
-        This fixture creates a test database named 'test_db' and a test table named 'test_table' in that database.
-        The table is simple and contains two columns: 'name' (a string) and 'age' (an integer).
+        This fixture creates a test database named 'test_db' and a test table
+        named 'test_table' in that database. The table is simple and contains
+        two columns: 'name' (a string) and 'age' (an integer).
 
-        The name of the table in the form 'database.table' is then yielded for use in the tests.
+        The name of the table in the form 'database.table' is then
+        yielded for use in the tests.
 
-        After the tests using this fixture are completed, it cleans up by dropping the test table and the test database.
+        After the tests using this fixture are completed, it cleans up by
+        dropping the test table and the test database.
 
         Parameters
         ----------
         spark_session
-            Active SparkSession to use for creating and deleting the test database and table.
+            Active SparkSession to use for creating and deleting the test
+            database and table.
 
         Yields
         ------
@@ -1024,8 +1028,8 @@ class TestExtractDatabaseName:
         spark_session: SparkSession,
         dummy_database_and_table: str,
     ) -> None:
-        """Test that extract_database_name correctly identifies the database
-        and table name from a correctly formatted input.
+        """Test that extract_database_name correctly identifies the database and
+        table name from a correctly formatted input.
         """
         long_table_name = dummy_database_and_table
         db_name, table_name = extract_database_name(spark_session, long_table_name)
@@ -1036,8 +1040,8 @@ class TestExtractDatabaseName:
         self,
         spark_session: SparkSession,
     ) -> None:
-        """Test that extract_database_name raises a ValueError when the input
-        is incorrectly formatted.
+        """Test that extract_database_name raises a ValueError when the input is
+        incorrectly formatted.
         """
         long_table_name = 'incorrect.format.table'
         with pytest.raises(ValueError):
@@ -1114,8 +1118,8 @@ class TestLoadAndValidateTable:
         load_and_validate_table(spark_session, table_name, skip_validation=True)
 
     def test_load_and_validate_table_with_normal_table(self) -> None:
-        """Test that load_and_validate_table works correctly when the table exists,
-        is not empty, and doesn't need a filter.
+        """Test that load_and_validate_table works correctly when the table
+        exists, is not empty, and doesn't need a filter.
         """
         table_name = 'normal_table'
         # Mock SparkSession and DataFrame
@@ -1134,8 +1138,8 @@ class TestInsertDataFrameToHiveTable:
 
     @pytest.fixture()
     def test_df(self, spark_session: SparkSession, create_spark_df: Callable):
-        """Fixture to create a test DataFrame with the help of
-        `create_spark_df` callable.
+        """Fixture to create a test DataFrame with the help of `create_spark_df`
+        callable.
 
         This fixture uses the `create_spark_df` callable to generate
         a DataFrame for testing.
@@ -1210,8 +1214,8 @@ class TestInsertDataFrameToHiveTable:
         test_df: SparkDF,
     ) -> None:
         """Test that insert_df_to_hive_table raises a ValueError when
-        'fill_missing_cols' is False and DataFrame schema doesn't match with
-        the table schema.
+        'fill_missing_cols' is False and DataFrame schema doesn't match with the
+        table schema.
         """
         table_name = 'test_table'
         # Mock the table columns
@@ -1294,8 +1298,9 @@ class TestWriteAndReadHiveTable:
     def test_write_and_read_hive_table_success(
         self, mock_insert, mock_load_and_validate, mock_spark, mock_df,
     ):
-        """Test that write_and_read_hive_table function successfully writes SparkDF
-        to the Hive table and reads it back when all arguments are valid.
+        """Test that write_and_read_hive_table function successfully writes
+        SparkDF to the Hive table and reads it back when all arguments are
+        valid.
         """
         # Mock the functions
         mock_insert.return_value = None
@@ -1340,11 +1345,16 @@ class TestWriteAndReadHiveTable:
             )
 
     def test_df_missing_filter_column(self, mock_spark, mock_df):
-        """Check exception handling when the DataFrame is missing the filter column."""
+        """Check exception handling when the DataFrame is missing the filter
+        column.
+        """
         mock_df.columns = ['col1', 'col2']
         with pytest.raises(
             ValueError,
-            match="The provided DataFrame doesn't contain the specified filter column: run_id",
+            match=(
+                "The provided DataFrame doesn't contain the specified "
+                "filter column: run_id"
+            ),
         ):
             write_and_read_hive_table(
                 mock_spark,
