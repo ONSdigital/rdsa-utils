@@ -43,7 +43,8 @@ class TestWriteEntry:
         # Call function with empty DataFrame and empty table name
         _write_entry(mock_df, "")
 
-        # Assert that DataFrame write method was called once with empty string as argument
+        # Assert that DataFrame write method was called once with
+        # empty string as argument
         mock_df.write.insertInto.assert_called_once_with("")
 
 
@@ -59,7 +60,8 @@ class TestCreateRunlogTable:
         # Call function with default tablename
         create_runlog_table(mock_spark, "test_db")
 
-        # Assert that the main table and _reserved_ids table were created with correct names
+        # Assert that the main table and _reserved_ids table were created
+        # with correct names
         mock_spark.sql.assert_any_call(
             """
         CREATE TABLE IF NOT EXISTS test_db.pipeline_runlog (
@@ -93,7 +95,8 @@ class TestCreateRunlogTable:
         # Call function with custom tablename
         create_runlog_table(mock_spark, "test_db", "custom_table")
 
-        # Assert that the main table and _reserved_ids table were created with correct names
+        # Assert that the main table and _reserved_ids table were created
+        # with correct names
         mock_spark.sql.assert_any_call(
             """
         CREATE TABLE IF NOT EXISTS test_db.custom_table (
@@ -584,7 +587,3 @@ class TestWriteRunlogFile:
         # Call function and assert FileNotFoundError is raised
         with pytest.raises(FileNotFoundError):
             write_runlog_file(spark_mock, runlog_table, runlog_id, path)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])

@@ -32,10 +32,12 @@ class BaseTest:
     The class contains two fixtures:
     1. mock_subprocess_popen: Replaces subprocess.Popen function with a mock that
        simulates a successful command execution.
-    2. mock_subprocess_popen_date_modified: Replaces subprocess.Popen function with a mock
-       that simulates a successful command execution with a specific date string as output.
+    2. mock_subprocess_popen_date_modified: Replaces subprocess.Popen function
+       with a mock that simulates a successful command execution with a specific date
+       string as output.
 
-    These fixtures are intended to be used by test cases that need to mock subprocess.Popen calls.
+    These fixtures are intended to be used by test cases that need to mock
+    subprocess.Popen calls.
     """
 
     @pytest.fixture
@@ -44,8 +46,8 @@ class BaseTest:
 
         This fixture replaces the subprocess.Popen function with a mock implementation.
         The mock implementation returns a MagicMock object that simulates the behavior
-        of the Popen object. It sets the returncode to 0 and configures the communicate method
-        to return empty byte strings (b"") for stdout and stderr.
+        of the Popen object. It sets the returncode to 0 and configures the communicate
+        method to return empty byte strings (b"") for stdout and stderr.
 
         Parameters
         ----------
@@ -55,7 +57,8 @@ class BaseTest:
         Returns
         -------
         None
-            This fixture does not return any value, but it patches the subprocess.Popen function.
+            This fixture does not return any value, but it patches the
+            subprocess.Popen function.
         """
 
         def mock_popen(*args, **kwargs):
@@ -72,10 +75,15 @@ class BaseTest:
         """Fixture to mock the subprocess.Popen function for testing
         get_date_modified function.
 
-        This fixture patches the subprocess.Popen function using the patch decorator from the unittest.mock module.
-        It configures the mock implementation to return a MagicMock object for mocking the Popen object.
-        The MagicMock object is configured to simulate the behavior of stdout.read() method by returning
-        a byte string representing the date "2023-05-25" when called with decode method.
+        This fixture patches the subprocess.Popen function using the patch decorator
+        from the unittest.mock module.
+
+        It configures the mock implementation to return a MagicMock object for
+        mocking the Popen object.
+
+        The MagicMock object is configured to simulate the behavior of stdout.read()
+        method by returning a byte string representing the date "2023-05-25" when
+        called with decode method.
 
         Yields
         ------
@@ -96,7 +104,7 @@ class TestPerform(BaseTest):
         """Test checks the behavior of the _perform function when the command
         execution is successful."""
         command = ["ls", "-l", "/home/user"]
-        assert _perform(command) == True
+        assert _perform(command) is True
 
 
 class TestChangePermissons(BaseTest):
@@ -264,7 +272,8 @@ class TestCreateTxtFromString:
             file_exists_mock.assert_called_with(path)
 
             if replace and file_exists_mock.return_value:
-                # Verify if delete_file mock is called when replace is True and file exists
+                # Verify if delete_file mock is called when replace is True
+                # and file exists
                 delete_file_mock.assert_called_with(path)
             else:
                 # Verify delete_file mock is not called in other cases
@@ -489,7 +498,3 @@ class TestRename(BaseTest):
         assert rename(
             overwrite_from_path, overwrite_to_path, overwrite=True
         ) == _perform(overwrite_command)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
