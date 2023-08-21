@@ -1,11 +1,4 @@
-"""Functions that support the use of pydantic validators.
-
-Provides:
-* :func:`apply_validation`
-* :func:`list_convert_validator`
-* :func:`get_category_config`
-* :func:`get_table_paths`
-"""
+"""Functions that support the use of pydantic validators."""
 import json
 import logging
 from typing import Any, Callable, Mapping, Optional
