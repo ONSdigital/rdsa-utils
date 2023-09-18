@@ -20,8 +20,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add the helpers_python.py and test_helpers_python.py modules from cprices-utils.
 - Add `init_logger_advanced` in `helpers/logging.py` module.
 - Add in the general validation functions from cprices-utils.
+- Add common custom exceptions.
 
 ### Changed
+- Renamed `_typing` module to `typing`.
 
 ### Deprecated
 
