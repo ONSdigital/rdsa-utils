@@ -205,11 +205,11 @@ def calc_product_of_dict_values(
     In order to create product of values, the values are converted to
     a list so that product of values can be derived.
 
-    Yields:
+    Yields
     ------
         Next result of cartesian product of kwargs values.
 
-    Example:
+    Example
     -------
     my_dict = {
         'key1': 1,
@@ -219,7 +219,7 @@ def calc_product_of_dict_values(
     list(calc_product_of_dict_values(**my_dict))
     >>> [{'key1': 1, 'key2': 2}, {'key1': 1, 'key2': 3}, {'key1': 1, 'key2': 4}]
 
-    Notes:
+    Notes
     -----
     Modified from: https://stackoverflow.com/a/5228294
     """
