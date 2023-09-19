@@ -239,9 +239,9 @@ class TestCreateTxtFromString:
     ):
         """Verify 'echo | hadoop fs -put -' command execution by create_txt_from_string."""
         with patch('subprocess.call') as subprocess_mock, patch(
-            'rdsa_utils.cdsw.hdfs_utils.file_exists',
+            'rdsa_utils.cdsw.helpers.hdfs_utils.file_exists',
         ) as file_exists_mock, patch(
-            'rdsa_utils.cdsw.hdfs_utils.delete_file',
+            'rdsa_utils.cdsw.helpers.hdfs_utils.delete_file',
         ) as delete_file_mock:
             file_exists_mock.return_value = (
                 replace  # Assume file exists if replace is True
