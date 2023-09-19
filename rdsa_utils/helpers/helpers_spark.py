@@ -719,6 +719,8 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
 
     Parameters
     ----------
+    app_name
+        The spark session app name.
     size
         The size of the spark session to be created. It can be 'default',
         'small', 'medium', 'large', or 'extra-large'.
