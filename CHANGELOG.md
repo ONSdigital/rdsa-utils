@@ -18,6 +18,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add the helpers_spark.py and test_helpers_spark.py modules from cprices-utils.
 - Add logging.py and test_logging.py module from cprices-utils.
 - Add the helpers_python.py and test_helpers_python.py modules from cprices-utils.
+- Add `init_logger_advanced` in `helpers/logging.py` module.
+- Add in the general validation functions from cprices-utils.
+- Add `invalidate_impala_metadata` function to the `cdsw/impala.py` module.
 - Add "search" Plugin and mkdocs GOV UK Theme via `mkdocs-tech-docs-template`.
 
 ### Changed
