@@ -21,6 +21,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add `init_logger_advanced` in `helpers/logging.py` module.
 - Add in the general validation functions from cprices-utils.
 - Add `invalidate_impala_metadata` function to the `cdsw/impala.py` module.
+- Add "search" Plugin and mkdocs GOV UK Theme via `mkdocs-tech-docs-template`.
 
 ### Changed
 
@@ -29,3 +30,4 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
+- Remove `_version.py`.
