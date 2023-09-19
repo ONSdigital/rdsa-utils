@@ -520,6 +520,13 @@ def cut_lineage(df: SparkDF) -> SparkDF:
     SparkDF
         New SparkDF created from Java RDD.
 
+    Raises
+    ------
+    Exception
+        If any error occurs during the lineage cutting process,
+        particularly during conversion between SparkDF and Java RDD
+        or accessing internal members.
+
     Examples
     --------
     >>> df = rdd.toDF()
@@ -738,7 +745,10 @@ def create_spark_session(
     Raises
     ------
     ValueError
-        If specified 'size' parameter is not one of the valid options.
+        If the specified 'size' parameter is not one of the valid options:
+        'small', 'medium', 'large', or 'extra-large'.
+    Exception
+        If any other error occurs during the Spark session creation process.
 
     Examples
     --------
