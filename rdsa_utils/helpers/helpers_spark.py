@@ -736,7 +736,7 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
     Raises
     ------
     ValueError
-        If the 'size' parameter is not one of the valid options.
+        If specified 'size' parameter is not one of the valid options.
 
     Examples
     --------
@@ -744,11 +744,6 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
 
     Session Details:
     ---------------
-    'default':
-        As a starting point you can create a Spark session with all the default
-        options. This is the bare minimum you need to create a Spark session and
-        will work fine for many users. It's recommended for users who are unsure
-        of their requirements or are dealing with unfamiliar data sources.
     'small':
         This is the smallest session that will realistically be used. It uses
         only 1g of memory and 3 executors, and only 1 core. The number of
@@ -782,9 +777,9 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
     """
     try:
         size = size.lower()
-        valid_sizes = ['default', 'small', 'medium', 'large', 'extra-large']
+        valid_sizes = ['small', 'medium', 'large', 'extra-large']
         if size not in valid_sizes:
-            msg = f"Invalid size '{size}'. It must be one of {valid_sizes}."
+            msg = f"Invalid '{size=}'. If specified must be one of {valid_sizes}."
             raise ValueError(msg)
 
         logger.info(f"Creating a '{size}' Spark session...")
