@@ -39,7 +39,11 @@ def load_and_validate_table(
     Raises
     ------
     PermissionError
-        If accessing the table fails.
+        If there's an issue accessing the table or if the table
+        does not exist in the specified database.
+    ValueError
+        If the table is empty after loading, or if it becomes
+        empty after applying a filter condition.
     """
     try:
         df = spark.read.table(table_name)

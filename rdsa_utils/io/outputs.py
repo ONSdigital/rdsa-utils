@@ -39,6 +39,17 @@ def insert_df_to_hive_table(
         by default False.
     fill_missing_cols
         If True, missing columns will be filled with nulls, by default False.
+
+    Raises
+    ------
+    AnalysisException
+        If there's an error reading the table. This can occur if the table
+        doesn't exist or if there's no access to it.
+    ValueError
+        If the SparkDF schema does not match the Hive table schema and
+        'fill_missing_cols' is set to False.
+    Exception
+        For other general exceptions when writing data to the table.
     """
     logger.info(f'Preparing to write data to {table_name}.')
 
@@ -115,6 +126,14 @@ def write_and_read_hive_table(
     -------
     SparkDF
         The DataFrame read from the Hive table.
+
+    Raises
+    ------
+    ValueError
+        If the specified Hive table does not exist in the given database or
+        if the provided DataFrame doesn't contain the specified filter column.
+    Exception
+        For general exceptions encountered during execution.
 
     Notes
     -----
