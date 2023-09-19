@@ -723,7 +723,8 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
         The size of the spark session to be created. It can be 'default',
         'small', 'medium', 'large', or 'extra-large'.
     extra_configs
-        Dictionary of extra Spark configurations to override the defaults.
+        Mapping of additional spark session config settings and the desired
+        value for it. Will override any default settings.
 
     Returns
     -------
