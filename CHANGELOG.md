@@ -23,8 +23,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add `invalidate_impala_metadata` function to the `cdsw/impala.py` module.
 - Add "search" Plugin and mkdocs GOV UK Theme via `mkdocs-tech-docs-template`.
 - Add `pipeline_runlog.py` and `hdfs_utils.py` modules from `epds_utils`.
+- Add common custom exceptions.
 
 ### Changed
+- Renamed `_typing` module to `typing`.
 
 ### Deprecated
 

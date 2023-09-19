@@ -15,7 +15,7 @@ from pyspark.sql import (
 )
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def create_colname_to_value_map(cols: Sequence[str]) -> SparkCol:
