@@ -2,7 +2,7 @@
 
 import pytest
 
-from rdsa_utils.validation.validation_helpers import *
+from rdsa_utils.validation import *
 
 
 @pytest.mark.skip(reason='test shell')

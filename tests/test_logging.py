@@ -9,7 +9,7 @@ from tests.conftest import (
     parametrize_cases,
 )
 
-from rdsa_utils.helpers.logging import (
+from rdsa_utils.logging import (
     init_logger_advanced,
     timer_args,
     print_full_table_and_raise_error,

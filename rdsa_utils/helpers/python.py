@@ -151,7 +151,7 @@ def overwrite_dictionary(
 
     Raises
     ------
-    Exception
+    ValueError
         If a key is present in override_dict but not base_dict.
     """ # noqa: E501
     for key, val in base_dict.items():
@@ -186,13 +186,14 @@ def overwrite_dictionary(
 
     for key, val in override_dict.items():
         if key not in base_dict:
-            logger.error(f"""
+            msg = f"""
             The key, value pair:
             {key, val}
             is not in the base dictionary
             {json.dumps(base_dict, indent=4)}
-            """)
-            raise Exception
+            """
+            logger.error(msg)
+            raise ValueError(msg)
 
     return base_dict
 

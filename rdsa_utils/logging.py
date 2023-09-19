@@ -472,7 +472,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
     return wrapper_decorator
 
 
-def _add_warning_message_to_function(
+def add_warning_message_to_function(
     _func: Callable = None,
     *,
     message: Optional[str] = None,
@@ -527,6 +527,6 @@ def _add_warning_message_to_function(
 
 
 not_undergone_functional_test_warning = partial(
-    _add_warning_message_to_function,
+    add_warning_message_to_function,
     message='is unit tested, but not formally end-to-end tested.',
 )

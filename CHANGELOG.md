@@ -24,9 +24,13 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add "search" Plugin and mkdocs GOV UK Theme via `mkdocs-tech-docs-template`.
 - Add `pipeline_runlog.py` and `hdfs_utils.py` modules from `epds_utils`.
 - Add common custom exceptions.
+- Add config load class
+- Add generic IO input functions
 
 ### Changed
 - Renamed `_typing` module to `typing`.
+- Renamed modules in helpers directory to remove `helper_` from names.
+- Relocated `logging.py` and `validation.py` to root level.
 
 ### Deprecated
 
