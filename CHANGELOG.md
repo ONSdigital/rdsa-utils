@@ -14,6 +14,14 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Pull Request Workflow includes `test` job which installs Poetry and Run Tests.
 - Add `.pre-commit-config.yaml` for pre-commit hooks.
 - Add CODEOWNERS file to repository.
+- Add mkdocs; `deploy_mkdocs.yaml` and `docs` Folder.
+- Add the helpers_spark.py and test_helpers_spark.py modules from cprices-utils.
+- Add logging.py and test_logging.py module from cprices-utils.
+- Add the helpers_python.py and test_helpers_python.py modules from cprices-utils.
+- Add `init_logger_advanced` in `helpers/logging.py` module.
+- Add in the general validation functions from cprices-utils.
+- Add `invalidate_impala_metadata` function to the `cdsw/impala.py` module.
+- Add "search" Plugin and mkdocs GOV UK Theme via `mkdocs-tech-docs-template`.
 - Add `pipeline_runlog.py` and `hdfs_utils.py` modules from `epds_utils`.
 
 ### Changed
@@ -21,5 +29,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+- Fix `deploy_mkdocs.yaml`, changed `mkdocs-material` to `mkdocs-tech-docs-template`.
 
 ### Removed
+- Remove `_version.py`.

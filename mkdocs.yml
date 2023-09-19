@@ -1,0 +1,26 @@
+site_name: rdsa-utils Documentation
+
+theme:
+  name: tech_docs_template
+  logo: assets/ons_logo_white.svg
+  favicon: assets/ons_favicon.svg
+
+repo_name: rdsa-utils
+repo_url: https://github.com/ONSdigital/rdsa-utils
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            # All options can be found at: https://mkdocstrings.github.io/python/usage/#globallocal-options
+            docstring_style: numpy
+            show_signature_annotations: True
+            show_source: False
+            show_root_heading: True
+            merge_init_into_class: True
+  - material/search
+
+nav:
+  - rdsa-utils: index.md
+  - API reference: reference.md
