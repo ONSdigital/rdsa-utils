@@ -790,7 +790,10 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
         logger.info('Stopping any existing Spark session...')
         SparkSession.builder.getOrCreate().stop()
 
-        builder = SparkSession.builder.appName(f'{size}-session')
+        if app_name:
+            builder = SparkSession.builder.appName(f'{app_name}')
+        else:
+            builder = SparkSession.builder
 
         # fmt: off
         if size == 'small':
