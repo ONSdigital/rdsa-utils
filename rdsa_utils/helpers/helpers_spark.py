@@ -709,7 +709,9 @@ def find_spark_dataframes(
     return frames
 
 
-def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
+def create_spark_session(
+    app_name: str, size: str, extra_configs: Dict = None,
+) -> SparkSession:
     """Create a PySpark Session based on the specified size.
 
     This function creates a PySpark session with different configurations
@@ -779,7 +781,10 @@ def create_spark_session(size: str, extra_configs: Dict = None) -> SparkSession:
         size = size.lower()
         valid_sizes = ['small', 'medium', 'large', 'extra-large']
         if size not in valid_sizes:
-            msg = f"Invalid '{size=}'. If specified must be one of {valid_sizes}."
+            msg = (
+                f"Invalid '{size=}'. "
+                f"If specified must be one of {valid_sizes}."
+            )
             raise ValueError(msg)
 
         logger.info(f"Creating a '{size}' Spark session...")
