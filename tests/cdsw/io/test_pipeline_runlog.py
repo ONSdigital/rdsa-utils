@@ -3,7 +3,7 @@
 import pytest
 from pyspark.sql import DataFrame
 
-from rdsa_utils.cdsw.pipeline_runlog import (
+from rdsa_utils.cdsw.io.pipeline_runlog import (
     _get_run_ids,
     _write_entry,
     add_runlog_entry,

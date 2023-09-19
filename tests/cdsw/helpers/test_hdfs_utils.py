@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from rdsa_utils.cdsw.hdfs_utils import (
+from rdsa_utils.cdsw.helpers.hdfs_utils import (
     _perform,
     change_permissions,
     copy,

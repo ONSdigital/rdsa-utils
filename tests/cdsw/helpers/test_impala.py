@@ -1,7 +1,7 @@
 """Tests for impala.py module."""
 import subprocess
 
-from rdsa_utils.cdsw.impala import invalidate_impala_metadata
+from rdsa_utils.cdsw.helpers.impala import invalidate_impala_metadata
 
 
 class TestInvalidateImpalaMetadata:
