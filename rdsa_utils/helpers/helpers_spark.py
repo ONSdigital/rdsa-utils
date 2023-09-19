@@ -25,7 +25,7 @@ from pyspark.sql import (
 )
 from pyspark.sql.utils import AnalysisException
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def create_colname_to_value_map(cols: Sequence[str]) -> SparkCol:
