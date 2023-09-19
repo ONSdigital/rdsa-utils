@@ -1,6 +1,6 @@
 """Utility functions for interacting with HDFS."""
-import os
 import subprocess
+from pathlib import Path
 from typing import List, Optional
 
 
@@ -31,10 +31,12 @@ def _perform(command: List[str]) -> bool:
     """
     try:
         process = subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         stdout, stderr = process.communicate(
-            timeout=15
+            timeout=15,
         )  # added a timeout for robustness
     except subprocess.TimeoutExpired:
         process.kill()
@@ -43,7 +45,9 @@ def _perform(command: List[str]) -> bool:
 
 
 def change_permissions(
-    path: str, permission: str, recursive: bool = False
+    path: str,
+    permission: str,
+    recursive: bool = False,
 ) -> bool:
     """Change directory and file permissions in HDFS.
 
@@ -63,9 +67,9 @@ def change_permissions(
         True if the operation was successful (command return code 0),
         otherwise False.
     """
-    command = ["hadoop", "fs", "-chmod"]
+    command = ['hadoop', 'fs', '-chmod']
     if recursive:
-        command.append("-R")
+        command.append('-R')
     command.extend([permission, path])
     return _perform(command)
 
@@ -94,9 +98,9 @@ def copy(from_path: str, to_path: str, overwrite: bool = False) -> bool:
     subprocess.TimeoutExpired
         If the process does not complete within the default timeout.
     """
-    command = ["hadoop", "fs", "-cp"]
+    command = ['hadoop', 'fs', '-cp']
     if overwrite:
-        command.append("-f")
+        command.append('-f')
     command.extend([from_path, to_path])
     return _perform(command)
 
@@ -117,7 +121,7 @@ def copy_local_to_hdfs(from_path: str, to_path: str) -> bool:
         True if the operation was successful (command return code 0),
         otherwise False.
     """
-    command = ["hadoop", "fs", "-copyFromLocal", from_path, to_path]
+    command = ['hadoop', 'fs', '-copyFromLocal', from_path, to_path]
     return _perform(command)
 
 
@@ -135,12 +139,14 @@ def create_dir(path: str) -> bool:
         True if the operation is successful (directory created),
         otherwise False.
     """
-    command = ["hadoop", "fs", "-mkdir", path]
+    command = ['hadoop', 'fs', '-mkdir', path]
     return _perform(command)
 
 
 def create_txt_from_string(
-    path: str, string_to_write: str, replace: Optional[bool] = False
+    path: str,
+    string_to_write: str,
+    replace: Optional[bool] = False,
 ) -> None:
     """Create and populate a text file in HDFS.
 
@@ -169,12 +175,14 @@ def create_txt_from_string(
     if replace and file_exists(path):
         delete_file(path)
     elif not replace and file_exists(path):
+        msg = f'File {path} already exists and replace is set to False.'
         raise FileNotFoundError(
-            f"File {path} already exists and replace is set to False."
+            msg,
         )
 
     subprocess.call(
-        [f'echo "{string_to_write}" | hadoop fs -put - {path}'], shell=True
+        [f'echo "{string_to_write}" | hadoop fs -put - {path}'],
+        shell=True,
     )
 
 
@@ -192,7 +200,7 @@ def delete_dir(path: str) -> bool:
         True if the operation is successful (directory deleted),
         otherwise False.
     """
-    command = ["hadoop", "fs", "-rmdir", path]
+    command = ['hadoop', 'fs', '-rmdir', path]
     return _perform(command)
 
 
@@ -215,7 +223,7 @@ def delete_file(path: str) -> bool:
     subprocess.TimeoutExpired
         If the process does not complete within the default timeout.
     """
-    command = ["hadoop", "fs", "-rm", path]
+    command = ['hadoop', 'fs', '-rm', path]
     return _perform(command)
 
 
@@ -237,7 +245,7 @@ def file_exists(path: str) -> bool:
     subprocess.TimeoutExpired
         If the process does not complete within the default timeout.
     """
-    command = ["hadoop", "fs", "-test", "-e", path]
+    command = ['hadoop', 'fs', '-test', '-e', path]
     return _perform(command)
 
 
@@ -255,9 +263,11 @@ def get_date_modified(filepath: str) -> str:
         The date the file was last modified.
     """
     command = subprocess.Popen(
-        f"hadoop fs -stat %y {filepath}", stdout=subprocess.PIPE, shell=True
+        f'hadoop fs -stat %y {filepath}',
+        stdout=subprocess.PIPE,
+        shell=True,
     )
-    return command.stdout.read().decode("utf-8")[0:10]
+    return command.stdout.read().decode('utf-8')[0:10]
 
 
 def isdir(path: str) -> bool:
@@ -273,7 +283,7 @@ def isdir(path: str) -> bool:
     bool
         True if the operation is successful (directory exists), otherwise False.
     """
-    command = ["hadoop", "fs", "-test", "-d", path]
+    command = ['hadoop', 'fs', '-test', '-d', path]
     return _perform(command)
 
 
@@ -293,7 +303,7 @@ def move_local_to_hdfs(from_path: str, to_path: str) -> bool:
         True if the operation was successful (command return code 0),
         otherwise False.
     """
-    command = ["hadoop", "fs", "-moveFromLocal", from_path, to_path]
+    command = ['hadoop', 'fs', '-moveFromLocal', from_path, to_path]
     return _perform(command)
 
 
@@ -310,11 +320,11 @@ def read_dir(path: str) -> List[str]:
     List[str]
         A list of full paths of the items found in the directory.
     """
-    ls = subprocess.Popen(["hadoop", "fs", "-ls", path], stdout=subprocess.PIPE)
+    ls = subprocess.Popen(['hadoop', 'fs', '-ls', path], stdout=subprocess.PIPE)
     files = [
-        line.decode("utf-8").split()[-1]
+        line.decode('utf-8').split()[-1]
         for line in ls.stdout
-        if "Found" not in line.decode("utf-8")
+        if 'Found' not in line.decode('utf-8')
     ]
     return files
 
@@ -332,8 +342,7 @@ def read_dir_files(path: str) -> List[str]:
     List[str]
         A list of filenames in the directory.
     """
-    files = [os.path.basename(path) for path in read_dir(path)]
-    return files
+    return [Path(p).name for p in read_dir(path)]
 
 
 def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
@@ -358,11 +367,13 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
         shell=True,
     )
     object_list = [
-        obj.decode("utf-8") for obj in command.stdout.read().splitlines()
+        obj.decode('utf-8')
+        for obj in command.stdout.read().splitlines()
     ]
 
     if not return_path:
-        return [os.path.basename(path) for path in object_list]
+        return [Path(path).name for path in object_list]
+
     else:
         return object_list
 
@@ -394,5 +405,5 @@ def rename(from_path: str, to_path: str, overwrite: bool = False) -> bool:
     if overwrite:
         delete_file(to_path)
 
-    command = ["hadoop", "fs", "-mv", from_path, to_path]
+    command = ['hadoop', 'fs', '-mv', from_path, to_path]
     return _perform(command)
