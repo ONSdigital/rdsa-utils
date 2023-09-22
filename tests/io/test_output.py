@@ -6,7 +6,7 @@ import pytest
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
 
-from rdsa_utils.io.outputs import *
+from rdsa_utils.io.output import *
 
 
 class TestInsertDataFrameToHiveTable:
