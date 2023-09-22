@@ -1,4 +1,4 @@
-"""Functions that primarily deal with writing or saving data."""
+"""Functions that primarily deal with writing or saving data to Hive."""
 import logging
 from typing import Union
 
@@ -13,7 +13,7 @@ from rdsa_utils.exceptions import (
     TableNotFoundError,
 )
 from rdsa_utils.helpers.pyspark import is_df_empty
-from rdsa_utils.io.inputs import load_and_validate_table
+from rdsa_utils.io.input_hive import load_and_validate_table
 
 logger = logging.getLogger(__name__)
 

@@ -1,11 +1,11 @@
-"""Tests for the inputs.py module."""
+"""Tests for the input_hive.py module."""
 from unittest.mock import MagicMock
 
 import pytest
 from pyspark.sql import DataFrame as SparkDF
 
-from rdsa_utils.io.inputs import *
-
+from rdsa_utils.io.input_hive import *
+from rdsa_utils.exceptions import DataframeEmptyError
 
 class TestLoadAndValidateTable:
     """Tests for load_and_validate_table function."""
@@ -20,7 +20,7 @@ class TestLoadAndValidateTable:
         df = MagicMock(spec=SparkDF)
         df.rdd.isEmpty.return_value = True
         spark_session.read.table.return_value = df
-        with pytest.raises(ValueError):
+        with pytest.raises(DataframeEmptyError):
             load_and_validate_table(spark_session, table_name)
 
     def test_load_and_validate_table_with_non_existing_table(self) -> None:
@@ -45,7 +45,7 @@ class TestLoadAndValidateTable:
         df = MagicMock(spec=SparkDF)
         df.rdd.isEmpty.side_effect = [False, True]
         spark_session.read.table.return_value = df
-        with pytest.raises(ValueError):
+        with pytest.raises(DataframeEmptyError):
             load_and_validate_table(
                 spark_session, table_name, filter_cond=filter_cond,
             )

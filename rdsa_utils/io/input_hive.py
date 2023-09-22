@@ -1,11 +1,11 @@
-"""Functions that primarily deal with loading or reading data."""
+"""Functions that primarily deal with loading or reading data to Hive."""
 import logging
 
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
 
 from rdsa_utils.exceptions import DataframeEmptyError
-from rdsa_utils.helpers.pyspark import extract_database_name, is_df_empty
+from rdsa_utils.helpers.pyspark import extract_database_name
 
 logger = logging.getLogger(__name__)
 
@@ -60,13 +60,13 @@ def load_and_validate_table(
         raise PermissionError(db_err) from e
 
     if not skip_validation:
-        if is_df_empty(df):
+        if df.rdd.isEmpty():
             err_msg = err_msg or f'Table {table_name} is empty.'
             raise DataframeEmptyError(err_msg)
 
     if filter_cond:
         df = df.filter(filter_cond)
-        if not skip_validation and is_df_empty(df):
+        if not skip_validation and df.rdd.isEmpty():
             err_msg = (
                 err_msg
                 or f'Table {table_name} is empty after applying '
