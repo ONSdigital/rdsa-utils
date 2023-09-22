@@ -137,8 +137,8 @@ class TestWriteAndReadHiveTable:
         mock_df.columns = ['run_id', 'data']
         return mock_df
 
-    @patch('rdsa_utils.helpers.helpers_spark.load_and_validate_table')
-    @patch('rdsa_utils.helpers.helpers_spark.insert_df_to_hive_table')
+    @patch('rdsa_utils.helpers.pyspark.load_and_validate_table')
+    @patch('rdsa_utils.helpers.pyspark.insert_df_to_hive_table')
     def test_write_and_read_hive_table_success(
         self,
         mock_insert,
