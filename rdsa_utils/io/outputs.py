@@ -7,7 +7,11 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.utils import AnalysisException
 
-from rdsa_utils.exceptions import DataframeEmptyError
+from rdsa_utils.exceptions import (
+    ColumnNotInDataframeError,
+    DataframeEmptyError,
+    TableNotFoundError,
+)
 from rdsa_utils.helpers.helpers_spark import is_df_empty
 from rdsa_utils.io.inputs import load_and_validate_table
 
@@ -166,7 +170,7 @@ def write_and_read_hive_table(
                 f'The specified Hive table {database}.'
                 f'{table_name} does not exist.'
             )
-            raise ValueError(
+            raise TableNotFoundError(
                 msg,
             )
 
@@ -176,7 +180,7 @@ def write_and_read_hive_table(
                 "The provided DataFrame doesn't contain the "
                 f"specified filter column: {filter_col}"
             )
-            raise ValueError(
+            raise ColumnNotInDataframeError(
                 msg,
             )
 
