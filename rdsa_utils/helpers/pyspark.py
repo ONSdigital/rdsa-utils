@@ -555,40 +555,6 @@ def cut_lineage(df: SparkDF) -> SparkDF:
         raise
 
 
-def assert_df_is_not_empty(df: SparkDF, err_msg: str) -> SparkDF:
-    """Raise an error if the SparkDF is empty.
-
-    Parameters
-    ----------
-    df
-        SparkDF to check.
-    err_msg
-        Error message to raise if SparkDF is empty.
-
-    Returns
-    -------
-    SparkDF
-        Returns the input SparkDF if not empty.
-
-    Raises
-    ------
-    ValueError
-        If SparkDF is empty.
-    """
-    if not df.head():
-        err_msg += f'. SparkDF schema: {df.schema}'
-        raise ValueError(err_msg)
-    else:
-        num_rows = df.count()
-        logger.info(
-            (
-                f'SparkDF is not empty. It contains {num_rows} rows '
-                f'and has the following schema: {df.schema}'
-            ),
-        )
-        return df
-
-
 def extract_database_name(
     spark: SparkSession,
     long_table_name: str,

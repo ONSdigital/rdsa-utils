@@ -942,53 +942,6 @@ class TestFindSparkDataFrames:
         assert all(isinstance(val, SparkDF) for val in result['df_dict'].values())
 
 
-class TestAssertDataFrameIsNotEmpty:
-    """Tests for assert_df_is_not_empty function."""
-
-    def test_assert_df_is_not_empty_with_empty_df(
-        self,
-        spark_session: SparkSession,
-    ) -> None:
-        """Test that assert_df_is_not_empty raises a ValueError when the input
-        DataFrame is empty.
-        """
-        empty_df = spark_session.createDataFrame([], 'name STRING, age INT')
-
-        err_msg = 'DataFrame is empty'
-        with pytest.raises(ValueError):
-            assert_df_is_not_empty(empty_df, err_msg)
-
-    def test_assert_df_is_not_empty_with_non_empty_df(
-        self,
-        spark_session: SparkSession,
-        create_spark_df: Callable,
-    ) -> None:
-        """Test that assert_df_is_not_empty returns the input DataFrame when it
-        is not empty.
-        """
-        input_schema = T.StructType(
-            [
-                T.StructField('name', T.StringType(), True),
-                T.StructField('department', T.StringType(), True),
-                T.StructField('salary', T.IntegerType(), True),
-            ],
-        )
-        non_empty_df = create_spark_df(
-            [
-                (input_schema),
-                ('John', 'Sales', 20),
-                ('Jane', 'Marketing', 21),
-            ],
-        )
-
-        err_msg = 'DataFrame is empty'
-        returned_df = assert_df_is_not_empty(non_empty_df, err_msg)
-
-        assert isinstance(returned_df, SparkDF)
-        assert returned_df.count() == 2
-        assert returned_df.columns == ['name', 'department', 'salary']
-
-
 class TestExtractDatabaseName:
     """Tests for extract_database_name function."""
 
