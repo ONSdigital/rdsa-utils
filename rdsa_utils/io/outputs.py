@@ -7,7 +7,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.utils import AnalysisException
 
-from rdsa_utils.helpers.helpers_spark import assert_df_is_not_empty
+from rdsa_utils.exceptions import DataframeEmptyError
+from rdsa_utils.helpers.helpers_spark import is_df_empty
 from rdsa_utils.io.inputs import load_and_validate_table
 
 logger = logging.getLogger(__name__)
@@ -54,7 +55,11 @@ def insert_df_to_hive_table(
     logger.info(f'Preparing to write data to {table_name}.')
 
     # Validate SparkDF before writing
-    assert_df_is_not_empty(df, f'Cannot write an empty SparkDF to {table_name}')
+    if is_df_empty(df):
+        msg = f'Cannot write an empty SparkDF to {table_name}'
+        raise DataframeEmptyError(
+            msg,
+        )
 
     try:
         table_columns = spark.read.table(table_name).columns
