@@ -10,3 +10,7 @@ The Reproducible Data Science and Analysis (RDSA) team, sits within the Economic
 
 - Python 3.7 or higher
 - Poetry
+
+## Documentation and Further Information
+
+Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://solid-adventure-n1jo3ky.pages.github.io/).
