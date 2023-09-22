@@ -691,9 +691,11 @@ def create_spark_session(
     """Create a PySpark Session based on the specified size.
 
     This function creates a PySpark session with different configurations
-    based on the size specified. The size can be 'default', 'small', 'medium',
-    'large', or 'extra-large'. Extra Spark configurations can be passed as
-    a dictionary.
+    based on the size specified.
+
+    The size can be 'default', 'small', 'medium', 'large', or 'extra-large'.
+    Extra Spark configurations can be passed as a dictionary.
+    If no size is given, then a basic Spark session is spun up.
 
     Parameters
     ----------
@@ -757,16 +759,21 @@ def create_spark_session(
     "https://best-practice-and-impact.github.io/ons-spark/spark-overview/example-spark-sessions.html"
     """
     try:
-        size = size.lower()
-        valid_sizes = ['small', 'medium', 'large', 'extra-large']
-        if size not in valid_sizes:
-            msg = (
-                f"Invalid '{size=}'. "
-                f"If specified must be one of {valid_sizes}."
-            )
-            raise ValueError(msg)
+        if size:
+            size = size.lower()
+            valid_sizes = ['small', 'medium', 'large', 'extra-large']
+            if size not in valid_sizes:
+                msg = (
+                    f"Invalid '{size=}'. "
+                    f"If specified must be one of {valid_sizes}."
+                )
+                raise ValueError(msg)
 
-        logger.info(f"Creating a '{size}' Spark session...")
+        logger.info(
+            f"Creating a '{size}' Spark session..."
+            if size
+            else 'Creating a basic Spark session...',
+        )
 
         logger.info('Stopping any existing Spark session...')
         SparkSession.builder.getOrCreate().stop()
