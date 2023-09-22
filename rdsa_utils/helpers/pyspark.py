@@ -15,15 +15,11 @@ from typing import (
     Union,
 )
 
-from pyspark.sql import (
-    Column as SparkCol,
-    DataFrame as SparkDF,
-    functions as F,
-    SparkSession,
-    types as T,
-    Window,
-    WindowSpec,
-)
+from pyspark.sql import Column as SparkCol
+from pyspark.sql import DataFrame as SparkDF
+from pyspark.sql import SparkSession, Window, WindowSpec
+from pyspark.sql import functions as F
+from pyspark.sql import types as T
 
 logger = logging.getLogger(__name__)
 
@@ -686,7 +682,7 @@ def find_spark_dataframes(
 def create_spark_session(
     app_name: Optional[str] = None,
     size: Optional[Literal['small', 'medium', 'large', 'extra-large']] = None,
-    extra_configs: Optional[dict[str, str]] = None,
+    extra_configs: Optional[Dict[str, str]] = None,
 ) -> SparkSession:
     """Create a PySpark Session based on the specified size.
 
