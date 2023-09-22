@@ -7,6 +7,7 @@ from typing import (
     Callable,
     Dict,
     List,
+    Literal,
     Mapping,
     Optional,
     Sequence,
@@ -683,7 +684,9 @@ def find_spark_dataframes(
 
 
 def create_spark_session(
-    app_name: str, size: str, extra_configs: Dict = None,
+    app_name: Optional[str] = None,
+    size: Optional[Literal['small', 'medium', 'large', 'extra-large']] = None,
+    extra_configs: Optional[dict[str, str]] = None,
 ) -> SparkSession:
     """Create a PySpark Session based on the specified size.
 
