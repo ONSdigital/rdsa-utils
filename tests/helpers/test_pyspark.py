@@ -6,8 +6,8 @@ from chispa import assert_df_equality
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
 
-from rdsa_utils.helpers.helpers_spark import *
-from rdsa_utils.helpers.helpers_spark import _convert_to_spark_col
+from rdsa_utils.helpers.pyspark import *
+from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 from tests.conftest import (
     Case,
     create_dataframe,
@@ -15,6 +15,7 @@ from tests.conftest import (
     to_date,
     to_datetime,
 )
+
 
 @to_spark_col
 def input_funct(s1: str):
