@@ -26,7 +26,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add common custom exceptions.
 - Add config load class
 - Add generic IO input functions
-- Add functions from `epds_utils` into `helpers/pyspark.py`, `io/input_hive.py`, `io/output_hive.py`.
+- Add functions from `epds_utils` into `helpers/pyspark.py`, `io/input.py`, `io/output.py`.
 
 ### Changed
 - Renamed `_typing` module to `typing`.

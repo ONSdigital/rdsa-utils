@@ -1,4 +1,4 @@
-"""Tests for the output_hive.py module."""
+"""Tests for the output.py module."""
 from typing import Callable
 from unittest.mock import Mock, patch
 
@@ -6,7 +6,7 @@ import pytest
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
 
-from rdsa_utils.io.output_hive import *
+from rdsa_utils.io.output import *
 
 
 class TestInsertDataFrameToHiveTable:
@@ -137,8 +137,8 @@ class TestWriteAndReadHiveTable:
         mock_df.columns = ['run_id', 'data']
         return mock_df
 
-    @patch('rdsa_utils.io.output_hive.load_and_validate_table')
-    @patch('rdsa_utils.io.output_hive.insert_df_to_hive_table')
+    @patch('rdsa_utils.io.output.load_and_validate_table')
+    @patch('rdsa_utils.io.output.insert_df_to_hive_table')
     def test_write_and_read_hive_table_success(
         self,
         mock_insert,
