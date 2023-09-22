@@ -12,7 +12,7 @@ from rdsa_utils.exceptions import (
     DataframeEmptyError,
     TableNotFoundError,
 )
-from rdsa_utils.helpers.helpers_spark import is_df_empty
+from rdsa_utils.helpers.pyspark import is_df_empty
 from rdsa_utils.io.inputs import load_and_validate_table
 
 logger = logging.getLogger(__name__)
