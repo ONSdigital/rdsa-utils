@@ -2,6 +2,7 @@
 import json
 import logging
 from pathlib import Path
+from typing import Tuple, Union
 
 import tomli
 import yaml
@@ -10,7 +11,6 @@ from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
 
 from rdsa_utils.exceptions import DataframeEmptyError
-from rdsa_utils.helpers.pyspark import extract_database_name
 from rdsa_utils.typing import Config
 
 logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ def parse_yaml(data: str) -> Config:
     return yaml.safe_load(data)
 
 
-def read_file(file: CloudPath | Path) -> str:
+def read_file(file: Union[CloudPath, Path]) -> str:
     """Load contents of specified file.
 
     Parameters
@@ -112,6 +112,78 @@ def read_file(file: CloudPath | Path) -> str:
         msg = f'{file=} cannot be found.'
         logger.error(msg)
         raise FileNotFoundError(msg)
+
+
+def get_current_database(spark: SparkSession) -> str:
+    """Retrieve the current database from the active SparkSession."""
+    return spark.sql('SELECT current_database()').collect()[0][
+        'current_database()'
+    ]
+
+
+def extract_database_name(
+    spark: SparkSession, long_table_name: str,
+) -> Tuple[str, str]:
+    """Extract the database component and table name from a compound table name.
+
+    This function can handle multiple scenarios:
+
+    1. For GCP's naming format '<project>.<database>.<table>',
+       the function will return the database and table name.
+
+    2. If the name is formatted as 'db_name.table_name', the function will
+       extract and return the database and table names.
+
+    3. If the long_table_name contains only the table name (e.g., 'table_name'),
+       the function will use the current database of the SparkSession.
+
+    4. For any other incorrectly formatted names, the function will raise
+       a ValueError.
+
+    Parameters
+    ----------
+    spark : SparkSession
+        Active SparkSession.
+    long_table_name : str
+        Full name of the table, which can include the GCP project
+        and/or database name.
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing the name of the database and the table name.
+
+    Raises
+    ------
+    ValueError
+        If the table name doesn't match any of the expected formats.
+    """
+    parts = long_table_name.split('.')
+
+    if len(parts) == 3:  # GCP format: project.database.table
+        _, db_name, table_name = parts
+
+    elif len(parts) == 2:  # Common format: database.table
+        db_name, table_name = parts
+
+    elif len(parts) == 1:  # Only table name is given
+        db_name = get_current_database(spark)
+        table_name = parts[0]
+
+    else:
+        error_msg = (
+            f'Table name {long_table_name} is incorrectly formatted. '
+            'Expected formats: <project>.<database>.<table>, '
+            '<database>.<table>, or <table>'
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    logger.info(
+        f'Extracted database name: {db_name}, table name: '
+        f'{table_name} from {long_table_name}',
+    )
+    return db_name, table_name
 
 
 def load_and_validate_table(

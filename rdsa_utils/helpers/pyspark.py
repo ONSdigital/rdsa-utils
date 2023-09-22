@@ -11,7 +11,6 @@ from typing import (
     Mapping,
     Optional,
     Sequence,
-    Tuple,
     Union,
 )
 
@@ -550,81 +549,6 @@ def cut_lineage(df: SparkDF) -> SparkDF:
     except Exception:
         logger.error('An error occurred during the lineage cutting process.')
         raise
-
-
-def extract_database_name(
-    spark: SparkSession,
-    long_table_name: str,
-) -> Tuple[str, str]:
-    """Extract the database component and table name from a compound table name.
-
-    This function can handle three scenarios:
-
-    1. If the long_table_name is correctly formatted as 'db_name.table_name',
-       the function will extract and return the database name (db_name)
-       and table name.
-
-    2. If the long_table_name contains only the table name (e.g., 'table_name'),
-       the function will use the current database of the SparkSession and
-       the provided table name.
-
-    3. If the long_table_name is incorrectly formatted (contains more
-       than one dot), the function will raise a ValueError.
-
-    Parameters
-    ----------
-    spark
-        Active SparkSession.
-    long_table_name
-        Full name of the table including the database name.
-
-    Returns
-    -------
-    Tuple[str, str]
-        A tuple containing the name of the database and the table name.
-
-    Raises
-    ------
-    ValueError
-        If the table name is incorrectly formatted (contains more than one dot).
-        Expected format: db_name.table_name
-    """
-    if '.' in long_table_name:
-        parts = long_table_name.split('.')
-        if len(parts) > 2:
-            logger.error(
-                f'Table name {long_table_name} is incorrectly formatted. '
-                f'Expected format: db_name.table_name',
-            )
-            msg = (
-                f'Table name {long_table_name} is incorrectly formatted. '
-                f'Expected format: db_name.table_name'
-            )
-            raise ValueError(msg)
-        db_name, table_name = (
-            parts
-            if len(parts) == 2
-            else (
-                spark.sql('SELECT current_database()').collect()[0][
-                    'current_database()'
-                ],
-                parts[0],
-            )
-        )
-    else:
-        db_name = spark.sql('SELECT current_database()').collect()[0][
-            'current_database()'
-        ]
-        table_name = long_table_name
-
-    logger.info(
-        (
-            f'Extracted database name: {db_name}, '
-            f'table name: {table_name} from {long_table_name}'
-        ),
-    )
-
-    return db_name, table_name
 
 
 def find_spark_dataframes(
