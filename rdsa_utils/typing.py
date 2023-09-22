@@ -1,15 +1,9 @@
 """Contains custom types for type hinting."""
 import os
 import pathlib
-from typing import (
-    Any,
-    Mapping,
-    Literal,
-    TypeVar,
-)
+from typing import Any, Literal, Mapping, TypeVar, Union
 
 from pandas.core.generic import NDFrame
-
 
 # Table paths are in the format "database_name.table_name".
 TablePath = str
@@ -23,6 +17,6 @@ FrameOrSeries = TypeVar('FrameOrSeries', bound=NDFrame)
 
 Config = Mapping[str, Any]
 
-# See https://cloud.google.com/bigquery/docs/partitioned-tables for details on
-# the use of time based partitions in Google BigQuery.
-BigQueryTimePartitions = Literal['hour', 'day', 'month', 'year'] | None
+# See https://cloud.google.com/bigquery/docs/partitioned-tables for details on
+# the use of time based partitions in Google BigQuery.
+BigQueryTimePartitions = Union[Literal['hour', 'day', 'month', 'year'], None]
