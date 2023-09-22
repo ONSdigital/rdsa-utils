@@ -15,6 +15,8 @@ from tests.conftest import (
     to_date,
     to_datetime,
 )
+from rdsa_utils.helpers.pyspark import *
+from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 
 
 @to_spark_col

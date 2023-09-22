@@ -5,7 +5,7 @@ from tests.conftest import (
     Case,
     parametrize_cases,
 )
-from rdsa_utils.helpers.helpers_python import *
+from rdsa_utils.helpers.python import *
 
 
 @pytest.mark.skip(reason='wrapper of third party function')
@@ -160,7 +160,7 @@ class TestOverwriteDictionary:
     def test_raises_when_key_missing(self, base_dict):
         """Test error raised if override key isn't present in base_dict."""
         override_dict = {'var10': 'value404'}
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             overwrite_dictionary(base_dict, override_dict)
 
 
