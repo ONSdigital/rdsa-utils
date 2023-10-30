@@ -3,7 +3,7 @@ import functools
 from functools import partial
 import logging
 from textwrap import dedent
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, List, Optional
 
 from humanfriendly import format_timespan
 import pandas as pd
@@ -62,6 +62,103 @@ def init_logger_basic(log_level: int) -> None:
 
     Also have access to `logger.dev` by using this function.
     """)
+
+
+def init_logger_advanced(
+    log_level: int,
+    handlers: Optional[List[logging.Handler]] = None,
+    log_format: str = None,
+    date_format: str = None,
+) -> None:
+    """Instantiate a logger with provided handlers.
+
+    This function allows the logger to be used across modules. Logs can be
+    handled by any number of handlers, e.g., FileHandler, StreamHandler, etc.,
+    provided in the `handlers` list.
+
+    Parameters
+    ----------
+    log_level
+        The level of logging to be recorded. Can be defined either as the
+        integer level or the logging.<LEVEL> values in line with the definitions
+        of the logging module.
+        (see - https://docs.python.org/3/library/logging.html#levels)
+    handlers
+        List of handler instances to be added to the logger. Each handler
+        instance must be a subclass of `logging.Handler`. Default is an
+        empty list, and in this case, basicConfig with `log_level`,
+        `log_format`, and `date_format` is used.
+    log_format
+        The format of the log message. If not provided, a default format
+        `'%(asctime)s %(levelname)s %(name)s: %(message)s'` is used.
+    date_format
+        The format of the date in the log message. If not provided, a default
+        format `'%Y-%m-%d %H:%M:%S'` is used.
+
+    Returns
+    -------
+    None
+        The logger created by this function is available in any other modules
+        by using `logging.getLogger(__name__)` at the global scope level in a
+        module (i.e., below imports, not in a function).
+
+    Raises
+    ------
+    ValueError
+        If any item in the `handlers` list is not an instance of
+        `logging.Handler`.
+
+    Examples
+    --------
+    >>> file_handler = logging.FileHandler('logfile.log')
+    >>> rich_handler = RichHandler()
+    >>> init_logger_advanced(
+    ...     logging.DEBUG,
+    ...     [file_handler, rich_handler],
+    ...     "%(levelname)s: %(message)s",
+    ...     "%H:%M:%S"
+    ... )
+    """
+    # Set default log format and date format if not provided
+    if log_format is None:
+        log_format = '%(asctime)s %(levelname)s %(name)s: %(message)s'
+    if date_format is None:
+        date_format = '%Y-%m-%d %H:%M:%S'
+
+    # Prepare a formatter
+    formatter = logging.Formatter(log_format, date_format)
+
+    # Create a logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(log_level)
+
+    # Check if handlers is None, if so assign an empty list to it
+    if handlers is None:
+        handlers = []
+
+    # Validate each handler
+    for handler in handlers:
+        if not isinstance(handler, logging.Handler):
+            msg = (
+                f'Handler {handler} is not an instance of '
+                f'logging.Handler or its subclasses'
+            )
+            raise ValueError(
+                msg,
+            )
+
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+    # If no handlers provided, use basicConfig
+    if not handlers:
+        logging.basicConfig(
+            level=log_level,
+            format=log_format,
+            datefmt=date_format,
+        )
+
+    logger.debug('Initialised logger for pipeline.')
 
 
 def timer_args(
@@ -375,7 +472,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
     return wrapper_decorator
 
 
-def _add_warning_message_to_function(
+def add_warning_message_to_function(
     _func: Callable = None,
     *,
     message: Optional[str] = None,
@@ -430,6 +527,6 @@ def _add_warning_message_to_function(
 
 
 not_undergone_functional_test_warning = partial(
-    _add_warning_message_to_function,
+    add_warning_message_to_function,
     message='is unit tested, but not formally end-to-end tested.',
 )

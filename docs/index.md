@@ -3,7 +3,8 @@ This site contains the project documentation for `rdsa-utils`, a suite of pyspar
 
 ## Table Of Contents
 
-1. [API reference](reference.md)
+1. [API Reference](reference.md)
+2. [Contribution Guide](contribution_guide.md)
 
 Quickly find what you're looking for depending on your use case by looking at the different pages.
 
@@ -11,5 +12,5 @@ Quickly find what you're looking for depending on your use case by looking at th
 
 The following prerequisites are required for `rdsa-utils`:
 
-- Python 3.7 or higher
+- Python 3.8 or higher
 - Poetry

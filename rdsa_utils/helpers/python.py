@@ -151,7 +151,7 @@ def overwrite_dictionary(
 
     Raises
     ------
-    Exception
+    ValueError
         If a key is present in override_dict but not base_dict.
     """ # noqa: E501
     for key, val in base_dict.items():
@@ -186,13 +186,14 @@ def overwrite_dictionary(
 
     for key, val in override_dict.items():
         if key not in base_dict:
-            logger.error(f"""
+            msg = f"""
             The key, value pair:
             {key, val}
             is not in the base dictionary
             {json.dumps(base_dict, indent=4)}
-            """)
-            raise Exception
+            """
+            logger.error(msg)
+            raise ValueError(msg)
 
     return base_dict
 
@@ -205,11 +206,11 @@ def calc_product_of_dict_values(
     In order to create product of values, the values are converted to
     a list so that product of values can be derived.
 
-    Yields:
+    Yields
     ------
         Next result of cartesian product of kwargs values.
 
-    Example:
+    Example
     -------
     my_dict = {
         'key1': 1,
@@ -219,7 +220,7 @@ def calc_product_of_dict_values(
     list(calc_product_of_dict_values(**my_dict))
     >>> [{'key1': 1, 'key2': 2}, {'key1': 1, 'key2': 3}, {'key1': 1, 'key2': 4}]
 
-    Notes:
+    Notes
     -----
     Modified from: https://stackoverflow.com/a/5228294
     """
