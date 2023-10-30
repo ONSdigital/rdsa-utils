@@ -38,16 +38,16 @@ If you would like to contribute to the project by fixing an existing issue, plea
 
 ### Installing Python
 
-Before getting started, you need to have Python 3.7 or higher installed on your system. You can download Python from the [official website](https://www.python.org/downloads/). Make sure to add Python to your `PATH` during the installation process.
+Before getting started, you need to have Python 3.8 or higher installed on your system. You can download Python from the [official website](https://www.python.org/downloads/). Make sure to add Python to your `PATH` during the installation process.
 
-Alternatively, you can use [Anaconda](https://www.anaconda.com/download) to create a Python 3.7 or higher virtual environment. Anaconda is a popular Python distribution that comes with many pre-installed scientific computing packages and tools. Here's how to create a new environment with Anaconda:
+Alternatively, you can use [Anaconda](https://www.anaconda.com/download) to create a Python 3.8 or higher virtual environment. Anaconda is a popular Python distribution that comes with many pre-installed scientific computing packages and tools. Here's how to create a new environment with Anaconda:
 
 1. Download and install Anaconda from the [official website](https://www.anaconda.com/download).
 2. Open the Anaconda prompt.
-3. Create a new virtual environment with Python 3.7 or higher:
+3. Create a new virtual environment with Python 3.8 or higher:
 
     ```
-    conda create --name myenv python=3.7
+    conda create --name myenv python=3.8
     ```
 4. Activate the virtual environment:
 

@@ -12,5 +12,5 @@ Quickly find what you're looking for depending on your use case by looking at th
 
 The following prerequisites are required for `rdsa-utils`:
 
-- Python 3.7 or higher
+- Python 3.8 or higher
 - Poetry
