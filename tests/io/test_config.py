@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel, ValidationError
 import pytest
 
@@ -19,8 +21,8 @@ class ValidatorSection1(BaseModel):
 class ValidatorSection2(BaseModel):
     """Pydantic validator used with TestLoadConfig."""
 
-    value_2_1: list[int]
-    value_2_2: list[int]
+    value_2_1: List[int]
+    value_2_2: List[int]
 
 
 class _ValidatorSection31(BaseModel):

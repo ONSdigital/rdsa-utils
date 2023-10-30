@@ -6,6 +6,7 @@ from typing import (
     Mapping,
     Literal,
     TypeVar,
+    Union
 )
 
 from pandas.core.generic import NDFrame
@@ -25,4 +26,4 @@ Config = Mapping[str, Any]
 
 # See https://cloud.google.com/bigquery/docs/partitioned-tables for details on
 # the use of time based partitions in Google BigQuery.
-BigQueryTimePartitions = Literal['hour', 'day', 'month', 'year'] | None
+BigQueryTimePartitions = Union[Literal['hour', 'day', 'month', 'year'], None]
