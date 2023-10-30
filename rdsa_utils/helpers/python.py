@@ -231,4 +231,4 @@ def calc_product_of_dict_values(
     vals = kwargs.values()
 
     for instance in itertools.product(*vals):
-        yield dict(zip(keys, instance))
+        yield dict(zip(keys, instance))  # noqa: B905
