@@ -39,6 +39,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix `deploy_mkdocs.yaml`, changed `mkdocs-material` to `mkdocs-tech-docs-template`.
 - Fix module paths for unit test patches in `tests/cdsw/`.
+- Fix `pull_request_workflow.yaml`; ensured pytest failures are accurately reported in GitHub workflow by removing `|| true` condition.
 
 ### Removed
 - Remove `_version.py`.
