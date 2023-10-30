@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import (
     Callable,
+    Dict,
     Literal,
     Optional,
 )
@@ -61,7 +62,7 @@ class LoadConfig:
         config_path: CloudPath | Path,
         config_overrides: Optional[Config] = None,
         config_type: Optional[Literal['json', 'toml', 'yaml']] = None,
-        config_validators: Optional[dict[str, BaseModel]] = None,
+        config_validators: Optional[Dict[str, BaseModel]] = None,
     ) -> None:
         """Init method.
 

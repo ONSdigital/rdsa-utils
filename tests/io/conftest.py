@@ -1,5 +1,5 @@
 """Functions, classes and fixtures available across all tests in io."""
-from typing import Any
+from typing import Any, Dict
 
 import pytest
 
@@ -67,7 +67,7 @@ def yaml_config_string() -> str:
 
 
 @pytest.fixture()
-def expected_standard_config() -> dict[str, Any]:
+def expected_standard_config() -> Dict[str, Any]:
     """Fixture providing the loaded config from loading the temp file."""
     return {
         'section_1': {
