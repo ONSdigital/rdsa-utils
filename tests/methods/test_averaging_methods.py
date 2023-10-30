@@ -3,7 +3,7 @@ from chispa import (
 )
 import pytest
 
-from rdsa_utils.helpers.averaging_methods import *
+from rdsa_utils.methods.averaging_methods import *
 
 
 @pytest.fixture()
