@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../reference/">
       
-      
-        <link rel="next" href="../contribution_guide/">
       
       
       <link rel="icon" href="../assets/ons_favicon.svg">
@@ -20,7 +18,7 @@
     
     
       
-        <title>API Reference - rdsa-utils Documentation</title>
+        <title>Contribution Guide - rdsa-utils Documentation</title>
       
     
     
@@ -70,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rdsa_utils.test_utils" class="md-skip">
+        <a href="#contribution-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -105,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              Contribution Guide
             
           </span>
         </div>
@@ -234,6 +232,25 @@
       
   
   
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -242,12 +259,14 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
   <span class="md-ellipsis">
-    API Reference
+    Contribution Guide
   </span>
   
 
@@ -258,7 +277,7 @@
         
   
   <span class="md-ellipsis">
-    API Reference
+    Contribution Guide
   </span>
   
 
@@ -270,6 +289,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -278,119 +299,93 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils" class="md-nav__link">
-    test_utils
+  <a href="#pull-requests" class="md-nav__link">
+    Pull Requests
   </a>
   
-    <nav class="md-nav" aria-label="test_utils">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issues" class="md-nav__link">
+    Issues
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    Getting Started
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case" class="md-nav__link">
-    Case
-  </a>
-  
-    <nav class="md-nav" aria-label="Case">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case--see-also" class="md-nav__link">
-    See Also
+  <a href="#installing-python" class="md-nav__link">
+    Installing Python
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case.__repr__" class="md-nav__link">
-    __repr__()
+  <a href="#installing-poetry" class="md-nav__link">
+    Installing Poetry
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clone-the-repository" class="md-nav__link">
+    Clone the Repository
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-the-development-environment" class="md-nav__link">
+    Set Up the Development Environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#activate-the-virtual-environment" class="md-nav__link">
+    Activate the Virtual Environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    Running Tests
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-pre-commit-hooks-in-your-development-environment" class="md-nav__link">
+    Installing Pre-commit Hooks in Your Development Environment
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing Pre-commit Hooks in Your Development Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation-steps" class="md-nav__link">
+    Installation Steps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
   </a>
   
 </li>
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_dataframe" class="md-nav__link">
-    create_dataframe()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_spark_df" class="md-nav__link">
-    create_spark_df()
-  </a>
-  
-    <nav class="md-nav" aria-label="create_spark_df()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_spark_df--example" class="md-nav__link">
-    Example:
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.parametrize_cases" class="md-nav__link">
-    parametrize_cases()
-  </a>
-  
-    <nav class="md-nav" aria-label="parametrize_cases()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.parametrize_cases--see-also" class="md-nav__link">
-    See Also
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.spark_session" class="md-nav__link">
-    spark_session()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.suppress_py4j_logging" class="md-nav__link">
-    suppress_py4j_logging()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_date" class="md-nav__link">
-    to_date()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_datetime" class="md-nav__link">
-    to_datetime()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_spark" class="md-nav__link">
-    to_spark()
-  </a>
   
 </li>
         
@@ -403,25 +398,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../contribution_guide/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Contribution Guide
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -443,6 +419,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -451,119 +429,93 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils" class="md-nav__link">
-    test_utils
+  <a href="#pull-requests" class="md-nav__link">
+    Pull Requests
   </a>
   
-    <nav class="md-nav" aria-label="test_utils">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issues" class="md-nav__link">
+    Issues
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    Getting Started
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case" class="md-nav__link">
-    Case
-  </a>
-  
-    <nav class="md-nav" aria-label="Case">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case--see-also" class="md-nav__link">
-    See Also
+  <a href="#installing-python" class="md-nav__link">
+    Installing Python
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case.__repr__" class="md-nav__link">
-    __repr__()
+  <a href="#installing-poetry" class="md-nav__link">
+    Installing Poetry
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clone-the-repository" class="md-nav__link">
+    Clone the Repository
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-the-development-environment" class="md-nav__link">
+    Set Up the Development Environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#activate-the-virtual-environment" class="md-nav__link">
+    Activate the Virtual Environment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    Running Tests
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-pre-commit-hooks-in-your-development-environment" class="md-nav__link">
+    Installing Pre-commit Hooks in Your Development Environment
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing Pre-commit Hooks in Your Development Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation-steps" class="md-nav__link">
+    Installation Steps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
   </a>
   
 </li>
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_dataframe" class="md-nav__link">
-    create_dataframe()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_spark_df" class="md-nav__link">
-    create_spark_df()
-  </a>
-  
-    <nav class="md-nav" aria-label="create_spark_df()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_spark_df--example" class="md-nav__link">
-    Example:
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.parametrize_cases" class="md-nav__link">
-    parametrize_cases()
-  </a>
-  
-    <nav class="md-nav" aria-label="parametrize_cases()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.parametrize_cases--see-also" class="md-nav__link">
-    See Also
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.spark_session" class="md-nav__link">
-    spark_session()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.suppress_py4j_logging" class="md-nav__link">
-    suppress_py4j_logging()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_date" class="md-nav__link">
-    to_date()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_datetime" class="md-nav__link">
-    to_datetime()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_spark" class="md-nav__link">
-    to_spark()
-  </a>
   
 </li>
         
@@ -590,345 +542,100 @@
   
 
 
-  <h1>API Reference</h1>
-
-<p>This part of the project documentation focuses on an <strong>information-oriented</strong> approach. Use it as a
-reference for the technical implementation of the<code>rdsa-utils</code> codebase.</p>
-
-
-<div class="doc doc-object doc-module">
-
-
-
-
-<h2 id="rdsa_utils.test_utils" class="doc doc-heading">
-          <code>rdsa_utils.test_utils</code>
-
-
-</h2>
-
-  <div class="doc doc-contents first">
-  
-      <p>Functions and fixtures used with test suites.</p>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.Case" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">Case</span><span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">marks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MarkDecorator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-
-  
-      <p>Container for a test case, with optional test ID.</p>
-<p>The Case class is to be used in conjunction with <code>parameterize_cases</code>.</p>
-
-
-
-  <p><strong>Attributes:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>    label</code></td>
-          <td>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <pre><code>Optional test ID. Will be displayed for each test when
-running `pytest -v`.
+<h1 id="contribution-guide">Contribution Guide</h1>
+<p>We welcome contributions. To contribute, please follow these guidelines:</p>
+<h2 id="pull-requests">Pull Requests</h2>
+<ul>
+<li>All pull requests should be made to the <code>dev</code> branch, named <code>dev_&lt;feature_name&gt;</code>.</li>
+<li>Please make sure that your code passes all unit tests before submitting a pull request.</li>
+<li>Include unit tests with your code changes whenever possible, preferably written in <a href="https://docs.pytest.org/en/stable/">pytest</a> format.</li>
+<li>Make sure that all existing unit tests still pass with your code changes.</li>
+<li>Please ensure that your code is compliant with the project's coding style guidelines, which include:</li>
+<li>Writing docstrings in <a href="https://numpydoc.readthedocs.io/en/latest/format.html">Scipy/numpy style format</a>.</li>
+<li>Using <a href="https://docs.python.org/3/library/typing.html">type hints</a> in Python functions.</li>
+<li>Adhering to the <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 style guide</a> for Python code.</li>
+<li>No wildcard imports.</li>
+<li>Import PySpark functions as <code>F</code>.</li>
+<li>Providing well-documented and easy-to-understand code, including clear variable and function names, as well as explanatory comments where necessary.</li>
+<li>If you are making a significant change to the codebase, please make sure to update the documentation to reflect the changes.</li>
+<li>If you are adding new functionality, please provide examples of how to use it in the project's documentation or in a separate README file.</li>
+<li>If you are fixing a bug, please include a description of the bug and how your changes address it.</li>
+<li>If you are adding a new dependency, please include a brief explanation of why it is necessary and what it does.</li>
+<li>If you are making significant changes to the project's architecture or design, please discuss your ideas with the project maintainers first to ensure they align with the project's goals and vision.</li>
+</ul>
+<h2 id="issues">Issues</h2>
+<p>If you find a bug or would like to request a feature, please open an issue on the project's <a href="https://github.com/ONSdigital/rdsa-utils/issues">GitHub page</a>. When opening an issue, please provide as much detail as possible, including:</p>
+<ul>
+<li>A clear and descriptive title.</li>
+<li>A description of the problem you're experiencing, including steps to reproduce it.</li>
+<li>Any error messages or logs related to the issue.</li>
+<li>Your operating system and Python version (if relevant).</li>
+</ul>
+<p>Please search through the existing issues before opening a new one to avoid duplicates. If you find an existing issue that covers your problem, please add any additional information as a comment. Issues will be triaged and prioritized by the project maintainers.</p>
+<p>If you would like to contribute to the project by fixing an existing issue, please leave a comment on the issue to let the maintainers know that you are working on it.</p>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="installing-python">Installing Python</h3>
+<p>Before getting started, you need to have Python 3.8 or higher installed on your system. You can download Python from the <a href="https://www.python.org/downloads/">official website</a>. Make sure to add Python to your <code>PATH</code> during the installation process.</p>
+<p>Alternatively, you can use <a href="https://www.anaconda.com/download">Anaconda</a> to create a Python 3.8 or higher virtual environment. Anaconda is a popular Python distribution that comes with many pre-installed scientific computing packages and tools. Here's how to create a new environment with Anaconda:</p>
+<ol>
+<li>Download and install Anaconda from the <a href="https://www.anaconda.com/download">official website</a>.</li>
+<li>Open the Anaconda prompt.</li>
+<li>
+<p>Create a new virtual environment with Python 3.8 or higher:</p>
+<p><code>conda create --name myenv python=3.8</code>
+4. Activate the virtual environment:</p>
+<p><code>conda activate myenv</code></p>
+</li>
+</ol>
+<h3 id="installing-poetry">Installing Poetry</h3>
+<p>Poetry is a dependency management and packaging tool for Python projects. To install Poetry into your virtual environment, use the following command:</p>
+<pre><code>pip install poetry
 </code></pre>
-<p>marks
-    Optional pytest marks to denote any tests to skip etc.
-kwargs
-    Parameters used for the test cases.</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-
-
-<p><strong>Examples:</strong></p>
-    <pre><code class="language-python">&gt;&gt;&gt; Case(label=&quot;some test name&quot;, foo=10, bar=&quot;some value&quot;)
-
-&gt;&gt;&gt; Case(
-&gt;&gt;&gt;     label=&quot;some test name&quot;,
-&gt;&gt;&gt;     marks=pytest.mark.skip(reason='not implemented'),
-&gt;&gt;&gt;     foo=10,
-&gt;&gt;&gt;     bar=&quot;some value&quot;
-&gt;&gt;&gt; )
+<p>For more detailed installation instructions and troubleshooting, please visit the <a href="https://python-poetry.org/docs/#installation">official Poetry documentation</a>.</p>
+<h3 id="clone-the-repository">Clone the Repository</h3>
+<p>Clone the repository to your local machine:</p>
+<pre><code>git clone https://github.com/ONSdigital/rdsa-utils.git
+cd rdsa-utils
 </code></pre>
-      <h5 id="rdsa_utils.test_utils.Case--see-also">See Also</h5>
-<p>Modified from https://github.com/ckp95/pytest-parametrize-cases to allow
-pytest mark usage.</p>
-  
-      <p>Initialise objects.</p>
-
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h4 id="rdsa_utils.test_utils.Case.__repr__" class="doc doc-heading">
-          <code class="highlight language-python"><span class="fm">__repr__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
-
-</h4>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Return string.</p>
-
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.create_dataframe" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">create_dataframe</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Create pandas df from tuple data with a header.</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.create_spark_df" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">create_spark_df</span><span class="p">(</span><span class="n">spark_session</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Create Spark DataFrame from tuple data with first row as schema.</p>
-<h5 id="rdsa_utils.test_utils.create_spark_df--example">Example:</h5>
-<p>create_spark_df([
-    ('column1', 'column2', 'column3'),
-    ('aaaa', 1, 1.1)
-])</p>
-<p>Can specify the schema alongside the column names:
-create_spark_df([
-    ('column1 STRING, column2 INT, column3 DOUBLE'),
-    ('aaaa', 1, 1.1)
-])</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.parametrize_cases" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">parametrize_cases</span><span class="p">(</span><span class="o">*</span><span class="n">cases</span><span class="p">:</span> <span class="n">Case</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>More user friendly parameterize cases testing.</p>
-<p>Utilise as a decorator on top of test function.</p>
-
-
-
-<p><strong>Examples:</strong></p>
-    <pre><code class="language-python">@parameterize_cases(
-    Case(
-        label=&quot;some test name&quot;,
-        foo=10,
-        bar=&quot;some value&quot;
-    ),
-    Case(
-        label=&quot;some test name #2&quot;,
-        foo=20,
-        bar=&quot;some other value&quot;
-    ),
-)
-def test(foo, bar):
-    ...
+<h3 id="set-up-the-development-environment">Set Up the Development Environment</h3>
+<p>To set up the development environment and install the required dependencies, run the following command:</p>
+<pre><code>poetry install
 </code></pre>
-      <h5 id="rdsa_utils.test_utils.parametrize_cases--see-also">See Also</h5>
-<p>Source: https://github.com/ckp95/pytest-parametrize-cases</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.spark_session" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">spark_session</span><span class="p">()</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Set up spark session fixture.</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.suppress_py4j_logging" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">suppress_py4j_logging</span><span class="p">()</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Suppress spark logging.</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.to_date" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">to_date</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Convert date string to datetime.date type.</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.to_datetime" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">to_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Convert datetime string to datetime.datetime type.</p>
-
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rdsa_utils.test_utils.to_spark" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">to_spark</span><span class="p">(</span><span class="n">spark_session</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Convert pandas df to spark.</p>
-
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
+<p>This command will create a virtual environment and install all the dependencies specified in the <code>pyproject.toml</code> file.</p>
+<p>If you're working on <strong>Google Cloud Platform (GCP)</strong> and want to save memory on Cloud Shell, you can use the <code>--no-cache</code> option:</p>
+<pre><code>poetry install --no-cache
+</code></pre>
+<p>This command installs the required dependencies without using the cache, which can save memory on the Cloud Shell.</p>
+<h3 id="activate-the-virtual-environment">Activate the Virtual Environment</h3>
+<p>To activate the virtual environment, run the following command:</p>
+<pre><code>poetry shell
+</code></pre>
+<h3 id="running-tests">Running Tests</h3>
+<p>You can run tests (if any) using the following command:</p>
+<pre><code>poetry run pytest
+</code></pre>
+<h3 id="installing-pre-commit-hooks-in-your-development-environment">Installing Pre-commit Hooks in Your Development Environment</h3>
+<p>To improve code quality and maintain a consistent coding style, we use pre-commit hooks in this repository. The following steps will guide you through the process of setting up pre-commit hooks in your development environment.</p>
+<h4 id="installation-steps">Installation Steps</h4>
+<ol>
+<li><strong>Install pre-commit</strong>: Open a terminal and run the following command to install the <code>pre-commit</code> package:</li>
+</ol>
+<pre><code>pip install pre-commit
+</code></pre>
+<p>This command installs the pre-commit tool, which manages the pre-commit hooks for this repository.</p>
+<ol>
+<li><strong>Install pre-commit hooks</strong>: Run the following command to install the pre-commit hooks defined in the <code>.pre-commit-config.yaml</code> file:</li>
+</ol>
+<pre><code>pre-commit install
+</code></pre>
+<p>This command sets up the pre-commit hooks to run automatically before each commit.</p>
+<h4 id="usage">Usage</h4>
+<p>Now that you have installed the pre-commit hooks, they will run automatically before each commit. If any of the hooks fail, the commit will be aborted, and you will need to fix the issues before trying again.</p>
+<p>You can also run the pre-commit hooks manually at any time using the following command:</p>
+<pre><code>pre-commit run --all-files
+</code></pre>
+<p>This command runs all the pre-commit hooks on all the files in the repository, allowing you to check your code before committing.</p>
+<p>By following these steps, you can ensure that your development environment is set up to use the pre-commit hooks, helping to maintain a clean and consistent codebase.</p>
 
 
 
