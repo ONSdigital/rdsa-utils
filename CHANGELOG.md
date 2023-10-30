@@ -26,11 +26,13 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add common custom exceptions.
 - Add config load class
 - Add generic IO input functions
+- Add `docs/contribution_guide.md`
 
 ### Changed
 - Renamed `_typing` module to `typing`.
 - Renamed modules in helpers directory to remove `helper_` from names.
 - Relocated `logging.py` and `validation.py` to root level.
+- Relocated `Getting Started for Developers` into `docs/contribution_guide.md`.
 
 ### Deprecated
 

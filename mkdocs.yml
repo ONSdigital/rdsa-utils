@@ -23,4 +23,5 @@ plugins:
 
 nav:
   - rdsa-utils: index.md
-  - API reference: reference.md
+  - API Reference: reference.md
+  - Contribution Guide: contribution_guide.md
