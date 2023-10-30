@@ -8,7 +8,7 @@ from typing import (
     Dict,
     Literal,
     Optional,
-    Union
+    Union,
 )
 
 from cloudpathlib import CloudPath

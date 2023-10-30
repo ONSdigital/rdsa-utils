@@ -6,7 +6,7 @@ from typing import (
     Mapping,
     Literal,
     TypeVar,
-    Union
+    Union,
 )
 
 from pandas.core.generic import NDFrame
