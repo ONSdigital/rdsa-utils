@@ -70,7 +70,7 @@ For more detailed installation instructions and troubleshooting, please visit th
 Clone the repository to your local machine:
 
 ```
-git clone git@github.com:ONSdigital/rdsa-utils.git
+git clone https://github.com/ONSdigital/rdsa-utils.git
 cd rdsa-utils
 ```
 
