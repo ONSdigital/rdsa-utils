@@ -20,6 +20,11 @@ from rdsa_utils.typing import TablePath
 logger = logging.getLogger(__name__)
 
 
+def run_bq_query(query: str) -> bigquery.QueryJob:
+    """Run an SQL query in BigQuery."""
+    return bigquery.Client().query(query)
+
+
 def get_table_columns(table_path) -> List[str]:
     """Return the column names for given bigquery table."""
     client = bigquery.Client()

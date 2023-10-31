@@ -1,5 +1,15 @@
 import pytest
 
+
+@pytest.mark.skip(reason='requires query')
+class TestRunBqQuery:
+    """Test for run_bq_query function.."""
+
+    def test_expected(self):
+        """Test expected functionality."""
+        pass
+
+
 @pytest.mark.skip(reason='requires table path')
 class TestGetTableColumns:
     """Test for get_table_columns function.."""

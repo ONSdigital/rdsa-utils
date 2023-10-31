@@ -5,9 +5,6 @@ from typing import (
     Optional,
 )
 
-from google.cloud import (
-    bigquery,
-)
 from pandas import DataFrame as PandasDF
 from pyspark.sql import (
     DataFrame as SparkDF,
@@ -16,6 +13,9 @@ from pyspark.sql import (
 from rdsa_utils.typing import (
     BigQueryTimePartitions,
     TablePath,
+)
+from rdsa_utils.gcp.helpers.gcp_utils import (
+    run_bq_query,
 )
 from rdsa_utils.helpers.pyspark import (
     is_df_empty,
@@ -26,11 +26,6 @@ from rdsa_utils.helpers.python import (
 
 
 logger = logging.getLogger(__name__)
-
-
-def run_bq_query(query: str) -> bigquery.QueryJob:
-    """Run an SQL query in BigQuery."""
-    return bigquery.Client().query(query)
 
 
 def write_table(

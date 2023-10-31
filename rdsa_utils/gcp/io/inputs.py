@@ -16,9 +16,16 @@ from rdsa_utils.exceptions import (
     ColumnNotInDataframeError,
     TableNotFoundError,
 )
+from rdsa_utils.logging import (
+    log_spark_df_schema,
+)
 from rdsa_utils.typing import (
     BigQueryTimePartitions,
     TablePath,
+)
+from rdsa_utils.gcp.helpers.gcp_utils import (
+    get_table_columns,
+    table_exists,
 )
 from rdsa_utils.helpers.pyspark import (
     is_df_empty,
@@ -28,13 +35,6 @@ from rdsa_utils.helpers.python import (
     convert_date_strings_to_datetimes,
     list_convert,
     tuple_convert,
-)
-from rdsa_utils.logging import (
-    log_spark_df_schema,
-)
-from rdsa_utils.gcp.helpers.gcp_utils import (
-    get_table_columns,
-    table_exists,
 )
 
 
