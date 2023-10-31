@@ -171,7 +171,7 @@ class TestInitLoggerAdvanced:
         handlers = [handler]
         init_logger_advanced(logging.DEBUG, handlers)
 
-        logger = logging.getLogger('rdsa_utils.helpers.logging')
+        logger = logging.getLogger('rdsa_utils.logging')
 
         assert caplog.records[0].levelname == 'DEBUG'
         assert any(isinstance(h, type(handler)) for h in logger.handlers)
