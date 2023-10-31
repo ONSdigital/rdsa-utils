@@ -234,7 +234,7 @@ def calc_product_of_dict_values(
     vals = kwargs.values()
 
     for instance in itertools.product(*vals):
-        yield dict(zip(keys, instance, strict=True))
+        yield dict(zip(keys, instance))  # noqa: B905
 
 
 def convert_date_strings_to_datetimes(
