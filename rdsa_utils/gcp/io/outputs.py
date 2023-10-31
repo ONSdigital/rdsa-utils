@@ -4,6 +4,7 @@ from typing import (
     List,
     Literal,
     Optional,
+    Union,
 )
 
 from pandas import DataFrame as PandasDF
@@ -30,13 +31,13 @@ logger = logging.getLogger(__name__)
 
 
 def write_table(
-    df: PandasDF | SparkDF,
+    df: Union[PandasDF, SparkDF],
     table_name: TablePath,
     mode: Literal['append', 'error', 'ignore', 'overwrite'] = 'error',
     partition_col: Optional[str] = None,
     partition_type: Optional[BigQueryTimePartitions] = None,
     partition_expiry_days: Optional[float] = None,
-    clustered_fields: Optional[str | List[str]] = None,
+    clustered_fields: Optional[Union[str, List[str]]] = None,
  ) -> None:
     """Write dataframe out to a Google BigQuery table.
 

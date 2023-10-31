@@ -6,6 +6,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Union,
 )
 
 from pyspark.sql import (
@@ -55,7 +56,7 @@ def read_table(
     flatten_struct_cols: bool = False,
     partition_column: Optional[str] = None,
     partition_type: Optional[BigQueryTimePartitions] = None,
-    partition_value: Optional[Tuple[str, str] | str] = None,
+    partition_value: Optional[Union[Tuple[str, str], str]] = None,
 ) -> SparkDF:
     """Read BigQuery table given table path and column selection.
 
@@ -157,7 +158,7 @@ def build_sql_query(  # noqa: C901
     column_filter_dict: Optional[Dict[str, Sequence[str]]] = None,
     partition_column: Optional[str] = None,
     partition_type: Optional[str] = None,
-    partition_value: Optional[Tuple[str, str] | str] = None,
+    partition_value: Optional[Union[Tuple[str, str], str]] = None,
 ) -> str:
     """Create SQL query to load data with the specified filter conditions.
 
