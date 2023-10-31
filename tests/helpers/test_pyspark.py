@@ -30,7 +30,6 @@ def input_funct_with_exclude(s1: str):
     return s1
 
 
-@pytest.mark.slow()
 class TestSetDfColumnsNullable:
     """Tests for the set_df_columns_nullable function."""
 
@@ -83,7 +82,6 @@ class TestSetDfColumnsNullable:
         assert_df_equality(actual, expected)
 
 
-@pytest.mark.slow()
 class TestMelt:
     """Tests for melt function."""
 
@@ -408,7 +406,6 @@ class TestCreateColnameToValueMap:
         assert_df_equality(actual, expected, ignore_nullable=True)
 
 
-@pytest.mark.slow()
 class TestGetWindowSpec:
     """Tests for get_window_spec function."""
 
@@ -491,7 +488,6 @@ class TestGetWindowSpec:
         )
 
 
-@pytest.mark.slow()
 class TestRankNumeric:
     """Tests for the rank_numeric function."""
 
@@ -583,7 +579,6 @@ class TestRankNumeric:
             rank_numeric(['expenditure'], 'group', False)
 
 
-@pytest.mark.slow()
 class TestCalcMedianPrice:
     """Tests for calc_median_price function."""
 
