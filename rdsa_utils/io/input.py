@@ -2,6 +2,7 @@
 import json
 import logging
 from pathlib import Path
+from typing import Union
 
 from cloudpathlib import CloudPath
 import tomli
@@ -85,7 +86,7 @@ def parse_yaml(data: str) -> Config:
     return yaml.safe_load(data)
 
 
-def read_file(file: CloudPath | Path) -> str:
+def read_file(file: Union[CloudPath, Path]) -> str:
     """Load contents of specified file.
 
     Parameters
