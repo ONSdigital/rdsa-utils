@@ -6,6 +6,7 @@ from chispa import assert_df_equality
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
 
+from rdsa_utils.test_utils import *
 from rdsa_utils.helpers.pyspark import *
 from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 from tests.conftest import (
@@ -944,11 +945,11 @@ class TestCreateSparkSession:
     """Tests for create_spark_session function."""
 
     @pytest.mark.parametrize(
-        'session_size', ['default', 'small', 'medium', 'large', 'extra-large'],
+        'session_size', ['small', 'medium', 'large', 'extra-large'],
     )
     def test_create_spark_session_valid_sizes(self, session_size: str) -> None:
         """Test create_spark_session with valid sizes."""
-        spark = create_spark_session(session_size)
+        spark = create_spark_session(size=session_size)
         assert isinstance(
             spark, SparkSession,
         ), 'The function should return a SparkSession instance.'
@@ -958,14 +959,14 @@ class TestCreateSparkSession:
     def test_create_spark_session_invalid_sizes(self, session_size: str) -> None:
         """Test create_spark_session with invalid sizes."""
         with pytest.raises(ValueError):
-            create_spark_session(session_size)
+            create_spark_session(size=session_size)
 
     def test_create_spark_session_with_extra_configs(
         self,
     ) -> None:
         """Test create_spark_session with extra configurations."""
         extra_configs = {'spark.ui.enabled': 'false'}
-        spark = create_spark_session('default', extra_configs)
+        spark = create_spark_session(app_name='default', extra_configs=extra_configs)
         assert (
             spark.conf.get('spark.ui.enabled') == 'false'
         ), 'Extra configurations should be applied.'
