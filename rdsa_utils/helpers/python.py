@@ -240,7 +240,7 @@ def calc_product_of_dict_values(
 def convert_date_strings_to_datetimes(
     start_date: str,
     end_date: str,
-) -> tuple[pd.Timestamp, pd.Timestamp]:
+) -> Tuple[pd.Timestamp, pd.Timestamp]:
     """Convert start and end dates from strings to timestamps.
 
     Parameters
