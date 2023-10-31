@@ -8,4 +8,3 @@ class TestWriteTable:
     def test_expected(self):
         """Test expected functionality."""
         pass
-
