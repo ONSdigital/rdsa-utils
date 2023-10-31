@@ -1,7 +1,12 @@
-site_name: rdsa-utils
+site_name: rdsa-utils Documentation
 
 theme:
-  name: "material"
+  name: tech_docs_template
+  logo: assets/ons_logo_white.svg
+  favicon: assets/ons_favicon.svg
+
+repo_name: rdsa-utils
+repo_url: https://github.com/ONSdigital/rdsa-utils
 
 plugins:
   - mkdocstrings:
@@ -14,7 +19,9 @@ plugins:
             show_source: False
             show_root_heading: True
             merge_init_into_class: True
+  - material/search
 
 nav:
   - rdsa-utils: index.md
-  - API reference: reference.md
+  - API Reference: reference.md
+  - Contribution Guide: contribution_guide.md

@@ -4,7 +4,7 @@ import logging
 
 import yaml
 
-from rdsa_utils.helpers._typing import Config, PathLike
+from rdsa_utils.typing import Config, PathLike
 
 
 logger = logging.getLogger()

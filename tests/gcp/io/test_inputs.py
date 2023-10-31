@@ -7,7 +7,7 @@ from tests.conftest import (
     Case,
     parametrize_cases,
 )
-from rdsa_utils.gcp.io import (
+from rdsa_utils.gcp.io.inputs import (
     build_sql_query,
 )
 
@@ -227,39 +227,3 @@ class TestBuildSqlQuery:
         expected = textwrap.dedent(expected)
 
         assert(result.strip('\n') == expected.strip('\n'))
-
-
-@pytest.mark.skip(reason='requires table path')
-class TestWriteTable:
-    """Test for write_table function."""
-
-    def test_expected(self):
-        """Test expected functionality."""
-        pass
-
-
-@pytest.mark.skip(reason='requires table path')
-class TestGetTableColumns:
-    """Test for get_table_columns function.."""
-
-    def test_expected(self):
-        """Test expected functionality."""
-        pass
-
-
-@pytest.mark.skip(reason='requires table path')
-class TestTableExists:
-    """Test for table_exists function."""
-
-    def test_expected(self):
-        """Test expected functionality."""
-        pass
-
-
-@pytest.mark.skip(reason='requires GCP')
-class TestLoadConfigGcp:
-    """Test for load_config_gcp function."""
-
-    def test_expected(self):
-        """Test expected functionality."""
-        pass
