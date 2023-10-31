@@ -1,6 +1,7 @@
 """Write outputs to GCP."""
 import logging
 from typing import (
+    List,
     Literal,
     Optional,
 )
@@ -35,7 +36,7 @@ def write_table(
     partition_col: Optional[str] = None,
     partition_type: Optional[BigQueryTimePartitions] = None,
     partition_expiry_days: Optional[float] = None,
-    clustered_fields: Optional[str | list[str]] = None,
+    clustered_fields: Optional[str | List[str]] = None,
  ) -> None:
     """Write dataframe out to a Google BigQuery table.
 
