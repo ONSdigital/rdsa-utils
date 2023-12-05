@@ -6,7 +6,7 @@ from pyspark.sql import (
     functions as F,
 )
 
-from rdsa_utils.helpers.helpers_spark import get_window_spec
+from rdsa_utils.helpers.pyspark import get_window_spec
 
 
 def weighted_arithmetic_average(val: str, weight: str) -> SparkCol:
