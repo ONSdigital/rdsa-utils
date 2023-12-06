@@ -51,6 +51,8 @@ mkdocstrings = {extras = ["python"], version = "^0.22.0"}
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 80
 
 [tool.ruff]
 select = [
@@ -120,4 +122,5 @@ inline-quotes = "single"
    "F403", "F405",
    "PT011",
    "B017",
+   "D205"
 ]

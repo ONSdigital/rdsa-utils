@@ -25,9 +25,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add "search" Plugin and mkdocs GOV UK Theme via `mkdocs-tech-docs-template`.
 - Add `pipeline_runlog.py` and `hdfs_utils.py` modules from `epds_utils`.
 - Add common custom exceptions.
-- Add config load class
-- Add generic IO input functions
+- Add config load class.
+- Add generic IO input functions.
 - Add `docs/contribution_guide.md`
+- Add functions from `epds_utils` into `helpers/pyspark.py`, `io/input.py`, `io/output.py`.
 
 ### Changed
 - Renamed `_typing` module to `typing`.
