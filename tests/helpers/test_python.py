@@ -215,3 +215,66 @@ class TestCalcProductOfDictValues:
             {'key1': 1, 'key2': 4, 'key3': {'key4': [7, 8, 9], 'key5': [4, 5, 6]}},
         ]
         assert result == expected
+
+
+class TestConvertDateStringsToDatetimes:
+    """Test for convert_date_strings_to_datetimes."""
+
+    @parametrize_cases(
+        Case(
+            label='MMMM YYYY',
+            dates=('January 2021', 'March 2021'),
+        ),
+        Case(
+            label='MMM YYYY',
+            dates=('Jan 2021', 'Mar 2021'),
+        ),
+        Case(
+            label='YYYY MMMM',
+            dates=('2021 January', '2021 March'),
+        ),
+        Case(
+            label='YYYY MMM',
+            dates=('2021 Jan', '2021 Mar'),
+        ),
+        Case(
+            label='MM YYYY',
+            dates=('01 2021', '03 2021'),
+        ),
+        Case(
+            label='-M YYYY',
+            dates=('1 2021', '3 2021'),
+        ),
+        Case(
+            label='MM-YYYY',
+            dates=('01-2021', '03-2021'),
+        ),
+        Case(
+            label='-M-YYYY',
+            dates=('1-2021', '3-2021'),
+        ),
+    )
+    def test_year_month_format(
+        self,
+        dates,
+    ):
+        """Test different date formats for start and end date."""
+        actual = convert_date_strings_to_datetimes(*dates)
+
+        expected = (
+            pd.Timestamp('2021-01-01 00:00:00'),
+            pd.Timestamp('2021-03-31 23:59:59.999999'),
+        )
+        assert actual == expected
+
+    def test_year_month_day_format(self):
+        """Test for yyyy-mm-dd format."""
+        dates = ('2021-01-01', '2021-03-01')
+
+        actual = convert_date_strings_to_datetimes(*dates)
+
+        expected = (
+            pd.Timestamp('2021-01-01 00:00:00'),
+            pd.Timestamp('2021-03-01 23:59:59.999999'),
+        )
+        assert actual == expected

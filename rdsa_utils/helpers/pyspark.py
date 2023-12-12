@@ -20,6 +20,10 @@ from pyspark.sql import SparkSession, Window, WindowSpec
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 
+from rdsa_utils.logging import (
+    log_spark_df_schema,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -495,6 +499,51 @@ def select_first_obs_appearing_in_group(
         .filter(F.col('rank') == 1)
         .drop('rank')
     )
+
+
+@log_spark_df_schema
+def convert_struc_col_to_columns(
+    df: SparkDF,
+    convert_nested_structs: bool = False,
+) -> SparkDF:
+    """Flatten struct columns in pyspark dataframe to individual columns.
+
+    Parameters
+    ----------
+    df
+        Dataframe that may or may not contain struct type columns.
+    convert_nested_structs
+        If true, function will recursively call until no structs are left.
+        Inversely, when false, only top level structs are flattened; if these
+        contain subsequent structs they would remain.
+
+    Returns
+    -------
+        The input dataframe but with any struct type columns dropped, and in
+        its place the individual fields within the struct column as individual
+        columns.
+    """
+    struct_cols = []
+    for field in df.schema.fields:
+        if type(field.dataType) == T.StructType:
+            struct_cols.append(field.name)
+
+    df = df.select(
+        # Select all columns in df not identified as being struct type.
+        *[col for col in df.columns if col not in struct_cols],
+        # All columns identified as being struct type, but expand the struct
+        # to individual columns using .* notation.
+        *[f'{col}.*' for col in struct_cols],
+    )
+
+    if (
+        convert_nested_structs and
+        any(isinstance(field.dataType, T.StructType)
+        for field in df.schema.fields)
+    ):
+        df = convert_struc_col_to_columns(df=df)
+
+    return df
 
 
 def cut_lineage(df: SparkDF) -> SparkDF:

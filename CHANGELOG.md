@@ -29,6 +29,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add generic IO input functions.
 - Add `docs/contribution_guide.md`
 - Add functions from `epds_utils` into `helpers/pyspark.py`, `io/input.py`, `io/output.py`.
+- Add various I/O functions from the io.py module in cprices-utils.
 - Add modules to `docs/reference.md`
 
 ### Changed

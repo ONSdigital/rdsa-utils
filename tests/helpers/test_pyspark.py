@@ -861,6 +861,95 @@ class TestSelectFirstObsAppearingInGroup:
         )
 
 
+class TestConvertStrucColToColumns:
+    """Tests for the convert_struc_col_to_columns function."""
+
+    @parametrize_cases(
+        Case(
+            label='no_struct_type_columns',
+            input_df=[
+                ('string_col', 'num1_col', 'num2_col'),
+                ('a', 1, 2),
+                ('b', 9, 8),
+            ],
+            expected=[
+                ('string_col', 'num1_col', 'num2_col'),
+                ('a', 1, 2),
+                ('b', 9, 8),
+            ],
+        ),
+        Case(
+            label='one_struct_type_column',
+            input_df=[
+                ('string_col', 'struct_col'),
+                ('a', (1, 2)),
+                ('b', (9, 8)),
+            ],
+            expected=[
+                ('string_col', '_1', '_2'),
+                ('a', 1, 2),
+                ('b', 9, 8),
+            ],
+        ),
+        Case(
+            label='many_struct_type_columns',
+            input_df=[
+                ('string_col', 'struct1_col', 'struct2_col'),
+                ('a', (1, 2), (3, 4)),
+                ('b', (9, 8), (7, 6)),
+            ],
+            expected=[
+                ('string_col', '_1', '_2', '_1', '_2'),
+                ('a', 1, 2, 3, 4),
+                ('b', 9, 8, 7, 6),
+            ],
+        ),
+        Case(
+            label='nested_struct_type_column',
+            input_df=[
+                ('string_col', 'struct_col'),
+                ('a', ((1, 2), (3, 4))),
+                ('b', ((9, 8), (7, 6))),
+            ],
+            expected=[
+                ('string_col', '_1', '_2'),
+                ('a', (1, 2), (3, 4)),
+                ('b', (9, 8), (7, 6)),
+            ],
+        ),
+    )
+    def test_method(self, create_spark_df, input_df, expected):
+        """Test expected functionality.
+
+        Note it is non-trivial to implement column names within the struct
+        being defined, so left out, these then default to `_n` where n is the
+        ordered position in the struct for the column.
+        """
+        actual = convert_struc_col_to_columns(df=create_spark_df(input_df))
+
+        assert_df_equality(actual, create_spark_df(expected))
+
+    def test_convert_nested_structs(self, create_spark_df):
+        """Test expected functionality for recursive flattening."""
+        actual = convert_struc_col_to_columns(
+            df=create_spark_df([
+                ('string_col', 'struct_col'),
+                ('a', ((1, 2), (3, 4))),
+                ('b', ((9, 8), (7, 6))),
+            ]),
+            convert_nested_structs=True,
+        )
+
+        assert_df_equality(
+            actual,
+            create_spark_df([
+                ('string_col', '_1', '_2', '_1', '_2'),
+                ('a', 1, 2, 3, 4),
+                ('b', 9, 8, 7, 6),
+            ]),
+        )
+
+
 class TestCutLineage:
     """Tests for cut_lineage function."""
 
