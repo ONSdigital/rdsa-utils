@@ -29,6 +29,7 @@ def spark_session():
         # .config('spark.sql.execution.arrow.enabled', 'true')
         .config('spark.executorEnv.ARROW_PRE_0_15_IPC_FORMAT', 1)
         .config('spark.workerEnv.ARROW_PRE_0_15_IPC_FORMAT', 1)
+        .enableHiveSupport()
         .getOrCreate()
     )
 

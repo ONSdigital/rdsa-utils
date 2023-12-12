@@ -11,7 +11,6 @@ from typing import (
 
 from pandas.core.generic import NDFrame
 
-
 # Table paths are in the format "database_name.table_name".
 TablePath = str
 

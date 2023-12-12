@@ -1,12 +1,14 @@
 """Tests for spark_helpers module."""
+from unittest.mock import MagicMock
+
 import pytest
-
 from chispa import assert_df_equality
-from pyspark.sql import (
-    DataFrame as SparkDF,
-    types as T,
-)
+from pyspark.sql import DataFrame as SparkDF
+from pyspark.sql import types as T
 
+from rdsa_utils.test_utils import *
+from rdsa_utils.helpers.pyspark import *
+from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 from tests.conftest import (
     Case,
     create_dataframe,
@@ -14,8 +16,6 @@ from tests.conftest import (
     to_date,
     to_datetime,
 )
-from rdsa_utils.helpers.pyspark import *
-from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 
 
 @to_spark_col
@@ -948,3 +948,115 @@ class TestConvertStrucColToColumns:
                 ('b', 9, 8, 7, 6),
             ]),
         )
+
+
+class TestCutLineage:
+    """Tests for cut_lineage function."""
+
+    def test_cut_lineage(self, spark_session: SparkSession) -> None:
+        """Test that cut_lineage returns a DataFrame and doesn't raise any
+        exceptions during the process.
+        """
+        # Create a mock DataFrame with all necessary attributes
+        df = MagicMock(spec=SparkDF)
+        df._jdf = MagicMock()
+        df._jdf.toJavaRDD.return_value = MagicMock()
+        df._jdf.schema.return_value = MagicMock()
+        df.sql_ctx = spark_session
+        spark_session._jsqlContext = MagicMock()
+        spark_session._jsqlContext.createDataFrame.return_value = MagicMock()
+        try:
+            new_df = cut_lineage(df)
+            assert isinstance(new_df, SparkDF)
+        except Exception:
+            pytest.fail('cut_lineage raised Exception unexpectedly!')
+
+    def test_cut_lineage_error(self) -> None:
+        """Test that cut_lineage raises an exception when an error occurs during
+        the lineage cutting process.
+        """
+        # Create a mock DataFrame with all necessary attributes
+        df = MagicMock(spec=SparkDF)
+        df._jdf = MagicMock()
+        df._jdf.toJavaRDD.side_effect = Exception(
+            'An error occurred during the lineage cutting process.',
+        )
+        with pytest.raises(
+            Exception,
+            match='An error occurred during the lineage cutting process.',
+        ):
+            cut_lineage(df)
+
+
+class TestFindSparkDataFrames:
+    """Tests find_spark_dataframes function."""
+
+    def test_find_spark_dataframes(
+        self,
+        spark_session: SparkSession,
+        create_spark_df: Callable,
+    ) -> None:
+        """Test that find_spark_dataframes correctly identifies DataFrames and
+        dictionaries containing DataFrames.
+        """
+        input_schema = T.StructType(
+            [
+                T.StructField('name', T.StringType(), True),
+                T.StructField('department', T.StringType(), True),
+                T.StructField('salary', T.IntegerType(), True),
+            ],
+        )
+        df = create_spark_df(
+            [
+                (input_schema),
+                ('John', 'Sales', 20),
+                ('Jane', 'Marketing', 21),
+            ],
+        )
+        locals_dict = {
+            'df': df,
+            'not_df': "I'm not a DataFrame",
+            'df_dict': {'df1': df, 'df2': df},
+        }
+
+        result = find_spark_dataframes(locals_dict)
+
+        assert 'df' in result
+        assert 'df_dict' in result
+        assert 'not_df' not in result
+
+        assert isinstance(result['df'], SparkDF)
+        assert isinstance(result['df_dict'], dict)
+        assert all(isinstance(val, SparkDF) for val in result['df_dict'].values())
+
+
+class TestCreateSparkSession:
+    """Tests for create_spark_session function."""
+
+    @pytest.mark.parametrize(
+        'session_size', ['small', 'medium', 'large', 'extra-large'],
+    )
+    def test_create_spark_session_valid_sizes(self, session_size: str) -> None:
+        """Test create_spark_session with valid sizes."""
+        spark = create_spark_session(size=session_size)
+        assert isinstance(
+            spark, SparkSession,
+        ), 'The function should return a SparkSession instance.'
+        spark.stop()
+
+    @pytest.mark.parametrize('session_size', ['tiny', 'huge', 'invalid'])
+    def test_create_spark_session_invalid_sizes(self, session_size: str) -> None:
+        """Test create_spark_session with invalid sizes."""
+        with pytest.raises(ValueError):
+            create_spark_session(size=session_size)
+
+    def test_create_spark_session_with_extra_configs(
+        self,
+    ) -> None:
+        """Test create_spark_session with extra configurations."""
+        extra_configs = {'spark.ui.enabled': 'false'}
+        spark = create_spark_session(app_name='default', extra_configs=extra_configs)
+        assert (
+            spark.conf.get('spark.ui.enabled') == 'false'
+        ), 'Extra configurations should be applied.'
+        spark.stop()

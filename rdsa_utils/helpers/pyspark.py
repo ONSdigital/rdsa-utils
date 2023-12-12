@@ -2,17 +2,23 @@
 import functools
 import itertools
 import logging
-from typing import Any, Callable, List, Mapping, Optional, Sequence, Union
-
-from pyspark.sql import (
-    Column as SparkCol,
-    DataFrame as SparkDF,
-    functions as F,
-    SparkSession,
-    types as T,
-    Window,
-    WindowSpec,
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Mapping,
+    Optional,
+    Sequence,
+    Union,
 )
+
+from pyspark.sql import Column as SparkCol
+from pyspark.sql import DataFrame as SparkDF
+from pyspark.sql import SparkSession, Window, WindowSpec
+from pyspark.sql import functions as F
+from pyspark.sql import types as T
 
 from rdsa_utils.logging import (
     log_spark_df_schema,
@@ -538,3 +544,261 @@ def convert_struc_col_to_columns(
         df = convert_struc_col_to_columns(df=df)
 
     return df
+
+
+def cut_lineage(df: SparkDF) -> SparkDF:
+    """Convert the SparkDF to a Java RDD and back again.
+
+    This function is helpful in instances where Catalyst optimizer is causing
+    memory errors or problems, as it only tries to optimize till the conversion
+    point.
+
+    Note: This uses internal members and may break between versions.
+
+    Parameters
+    ----------
+    df
+        SparkDF to convert.
+
+    Returns
+    -------
+    SparkDF
+        New SparkDF created from Java RDD.
+
+    Raises
+    ------
+    Exception
+        If any error occurs during the lineage cutting process,
+        particularly during conversion between SparkDF and Java RDD
+        or accessing internal members.
+
+    Examples
+    --------
+    >>> df = rdd.toDF()
+    >>> new_df = cut_lineage(df)
+    >>> new_df.count()
+    3
+    """
+    logger.info('Converting SparkDF to Java RDD.')
+
+    try:
+        jrdd = df._jdf.toJavaRDD()
+        jschema = df._jdf.schema()
+        jrdd.cache()
+        sql_ctx = df.sql_ctx
+        try:
+            java_sql_ctx = sql_ctx._jsqlContext
+        except AttributeError:
+            java_sql_ctx = sql_ctx._ssql_ctx
+
+        logger.info('Creating new SparkDF from Java RDD.')
+        new_java_df = java_sql_ctx.createDataFrame(jrdd, jschema)
+        new_df = SparkDF(new_java_df, sql_ctx)
+        return new_df
+    except Exception:
+        logger.error('An error occurred during the lineage cutting process.')
+        raise
+
+
+def find_spark_dataframes(
+    locals_dict: Dict[str, Union[SparkDF, Dict]],
+) -> Dict[str, Union[SparkDF, Dict]]:
+    """Extract SparkDF's objects from a given dictionary.
+
+    This function scans the dictionary and returns another containing only
+    entries where the value is a SparkDF. It also handles dictionaries within
+    the input, including them in the output if their first item is a SparkDF.
+
+    Designed to be used with locals() in Python, allowing extraction of
+    all SparkDF variables in a function's local scope.
+
+    Parameters
+    ----------
+    locals_dict
+        A dictionary usually returned by locals(), with variable names
+        as keys and their corresponding objects as values.
+
+    Returns
+    -------
+    Dict
+        A dictionary with entries from locals_dict where the value is a
+        SparkDF or a dictionary with a SparkDF as its first item.
+
+    Examples
+    --------
+    >>> dfs = find_spark_dataframes(locals())
+    """
+    frames = {}
+
+    for key, value in locals_dict.items():
+        if key in ['_', '__', '___']:
+            continue
+
+        if isinstance(value, SparkDF):
+            frames[key] = value
+            logger.info(f'SparkDF found: {key}')
+        elif (
+            isinstance(value, dict)
+            and value
+            and isinstance(next(iter(value.values())), SparkDF)
+        ):
+            frames[key] = value
+            logger.info(f'Dictionary of SparkDFs found: {key}')
+        else:
+            logger.debug(
+                f'Skipping non-SparkDF item: {key}, Type: {type(value)}',
+            )
+
+    return frames
+
+
+def create_spark_session(
+    app_name: Optional[str] = None,
+    size: Optional[Literal['small', 'medium', 'large', 'extra-large']] = None,
+    extra_configs: Optional[Dict[str, str]] = None,
+) -> SparkSession:
+    """Create a PySpark Session based on the specified size.
+
+    This function creates a PySpark session with different configurations
+    based on the size specified.
+
+    The size can be 'default', 'small', 'medium', 'large', or 'extra-large'.
+    Extra Spark configurations can be passed as a dictionary.
+    If no size is given, then a basic Spark session is spun up.
+
+    Parameters
+    ----------
+    app_name
+        The spark session app name.
+    size
+        The size of the spark session to be created. It can be 'default',
+        'small', 'medium', 'large', or 'extra-large'.
+    extra_configs
+        Mapping of additional spark session config settings and the desired
+        value for it. Will override any default settings.
+
+    Returns
+    -------
+    SparkSession
+        The created PySpark session.
+
+    Raises
+    ------
+    ValueError
+        If the specified 'size' parameter is not one of the valid options:
+        'small', 'medium', 'large', or 'extra-large'.
+    Exception
+        If any other error occurs during the Spark session creation process.
+
+    Examples
+    --------
+    >>> spark = create_spark_session('medium', {'spark.ui.enabled': 'false'})
+
+    Session Details:
+    ---------------
+    'small':
+        This is the smallest session that will realistically be used. It uses
+        only 1g of memory and 3 executors, and only 1 core. The number of
+        partitions are limited to 12, which can improve performance with
+        smaller data. It's recommended for simple data exploration of small
+        survey data or for training and demonstrations when several people
+        need to run Spark sessions simultaneously.
+    'medium':
+        A standard session used for analysing survey or synthetic datasets.
+        Also used for some Production pipelines based on survey and/or smaller
+        administrative data.It uses 6g of memory and 3 executors, and 3 cores.
+        The number of partitions are limited to 18, which can improve
+        performance with smaller data.
+    'large':
+        Session designed for running Production pipelines on large
+        administrative data, rather than just survey data. It uses 10g of
+        memory and 5 executors, 1g of memory overhead, and 5 cores. It uses the
+        default number of 200 partitions.
+    'extra-large':
+        Used for the most complex pipelines, with huge administrative
+        data sources and complex calculations. It uses 20g of memory and
+        12 executors, 2g of memory overhead, and 5 cores. It uses 240
+        partitions; not significantly higher than the default of 200,
+        but it is best for these to be a multiple of cores and executors.
+
+    References
+    ----------
+    The session sizes and their details are taken directly
+    from the following resource:
+    "https://best-practice-and-impact.github.io/ons-spark/spark-overview/example-spark-sessions.html"
+    """
+    try:
+        if size:
+            size = size.lower()
+            valid_sizes = ['small', 'medium', 'large', 'extra-large']
+            if size not in valid_sizes:
+                msg = (
+                    f"Invalid '{size=}'. "
+                    f"If specified must be one of {valid_sizes}."
+                )
+                raise ValueError(msg)
+
+        logger.info(
+            f"Creating a '{size}' Spark session..."
+            if size
+            else 'Creating a basic Spark session...',
+        )
+
+        logger.info('Stopping any existing Spark session...')
+        SparkSession.builder.getOrCreate().stop()
+
+        if app_name:
+            builder = SparkSession.builder.appName(f'{app_name}')
+        else:
+            builder = SparkSession.builder
+
+        # fmt: off
+        if size == 'small':
+            builder = (
+                builder.config('spark.executor.memory', '1g')
+                .config('spark.executor.cores', 1)
+                .config('spark.dynamicAllocation.maxExecutors', 3)
+                .config('spark.sql.shuffle.partitions', 12)
+            )
+        elif size == 'medium':
+            builder = (
+                builder.config('spark.executor.memory', '6g')
+                .config('spark.executor.cores', 3)
+                .config('spark.dynamicAllocation.maxExecutors', 3)
+                .config('spark.sql.shuffle.partitions', 18)
+            )
+        elif size == 'large':
+            builder = (
+                builder.config('spark.executor.memory', '10g')
+                .config('spark.yarn.executor.memoryOverhead', '1g')
+                .config('spark.executor.cores', 5)
+                .config('spark.dynamicAllocation.maxExecutors', 5)
+                .config('spark.sql.shuffle.partitions', 200)
+            )
+        elif size == 'extra-large':
+            builder = (
+                builder.config('spark.executor.memory', '20g')
+                .config('spark.yarn.executor.memoryOverhead', '2g')
+                .config('spark.executor.cores', 5)
+                .config('spark.dynamicAllocation.maxExecutors', 12)
+                .config('spark.sql.shuffle.partitions', 240)
+            )
+
+        # Common configurations for all sizes
+        builder = (
+            builder.config('spark.dynamicAllocation.enabled', 'true')
+            .config('spark.shuffle.service.enabled', 'true')
+            .config('spark.ui.showConsoleProgress', 'false')
+        ).enableHiveSupport()
+        # fmt: on
+
+        # Apply extra configurations
+        if extra_configs:
+            for key, value in extra_configs.items():
+                builder = builder.config(key, value)
+
+        logger.info('Spark session created successfully!')
+        return builder.getOrCreate()
+    except Exception as e:
+        logger.error(f'An error occurred while creating the Spark session: {e}')
+        raise
