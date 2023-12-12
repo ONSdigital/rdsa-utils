@@ -15,6 +15,12 @@ reference for the technical implementation of the`rdsa-utils` codebase.
 ::: rdsa_utils.cdsw.helpers.impala
 ::: rdsa_utils.cdsw.io.pipeline_runlog
 
+## GCP
+
+::: rdsa_utils.gcp.helpers.gcp_utils
+::: rdsa_utils.gcp.io.inputs
+::: rdsa_utils.gcp.io.outputs
+
 ## Helpers
 
 ::: rdsa_utils.helpers.pyspark
