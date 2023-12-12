@@ -1,9 +1,12 @@
 """Miscellaneous helper functions for Python."""
+from datetime import datetime, time
 import itertools
 import json
 import logging
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
+import pandas as pd
+from pandas.tseries.offsets import MonthEnd
 from more_itertools import always_iterable
 
 
@@ -232,3 +235,68 @@ def calc_product_of_dict_values(
 
     for instance in itertools.product(*vals):
         yield dict(zip(keys, instance))  # noqa: B905
+
+
+def convert_date_strings_to_datetimes(
+    start_date: str,
+    end_date: str,
+) -> Tuple[pd.Timestamp, pd.Timestamp]:
+    """Convert start and end dates from strings to timestamps.
+
+    Parameters
+    ----------
+    start_date
+        Datetime like object which is used to define the start date for filter.
+        Acceptable string formats include (but not limited to): MMMM YYYY,
+        YYYY-MM, YYYY-MM-DD, DD MMM YYYY etc. If only month and year specified
+        the start_date is set as first day of month.
+    end_date
+        Datetime like object which is used to define the start date for filter.
+        Acceptable string formats include (but not limited to): MMMM YYYY,
+        YYYY-MM, YYYY-MM-DD, DD MMM YYYY etc. If only month and year specified
+        the end_date is set as final day of month.
+
+    Returns
+    -------
+    tuple[pd.Timestamp, pd.Timestamp]
+        Tuple where the first value is the start date and the second the end
+        date.
+    """
+    shift_end_date_to_month_end = False
+
+    year_month_formats = [
+        '%B %Y',  # January 2020
+        '%b %Y',  # Jan 2020
+        '%Y %B',  # 2020 January
+        '%Y %b',  # 2020 Jan
+        # '%Y-%m',  # 2020-01 - also matches 2020-01-01
+        # '%Y-%-m',  # 2020-1 - also matches 2020-01-01
+        # '%Y %m',  # 2020 01 - also matches 2020-01-01
+        # '%Y %-m',  # 2020 1 - also matches 2020-01-01
+        '%m-%Y',  # 01-2020
+        '%-m-%Y',  # 1-2020
+        '%m %Y',  # 01 2020
+        '%-m %Y',  # 1 2020
+    ]
+
+    # if the end_date format matches one of the above then it is assumed the
+    # used wants to use all days in that month.
+    for date_format in year_month_formats:
+        try:
+            pd.to_datetime(end_date, format=date_format)
+            shift_end_date_to_month_end = True
+
+        except ValueError:
+            pass
+
+    if shift_end_date_to_month_end:
+        end_date = pd.to_datetime(end_date) + MonthEnd(0)
+
+    # Obtain the last "moment" of the end_date to ensure any hourly data for
+    # the date is included
+    # https://medium.com/@jorlugaqui/how-to-get-the-latest-earliest-moment-from-a-day-in-python-aa8999bea945  # noqa: E501
+    end_date = datetime.combine(pd.to_datetime(end_date), time.max)
+
+    # Ensure dates are timestamp to enable inclusive filtering of provided end
+    # date, see https://stackoverflow.com/a/43403904 for info.
+    return (pd.Timestamp(start_date), pd.Timestamp(end_date))
