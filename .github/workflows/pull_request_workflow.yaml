@@ -40,7 +40,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -e .[dev,doc]
+          python -m pip install --upgrade pip
+          pip3 install -e .[dev,doc]
 
       - name: Run tests
         run: pytest
