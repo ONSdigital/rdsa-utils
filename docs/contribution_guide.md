@@ -76,10 +76,6 @@ pip3 install -e .[dev]
 
 The `-e` (or `--editable`) option is used to install the package in a way that allows you to modify the source code and see the changes directly without having to reinstall the package. This is particularly useful for development.
 
-### Activate the Virtual Environment
-
-It's recommended to use a virtual environment to manage dependencies. If you are using `venv` or a similar tool, activate your virtual environment as usual.
-
 ### Running Tests
 
 To run tests, ensure you're in the top-level directory of the project and execute:
