@@ -39,6 +39,7 @@ def table_exists(table_path: TablePath) -> bool:
     Returns True if a table exists.
     See code sample explanation here:
     https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_table_exists-python
+
     Parameters
     ----------
     table_path
