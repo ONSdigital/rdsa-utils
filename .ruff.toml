@@ -23,7 +23,7 @@ select = [
     "W",
     "YTT",
 ]
-ignore = ["N812", "PD901", "E712"]
+ignore = ["N812", "PD901", "E712", "E721"]
 
 [lint.pydocstyle]
 convention = "numpy"
