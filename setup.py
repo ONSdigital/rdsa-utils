@@ -1,12 +1,14 @@
 """Setup script for creating package from code."""
 from setuptools import find_packages, setup
 
+from rdsa_utils import __version__
+
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(
     name='rdsa-utils',
-    version='0.0.0',
+    version=__version__,
     author='Reproducible Data Science & Analysis, ONS',
     author_email = (
         'Diego.Lara.De.Andres@ons.gov.uk, '
