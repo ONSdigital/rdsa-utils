@@ -55,16 +55,6 @@ Alternatively, you can use [Anaconda](https://www.anaconda.com/download) to crea
     conda activate myenv
     ```
 
-### Installing Poetry
-
-Poetry is a dependency management and packaging tool for Python projects. To install Poetry into your virtual environment, use the following command:
-
-```
-pip install poetry
-```
-
-For more detailed installation instructions and troubleshooting, please visit the [official Poetry documentation](https://python-poetry.org/docs/#installation).
-
 ### Clone the Repository
 
 Clone the repository to your local machine:
@@ -76,70 +66,54 @@ cd rdsa-utils
 
 ### Set Up the Development Environment
 
-To set up the development environment and install the required dependencies, run the following command:
+We use a traditional `setup.py` approach for managing dependencies. To set up your development environment, first, ensure you have Python 3.8 to 3.10 installed.
 
-```
-poetry install
-```
+Then, to install the package in editable mode along with all development dependencies, run the following command:
 
-This command will create a virtual environment and install all the dependencies specified in the `pyproject.toml` file.
-
-If you're working on **Google Cloud Platform (GCP)** and want to save memory on Cloud Shell, you can use the `--no-cache` option:
-
-```
-poetry install --no-cache
+```bash
+pip3 install -e .[dev]
 ```
 
-This command installs the required dependencies without using the cache, which can save memory on the Cloud Shell.
-
-### Activate the Virtual Environment
-
-To activate the virtual environment, run the following command:
-
-```
-poetry shell
-```
+The `-e` (or `--editable`) option is used to install the package in a way that allows you to modify the source code and see the changes directly without having to reinstall the package. This is particularly useful for development.
 
 ### Running Tests
 
-You can run tests (if any) using the following command:
+To run tests, ensure you're in the top-level directory of the project and execute:
 
+```bash
+pytest
 ```
-poetry run pytest
-```
+
+This will run all the tests using the configurations set in the project.
 
 ### Installing Pre-commit Hooks in Your Development Environment
 
-To improve code quality and maintain a consistent coding style, we use pre-commit hooks in this repository. The following steps will guide you through the process of setting up pre-commit hooks in your development environment.
+Pre-commit hooks are used to automate checks and formatting before commits. Follow these steps to set them up:
 
 #### Installation Steps
 
-1. **Install pre-commit**: Open a terminal and run the following command to install the `pre-commit` package:
+1. **Install pre-commit**: If you haven't already, install the pre-commit package:
 
-```
-pip install pre-commit
-```
+   ```bash
+   pip install pre-commit
+   ```
 
-This command installs the pre-commit tool, which manages the pre-commit hooks for this repository.
+2. **Install pre-commit hooks**: Install the hooks defined in `.pre-commit-config.yaml`:
 
-2. **Install pre-commit hooks**: Run the following command to install the pre-commit hooks defined in the `.pre-commit-config.yaml` file:
+   ```bash
+   pre-commit install
+   ```
 
-```
-pre-commit install
-```
-
-This command sets up the pre-commit hooks to run automatically before each commit.
+   This sets up the hooks to run automatically before each commit.
 
 #### Usage
 
-Now that you have installed the pre-commit hooks, they will run automatically before each commit. If any of the hooks fail, the commit will be aborted, and you will need to fix the issues before trying again.
+The pre-commit hooks will automatically run on your modified files whenever you commit. To manually run all hooks on all files, use:
 
-You can also run the pre-commit hooks manually at any time using the following command:
-
-```
+```bash
 pre-commit run --all-files
 ```
 
-This command runs all the pre-commit hooks on all the files in the repository, allowing you to check your code before committing.
+This can be useful for checking your codebase.
 
-By following these steps, you can ensure that your development environment is set up to use the pre-commit hooks, helping to maintain a clean and consistent codebase.
+By following these steps, your development environment for `rdsa-utils` will be ready, and you can start contributing to the project with ease.

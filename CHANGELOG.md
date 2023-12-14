@@ -37,6 +37,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Renamed modules in helpers directory to remove `helper_` from names.
 - Relocated `logging.py` and `validation.py` to root level.
 - Relocated `Getting Started for Developers` into `docs/contribution_guide.md`.
+- Migrated from `poetry` to `setup.py` for Python Code Packaging.
 
 ### Deprecated
 
