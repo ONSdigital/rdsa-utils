@@ -47,6 +47,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Fix module paths for unit test patches in `tests/cdsw/`.
 - Fix `pull_request_workflow.yaml`; ensured pytest failures are accurately reported in GitHub workflow by removing `|| true` condition.
 - Fix `deploy_mkdocs.yaml`, fixed Python version to `3.10`.
+- Fix `deploy_mkdocs.yaml`, missing quotes for Python version.
 
 ### Removed
 - Remove `_version.py`.
