@@ -339,15 +339,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#installing-poetry" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installing Poetry
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#clone-the-repository" class="md-nav__link">
     <span class="md-ellipsis">
       Clone the Repository
@@ -360,15 +351,6 @@
   <a href="#set-up-the-development-environment" class="md-nav__link">
     <span class="md-ellipsis">
       Set Up the Development Environment
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#activate-the-virtual-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Activate the Virtual Environment
     </span>
   </a>
   
@@ -493,15 +475,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#installing-poetry" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installing Poetry
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#clone-the-repository" class="md-nav__link">
     <span class="md-ellipsis">
       Clone the Repository
@@ -514,15 +487,6 @@
   <a href="#set-up-the-development-environment" class="md-nav__link">
     <span class="md-ellipsis">
       Set Up the Development Environment
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#activate-the-virtual-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Activate the Virtual Environment
     </span>
   </a>
   
@@ -638,55 +602,42 @@
 <p><code>conda activate myenv</code></p>
 </li>
 </ol>
-<h3 id="installing-poetry">Installing Poetry</h3>
-<p>Poetry is a dependency management and packaging tool for Python projects. To install Poetry into your virtual environment, use the following command:</p>
-<pre><code>pip install poetry
-</code></pre>
-<p>For more detailed installation instructions and troubleshooting, please visit the <a href="https://python-poetry.org/docs/#installation">official Poetry documentation</a>.</p>
 <h3 id="clone-the-repository">Clone the Repository</h3>
 <p>Clone the repository to your local machine:</p>
 <pre><code>git clone https://github.com/ONSdigital/rdsa-utils.git
 cd rdsa-utils
 </code></pre>
 <h3 id="set-up-the-development-environment">Set Up the Development Environment</h3>
-<p>To set up the development environment and install the required dependencies, run the following command:</p>
-<pre><code>poetry install
+<p>We use a traditional <code>setup.py</code> approach for managing dependencies. To set up your development environment, first, ensure you have Python 3.8 to 3.10 installed.</p>
+<p>Then, to install the package in editable mode along with all development dependencies, run the following command:</p>
+<pre><code class="language-bash">pip3 install -e .[dev]
 </code></pre>
-<p>This command will create a virtual environment and install all the dependencies specified in the <code>pyproject.toml</code> file.</p>
-<p>If you're working on <strong>Google Cloud Platform (GCP)</strong> and want to save memory on Cloud Shell, you can use the <code>--no-cache</code> option:</p>
-<pre><code>poetry install --no-cache
-</code></pre>
-<p>This command installs the required dependencies without using the cache, which can save memory on the Cloud Shell.</p>
-<h3 id="activate-the-virtual-environment">Activate the Virtual Environment</h3>
-<p>To activate the virtual environment, run the following command:</p>
-<pre><code>poetry shell
-</code></pre>
+<p>The <code>-e</code> (or <code>--editable</code>) option is used to install the package in a way that allows you to modify the source code and see the changes directly without having to reinstall the package. This is particularly useful for development.</p>
 <h3 id="running-tests">Running Tests</h3>
-<p>You can run tests (if any) using the following command:</p>
-<pre><code>poetry run pytest
+<p>To run tests, ensure you're in the top-level directory of the project and execute:</p>
+<pre><code class="language-bash">pytest
 </code></pre>
+<p>This will run all the tests using the configurations set in the project.</p>
 <h3 id="installing-pre-commit-hooks-in-your-development-environment">Installing Pre-commit Hooks in Your Development Environment</h3>
-<p>To improve code quality and maintain a consistent coding style, we use pre-commit hooks in this repository. The following steps will guide you through the process of setting up pre-commit hooks in your development environment.</p>
+<p>Pre-commit hooks are used to automate checks and formatting before commits. Follow these steps to set them up:</p>
 <h4 id="installation-steps">Installation Steps</h4>
 <ol>
-<li><strong>Install pre-commit</strong>: Open a terminal and run the following command to install the <code>pre-commit</code> package:</li>
+<li><strong>Install pre-commit</strong>: If you haven't already, install the pre-commit package:</li>
 </ol>
-<pre><code>pip install pre-commit
-</code></pre>
-<p>This command installs the pre-commit tool, which manages the pre-commit hooks for this repository.</p>
+<p><code>bash
+   pip install pre-commit</code></p>
 <ol>
-<li><strong>Install pre-commit hooks</strong>: Run the following command to install the pre-commit hooks defined in the <code>.pre-commit-config.yaml</code> file:</li>
+<li><strong>Install pre-commit hooks</strong>: Install the hooks defined in <code>.pre-commit-config.yaml</code>:</li>
 </ol>
-<pre><code>pre-commit install
-</code></pre>
-<p>This command sets up the pre-commit hooks to run automatically before each commit.</p>
+<p><code>bash
+   pre-commit install</code></p>
+<p>This sets up the hooks to run automatically before each commit.</p>
 <h4 id="usage">Usage</h4>
-<p>Now that you have installed the pre-commit hooks, they will run automatically before each commit. If any of the hooks fail, the commit will be aborted, and you will need to fix the issues before trying again.</p>
-<p>You can also run the pre-commit hooks manually at any time using the following command:</p>
-<pre><code>pre-commit run --all-files
+<p>The pre-commit hooks will automatically run on your modified files whenever you commit. To manually run all hooks on all files, use:</p>
+<pre><code class="language-bash">pre-commit run --all-files
 </code></pre>
-<p>This command runs all the pre-commit hooks on all the files in the repository, allowing you to check your code before committing.</p>
-<p>By following these steps, you can ensure that your development environment is set up to use the pre-commit hooks, helping to maintain a clean and consistent codebase.</p>
+<p>This can be useful for checking your codebase.</p>
+<p>By following these steps, your development environment for <code>rdsa-utils</code> will be ready, and you can start contributing to the project with ease.</p>
 
 
 
