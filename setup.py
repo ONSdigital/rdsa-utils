@@ -39,8 +39,10 @@ setup(
         ],
         'doc': [
             'mkdocs>=1.4.2',
-            'mkdocs-tech-docs-template>=0.0.25',
+            'mkdocs-tech-docs-template>=0.1.2',
             'mkdocstrings[python]>=0.22.0',
+            'mkdocs-git-revision-date-localized-plugin>=1.2.1',
+            'mkdocs-jupyter>=0.24.3',
         ],
     },
 )

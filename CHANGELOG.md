@@ -31,6 +31,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add functions from `epds_utils` into `helpers/pyspark.py`, `io/input.py`, `io/output.py`.
 - Add various I/O functions from the io.py module in cprices-utils.
 - Add modules to `docs/reference.md`
+- Add mkdocs Plugins: `mkdocs-git-revision-date-localized-plugin`, `mkdocs-jupyter`.
+- Add better navigation to `mkdocs.yml`.
 
 ### Changed
 - Renamed `_typing` module to `typing`.
@@ -38,6 +40,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Relocated `logging.py` and `validation.py` to root level.
 - Relocated `Getting Started for Developers` into `docs/contribution_guide.md`.
 - Migrated from `poetry` to `setup.py` for Python Code Packaging.
+- Upgrade `mkdocs-tech-docs-template` to `0.1.2`.
 
 ### Deprecated
 
