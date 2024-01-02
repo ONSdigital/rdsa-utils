@@ -41,6 +41,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Relocated `Getting Started for Developers` into `docs/contribution_guide.md`.
 - Migrated from `poetry` to `setup.py` for Python Code Packaging.
 - Upgrade `mkdocs-tech-docs-template` to `0.1.2`.
+- Moved CDSW related from `io/input.py` & `io/output.py` into `cdsw/io/input.py` & `cdsw/io/output.py`
 
 ### Deprecated
 

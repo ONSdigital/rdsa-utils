@@ -14,6 +14,8 @@ reference for the technical implementation of the`rdsa-utils` codebase.
 ::: rdsa_utils.cdsw.helpers.hdfs_utils
 ::: rdsa_utils.cdsw.helpers.impala
 ::: rdsa_utils.cdsw.io.pipeline_runlog
+::: rdsa_utils.cdsw.io.input
+::: rdsa_utils.cdsw.io.output
 
 ## GCP
 

@@ -15,12 +15,12 @@ def suppress_py4j_logging():
     logger.setLevel(logging.WARN)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='module')
 def spark_session():
     """Set up spark session fixture."""
     suppress_py4j_logging()
 
-    return (
+    spark = (
         SparkSession.builder.master('local[2]')
         .appName('rdsa_test_context')
         .config('spark.sql.shuffle.partitions', 1)
@@ -32,6 +32,8 @@ def spark_session():
         .enableHiveSupport()
         .getOrCreate()
     )
+    yield spark
+    spark.stop()
 
 
 class Case:
