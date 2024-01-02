@@ -33,6 +33,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add modules to `docs/reference.md`
 - Add mkdocs Plugins: `mkdocs-git-revision-date-localized-plugin`, `mkdocs-jupyter`.
 - Add better navigation to `mkdocs.yml`.
+- Add `save_csv_to_hdfs` function to `cdsw/io/output.py`.
 
 ### Changed
 - Renamed `_typing` module to `typing`.
