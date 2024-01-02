@@ -227,21 +227,21 @@ def save_csv_to_hdfs(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         Active SparkSession instance.
-    df : DataFrame
+    df
         The PySpark DataFrame to save.
-    file_name : str
+    file_name
         The name of the CSV file. The file name must include
         the ".csv" extension.
-    file_path : str
+    file_path
         The path in HDFS where the CSV file should be saved.
-    overwrite : bool, default True
+    overwrite
         If True, any existing file with the same name in the
         given path will be overwritten.
         If False, an exception will be raised if a file with
         the same name already exists.
-    coalesce_data : bool, default True
+    coalesce_data
         If True, coalesces the DataFrame into a single partition
         before saving. This preserves the order of rows but may
         impact performance for large DataFrames.
