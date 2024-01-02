@@ -1095,6 +1095,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdsw.io.output.save_csv_to_hdfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      save_csv_to_hdfs()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdsw.io.output.write_and_read_hive_table" class="md-nav__link">
     <span class="md-ellipsis">
       write_and_read_hive_table()
@@ -2575,6 +2584,15 @@
   <a href="#rdsa_utils.cdsw.io.output.insert_df_to_hive_table" class="md-nav__link">
     <span class="md-ellipsis">
       insert_df_to_hive_table()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.cdsw.io.output.save_csv_to_hdfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      save_csv_to_hdfs()
     </span>
   </a>
   
@@ -7844,6 +7862,177 @@ doesn't exist or if there's no access to it.</p>
         </tr>
     </tbody>
   </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="rdsa_utils.cdsw.io.output.save_csv_to_hdfs" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_csv_to_hdfs</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">coalesce_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Save DataFrame as CSV on HDFS, with optional coalescing.</p>
+<p>This function saves a PySpark DataFrame to HDFS in CSV format.
+Coalescing the DataFrame into a single partition is optional.</p>
+<p>Without coalescing, the DataFrame is saved in multiple parts, and
+these parts are merged into a single file. However, this does not
+guarantee the order of rows as in the original DataFrame.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>spark</code></td>
+          <td>
+                <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Active SparkSession instance.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>df</code></td>
+          <td>
+                <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>PySpark DataFrame to save.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>file_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of the CSV file. The file name must include
+the ".csv" extension.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>file_path</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The path in HDFS where the CSV file should be saved.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, any existing file with the same name in the
+given path will be overwritten.
+If False, an exception will be raised if a file with
+the same name already exists.</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>coalesce_data</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If True, coalesces the DataFrame into a single partition
+before saving. This preserves the order of rows but may
+impact performance for large DataFrames.</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>ValueError</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the provided file_name doesn't end with ".csv".</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+                <code>IOError</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If <code>overwrite</code> is False and the file already exists.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">save_to_hdfs_csv</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;example.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/hadoop/data/&quot;</span><span class="p">)</span>
+</code></pre></div>
 
   </div>
 
