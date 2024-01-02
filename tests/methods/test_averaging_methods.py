@@ -7,7 +7,7 @@ from rdsa_utils.methods.averaging_methods import *
 
 
 @pytest.fixture()
-def input_df(create_spark_df):
+def input_df(spark_session, create_spark_df):
     """Fixture containing input data for tests."""
     return create_spark_df([
         ('price', 'quantity', 'weight'),
