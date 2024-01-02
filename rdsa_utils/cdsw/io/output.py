@@ -246,10 +246,6 @@ def save_csv_to_hdfs(
         before saving. This preserves the order of rows but may
         impact performance for large DataFrames.
 
-    Returns
-    -------
-    None
-
     Raises
     ------
     ValueError
