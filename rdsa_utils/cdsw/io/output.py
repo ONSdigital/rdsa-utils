@@ -230,7 +230,7 @@ def save_csv_to_hdfs(
     spark
         Active SparkSession instance.
     df
-        The PySpark DataFrame to save.
+        PySpark DataFrame to save.
     file_name
         The name of the CSV file. The file name must include
         the ".csv" extension.
