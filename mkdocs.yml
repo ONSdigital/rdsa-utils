@@ -2,6 +2,10 @@ site_name: rdsa-utils Documentation
 
 theme:
   name: tech_docs_template
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.indexes
   logo: assets/ons_logo_white.svg
   favicon: assets/ons_favicon.svg
 
@@ -20,6 +24,16 @@ plugins:
             show_root_heading: True
             merge_init_into_class: True
   - material/search
+  - git-revision-date-localized
+  - mkdocs-jupyter:
+      include_source: True
+      include: ["*.ipynb"] # Default: ["*.py", "*.ipynb"]
+      ignore: ["*.py"]
+      remove_tag_config:
+        remove_input_tags:
+          - hide_code
+        remove_all_outputs_tags:
+          - hide_out
 
 nav:
   - rdsa-utils: index.md
