@@ -1,4 +1,4 @@
-"""Tests for the output.py module."""
+"""Tests for the cdsw/io/output.py module."""
 from typing import Callable
 from unittest.mock import Mock, patch
 
@@ -6,7 +6,7 @@ import pytest
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
 
-from rdsa_utils.io.output import *
+from rdsa_utils.cdsw.io.output import *
 
 
 class TestInsertDataFrameToHiveTable:
