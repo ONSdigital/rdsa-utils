@@ -39,3 +39,4 @@ nav:
   - rdsa-utils: index.md
   - API Reference: reference.md
   - Contribution Guide: contribution_guide.md
+  - Branching & Deployment Guide: branch_and_deploy_guide.md

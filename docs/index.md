@@ -5,6 +5,7 @@ This site contains the project documentation for `rdsa-utils`, a suite of pyspar
 
 1. [API Reference](reference.md)
 2. [Contribution Guide](contribution_guide.md)
+2. [Branching & Deployment Guide](branch_and_deploy_guide.md)
 
 Quickly find what you're looking for depending on your use case by looking at the different pages.
 
