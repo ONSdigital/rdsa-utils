@@ -32,7 +32,7 @@ setup(
             'ruff>=0.0.270',
             'chispa>=0.9.2',
             'coverage[toml]>=7.1.0',
-            'pytest>=7.1.0, <8.0.0',
+            'pytest>=7.1.0, <8.0.0', # Temporarily pin pytest due to https://github.com/TvoroG/pytest-lazy-fixture/issues/65
             'pytest-cov>=4.0.0',
             'pytest-lazy-fixture>=0.6.0',
             'pytest-mock>=3.8.0',
