@@ -12,9 +12,42 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    # steps:
-    # - uses: actions/checkout@v4
-    # - name: Deployment Step
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine 
+
+    # - name: Build and publish to PyPI
+    #   env:
+    #     TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+    #     TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
     #   run: |
-    #     echo "Deploying the application"
-    #     # Your deployment scripts or commands
+    #     python setup.py sdist bdist_wheel
+    #     twine upload dist/*
+
+    - name: Extract package version
+      id: package_version
+      run: |
+        echo "PACKAGE_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
+
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        custom_tag: ${{ env.PACKAGE_VERSION }}
+
+    - name: Create a GitHub release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: Release ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
