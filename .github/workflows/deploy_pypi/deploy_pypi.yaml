@@ -1,0 +1,20 @@
+name: Deploy to PyPI and GitHub Releases
+
+on:
+  workflow_run:
+    workflows: ["Version and Branch Check on PR to Main"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    # steps:
+    # - uses: actions/checkout@v4
+    # - name: Deployment Step
+    #   run: |
+    #     echo "Deploying the application"
+    #     # Your deployment scripts or commands

@@ -35,6 +35,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add better navigation to `mkdocs.yml`.
 - Add `save_csv_to_hdfs` function to `cdsw/io/output.py`.
 - Add `docs/branch_and_deploy_guide.md`.
+- Add `.github/workflows/deploy_pypi/version_check.yaml` and `.github/workflows/deploy_pypi/deploy_pypi.yaml`.
 
 ### Changed
 - Renamed `_typing` module to `typing`.
