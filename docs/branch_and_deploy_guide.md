@@ -26,6 +26,10 @@ and improvements are merged.
 3. **Version Bumping**:
     - Before merging `development` into `main`, update the package version. 
     [Follow semantic versioning principles (MAJOR.MINOR.PATCH).](https://semver.org/)
+    - Use `bump2version` to bump `rdsa-utils` package version. 
+    Example: `bump2version patch` (for a patch update), 
+    `bump2version minor` (for a minor update), 
+    or `bump2version major` (for a major update).
 
 4. **Merging to Main**:
     - After a set of features is finalised in the `development` branch, and 
