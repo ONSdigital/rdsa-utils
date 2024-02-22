@@ -57,4 +57,4 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Remove `_version.py`.
-- Removed all references to Poetry.
+- Remove all references to Poetry.
