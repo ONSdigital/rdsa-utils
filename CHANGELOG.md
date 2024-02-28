@@ -21,7 +21,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.1.8] - 2024-02-28
 
 ### Added
-- Added `pyproject.toml`.
+- Added `pyproject.toml` and `setup.cfg`.
 
 ### Changed
 
