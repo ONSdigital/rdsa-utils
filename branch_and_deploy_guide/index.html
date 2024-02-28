@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="../reference/">
+        <link rel="prev" href="../contribution_guide/">
       
-      
-        <link rel="next" href="../branch_and_deploy_guide/">
       
       
       <link rel="icon" href="../assets/ons_favicon.svg">
@@ -20,7 +18,7 @@
     
     
       
-        <title>Contribution Guide - rdsa-utils Documentation</title>
+        <title>Branching & Deployment Guide - rdsa-utils Documentation</title>
       
     
     
@@ -67,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#contribution-guide" class="md-skip">
+        <a href="#branching-and-deployment-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Contribution Guide
+              Branching & Deployment Guide
             
           </span>
         </div>
@@ -209,11 +207,9 @@
         
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../contribution_guide/" class="md-tabs__link">
         
   
     
@@ -228,9 +224,11 @@
         
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../branch_and_deploy_guide/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
     
@@ -336,6 +334,26 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../contribution_guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contribution Guide
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -352,7 +370,7 @@
           
   
   <span class="md-ellipsis">
-    Contribution Guide
+    Branching & Deployment Guide
   </span>
   
 
@@ -363,7 +381,7 @@
         
   
   <span class="md-ellipsis">
-    Contribution Guide
+    Branching & Deployment Guide
   </span>
   
 
@@ -385,99 +403,57 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pull-requests" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Pull Requests
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#issues" class="md-nav__link">
+  <a href="#branches" class="md-nav__link">
     <span class="md-ellipsis">
-      Issues
+      Branches
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#development-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      Development Workflow
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Getting Started">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-process-using-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Process Using GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Process Using GitHub Actions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installing-python" class="md-nav__link">
+  <a href="#overview_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Installing Python
+      Overview
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clone-the-repository" class="md-nav__link">
+  <a href="#steps-in-the-deployment-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      Clone the Repository
+      Steps in the Deployment Pipeline
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#set-up-the-development-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Set Up the Development Environment
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      Running Tests
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#installing-pre-commit-hooks-in-your-development-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installing Pre-commit Hooks in Your Development Environment
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installing Pre-commit Hooks in Your Development Environment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation Steps
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -490,26 +466,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../branch_and_deploy_guide/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Branching & Deployment Guide
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -541,99 +497,57 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pull-requests" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Pull Requests
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#issues" class="md-nav__link">
+  <a href="#branches" class="md-nav__link">
     <span class="md-ellipsis">
-      Issues
+      Branches
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#development-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      Development Workflow
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Getting Started">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-process-using-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Process Using GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Process Using GitHub Actions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installing-python" class="md-nav__link">
+  <a href="#overview_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Installing Python
+      Overview
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#clone-the-repository" class="md-nav__link">
+  <a href="#steps-in-the-deployment-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      Clone the Repository
+      Steps in the Deployment Pipeline
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#set-up-the-development-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Set Up the Development Environment
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      Running Tests
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#installing-pre-commit-hooks-in-your-development-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installing Pre-commit Hooks in Your Development Environment
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installing Pre-commit Hooks in Your Development Environment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation Steps
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -660,87 +574,95 @@
   
 
 
-<h1 id="contribution-guide">Contribution Guide</h1>
-<p>We welcome contributions. To contribute, please follow these guidelines:</p>
-<h2 id="pull-requests">Pull Requests</h2>
+<h1 id="branching-and-deployment-guide">Branching and Deployment Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>Our branching strategy is designed to facilitate continuous integration and smooth 
+transitions between development, testing, and production stages.</p>
+<h2 id="branches">Branches</h2>
 <ul>
-<li>All pull requests should be made to the <code>dev</code> branch, named <code>dev_&lt;feature_name&gt;</code>.</li>
-<li>Please make sure that your code passes all unit tests before submitting a pull request.</li>
-<li>Include unit tests with your code changes whenever possible, preferably written in <a href="https://docs.pytest.org/en/stable/">pytest</a> format.</li>
-<li>Make sure that all existing unit tests still pass with your code changes.</li>
-<li>Please ensure that your code is compliant with the project's coding style guidelines, which include:</li>
-<li>Writing docstrings in <a href="https://numpydoc.readthedocs.io/en/latest/format.html">Scipy/numpy style format</a>.</li>
-<li>Using <a href="https://docs.python.org/3/library/typing.html">type hints</a> in Python functions.</li>
-<li>Adhering to the <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 style guide</a> for Python code.</li>
-<li>No wildcard imports.</li>
-<li>Import PySpark functions as <code>F</code>.</li>
-<li>Providing well-documented and easy-to-understand code, including clear variable and function names, as well as explanatory comments where necessary.</li>
-<li>If you are making a significant change to the codebase, please make sure to update the documentation to reflect the changes.</li>
-<li>If you are adding new functionality, please provide examples of how to use it in the project's documentation or in a separate README file.</li>
-<li>If you are fixing a bug, please include a description of the bug and how your changes address it.</li>
-<li>If you are adding a new dependency, please include a brief explanation of why it is necessary and what it does.</li>
-<li>If you are making significant changes to the project's architecture or design, please discuss your ideas with the project maintainers first to ensure they align with the project's goals and vision.</li>
+<li><strong>Main Branch</strong>: Stable codebase reflecting the current production state.</li>
+<li><strong>Development Branch</strong>: Active development branch where new features, bug fixes, 
+and improvements are merged.</li>
 </ul>
-<h2 id="issues">Issues</h2>
-<p>If you find a bug or would like to request a feature, please open an issue on the project's <a href="https://github.com/ONSdigital/rdsa-utils/issues">GitHub page</a>. When opening an issue, please provide as much detail as possible, including:</p>
-<ul>
-<li>A clear and descriptive title.</li>
-<li>A description of the problem you're experiencing, including steps to reproduce it.</li>
-<li>Any error messages or logs related to the issue.</li>
-<li>Your operating system and Python version (if relevant).</li>
-</ul>
-<p>Please search through the existing issues before opening a new one to avoid duplicates. If you find an existing issue that covers your problem, please add any additional information as a comment. Issues will be triaged and prioritized by the project maintainers.</p>
-<p>If you would like to contribute to the project by fixing an existing issue, please leave a comment on the issue to let the maintainers know that you are working on it.</p>
-<h2 id="getting-started">Getting Started</h2>
-<h3 id="installing-python">Installing Python</h3>
-<p>Before getting started, you need to have Python 3.8 or higher installed on your system. You can download Python from the <a href="https://www.python.org/downloads/">official website</a>. Make sure to add Python to your <code>PATH</code> during the installation process.</p>
-<p>Alternatively, you can use <a href="https://www.anaconda.com/download">Anaconda</a> to create a Python 3.8 or higher virtual environment. Anaconda is a popular Python distribution that comes with many pre-installed scientific computing packages and tools. Here's how to create a new environment with Anaconda:</p>
+<h2 id="development-workflow">Development Workflow</h2>
 <ol>
-<li>Download and install Anaconda from the <a href="https://www.anaconda.com/download">official website</a>.</li>
-<li>Open the Anaconda prompt.</li>
 <li>
-<p>Create a new virtual environment with Python 3.8 or higher:</p>
-<p><code>conda create --name myenv python=3.8</code>
-4. Activate the virtual environment:</p>
-<p><code>conda activate myenv</code></p>
+<p><strong>Feature Branches</strong>: </p>
+<ul>
+<li>All new features and bug fixes are developed in separate branches created from 
+ the <code>development</code> branch.</li>
+<li>Naming Convention: <code>dev_&lt;feature_name&gt;</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Merging to Development</strong>:</p>
+<ul>
+<li>Once a feature is complete and tested, it is merged into the <code>development</code> branch 
+through a pull request.</li>
+<li>Pull requests should be reviewed and approved by at least one other developer.</li>
+</ul>
+</li>
+<li>
+<p><strong>Version Bumping</strong>:</p>
+<ul>
+<li>Before merging <code>development</code> into <code>main</code>, update the package version. 
+<a href="https://semver.org/">Follow semantic versioning principles (MAJOR.MINOR.PATCH).</a></li>
+<li>Use <code>bump2version</code> to bump <code>rdsa-utils</code> package version. 
+Example: <code>bump2version patch</code> (for a patch update), 
+<code>bump2version minor</code> (for a minor update), 
+or <code>bump2version major</code> (for a major update).</li>
+</ul>
+</li>
+<li>
+<p><strong>Merging to Main</strong>:</p>
+<ul>
+<li>After a set of features is finalised in the <code>development</code> branch, and 
+the package version is bumped, merge <code>development</code> into <code>main</code>.</li>
+<li>This action triggers the automated deployment process 
+through GitHub Actions.</li>
+</ul>
+</li>
+<li>
+<p><strong>Post-Merge Update</strong>:</p>
+<ul>
+<li>After merging into <code>main</code>, update the <code>development</code> branch with the 
+latest <code>main</code> branch changes. This ensures <code>development</code> is aligned with production.</li>
+</ul>
 </li>
 </ol>
-<h3 id="clone-the-repository">Clone the Repository</h3>
-<p>Clone the repository to your local machine:</p>
-<pre><code>git clone https://github.com/ONSdigital/rdsa-utils.git
-cd rdsa-utils
-</code></pre>
-<h3 id="set-up-the-development-environment">Set Up the Development Environment</h3>
-<p>We use a traditional <code>setup.py</code> approach for managing dependencies. To set up your development environment, first, ensure you have Python 3.8 to 3.10 installed.</p>
-<p>Then, to install the package in editable mode along with all development dependencies, run the following command:</p>
-<pre><code class="language-bash">pip3 install -e .[dev]
-</code></pre>
-<p>The <code>-e</code> (or <code>--editable</code>) option is used to install the package in a way that allows you to modify the source code and see the changes directly without having to reinstall the package. This is particularly useful for development.</p>
-<h3 id="running-tests">Running Tests</h3>
-<p>To run tests, ensure you're in the top-level directory of the project and execute:</p>
-<pre><code class="language-bash">pytest
-</code></pre>
-<p>This will run all the tests using the configurations set in the project.</p>
-<h3 id="installing-pre-commit-hooks-in-your-development-environment">Installing Pre-commit Hooks in Your Development Environment</h3>
-<p>Pre-commit hooks are used to automate checks and formatting before commits. Follow these steps to set them up:</p>
-<h4 id="installation-steps">Installation Steps</h4>
+<h2 id="deployment-process-using-github-actions">Deployment Process Using GitHub Actions</h2>
+<h3 id="overview_1">Overview</h3>
+<p>The deployment process is automated using GitHub Actions. This CI/CD pipeline is 
+triggered upon merging changes into the <code>main</code> branch.</p>
+<h3 id="steps-in-the-deployment-pipeline">Steps in the Deployment Pipeline</h3>
 <ol>
-<li><strong>Install pre-commit</strong>: If you haven't already, install the pre-commit package:</li>
+<li>
+<p><strong>Trigger</strong>:</p>
+<ul>
+<li>The pipeline is triggered when a merge into <code>main</code> is detected.</li>
+</ul>
+</li>
+<li>
+<p><strong>Build</strong>:</p>
+<ul>
+<li>The <code>rdsa-utils</code> package is built. Ensure that all tests are passed 
+and quality checks are satisfied.</li>
+</ul>
+</li>
+<li>
+<p><strong>Publish to PyPI</strong>:</p>
+<ul>
+<li>The built package is published to the Python Package Index (PyPI).</li>
+</ul>
+</li>
+<li>
+<p><strong>Create GitHub Release</strong>:</p>
+<ul>
+<li>A GitHub Release is created with the new version tag.</li>
+<li>Built artifacts, such as wheels or source distributions, are uploaded to this release.</li>
+</ul>
+</li>
 </ol>
-<p><code>bash
-   pip install pre-commit</code></p>
-<ol>
-<li><strong>Install pre-commit hooks</strong>: Install the hooks defined in <code>.pre-commit-config.yaml</code>:</li>
-</ol>
-<p><code>bash
-   pre-commit install</code></p>
-<p>This sets up the hooks to run automatically before each commit.</p>
-<h4 id="usage">Usage</h4>
-<p>The pre-commit hooks will automatically run on your modified files whenever you commit. To manually run all hooks on all files, use:</p>
-<pre><code class="language-bash">pre-commit run --all-files
-</code></pre>
-<p>This can be useful for checking your codebase.</p>
-<p>By following these steps, your development environment for <code>rdsa-utils</code> will be ready, and you can start contributing to the project with ease.</p>
 
 
 
