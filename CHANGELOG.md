@@ -18,6 +18,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 
+## [v0.1.7] - 2024-02-28
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+- Added `build` dependency in `.github/workflows/deploy_pypi.yaml`
+
+### Removed
+
+
 ## [v0.1.6] - 2024-02-28
 
 ### Added
