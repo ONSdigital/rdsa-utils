@@ -46,6 +46,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Upgrade `mkdocs-tech-docs-template` to `0.1.2`.
 - Moved CDSW related from `io/input.py` & `io/output.py` into `cdsw/io/input.py` & `cdsw/io/output.py`
 - Pin `pytest` version `<8.0.0` due to https://github.com/TvoroG/pytest-lazy-fixture/issues/65
+- Updated the license information.
 
 ### Deprecated
 
@@ -59,3 +60,4 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Remove `_version.py`.
+- Remove all references to Poetry.
