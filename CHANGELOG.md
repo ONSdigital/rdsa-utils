@@ -17,6 +17,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.1.4] - 2024-02-28
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+- Remove check of branch for deployment.
+
+
 ## [v0.1.3] - 2024-02-28
 
 ### Added
@@ -121,6 +134,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Remove all references to Poetry.
 
 ### Release Links
+
+RDSA-utils [v0.1.4](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.4)
 
 RDSA-utils [v0.1.3](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.3)
 
