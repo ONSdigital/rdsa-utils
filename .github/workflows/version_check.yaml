@@ -13,16 +13,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Necessary to fetch all history for tags and branches
-
-      - name: Check branch name
-        run: |
-          BRANCH_NAME="${{ github.head_ref }}"
-          echo "Branch name is: $BRANCH_NAME"
-          if [ "$BRANCH_NAME" != "development" ]; then
-            echo "::error ::Pull requests can only be merged from the 'development' branch into 'main'. Your branch is named '$BRANCH_NAME'."
-            exit 1
-          fi
-        shell: bash
+      
+      # ToDO: need to check github.head_ref giving an empty string on action.
+      # - name: Check branch name
+      #   run: |
+      #     BRANCH_NAME="${{ github.head_ref }}"
+      #     echo "Branch name is: $BRANCH_NAME"
+      #     if [ "$BRANCH_NAME" != "development" ]; then
+      #       echo "::error ::Pull requests can only be merged from the 'development' branch into 'main'. Your branch is named '$BRANCH_NAME'."
+      #       exit 1
+      #     fi
+      #   shell: bash
 
       - name: Extract versions and compare
         run: |
