@@ -8,6 +8,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.1.0] - 2024-02-28
+
+### Added
+
 - `parametrize_cases` and `Case` code for use in test scripts.
 - Add in PR template.
 - README with additional information and guidelines for contributors.
@@ -34,8 +47,11 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Add mkdocs Plugins: `mkdocs-git-revision-date-localized-plugin`, `mkdocs-jupyter`.
 - Add better navigation to `mkdocs.yml`.
 - Add `save_csv_to_hdfs` function to `cdsw/io/output.py`.
+- Add `docs/branch_and_deploy_guide.md`.
+- Add `.github/workflows/deploy_pypi/version_check.yaml` and `.github/workflows/deploy_pypi/deploy_pypi.yaml`.
 
 ### Changed
+
 - Renamed `_typing` module to `typing`.
 - Renamed modules in helpers directory to remove `helper_` from names.
 - Relocated `logging.py` and `validation.py` to root level.
@@ -44,10 +60,12 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Upgrade `mkdocs-tech-docs-template` to `0.1.2`.
 - Moved CDSW related from `io/input.py` & `io/output.py` into `cdsw/io/input.py` & `cdsw/io/output.py`
 - Pin `pytest` version `<8.0.0` due to https://github.com/TvoroG/pytest-lazy-fixture/issues/65
+- Updated the license information.
 
 ### Deprecated
 
 ### Fixed
+
 - Fix paths for `get_window_spec` in `averaging_methods.py`.
 - Fix `deploy_mkdocs.yaml`, changed `mkdocs-material` to `mkdocs-tech-docs-template`.
 - Fix module paths for unit test patches in `tests/cdsw/`.
@@ -56,4 +74,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Fix `deploy_mkdocs.yaml`, missing quotes for Python version.
 
 ### Removed
+
 - Remove `_version.py`.
+- Remove all references to Poetry.
+
+### Release Links
+
+RDSA-utils [v0.1.0](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.0)
