@@ -1,8 +1,9 @@
-name: Version and Branch Check on PR to Main
+name: Version and Branch Check on Merge to Main
 
 on:
-  pull_request:
-    branches: [main]
+  push:
+    branches:
+      - main
 
 jobs:
   check-branch-and-version:

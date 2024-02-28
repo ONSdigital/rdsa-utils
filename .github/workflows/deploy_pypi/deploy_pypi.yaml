@@ -2,7 +2,7 @@ name: Deploy to PyPI and GitHub Releases
 
 on:
   workflow_run:
-    workflows: ["Version and Branch Check on PR to Main"]
+    workflows: ["Version and Branch Check on Merge to Main"]
     types:
       - completed
     branches:
