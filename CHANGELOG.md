@@ -23,6 +23,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Modified Workflow Trigger in `.github/workflows/deploy_pypi.yaml`
 
 ### Deprecated
 
