@@ -1,16 +1,12 @@
 name: Deploy to PyPI and GitHub Releases
 
 on:
-  workflow_run:
-    workflows: ["Version and Branch Check on Merge to Main"]
-    types:
-      - completed
+  push:
     branches:
       - main
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

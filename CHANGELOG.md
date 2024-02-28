@@ -18,6 +18,21 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 
+## [v0.1.6] - 2024-02-28
+
+### Added
+
+### Changed
+- Modified Workflow Trigger in `.github/workflows/deploy_pypi.yaml`
+
+### Deprecated
+
+### Fixed
+
+### Removed
+- Removed `.github/workflows/version_check.yaml`
+
+
 ## [v0.1.5] - 2024-02-28
 
 ### Added
@@ -148,6 +163,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Remove all references to Poetry.
 
 ### Release Links
+
+RDSA-utils [v0.1.6](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.6)
 
 RDSA-utils [v0.1.5](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.5)
 
