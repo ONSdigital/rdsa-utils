@@ -12,18 +12,13 @@ The RDSA team sits within the Economic Statistics Change Directorate, and uses c
 
 ## Installation
 
-`rdsa-utils` is available for installation via PyPI and can also be found on GitHub Releases for direct downloads and version history.
+`rdsa-utils` is available for installation via [PyPI](https://pypi.org/project/rdsa-utils/) and can also be found on [GitHub Releases](https://github.com/ONSdigital/rdsa-utils/releases) for direct downloads and version history.
 
 To install via `pip`, simply run:
 
 ```bash
 pip install rdsa-utils
 ```
-
-For more details on installation options and to download specific versions, visit:
-
-- [PyPI](https://pypi.org/project/rdsa-utils/)
-- [GitHub Releases](https://github.com/ONSdigital/rdsa-utils/releases)
 
 ## Documentation and Further Information
 
