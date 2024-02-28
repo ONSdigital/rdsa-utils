@@ -17,6 +17,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.1.2] - 2024-02-28
+
+### Added
+
+### Changed
+
+- Workflows to have PyPI listing on merge to main branch.
+
+### Deprecated
+
+### Fixed
+
+
 ## [v0.1.1] - 2024-02-28
 
 ### Added
@@ -94,6 +107,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Remove all references to Poetry.
 
 ### Release Links
+
+RDSA-utils [v0.1.2](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.2)
 
 RDSA-utils [v0.1.1](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.1)
 
