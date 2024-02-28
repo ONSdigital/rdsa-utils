@@ -30,7 +30,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
-
+- Removed `requirements.txt` now in `setup.cfg`.
 
 ## [v0.1.7] - 2024-02-28
 
