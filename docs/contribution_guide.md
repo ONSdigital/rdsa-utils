@@ -49,6 +49,7 @@ Alternatively, you can use [Anaconda](https://www.anaconda.com/download) to crea
     ```
     conda create --name myenv python=3.8
     ```
+
 4. Activate the virtual environment:
 
     ```
