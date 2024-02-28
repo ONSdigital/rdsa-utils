@@ -193,20 +193,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Release Links
 
-RDSA-utils [v0.1.8](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.8)
+RDSA-utils [v0.1.8](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8)
 
-RDSA-utils [v0.1.7](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.7)
+RDSA-utils [v0.1.7](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.7)
 
-RDSA-utils [v0.1.6](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.6)
+RDSA-utils [v0.1.6](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.6)
 
-RDSA-utils [v0.1.5](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.5)
+RDSA-utils [v0.1.5](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.5)
 
-RDSA-utils [v0.1.4](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.4)
+RDSA-utils [v0.1.4](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.4)
 
-RDSA-utils [v0.1.3](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.3)
+RDSA-utils [v0.1.3](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.3)
 
-RDSA-utils [v0.1.2](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.2)
+RDSA-utils [v0.1.2](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.2)
 
-RDSA-utils [v0.1.1](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.1)
+RDSA-utils [v0.1.1](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.1)
 
-RDSA-utils [v0.1.0](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.0)
+RDSA-utils [v0.1.0](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.0)
