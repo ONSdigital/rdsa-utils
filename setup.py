@@ -2,10 +2,12 @@
 from setuptools import setup
 
 def read_requirements():
+    """Read and return a list of requirements from 'requirements.txt'."""
     with open('requirements.txt') as f:
         return f.read().splitlines()
 
 def get_extra_requirements():
+    """Return extra requirements for development and documentation."""
     return {
         'dev': [
             'bump2version>=1.0.0',
@@ -27,7 +29,7 @@ def get_extra_requirements():
         ],
     }
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     setup(
         install_requires=read_requirements(),
         extras_require=get_extra_requirements(),
