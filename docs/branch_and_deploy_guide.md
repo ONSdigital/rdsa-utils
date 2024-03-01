@@ -2,8 +2,8 @@
 
 ## Overview
 
-Our branching strategy is designed to support continuous integration and 
-continuous deployment, ensuring smooth transitions between development, 
+Our branching strategy is designed to support Continuous Integration and 
+Continuous Deployment, ensuring smooth transitions between development, 
 testing, and production. 
 
 This framework aims to maintain a stable codebase and streamline collaboration, 
