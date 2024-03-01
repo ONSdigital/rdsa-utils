@@ -4,7 +4,14 @@ We welcome contributions. To contribute, please follow these guidelines:
 
 ## Pull Requests
 
-- All pull requests should be made to the `dev` branch, named `dev_<feature_name>`.
+- All pull requests should be made to the `development` branch. Please use the following 
+**Naming Conventions** for your branches:
+    - **Feature Branches**: `feature-<feature_name>` for introducing new features.
+    - **Bug Fixes**: `fix-<bug_description>` for resolving bugs.
+    - **Hotfixes**: `hotfix-<issue>` for urgent fixes that go straight to production.
+    - **Improvements/Refactors**: `refactor-<description>` or `improvement-<description>` for code improvements.
+    - **Documentation**: `docs-<change_description>` for updates to documentation.
+    - **Experimental**: `experiment-<experiment_name>` for trial and exploratory work.
 - Please make sure that your code passes all unit tests before submitting a pull request.
 - Include unit tests with your code changes whenever possible, preferably written in [pytest](https://docs.pytest.org/en/stable/) format.
 - Make sure that all existing unit tests still pass with your code changes.

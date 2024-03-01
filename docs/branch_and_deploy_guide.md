@@ -23,7 +23,13 @@ and improvements are merged.
 1. **Feature Branches**: 
     - All new features and bug fixes are developed in separate branches created from 
      the `development` branch.
-    - Naming Convention: `dev_<feature_name>`.
+    - **Branch Naming Conventions**:
+        - **Feature Branches**: `feature-<feature_name>` for introducing new features.
+        - **Bug Fixes**: `fix-<bug_description>` for resolving bugs.
+        - **Hotfixes**: `hotfix-<issue>` for urgent fixes that go straight to production.
+        - **Improvements/Refactors**: `refactor-<description>` or `improvement-<description>` for code improvements.
+        - **Documentation**: `docs-<change_description>` for updates to documentation.
+        - **Experimental**: `experiment-<experiment_name>` for trial and exploratory work.
 
 2. **Merging to Development**:
     - Once a feature is complete and tested, it is merged into the `development` branch 
