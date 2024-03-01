@@ -73,7 +73,8 @@ triggered upon merging changes into the `main` branch.
 
 ## Git Workflow Diagram
 
-Below is a visual representation of our Git workflow, illustrating the process from feature development through to deployment using GitHub Actions.
+Below is a visual representation of our Git workflow, illustrating the process 
+from feature development through to deployment using GitHub Actions.
 
 ```mermaid
 graph TD
