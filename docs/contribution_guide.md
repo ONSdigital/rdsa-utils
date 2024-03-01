@@ -5,7 +5,7 @@ We welcome contributions. To contribute, please follow these guidelines:
 ## Pull Requests
 
 - All pull requests should be made to the `development` branch. Please use the following 
-**Naming Conventions** for your branches:
+**Naming Conventions** for your **branches**:
     - **Feature Branches**: `feature-<feature_name>` for introducing new features.
     - **Bug Fixes**: `fix-<bug_description>` for resolving bugs.
     - **Hotfixes**: `hotfix-<issue>` for urgent fixes that go straight to production.
