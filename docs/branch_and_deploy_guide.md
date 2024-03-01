@@ -2,8 +2,15 @@
 
 ## Overview
 
-Our branching strategy is designed to facilitate continuous integration and smooth 
-transitions between development, testing, and production stages.
+Our branching strategy is designed to support continuous integration and 
+continuous deployment, ensuring smooth transitions between development, 
+testing, and production. 
+
+This framework aims to maintain a stable codebase and streamline collaboration, 
+by separating in-progress work from production-ready content. 
+
+The goal is to streamline our workflow, making it easier to integrate new features, 
+fix bugs, and release updates promptly.
 
 ## Branches
 
@@ -63,3 +70,27 @@ triggered upon merging changes into the `main` branch.
 4. **Create GitHub Release**:
     - A GitHub Release is created with the new version tag.
     - Built artifacts, such as wheels or source distributions, are uploaded to this release.
+
+## Git Workflow Diagram
+
+Below is a visual representation of our Git workflow, illustrating the process from feature development through to deployment using GitHub Actions.
+
+```mermaid
+graph TD
+    A[Start Feature Development] --> B[Create Feature Branch from Development]
+    B --> C{Feature Complete and Tested?}
+    C -->|No| B
+    C -->|Yes| D[Merge Feature into Development via Pull Request]
+    D --> E[Review and Approve Pull Request]
+    E --> F[Development Branch: Ready for Release?]
+    F -->|No| A
+    F -->|Yes| G[Update Package Version -- semver]
+    G --> H[Merge Development into Main]
+    H --> I[Trigger Automated Deployment via GitHub Actions]
+    I --> J[Build and Test rdsa-utils Package]
+    J --> K[Publish to PyPI]
+    K --> L[Create GitHub Release with Version Tag]
+    L --> M[Update Development Branch with Main]
+    M --> N[Continue Development or Start New Features]
+    N --> A
+```

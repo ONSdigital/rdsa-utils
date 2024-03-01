@@ -8,9 +8,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, enhancing documentation with MermaidJS diagram support.
 
 ### Changed
-- Modified `README.md`: Added Installation section.
+- Modified `README.md`: Added Installation and Git Workflow Diagram using MermaidJS diagram.
 
 ### Deprecated
 
