@@ -12,6 +12,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Modified `README.md`: Added Installation section and Git Workflow Diagram section with a MermaidJS diagram.
+- Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`, including all `3.11.x` versions.
+- Modified `pull_request_workflow.yaml` to add Python `3.11` to the testing matrix.
 
 ### Deprecated
 
