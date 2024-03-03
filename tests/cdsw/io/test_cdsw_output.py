@@ -116,7 +116,7 @@ class TestInsertDataFrameToHiveTable:
         """
         table_name = 'non_existing_table'
         # Create an AnalysisException with a stack trace
-        exc = AnalysisException(f'Table {table_name} not found.', stackTrace='')
+        exc = AnalysisException(f'Table {table_name} not found.')
         mock_table.side_effect = exc
         with pytest.raises(AnalysisException):
             insert_df_to_hive_table(spark_session, test_df, table_name)
