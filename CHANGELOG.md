@@ -8,12 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, enhancing documentation with MermaidJS diagram support.
+- Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, 
+  enhancing documentation with MermaidJS diagram support.
 
 ### Changed
-- Modified `README.md`: Added Installation section and Git Workflow Diagram section with a MermaidJS diagram.
-- Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`, including all `3.11.x` versions.
+- Modified `README.md`: Added Installation section and Git Workflow Diagram section 
+  with a MermaidJS diagram.
+- Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`, 
+  including all `3.11.x` versions.
 - Modified `pull_request_workflow.yaml` to add Python `3.11` to the testing matrix.
+- Moved `pyspark` from primary dependencies to `dev` section in `extras_require` to 
+  streamline installation for users with pre-installed environments, 
+  requiring manual installation where necessary.
 
 ### Deprecated
 
