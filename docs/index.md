@@ -25,7 +25,7 @@ such as **Cloudera Data Platform**.
 ### For Users:
 
 - **If your environment does not have `pyspark` pre-installed:** You will need to 
-manually install `pyspark` to utilize features dependent on it. This can be done by 
+manually install `pyspark` to utilise features dependent on it. This can be done by 
 running `pip install pyspark==<version>` when setting up your environment, 
 replacing `<version>` with the specific version required for your project.
 
