@@ -20,6 +20,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Moved `pyspark` from primary dependencies to `dev` section in `extras_require` to 
   streamline installation for users with pre-installed environments, 
   requiring manual installation where necessary.
+- Renamed `isdir` function in `cdsw/helpers/hdfs_utils` to `is_dir` for 
+  improved compliance with PEP 8 naming conventions.
 
 ### Deprecated
 
