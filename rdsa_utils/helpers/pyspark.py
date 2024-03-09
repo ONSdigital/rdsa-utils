@@ -20,9 +20,7 @@ from pyspark.sql import SparkSession, Window, WindowSpec
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 
-from rdsa_utils.logging import (
-    log_spark_df_schema,
-)
+from rdsa_utils.logging import log_spark_df_schema
 
 logger = logging.getLogger(__name__)
 
@@ -743,9 +741,6 @@ def create_spark_session(
             if size
             else 'Creating a basic Spark session...',
         )
-
-        logger.info('Stopping any existing Spark session...')
-        SparkSession.builder.getOrCreate().stop()
 
         if app_name:
             builder = SparkSession.builder.appName(f'{app_name}')

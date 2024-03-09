@@ -22,7 +22,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   requiring manual installation where necessary.
 - Renamed `isdir` function in `cdsw/helpers/hdfs_utils` to `is_dir` for 
   improved compliance with PEP 8 naming conventions.
-
+- Removed line stopping existing SparkSession in `create_spark_session`
+  to prevent Py4JError and enable seamless SparkContext management on GCP.
+  
 ### Deprecated
 
 ### Fixed
