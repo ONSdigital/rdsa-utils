@@ -8,9 +8,23 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, 
+  enhancing documentation with MermaidJS diagram support.
 
 ### Changed
-
+- Modified `README.md`: Added Installation section and Git Workflow Diagram section 
+  with a MermaidJS diagram.
+- Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`, 
+  including all `3.11.x` versions.
+- Modified `pull_request_workflow.yaml` to add Python `3.11` to the testing matrix.
+- Moved `pyspark` from primary dependencies to `dev` section in `extras_require` to 
+  streamline installation for users with pre-installed environments, 
+  requiring manual installation where necessary.
+- Renamed `isdir` function in `cdsw/helpers/hdfs_utils` to `is_dir` for 
+  improved compliance with PEP 8 naming conventions.
+- Removed line stopping existing SparkSession in `create_spark_session`
+  to prevent Py4JError and enable seamless SparkContext management on GCP.
+  
 ### Deprecated
 
 ### Fixed
@@ -192,20 +206,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Release Links
 
-RDSA-utils [v0.1.8](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.8)
+RDSA-utils [v0.1.8](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8)
 
-RDSA-utils [v0.1.7](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.7)
+RDSA-utils [v0.1.7](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.7)
 
-RDSA-utils [v0.1.6](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.6)
+RDSA-utils [v0.1.6](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.6)
 
-RDSA-utils [v0.1.5](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.5)
+RDSA-utils [v0.1.5](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.5)
 
-RDSA-utils [v0.1.4](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.4)
+RDSA-utils [v0.1.4](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.4)
 
-RDSA-utils [v0.1.3](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.3)
+RDSA-utils [v0.1.3](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.3)
 
-RDSA-utils [v0.1.2](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.2)
+RDSA-utils [v0.1.2](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.2)
 
-RDSA-utils [v0.1.1](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.1)
+RDSA-utils [v0.1.1](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.1)
 
-RDSA-utils [v0.1.0](https://github.com/ONSdigital/rdsa-utils/releases/tag/0.1.0)
+RDSA-utils [v0.1.0](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.0)

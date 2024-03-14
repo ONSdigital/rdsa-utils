@@ -270,7 +270,7 @@ def get_date_modified(filepath: str) -> str:
     return command.stdout.read().decode('utf-8')[0:10]
 
 
-def isdir(path: str) -> bool:
+def is_dir(path: str) -> bool:
     """Test if a directory exists in HDFS.
 
     Parameters

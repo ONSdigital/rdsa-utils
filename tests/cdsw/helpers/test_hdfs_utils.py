@@ -16,7 +16,7 @@ from rdsa_utils.cdsw.helpers.hdfs_utils import (
     delete_file,
     file_exists,
     get_date_modified,
-    isdir,
+    is_dir,
     move_local_to_hdfs,
     read_dir,
     read_dir_files,
@@ -339,22 +339,22 @@ class TestDateModified(BaseTest):
 
 
 class TestIsDir(BaseTest):
-    """Tests for isdir function."""
+    """Tests for is_dir function."""
 
-    def test_isdir(self, mock_subprocess_popen):
-        """Verify proper execution of 'hadoop fs -test -d' command by the isdir function.
+    def test_is_dir(self, mock_subprocess_popen):
+        """Verify proper execution of 'hadoop fs -test -d' command by the is_dir function.
 
         Checks if the command is correctly constructed based on the provided path.
         """
-        # Test case 1: Test isdir with an existing directory
+        # Test case 1: Test is_dir with an existing directory
         path = '/user/directory'
         command = ['hadoop', 'fs', '-test', '-d', path]
-        assert isdir(path) == _perform(command)
+        assert is_dir(path) == _perform(command)
 
-        # Test case 2: Test isdir with a non-existing directory
+        # Test case 2: Test is_dir with a non-existing directory
         non_existing_path = '/user/non_existing_directory'
         non_existing_command = ['hadoop', 'fs', '-test', '-d', non_existing_path]
-        assert isdir(non_existing_path) == _perform(non_existing_command)
+        assert is_dir(non_existing_path) == _perform(non_existing_command)
 
 
 class TestMoveLocalToHDFS(BaseTest):
