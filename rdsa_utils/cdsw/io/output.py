@@ -214,10 +214,10 @@ def save_csv_to_hdfs(
     file_path: str,
     overwrite: bool = True,
 ) -> None:
-    """Save a DataFrame as a CSV on HDFS, coalescing to a single partition.
+    """Save DataFrame as CSV on HDFS, coalescing to a single partition.
 
     This function saves a PySpark DataFrame to HDFS in CSV format. By
-    coalescing  the DataFrame into a single partition before saving, it
+    coalescing the DataFrame into a single partition before saving, it
     accomplishes two main objectives:
 
     1. Single Part File: The output is a single CSV file rather than
@@ -235,11 +235,11 @@ def save_csv_to_hdfs(
     Parameters
     ----------
     df
-        The PySpark DataFrame to be saved.
+        PySpark DataFrame to be saved.
     file_name
-        The name of the CSV file. Must include the ".csv" extension.
+        Name of the CSV file. Must include the ".csv" extension.
     file_path
-        The HDFS path where the CSV file should be saved.
+        HDFS path where the CSV file should be saved.
     overwrite
         If True, overwrite any existing file with the same name. If False
         and the file exists, the function will raise an error.
