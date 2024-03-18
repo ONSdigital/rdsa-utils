@@ -300,6 +300,7 @@ class TestDeleteFile(BaseTest):
         command = ['hadoop', 'fs', '-rm', path]
         assert delete_file(path) == _perform(command)
 
+
 class TestDeletePath(BaseTest):
     """Tests for delete_path function."""
 
