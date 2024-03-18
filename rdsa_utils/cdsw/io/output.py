@@ -250,6 +250,26 @@ def save_csv_to_hdfs(
         If the file_name does not end with ".csv".
     IOError
         If overwrite is False and the target file already exists.
+
+    Examples
+    --------
+    Saving to an S3 bucket using the `s3a://` scheme:
+
+    ```python
+    # Assume `df` is a pre-defined PySpark DataFrame
+    file_name = "data_output.csv"
+    file_path = "s3a://my-bucket/data_folder/"
+    save_csv_to_hdfs(df, file_name, file_path, overwrite=True)
+    ```
+
+    Saving to a normal HDFS path:
+
+    ```python
+    # Assume `df` is a pre-defined PySpark DataFrame
+    file_name = "data_output.csv"
+    file_path = "/user/hdfs/data_folder/"
+    save_csv_to_hdfs(df, file_name, file_path, overwrite=True)
+    ```
     """
     if not file_name.endswith('.csv'):
         error_msg = "The file_name must end with '.csv' extension."
