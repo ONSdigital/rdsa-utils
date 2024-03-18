@@ -14,6 +14,7 @@ from rdsa_utils.cdsw.helpers.hdfs_utils import (
     create_txt_from_string,
     delete_dir,
     delete_file,
+    delete_path,
     file_exists,
     get_date_modified,
     is_dir,
@@ -298,6 +299,29 @@ class TestDeleteFile(BaseTest):
         path = '/user/file.txt'
         command = ['hadoop', 'fs', '-rm', path]
         assert delete_file(path) == _perform(command)
+
+class TestDeletePath(BaseTest):
+    """Tests for delete_path function."""
+
+    def test_delete_file_with_delete_path(self, mock_subprocess_popen):
+        """Verify proper execution of 'hadoop fs -rm -r' command by the delete_path function for a file.
+
+        Checks if the command is correctly constructed based on the provided file path.
+        """
+        # Test case: Test delete_path with a valid file path
+        file_path = '/user/testfile.txt'
+        command = ['hadoop', 'fs', '-rm', '-r', file_path]
+        assert delete_path(file_path) == _perform(command)
+
+    def test_delete_directory_with_delete_path(self, mock_subprocess_popen):
+        """Verify proper execution of 'hadoop fs -rm -r' command by the delete_path function for a directory.
+
+        Checks if the command is correctly constructed based on the provided directory path.
+        """
+        # Test case: Test delete_path with a valid directory path
+        dir_path = '/user/testdir'
+        command = ['hadoop', 'fs', '-rm', '-r', dir_path]
+        assert delete_path(dir_path) == _perform(command)
 
 
 class TestFileExits(BaseTest):
