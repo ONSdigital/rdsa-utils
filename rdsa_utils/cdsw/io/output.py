@@ -221,9 +221,9 @@ def save_csv_to_hdfs(
     accomplishes two main objectives:
 
     1. Single Part File: The output is a single CSV file rather than
-       multiple part files. This is particularly useful for ensuring
-       that the output can be easily consumed by other systems or processes
-       that expect a single file or do not handle multi-part files well.
+       multiple part files. This method reduces complexity and
+       cuts through the clutter of multi-part files, offering users
+       and systems a more cohesive and hassle-free experience.
 
     2. Preserving Row Order: Coalescing into a single partition maintains
        the order of rows as they appear in the DataFrame. This is essential
