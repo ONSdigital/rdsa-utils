@@ -24,6 +24,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   improved compliance with PEP 8 naming conventions.
 - Removed line stopping existing SparkSession in `create_spark_session`
   to prevent Py4JError and enable seamless SparkContext management on GCP.
+- Refactor `save_csv_to_hdfs` to use `/cdsw/helpers/hdfs_utils.py`
+- Add function `delete_path` in `/cdsw/helpers/hdfs_utils.py`, and refactor docstring for `delete_file` and `delete_dir`. 
   
 ### Deprecated
 

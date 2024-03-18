@@ -6,15 +6,15 @@ from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.utils import AnalysisException
-from py4j.java_gateway import java_import
 
+from rdsa_utils.cdsw.helpers.hdfs_utils import delete_path, file_exists, rename
+from rdsa_utils.cdsw.io.input import load_and_validate_table
 from rdsa_utils.exceptions import (
     ColumnNotInDataframeError,
     DataframeEmptyError,
     TableNotFoundError,
 )
 from rdsa_utils.helpers.pyspark import is_df_empty
-from rdsa_utils.cdsw.io.input import load_and_validate_table
 
 logger = logging.getLogger(__name__)
 
@@ -209,140 +209,82 @@ def write_and_read_hive_table(
 
 
 def save_csv_to_hdfs(
-    spark: SparkSession,
     df: SparkDF,
     file_name: str,
     file_path: str,
     overwrite: bool = True,
-    coalesce_data: bool = True,
 ) -> None:
-    """Save DataFrame as CSV on HDFS, with optional coalescing.
+    """Save a DataFrame as a CSV on HDFS, coalescing to a single partition.
 
-    This function saves a PySpark DataFrame to HDFS in CSV format.
-    Coalescing the DataFrame into a single partition is optional.
+    This function saves a PySpark DataFrame to HDFS in CSV format. By
+    coalescing  the DataFrame into a single partition before saving, it
+    accomplishes two main objectives:
 
-    Without coalescing, the DataFrame is saved in multiple parts, and
-    these parts are merged into a single file. However, this does not
-    guarantee the order of rows as in the original DataFrame.
+    1. Single Part File: The output is a single CSV file rather than
+       multiple part files. This is particularly useful for ensuring
+       that the output can be easily consumed by other systems or processes
+       that expect a single file or do not handle multi-part files well.
+
+    2. Preserving Row Order: Coalescing into a single partition maintains
+       the order of rows as they appear in the DataFrame. This is essential
+       when the row order matters for subsequent processing or analysis.
+       It's important to note, however, that coalescing can have performance
+       implications for very large DataFrames by concentrating
+       all data processing on a single node.
 
     Parameters
     ----------
-    spark
-        Active SparkSession instance.
     df
-        PySpark DataFrame to save.
+        The PySpark DataFrame to be saved.
     file_name
-        The name of the CSV file. The file name must include
-        the ".csv" extension.
+        The name of the CSV file. Must include the ".csv" extension.
     file_path
-        The path in HDFS where the CSV file should be saved.
+        The HDFS path where the CSV file should be saved.
     overwrite
-        If True, any existing file with the same name in the
-        given path will be overwritten.
-        If False, an exception will be raised if a file with
-        the same name already exists.
-    coalesce_data
-        If True, coalesces the DataFrame into a single partition
-        before saving. This preserves the order of rows but may
-        impact performance for large DataFrames.
+        If True, overwrite any existing file with the same name. If False
+        and the file exists, the function will raise an error.
 
     Raises
     ------
     ValueError
-        If the provided file_name doesn't end with ".csv".
+        If the file_name does not end with ".csv".
     IOError
-        If `overwrite` is False and the file already exists.
-
-    Examples
-    --------
-    >>> save_to_hdfs_csv(df, "example.csv", "/user/hadoop/data/")
+        If overwrite is False and the target file already exists.
     """
     if not file_name.endswith('.csv'):
-        msg = "The file_name must end with '.csv' extension."
-        raise ValueError(msg)
+        error_msg = "The file_name must end with '.csv' extension."
+        raise ValueError(error_msg)
 
     destination_path = f"{file_path.rstrip('/')}/{file_name}"
 
-    # Access Hadoop FileSystem
-    java_import(spark._jvm, 'org.apache.hadoop.fs.FileSystem')
-    java_import(spark._jvm, 'org.apache.hadoop.fs.Path')
-    java_import(spark._jvm, 'org.apache.hadoop.io.IOUtils')
-    fs = spark._jvm.org.apache.hadoop.fs.FileSystem.get(
-        spark._jsc.hadoopConfiguration(),
-    )
-
-    if not overwrite and fs.exists(spark._jvm.Path(destination_path)):
-        msg = (
+    if not overwrite and file_exists(destination_path):
+        error_msg = (
             f"File '{destination_path}' already exists "
             "and overwrite is set to False."
         )
-        raise IOError(
-            msg,
-        )
+        raise IOError(error_msg)
 
     logger.info(f'Saving DataFrame to {file_name} in HDFS at {file_path}')
 
-    # Coalesce the DataFrame to a single partition if required
-    if coalesce_data:
-        df = df.coalesce(1)
+    # Coalesce the DataFrame to a single partition
+    df = df.coalesce(1)
 
-    # Temporary directory for saving the data
-    temp_path = f"{file_path.rstrip('/')}/{file_name}_temp"
+    # Temporary path for saving the single part file
+    temp_path = f"{file_path.rstrip('/')}/temp_{file_name}"
 
-    # Save the DataFrame to HDFS in CSV format
+    # Save the DataFrame to HDFS in CSV format in a temporary directory
     df.write.csv(temp_path, header=True, mode='overwrite')
-    logger.info(f'DataFrame saved temporarily at {temp_path}')
 
-    # HDFS Path objects for source and destination
-    destination_file_path = spark._jvm.Path(destination_path)
-    temp_dir_path = spark._jvm.Path(temp_path)
+    # Identify the part file: pattern matching for the single part file
+    part_file = f'{temp_path}/part-00000*.csv'
 
-    # Open the merged file for writing
-    merged_file_path = spark._jvm.Path(temp_path + '/merged.csv')
-    merged_file = fs.create(merged_file_path)
+    # Rename the part file to the final file name
+    if not rename(part_file, destination_path, overwrite):
+        error_msg = f"Failed to rename the part file to '{destination_path}'"
+        raise IOError(error_msg)
 
-    try:
-        first_file = True
-        for file_status in fs.listStatus(temp_dir_path):
-            file_name = file_status.getPath().getName()
-            if file_name.startswith('part-'):
-                part_file = fs.open(file_status.getPath())
-                try:
-                    # Skip header for non-first files
-                    if not first_file:
-                        part_file.readLine()
-                    else:
-                        first_file = False
-                    spark._jvm.org.apache.hadoop.io.IOUtils.copyBytes(
-                        part_file,
-                        merged_file,
-                        spark._jsc.hadoopConfiguration(),
-                        False,
-                    )
-                finally:
-                    part_file.close()
-    finally:
-        merged_file.close()
+    logger.info(f'DataFrame successfully saved to {destination_path}')
 
-    # Check if the destination file already exists and delete if necessary
-    if fs.exists(destination_file_path):
-        if not fs.delete(destination_file_path, False):
-            logger.error(
-                f'Failed to delete existing file at {destination_path}',
-            )
-            msg = f'Could not delete existing file at {destination_path}'
-            raise IOError(
-                msg,
-            )
-
-    # Rename merged file to final destination
-    if not fs.rename(merged_file_path, destination_file_path):
-        logger.error(f'Failed to rename file to {destination_path}')
-        msg = f'Could not rename file to {destination_path}'
-        raise IOError(msg)
-    else:
-        logger.info(f'Renamed the file to {file_name}')
-
-    # Clean up temporary directory
-    fs.delete(spark._jvm.Path(temp_path), True)
+    # Clean up the temporary directory
+    delete_path(temp_path)
     logger.info(f'Temporary directory {temp_path} deleted')
