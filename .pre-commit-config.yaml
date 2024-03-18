@@ -19,7 +19,18 @@ repos:
       - id: check-toml
       - id: debug-statements
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.7
+    rev: v0.3.2
     hooks:
       - id: ruff
         args: ["--config", ".ruff.toml"]
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+  - repo: local
+    hooks:
+      - id: restricted-filenames
+        name: Check commits for restricted file extensions
+        entry: These file extensions are restricted. Data should be removed from the commit
+        language: fail
+        files: .*\.(csv|feather|xlsx|zip|hdf5|h5|txt|json|xml|hd|parquet)
