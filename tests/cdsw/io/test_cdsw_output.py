@@ -307,10 +307,10 @@ class TestSaveCSVToHDFS:
             ('/user/hdfs/test/path', '/user/hdfs/test/path/should_write.csv'),
         ],
     )
-    @patch('rdsa_utils.cdsw.io.output.file_exists', return_value=False, create=True)
-    @patch('rdsa_utils.cdsw.io.output.rename', create=True)
-    @patch('rdsa_utils.cdsw.io.output.delete_path', create=True)
-    @patch('rdsa_utils.cdsw.io.output.logger', create=True)
+    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    @patch('rdsa_utils.cdsw.io.output.rename')
+    @patch('rdsa_utils.cdsw.io.output.delete_path')
+    @patch('rdsa_utils.cdsw.io.output.logger')
     def test_file_path_schemes(
         self,
         mock_logger,
