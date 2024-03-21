@@ -212,11 +212,11 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 - rdsa-utils v0.1.8: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.1.8/)
-- rdsa-utils v0.1.7 - Not available on GitHub Releases
-- rdsa-utils v0.1.6 - Not available on GitHub Releases
-- rdsa-utils v0.1.5 - Not available on GitHub Releases
-- rdsa-utils v0.1.4 - Not available on GitHub Releases
-- rdsa-utils v0.1.3 - Not available on GitHub Releases
-- rdsa-utils v0.1.2 - Not available on GitHub Releases
-- rdsa-utils v0.1.1 - Not available on GitHub Releases
-- rdsa-utils v0.1.0 - Not available on GitHub Releases
+- rdsa-utils v0.1.7 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.6 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.5 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.4 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.3 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.2 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.1 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.0 - Not available on GitHub Releases or PyPI
