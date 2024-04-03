@@ -187,7 +187,10 @@ def create_txt_from_string(
 
 
 def delete_dir(path: str) -> bool:
-    """Delete a directory from HDFS.
+    """Delete an empty directory from HDFS.
+
+    This function attempts to delete an empty directory in HDFS.
+    If the directory is not empty, the deletion will fail.
 
     Parameters
     ----------
@@ -199,13 +202,23 @@ def delete_dir(path: str) -> bool:
     bool
         True if the operation is successful (directory deleted),
         otherwise False.
+
+    Note
+    ----
+    This function will only succeed if the directory is empty.
+    To delete directories containing files or other directories,
+    consider using `delete_path` instead.
     """
     command = ['hadoop', 'fs', '-rmdir', path]
     return _perform(command)
 
 
 def delete_file(path: str) -> bool:
-    """Delete a file in HDFS.
+    """Delete a specific file in HDFS.
+
+    This function is used to delete a single file located
+    at the specified HDFS path. If the path points to a
+    directory, the command will fail.
 
     Parameters
     ----------
@@ -222,8 +235,46 @@ def delete_file(path: str) -> bool:
     ------
     subprocess.TimeoutExpired
         If the process does not complete within the default timeout.
+
+    Note
+    ----
+    This function is intended for files only. For directory deletions,
+    use `delete_dir` or `delete_path`.
     """
     command = ['hadoop', 'fs', '-rm', path]
+    return _perform(command)
+
+
+def delete_path(path: str) -> bool:
+    """Delete a file or directory in HDFS, including non-empty directories.
+
+    This function is capable of deleting both files and directories.
+    When applied to directories, it will recursively delete all contents
+    within the directory, making it suitable for removing directories regardless
+    of whether they are empty or contain files or other directories.
+
+    Parameters
+    ----------
+    path
+        The path to the file or directory in HDFS to be deleted.
+
+    Returns
+    -------
+    bool
+        True if the file was successfully deleted (command return code 0),
+        otherwise False.
+
+    Raises
+    ------
+    subprocess.TimeoutExpired
+        If the process does not complete within the default timeout.
+
+    Warning
+    -------
+    Use with caution: applying this function to a directory will
+    remove all contained files and subdirectories without confirmation.
+    """
+    command = ['hadoop', 'fs', '-rm', '-r', path]
     return _perform(command)
 
 
@@ -270,7 +321,7 @@ def get_date_modified(filepath: str) -> str:
     return command.stdout.read().decode('utf-8')[0:10]
 
 
-def isdir(path: str) -> bool:
+def is_dir(path: str) -> bool:
     """Test if a directory exists in HDFS.
 
     Parameters

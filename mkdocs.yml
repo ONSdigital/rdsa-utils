@@ -34,6 +34,7 @@ plugins:
           - hide_code
         remove_all_outputs_tags:
           - hide_out
+  - mermaid2
 
 nav:
   - rdsa-utils: index.md
