@@ -217,10 +217,119 @@ class TestWriteAndReadHiveTable:
             )
 
 
-@pytest.mark.skip(reason='requires HDFS')
 class TestSaveCSVToHDFS:
-    """Test for save_csv_to_hdfs function."""
+    """Tests for save_csv_to_hdfs function."""
 
-    def test_expected(self):
-        """Test expected functionality."""
-        pass
+    @pytest.fixture()
+    def mock_df(self) -> Mock:
+        """Fixture for mocked Spark DataFrame."""
+        return Mock(spec=SparkDF)
+
+    @patch('rdsa_utils.cdsw.io.output.logger')
+    @patch('rdsa_utils.cdsw.io.output.delete_path')
+    @patch('rdsa_utils.cdsw.io.output.rename')
+    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    def test_save_csv_to_hdfs_success(
+        self,
+        mock_file_exists,
+        mock_rename,
+        mock_delete_path,
+        mock_logger,
+        mock_df,
+    ):
+        """Test successful saving of DataFrame to HDFS as a single CSV file."""
+        mock_file_exists.return_value = False
+        mock_rename.return_value = True
+
+        file_name = 'test_output.csv'
+        file_path = '/test/hdfs/path'
+
+        save_csv_to_hdfs(mock_df, file_name, file_path)
+
+        mock_df.coalesce.assert_called_once_with(1)
+        mock_rename.assert_called_once()
+        mock_delete_path.assert_called_once()
+        assert mock_logger.info.call_count > 0
+
+    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    @patch('rdsa_utils.cdsw.io.output.rename')
+    @patch('rdsa_utils.cdsw.io.output.delete_path')
+    @patch('rdsa_utils.cdsw.io.output.logger')
+    def test_overwriting_existing_file(
+        self,
+        mock_logger,
+        mock_delete_path,
+        mock_rename,
+        mock_file_exists,
+        mock_df,
+    ):
+        """Ensure the function correctly overwrites an existing file when overwrite=True."""
+        file_name = 'should_overwrite.csv'
+        file_path = '/test/overwrite/path'
+
+        # Attempt to save, expecting no errors
+        try:
+            save_csv_to_hdfs(mock_df, file_name, file_path, overwrite=True)
+        except Exception as e:
+            pytest.fail(f'Function raised an unexpected exception: {e}')
+
+        mock_rename.assert_called_once()
+
+    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    def test_save_csv_to_hdfs_file_exists_error(
+        self,
+        mock_file_exists,
+        mock_df,
+    ):
+        """Test error raised when the target file exists and overwrite is False."""
+        mock_file_exists.return_value = True
+
+        file_name = 'test_output.csv'
+        file_path = '/test/hdfs/path'
+
+        with pytest.raises(IOError):
+            save_csv_to_hdfs(mock_df, file_name, file_path, overwrite=False)
+
+        mock_file_exists.assert_called_once_with(f"{file_path.rstrip('/')}/{file_name}")
+
+    def test_save_csv_to_hdfs_invalid_file_name(self, mock_df):
+        """Test error raised when file name does not end with '.csv'."""
+        file_name = 'invalid_file_name'
+        file_path = '/test/hdfs/path'
+
+        with pytest.raises(ValueError):
+            save_csv_to_hdfs(mock_df, file_name, file_path)
+
+    @pytest.mark.parametrize(
+        ('file_path', 'expected_call'),
+        [
+            ('s3a://bucket/path/', 's3a://bucket/path/should_write.csv'),
+            ('/user/hdfs/test/path', '/user/hdfs/test/path/should_write.csv'),
+        ],
+    )
+    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    @patch('rdsa_utils.cdsw.io.output.rename')
+    @patch('rdsa_utils.cdsw.io.output.delete_path')
+    @patch('rdsa_utils.cdsw.io.output.logger')
+    def test_file_path_schemes(
+        self,
+        mock_logger,
+        mock_delete_path,
+        mock_rename,
+        mock_file_exists,
+        mock_df,
+        file_path,
+        expected_call,
+    ):
+        """Test the function with different file path schemes, including S3 and HDFS."""
+        file_name = 'should_write.csv'
+
+        try:
+            save_csv_to_hdfs(mock_df, file_name, file_path)
+        except Exception as e:
+            pytest.fail(
+                f"Function raised an unexpected exception with file path '{file_path}': {e}",
+            )
+
+        # We're focusing on path handling, so just ensure it gets to the rename call
+        mock_rename.assert_called_once()
