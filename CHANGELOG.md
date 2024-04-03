@@ -10,6 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, 
   enhancing documentation with MermaidJS diagram support.
+- Added `gitleaks` and local `restrict-filenames` hooks to `.pre-commit-config.yaml`.
 - Enhanced `README.md` headers with relevant emojis for improved readability and engagement.
 
 ### Changed
