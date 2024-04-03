@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/ons_favicon.svg">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
     
     
       
@@ -25,7 +25,7 @@
     
     
   
-      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
       
       
 
@@ -761,6 +761,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.delete_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete_path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.file_exists" class="md-nav__link">
     <span class="md-ellipsis">
       file_exists
@@ -779,9 +788,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.isdir" class="md-nav__link">
+  <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.is_dir" class="md-nav__link">
     <span class="md-ellipsis">
-      isdir
+      is_dir
     </span>
   </a>
   
@@ -2039,6 +2048,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.delete_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      delete_path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.file_exists" class="md-nav__link">
     <span class="md-ellipsis">
       file_exists
@@ -2057,9 +2075,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.isdir" class="md-nav__link">
+  <a href="#rdsa_utils.cdsw.helpers.hdfs_utils.is_dir" class="md-nav__link">
     <span class="md-ellipsis">
-      isdir
+      is_dir
     </span>
   </a>
   
@@ -4964,7 +4982,9 @@ of creating a text file.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Delete a directory from HDFS.</p>
+      <p>Delete an empty directory from HDFS.</p>
+<p>This function attempts to delete an empty directory in HDFS.
+If the directory is not empty, the deletion will fail.</p>
 
 
 
@@ -5021,6 +5041,12 @@ otherwise False.</p>
     </tbody>
   </table>
 
+<details class="note" open>
+  <summary>Note</summary>
+  <p>This function will only succeed if the directory is empty.
+To delete directories containing files or other directories,
+consider using <code>delete_path</code> instead.</p>
+</details>
   </div>
 
 </div>
@@ -5038,7 +5064,10 @@ otherwise False.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Delete a file in HDFS.</p>
+      <p>Delete a specific file in HDFS.</p>
+<p>This function is used to delete a single file located
+at the specified HDFS path. If the path points to a
+directory, the command will fail.</p>
 
 
 
@@ -5119,6 +5148,118 @@ otherwise False.</p>
     </tbody>
   </table>
 
+<details class="note" open>
+  <summary>Note</summary>
+  <p>This function is intended for files only. For directory deletions,
+use <code>delete_dir</code> or <code>delete_path</code>.</p>
+</details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="rdsa_utils.cdsw.helpers.hdfs_utils.delete_path" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">delete_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Delete a file or directory in HDFS, including non-empty directories.</p>
+<p>This function is capable of deleting both files and directories.
+When applied to directories, it will recursively delete all contents
+within the directory, making it suitable for removing directories regardless
+of whether they are empty or contain files or other directories.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>path</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The path to the file or directory in HDFS to be deleted.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>True if the file was successfully deleted (command return code 0),
+otherwise False.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If the process does not complete within the default timeout.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="warning" open>
+  <summary>Warning</summary>
+  <p>Use with caution: applying this function to a directory will
+remove all contained files and subdirectories without confirmation.</p>
+</details>
   </div>
 
 </div>
@@ -5298,8 +5439,8 @@ otherwise False.</p>
 
 
 
-<h3 id="rdsa_utils.cdsw.helpers.hdfs_utils.isdir" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
+<h3 id="rdsa_utils.cdsw.helpers.hdfs_utils.is_dir" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">is_dir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
 
 </h3>
 
@@ -7397,19 +7538,33 @@ doesn't exist or if there's no access to it.</p>
 
 
 <h3 id="rdsa_utils.cdsw.io.output.save_csv_to_hdfs" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">save_csv_to_hdfs</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">coalesce_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+          <code class="highlight language-python"><span class="n">save_csv_to_hdfs</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Save DataFrame as CSV on HDFS, with optional coalescing.</p>
-<p>This function saves a PySpark DataFrame to HDFS in CSV format.
-Coalescing the DataFrame into a single partition is optional.</p>
-<p>Without coalescing, the DataFrame is saved in multiple parts, and
-these parts are merged into a single file. However, this does not
-guarantee the order of rows as in the original DataFrame.</p>
+      <p>Save DataFrame as CSV on HDFS, coalescing to a single partition.</p>
+<p>This function saves a PySpark DataFrame to HDFS in CSV format. By
+coalescing the DataFrame into a single partition before saving, it
+accomplishes two main objectives:</p>
+<ol>
+<li>
+<p>Single Part File: The output is a single CSV file rather than
+   multiple part files. This method reduces complexity and
+   cuts through the clutter of multi-part files, offering users
+   and systems a more cohesive and hassle-free experience.</p>
+</li>
+<li>
+<p>Preserving Row Order: Coalescing into a single partition maintains
+   the order of rows as they appear in the DataFrame. This is essential
+   when the row order matters for subsequent processing or analysis.
+   It's important to note, however, that coalescing can have performance
+   implications for very large DataFrames by concentrating
+   all data processing on a single node.</p>
+</li>
+</ol>
 
 
 
@@ -7425,27 +7580,13 @@ guarantee the order of rows as in the original DataFrame.</p>
     </thead>
     <tbody>
         <tr>
-          <td><code>spark</code></td>
-          <td>
-                <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Active SparkSession instance.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
           <td><code>df</code></td>
           <td>
                 <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>PySpark DataFrame to save.</p>
+              <p>PySpark DataFrame to be saved.</p>
             </div>
           </td>
           <td>
@@ -7459,8 +7600,7 @@ guarantee the order of rows as in the original DataFrame.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The name of the CSV file. The file name must include
-the ".csv" extension.</p>
+              <p>Name of the CSV file. Must include the ".csv" extension.</p>
             </div>
           </td>
           <td>
@@ -7474,7 +7614,7 @@ the ".csv" extension.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The path in HDFS where the CSV file should be saved.</p>
+              <p>HDFS path where the CSV file should be saved.</p>
             </div>
           </td>
           <td>
@@ -7488,26 +7628,8 @@ the ".csv" extension.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>If True, any existing file with the same name in the
-given path will be overwritten.
-If False, an exception will be raised if a file with
-the same name already exists.</p>
-            </div>
-          </td>
-          <td>
-                <code>True</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>coalesce_data</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>If True, coalesces the DataFrame into a single partition
-before saving. This preserves the order of rows but may
-impact performance for large DataFrames.</p>
+              <p>If True, overwrite any existing file with the same name. If False
+and the file exists, the function will raise an error.</p>
             </div>
           </td>
           <td>
@@ -7534,7 +7656,7 @@ impact performance for large DataFrames.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>If the provided file_name doesn't end with ".csv".</p>
+              <p>If the file_name does not end with ".csv".</p>
             </div>
           </td>
         </tr>
@@ -7544,7 +7666,7 @@ impact performance for large DataFrames.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>If <code>overwrite</code> is False and the file already exists.</p>
+              <p>If overwrite is False and the target file already exists.</p>
             </div>
           </td>
         </tr>
@@ -7554,8 +7676,18 @@ impact performance for large DataFrames.</p>
 
 
 <p><strong>Examples:</strong></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">save_to_hdfs_csv</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;example.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;/user/hadoop/data/&quot;</span><span class="p">)</span>
-</code></pre></div>
+    <p>Saving to an S3 bucket using the <code>s3a://</code> scheme:</p>
+<pre><code class="language-python"># Assume `df` is a pre-defined PySpark DataFrame
+file_name = &quot;data_output.csv&quot;
+file_path = &quot;s3a://my-bucket/data_folder/&quot;
+save_csv_to_hdfs(df, file_name, file_path, overwrite=True)
+</code></pre>
+<p>Saving to a normal HDFS path:</p>
+<pre><code class="language-python"># Assume `df` is a pre-defined PySpark DataFrame
+file_name = &quot;data_output.csv&quot;
+file_path = &quot;/user/hdfs/data_folder/&quot;
+save_csv_to_hdfs(df, file_name, file_path, overwrite=True)
+</code></pre>
 
   </div>
 
@@ -11672,7 +11804,7 @@ json.loads (i.e. converted to a dictionary).</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 28, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 3, 2024</span>
   </span>
 
     
@@ -11739,7 +11871,7 @@ json.loads (i.e. converted to a dictionary).</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
       
     
   </body>
