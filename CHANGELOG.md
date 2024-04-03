@@ -11,6 +11,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, 
   enhancing documentation with MermaidJS diagram support.
 - Added `gitleaks` and local `restrict-filenames` hooks to `.pre-commit-config.yaml`.
+- Enhanced `README.md` headers with relevant emojis for improved readability and engagement.
 
 ### Changed
 - Modified `README.md`: Added Installation section and Git Workflow Diagram section 
@@ -25,6 +26,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   improved compliance with PEP 8 naming conventions.
 - Removed line stopping existing SparkSession in `create_spark_session`
   to prevent Py4JError and enable seamless SparkContext management on GCP.
+- Refactor `save_csv_to_hdfs` to use functions in `/cdsw/helpers/hdfs_utils.py`
+- Add function `delete_path` in `/cdsw/helpers/hdfs_utils.py`, and refactor docstring for `delete_file` and `delete_dir`. 
   
 ### Deprecated
 
@@ -207,20 +210,17 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Release Links
 
-RDSA-utils [v0.1.8](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8)
+> Note: Releases prior to v0.1.8 are not available on GitHub Releases and PyPI 
+> due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
+> and GitHub Releases.
 
-RDSA-utils [v0.1.7](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.7)
-
-RDSA-utils [v0.1.6](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.6)
-
-RDSA-utils [v0.1.5](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.5)
-
-RDSA-utils [v0.1.4](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.4)
-
-RDSA-utils [v0.1.3](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.3)
-
-RDSA-utils [v0.1.2](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.2)
-
-RDSA-utils [v0.1.1](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.1)
-
-RDSA-utils [v0.1.0](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.0)
+- rdsa-utils v0.1.8: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.1.8/)
+- rdsa-utils v0.1.7 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.6 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.5 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.4 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.3 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.2 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.1 - Not available on GitHub Releases or PyPI
+- rdsa-utils v0.1.0 - Not available on GitHub Releases or PyPI
