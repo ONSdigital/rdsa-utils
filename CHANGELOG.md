@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+
+### Changed
+  
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.1.9] - 2024-04-03
+
+### Added
 - Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, 
   enhancing documentation with MermaidJS diagram support.
 - Added `gitleaks` and local `restrict-filenames` hooks to `.pre-commit-config.yaml`.
@@ -16,6 +28,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Modified `README.md`: Added Installation section and Git Workflow Diagram section 
   with a MermaidJS diagram.
+- Improved the `branch_and_deploy_guide.md` and `contribution_guide.md`
+  documentation on branching strategy.
 - Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`, 
   including all `3.11.x` versions.
 - Modified `pull_request_workflow.yaml` to add Python `3.11` to the testing matrix.
@@ -27,14 +41,14 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Removed line stopping existing SparkSession in `create_spark_session`
   to prevent Py4JError and enable seamless SparkContext management on GCP.
 - Refactor `save_csv_to_hdfs` to use functions in `/cdsw/helpers/hdfs_utils.py`
-- Add function `delete_path` in `/cdsw/helpers/hdfs_utils.py`, and refactor docstring for `delete_file` and `delete_dir`. 
+- Add function `delete_path` in `/cdsw/helpers/hdfs_utils.py`, and refactor docstring for `delete_file` and `delete_dir`.
+- Modified `CHANGELOG.md` added note on missing `pre-v0.1.8` releases due to `deploy_pypi.yaml` issues
   
 ### Deprecated
 
 ### Fixed
 
 ### Removed
-
 
 ## [v0.1.8] - 2024-02-28
 
@@ -214,6 +228,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.1.9: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.9) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.1.9/)
 - rdsa-utils v0.1.8: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.1.8/)
 - rdsa-utils v0.1.7 - Not available on GitHub Releases or PyPI
