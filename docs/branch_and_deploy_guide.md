@@ -146,12 +146,27 @@ and reliability. Below is a straightforward guide on the procedure:
 5. **Update CHANGELOG.md**:
     - In the `CHANGELOG.md` file, create a new header/section for the newly bumped version.
     - Move all entries from the **"Unreleased"** section to the **new version section**. 
-      This action effectively transfers the documentation of changes from being pending 
-      release to being part of the new version's official changelog.
+    This action effectively transfers the documentation of changes from being pending 
+    release to being part of the new version's official changelog.
     - Ensure the **"Unreleased"** section is left empty after this process, 
-      ready for documenting future changes.
+    ready for documenting future changes.
 
-6. **Final Review and Push**:
+6. **Update `CHANGELOG.md` Release Links**:
+    - After bumping the version and updating the `CHANGELOG.md` with the new version 
+    header and changes, proceed to update the **"Release Links"** section at the bottom 
+    of the document. Add links to the new version's GitHub Release page and its PyPI listing, 
+    following the existing format. For example:
+        
+        ```
+        - rdsa-utils v0.1.9: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.9) | 
+        [PyPI](https://pypi.org/project/rdsa-utils/0.1.9/)
+        ```
+
+    This step ensures users and developers can easily find and access the specific 
+    versions of `rdsa-utils` through their respective release pages and download links, 
+    maintaining a comprehensive and navigable documentation.
+
+7. **Final Review and Push**:
     - Review the changes one more time, ensuring that the version bump and `CHANGELOG.md` 
       updates are correctly applied.
     - Push the commit(s) to the `development` branch. This action updates the 
@@ -159,7 +174,7 @@ and reliability. Below is a straightforward guide on the procedure:
 
 ### Merging and Deployment
 
-7. **Merge to Main**:
+8. **Merge to Main**:
     - With all preparations complete and changes reviewed, proceed to merge 
       the `development` branch into the `main` branch.
     - This action can be done through the GitHub UI by completing the pull request 
