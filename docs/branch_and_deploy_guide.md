@@ -178,7 +178,7 @@ and reliability. Below is a straightforward guide on the procedure:
     - With all preparations complete and changes reviewed, proceed to merge 
       the `development` branch into the `main` branch.
     - This action can be done through the GitHub UI by completing the pull request 
-      initiated in **Preparation** section of the guide.
+      initiated in the **Preparation** section of the guide.
     - Merging to `main` automatically triggers the GitHub Actions workflow for deployment, 
       which includes building the package, publishing to PyPI, and creating a 
       GitHub Release with the new version tag.
