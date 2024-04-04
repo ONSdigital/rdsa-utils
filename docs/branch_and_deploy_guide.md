@@ -111,7 +111,7 @@ and reliability. Below is a straightforward guide on the procedure:
 
 ### Preparation
 
-1. **Initiate Merge Request**:
+- **Initiate Merge Request**:
     - Navigate to the GitHub repository's page and access the **'Pull Requests'** section.
     - Click on **'New Pull Request'** to start the merging process. Select the `development` 
       branch as the source and the `main` branch as the target.
@@ -121,13 +121,13 @@ and reliability. Below is a straightforward guide on the procedure:
 
 ### Review and Approval
 
-2. **Review Changes**:
+- **Review Changes**:
     - Utilise GitHub's User Interface (UI) to review the changes introduced. This is 
       critical for spotting any potential issues before they make it into the `main` branch.
     - Cross-reference the changes against the `CHANGELOG.md` file to ensure all updates, 
       fixes, and new features are properly documented.
 
-3. **Approve Changes**:
+- **Approve Changes**:
     - Once satisfied with the review, click on the **"Review changes"** button in GitHub 
       and select **"Approve"** from the options. This indicates that the changes have been 
       reviewed and are considered ready for merging. If you're reviewing multiple files, 
@@ -137,13 +137,13 @@ and reliability. Below is a straightforward guide on the procedure:
 
 ### Version Management and Documentation
 
-4. **Bump Version**:
+- **Bump Version**:
     - Before merging, it's essential to update the package version. Use the `bump2version`
       command line tool to increment the version according to the nature of the changes 
       (patch, minor, or major). For example, run `bump2version patch` for a patch update 
       in your local development environment.
 
-5. **Update CHANGELOG.md**:
+- **Update CHANGELOG.md**:
     - In the `CHANGELOG.md` file, create a new header/section for the newly bumped version.
     - Move all entries from the **"Unreleased"** section to the **new version section**. 
     This action effectively transfers the documentation of changes from being pending 
@@ -151,7 +151,7 @@ and reliability. Below is a straightforward guide on the procedure:
     - Ensure the **"Unreleased"** section is left empty after this process, 
     ready for documenting future changes.
 
-6. **Update `CHANGELOG.md` Release Links**:
+- **Update `CHANGELOG.md` Release Links**:
     - After bumping the version and updating the `CHANGELOG.md` with the new version 
     header and changes, proceed to update the **"Release Links"** section at the bottom 
     of the document. Add links to the new version's GitHub Release page and its PyPI listing, 
@@ -166,7 +166,7 @@ and reliability. Below is a straightforward guide on the procedure:
     versions of `rdsa-utils` through their respective release pages and download links, 
     maintaining a comprehensive and navigable documentation.
 
-7. **Final Review and Push**:
+- **Final Review and Push**:
     - Review the changes one more time, ensuring that the version bump and `CHANGELOG.md` 
       updates are correctly applied.
     - Push the commit(s) to the `development` branch. This action updates the 
@@ -174,11 +174,11 @@ and reliability. Below is a straightforward guide on the procedure:
 
 ### Merging and Deployment
 
-8. **Merge to Main**:
+- **Merge to Main**:
     - With all preparations complete and changes reviewed, proceed to merge 
       the `development` branch into the `main` branch.
     - This action can be done through the GitHub UI by completing the pull request 
-      initiated in **Step 1**.
+      initiated in **Prepartion** section of the guide.
     - Merging to `main` automatically triggers the GitHub Actions workflow for deployment, 
       which includes building the package, publishing to PyPI, and creating a 
       GitHub Release with the new version tag.
