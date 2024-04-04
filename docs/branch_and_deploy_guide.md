@@ -101,3 +101,74 @@ graph TD
     M --> N[Continue Development or Start New Features]
     N --> A
 ```
+
+## Merging Development to Main: A Guide for Maintainers
+
+As `rdsa-utils` maintainers, ensuring a seamless transition from `development` to the `main`
+branch is essential. This process extends beyond mere code merging; it encompasses careful 
+preparation, version management, and detailed documentation to preserve the codebase's integrity 
+and reliability. Below is a straightforward guide on the procedure:
+
+### Preparation
+
+1. **Initiate Merge Request**:
+    - Navigate to the GitHub repository's page and access the **'Pull Requests'** section.
+    - Click on **'New Pull Request'** to start the merging process. Select the `development` 
+      branch as the source and the `main` branch as the target.
+    - Title the Merge Request with a relevant name that succinctly describes the set of 
+      features, fixes, or improvements being merged. 
+      Example: "Release 1.2.0: Feature Enhancements and Bug Fixes".
+
+### Review and Approval
+
+2. **Review Changes**:
+    - Utilise GitHub's User Interface (UI) to review the changes introduced. This is 
+      critical for spotting any potential issues before they make it into the `main` branch.
+    - Cross-reference the changes against the `CHANGELOG.md` file to ensure all updates, 
+      fixes, and new features are properly documented.
+
+3. **Approve Changes**:
+    - Once satisfied with the review, click on the **"Review changes"** button in GitHub 
+      and select **"Approve"** from the options. This indicates that the changes have been 
+      reviewed and are considered ready for merging. If you're reviewing multiple files, 
+      click on the **"Viewed"** checkbox for each file as you review them. This helps 
+      manage and streamline the review process by marking files that have already been 
+      checked.
+
+### Version Management and Documentation
+
+4. **Bump Version**:
+    - Before merging, it's essential to update the package version. Use the `bump2version`
+      command line tool to increment the version according to the nature of the changes 
+      (patch, minor, or major). For example, run `bump2version patch` for a patch update 
+      in your local development environment.
+
+5. **Update CHANGELOG.md**:
+    - In the `CHANGELOG.md` file, create a new header/section for the newly bumped version.
+    - Move all entries from the **"Unreleased"** section to the **new version section**. 
+      This action effectively transfers the documentation of changes from being pending 
+      release to being part of the new version's official changelog.
+    - Ensure the **"Unreleased"** section is left empty after this process, 
+      ready for documenting future changes.
+
+6. **Final Review and Push**:
+    - Review the changes one more time, ensuring that the version bump and `CHANGELOG.md` 
+      updates are correctly applied.
+    - Push the commit(s) to the `development` branch. This action updates the 
+      branch with the version change and changelog updates.
+
+### Merging and Deployment
+
+7. **Merge to Main**:
+    - With all preparations complete and changes reviewed, proceed to merge 
+      the `development` branch into the `main` branch.
+    - This action can be done through the GitHub UI by completing the pull request 
+      initiated in **Step 1**.
+    - Merging to `main` automatically triggers the GitHub Actions workflow for deployment, 
+      which includes building the package, publishing to PyPI, and creating a 
+      GitHub Release with the new version tag.
+
+By adhering to these steps, you'll make the transition from development to production 
+smooth and efficient, ensuring the codebase remains stable and the release process flows 
+seamlessly. As maintainers, your pivotal role guarantees the `rdsa-utils` package's 
+reliability and efficiency for all users.

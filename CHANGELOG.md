@@ -7,7 +7,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
+### Added"
+- Updated `branch_and_deploy_guide.md`, added section titled: 
+  "Merging Development to Main: A Guide for Maintainers"
 
 ### Changed
   
