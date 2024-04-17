@@ -12,8 +12,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   "Merging Development to Main: A Guide for Maintainers"
 
 ### Changed
-- Updated `README.md` to include new badges for Deployment Status, 
-  Pull Request Workflow, and PyPI version.
+- Updated `README.md` to include new badges for Deployment Status and PyPI version.
   
 ### Deprecated
 
