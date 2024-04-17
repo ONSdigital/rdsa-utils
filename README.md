@@ -1,9 +1,9 @@
 # 🧰 rdsa-utils 
 
-[![Deploy to PyPI](https://github.com/ONSdigital/rdsa-utils/workflows/Deploy%20to%20PyPI/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml)
-[![Deploy MkDocs](https://github.com/ONSdigital/rdsa-utils/workflows/Deploy%20MkDocs/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml)
+[![Deploy to PyPI](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml)
+[![Deploy MkDocs](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml)
 [![PyPI version](https://badge.fury.io/py/rdsa-utils.svg)](https://pypi.org/project/rdsa-utils/)
-[![Pull Request Workflow](https://github.com/ONSdigital/rdsa-utils/workflows/Pull%20Request%20Workflow/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/pull_request_workflow.yaml)
+[![Pull Request Workflow](https://github.com/ONSdigital/rdsa-utils/actions/workflows/pull_request_workflow.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/pull_request_workflow.yaml)
 
 A suite of PySpark, Pandas, and general pipeline utils for **Reproducible Data Science and Analysis (RDSA)** projects.
 
