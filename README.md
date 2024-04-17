@@ -1,5 +1,10 @@
 # 🧰 rdsa-utils 
 
+[![Deploy to PyPI](https://github.com/ONSdigital/rdsa-utils/workflows/Deploy%20to%20PyPI/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml)
+[![Deploy MkDocs](https://github.com/ONSdigital/rdsa-utils/workflows/Deploy%20MkDocs/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml)
+[![PyPI version](https://badge.fury.io/py/rdsa-utils.svg)](https://pypi.org/project/rdsa-utils/)
+[![Pull Request Workflow](https://github.com/ONSdigital/rdsa-utils/workflows/Pull%20Request%20Workflow/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/pull_request_workflow.yaml)
+
 A suite of PySpark, Pandas, and general pipeline utils for **Reproducible Data Science and Analysis (RDSA)** projects.
 
 The RDSA team sits within the Economic Statistics Change Directorate, and uses cutting-edge data science and engineering skills to produce the next generation of economic statistics. Current priorities include overhauling legacy systems and developing new systems for key statistics. More information about work at RDSA can be found here: [Using Data Science for Next-Gen Statistics](https://dataingovernment.blog.gov.uk/2023/02/14/using-data-science-for-next-gen-statistics/).
