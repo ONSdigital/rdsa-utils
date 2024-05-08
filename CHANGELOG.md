@@ -5,11 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 
 ### Changed
+  
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.1.10] - 2024-05-08
+
+### Added
+- Updated `branch_and_deploy_guide.md`, added section titled: 
+  "Merging Development to Main: A Guide for Maintainers"
+
+### Changed
+- Updated `README.md` to include new badges for Deployment Status and PyPI version.
   
 ### Deprecated
 
@@ -228,6 +243,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+
+- rdsa-utils v0.1.10: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.10) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.1.10/)
 - rdsa-utils v0.1.9: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.9) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.1.9/)
 - rdsa-utils v0.1.8: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8) | 
