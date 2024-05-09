@@ -10,7 +10,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-  
+- Added a "Further Reading on Reproducible Analytical Pipelines" section to `README.md`
+  to enhance resources on RAP best practices.
+ 
 ### Deprecated
 
 ### Fixed
