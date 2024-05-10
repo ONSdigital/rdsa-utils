@@ -1,11 +1,11 @@
-"""Tests for the cdp/io/input.py module."""
+"""Tests for the cdsw/io/input.py module."""
 from unittest.mock import MagicMock
 
 import pytest
 from pyspark.sql import DataFrame as SparkDF
 
-from rdsa_utils.cdp.io.input import *
 from rdsa_utils.exceptions import DataframeEmptyError
+from rdsa_utils.cdsw.io.input import *
 
 
 class TestGetCurrentDatabase:
