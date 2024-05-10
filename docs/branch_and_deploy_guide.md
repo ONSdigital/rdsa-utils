@@ -208,7 +208,6 @@ steps to ensure that `development` stays up-to-date:
 These commands ensure that the `development` branch reflects the latest 
 state of `main`, maintaining consistency across your project's branches.
 
-
 By adhering to these steps, you'll make the transition from development to production 
 smooth and efficient, ensuring the codebase remains stable and the release process flows 
 seamlessly. As maintainers, your pivotal role guarantees the `rdsa-utils` package's 
