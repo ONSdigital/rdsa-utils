@@ -16,6 +16,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+- Updated `contribution_guide.md`; fix code block rendering issue in `mkdocs` by 
+  removing extra whitespaces.
 
 ### Removed
 
