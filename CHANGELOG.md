@@ -10,7 +10,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-  
+- Added section on synchronising the `development` branch with `main` to 
+  the `branch_and_deploy_guide.md` file.  
+
 ### Deprecated
 
 ### Fixed
