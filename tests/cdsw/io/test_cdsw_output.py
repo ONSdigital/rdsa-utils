@@ -1,4 +1,4 @@
-"""Tests for the cdsw/io/output.py module."""
+"""Tests for the cdp/io/output.py module."""
 from typing import Callable
 from unittest.mock import Mock, patch
 
@@ -6,7 +6,7 @@ import pytest
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
 
-from rdsa_utils.cdsw.io.output import *
+from rdsa_utils.cdp.io.output import *
 
 
 class TestInsertDataFrameToHiveTable:
@@ -137,8 +137,8 @@ class TestWriteAndReadHiveTable:
         mock_df.columns = ['run_id', 'data']
         return mock_df
 
-    @patch('rdsa_utils.cdsw.io.output.load_and_validate_table')
-    @patch('rdsa_utils.cdsw.io.output.insert_df_to_hive_table')
+    @patch('rdsa_utils.cdp.io.output.load_and_validate_table')
+    @patch('rdsa_utils.cdp.io.output.insert_df_to_hive_table')
     def test_write_and_read_hive_table_success(
         self,
         mock_insert,
@@ -225,10 +225,10 @@ class TestSaveCSVToHDFS:
         """Fixture for mocked Spark DataFrame."""
         return Mock(spec=SparkDF)
 
-    @patch('rdsa_utils.cdsw.io.output.logger')
-    @patch('rdsa_utils.cdsw.io.output.delete_path')
-    @patch('rdsa_utils.cdsw.io.output.rename')
-    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    @patch('rdsa_utils.cdp.io.output.logger')
+    @patch('rdsa_utils.cdp.io.output.delete_path')
+    @patch('rdsa_utils.cdp.io.output.rename')
+    @patch('rdsa_utils.cdp.io.output.file_exists')
     def test_save_csv_to_hdfs_success(
         self,
         mock_file_exists,
@@ -251,10 +251,10 @@ class TestSaveCSVToHDFS:
         mock_delete_path.assert_called_once()
         assert mock_logger.info.call_count > 0
 
-    @patch('rdsa_utils.cdsw.io.output.file_exists')
-    @patch('rdsa_utils.cdsw.io.output.rename')
-    @patch('rdsa_utils.cdsw.io.output.delete_path')
-    @patch('rdsa_utils.cdsw.io.output.logger')
+    @patch('rdsa_utils.cdp.io.output.file_exists')
+    @patch('rdsa_utils.cdp.io.output.rename')
+    @patch('rdsa_utils.cdp.io.output.delete_path')
+    @patch('rdsa_utils.cdp.io.output.logger')
     def test_overwriting_existing_file(
         self,
         mock_logger,
@@ -275,7 +275,7 @@ class TestSaveCSVToHDFS:
 
         mock_rename.assert_called_once()
 
-    @patch('rdsa_utils.cdsw.io.output.file_exists')
+    @patch('rdsa_utils.cdp.io.output.file_exists')
     def test_save_csv_to_hdfs_file_exists_error(
         self,
         mock_file_exists,
@@ -307,10 +307,10 @@ class TestSaveCSVToHDFS:
             ('/user/hdfs/test/path', '/user/hdfs/test/path/should_write.csv'),
         ],
     )
-    @patch('rdsa_utils.cdsw.io.output.file_exists')
-    @patch('rdsa_utils.cdsw.io.output.rename')
-    @patch('rdsa_utils.cdsw.io.output.delete_path')
-    @patch('rdsa_utils.cdsw.io.output.logger')
+    @patch('rdsa_utils.cdp.io.output.file_exists')
+    @patch('rdsa_utils.cdp.io.output.rename')
+    @patch('rdsa_utils.cdp.io.output.delete_path')
+    @patch('rdsa_utils.cdp.io.output.logger')
     def test_file_path_schemes(
         self,
         mock_logger,

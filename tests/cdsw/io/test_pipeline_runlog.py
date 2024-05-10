@@ -3,7 +3,7 @@
 import pytest
 from pyspark.sql import DataFrame
 
-from rdsa_utils.cdsw.io.pipeline_runlog import (
+from rdsa_utils.cdp.io.pipeline_runlog import (
     _get_run_ids,
     _write_entry,
     add_runlog_entry,
@@ -134,7 +134,7 @@ class TestReserveId:
 
         # Mock _write_entry function
         mock_write_entry = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._write_entry',
+            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
         )
 
         # Mock pyspark.sql.functions.max
@@ -173,7 +173,7 @@ class TestReserveId:
 
         # Mock _write_entry function
         mock_write_entry = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._write_entry',
+            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
         )
 
         # Mock pyspark.sql.functions.max
@@ -299,7 +299,7 @@ class TestGetLastRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._get_run_ids',
+            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
             return_value=[3, 2, 1],
         )
 
@@ -319,7 +319,7 @@ class TestGetLastRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._get_run_ids',
+            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
             return_value=[],
         )
 
@@ -352,7 +352,7 @@ class TestGetPenultimateRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._get_run_ids',
+            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
             return_value=[3, 2, 1],
         )
 
@@ -387,7 +387,7 @@ class TestGetPenultimateRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._get_run_ids',
+            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
             return_value=[1],
         )
 
@@ -409,7 +409,7 @@ class TestGetPenultimateRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._get_run_ids',
+            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
             return_value=[],
         )
 
@@ -512,16 +512,16 @@ class TestAddRunlogEntry:
 
         # Mock reserve_id, create_runlog_entry, _write_entry
         reserve_id_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog.reserve_id',
+            'rdsa_utils.cdp.io.pipeline_runlog.reserve_id',
             return_value=1,
         )
         entry_mock = mocker.Mock()
         create_runlog_entry_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog.create_runlog_entry',
+            'rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry',
             return_value=entry_mock,
         )
         _write_entry_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._write_entry',
+            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
         )
 
         # Call function
@@ -565,11 +565,11 @@ class TestAddRunlogEntry:
         # Mock create_runlog_entry, _write_entry
         entry_mock = mocker.Mock()
         create_runlog_entry_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog.create_runlog_entry',
+            'rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry',
             return_value=entry_mock,
         )
         _write_entry_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._write_entry',
+            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
         )
 
         # Call function
@@ -613,11 +613,11 @@ class TestWriteRunlogFile:
 
         # Mock _parse_runlog_as_string and create_txt_from_string
         parse_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._parse_runlog_as_string',
+            'rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string',
         )
         parse_mock.return_value = 'test metadata'
         create_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog.create_txt_from_string',
+            'rdsa_utils.cdp.io.pipeline_runlog.create_txt_from_string',
         )
 
         # Call function
@@ -639,7 +639,7 @@ class TestWriteRunlogFile:
 
         # Mock _parse_runlog_as_string
         parse_mock = mocker.patch(
-            'rdsa_utils.cdsw.io.pipeline_runlog._parse_runlog_as_string',
+            'rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string',
         )
         parse_mock.return_value = 'test metadata'
 
