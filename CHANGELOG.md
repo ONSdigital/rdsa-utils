@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.2.1] - 2024-05-10
+
+### Added
+
+### Changed
+- Revised the "Further Reading on Reproducible Analytical Pipelines" section 
+  in the `README.md` for clarity.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [v0.2.0] - 2024-05-10
 
 ### Added
@@ -263,6 +277,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.2.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.1) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.2.1/)
 - rdsa-utils v0.2.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.0) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.0/)
 - rdsa-utils v0.1.10: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.10) | 
