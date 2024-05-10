@@ -9,7 +9,7 @@ reference for the technical implementation of the`rdsa-utils` codebase.
 ::: rdsa_utils.typing
 ::: rdsa_utils.validation
 
-## cdp
+## CDP
 
 ::: rdsa_utils.cdp.helpers.hdfs_utils
 ::: rdsa_utils.cdp.helpers.impala
