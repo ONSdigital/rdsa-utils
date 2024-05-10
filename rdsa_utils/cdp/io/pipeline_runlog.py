@@ -11,7 +11,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.utils import AnalysisException
 
-from rdsa_utils.cdsw.helpers.hdfs_utils import create_txt_from_string
+from rdsa_utils.cdp.helpers.hdfs_utils import create_txt_from_string
 
 logger = logging.getLogger(__name__)
 

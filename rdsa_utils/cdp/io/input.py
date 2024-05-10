@@ -1,4 +1,4 @@
-"""Read inputs on CDSW."""
+"""Read inputs on CDP."""
 import logging
 from typing import Tuple
 
