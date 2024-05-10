@@ -183,6 +183,31 @@ and reliability. Below is a straightforward guide on the procedure:
       which includes building the package, publishing to PyPI, and creating a 
       GitHub Release with the new version tag.
 
+### Synchronizing Development Branch Post-Merge
+
+After the pull request from `development` to `main` has been merged, it is crucial to 
+synchronise the `development` branch with the changes in `main`. Perform the following 
+steps to ensure that `development` stays up-to-date:
+
+- **Pull Changes from Main**:
+    - Execute `git pull origin main` to fetch and merge the latest changes from 
+      the `main` branch into your current branch.
+
+- **Switch to Development Branch**:
+    - Use `git checkout development` to switch from your current branch 
+      to the `development` branch.
+
+- **Merge Main into Development**:
+    - Run `git merge main` while on the `development` branch to merge the 
+      changes from the `main` branch into `development`.
+
+- **Push Updated Development**:
+    - After merging, push the updated `development` branch back to the remote 
+      repository using `git push origin development`.
+
+These commands ensure that the `development` branch reflects the latest 
+state of `main`, maintaining consistency across your project's branches.
+
 By adhering to these steps, you'll make the transition from development to production 
 smooth and efficient, ensuring the codebase remains stable and the release process flows 
 seamlessly. As maintainers, your pivotal role guarantees the `rdsa-utils` package's 

@@ -12,10 +12,14 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added a "Further Reading on Reproducible Analytical Pipelines" section to `README.md`
   to enhance resources on RAP best practices.
- 
+ - Added section on synchronising the `development` branch with `main` to 
+  the `branch_and_deploy_guide.md` file.  
+
 ### Deprecated
 
 ### Fixed
+- Updated `contribution_guide.md`; fix code block rendering issue in `mkdocs` by 
+  removing extra whitespaces.
 
 ### Removed
 
