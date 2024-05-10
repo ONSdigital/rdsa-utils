@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Revised the "Further Reading on Reproducible Analytical Pipelines" section 
+  in the `README.d` for clarity.
 
 ### Deprecated
 

@@ -30,9 +30,9 @@ Our documentation is automatically generated using **GitHub Actions** and **MkDo
 
 ## 📘 Further Reading on Reproducible Analytical Pipelines
 
-While `rdsa-utils` provides essential tools for data processing, it represents just one aspect of the broader development process necessary for building and maintaining robust, high-quality codebases. Adhering to best practices and utilising the right tools are crucial for success.
+While `rdsa-utils` provides essential tools for data processing, it's just one part of the broader development process needed to build and maintain a robust, high-quality codebase. Following best practices and using the right tools are crucial for success.
 
-We highly recommend exploring the following resources to gain deeper insights into the creation of Reproducible Analytical Pipelines (RAP), which delve into key topics such as version control, modular code development, unit testing, and peer review -- all vital for developing these pipelines:
+We highly recommend checking out the following resources to learn more about creating Reproducible Analytical Pipelines (RAP), which focus on important areas such as version control, modular code development, unit testing, and peer review -- all essential for developing these pipelines:
 
 - [Reproducible Analytical Pipelines (RAP) Resource](https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/) - This resource offers an overview of Reproducible Analytical Pipelines, covering benefits, case studies, and guidelines on building a RAP. It discusses minimising manual steps, using open source software like R or Python, enhancing quality assurance through peer review, and ensuring auditability with version control. It also addresses challenges and considerations for implementing RAPs, such as data access restrictions or confidentiality, and underscores the importance of collaborative development.
 
