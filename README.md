@@ -28,6 +28,18 @@ pip install rdsa-utils
 
 Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).
 
+## 📘 Further Reading on Reproducible Analytical Pipelines
+
+While `rdsa-utils` provides essential tools for data processing, it represents just one aspect of the broader development process necessary for building and maintaining robust, high-quality codebases. Adhering to best practices and utilising the right tools are crucial for success.
+
+We highly recommend exploring the following resources to gain deeper insights into the creation of Reproducible Analytical Pipelines (RAP), which delve into key topics such as version control, modular code development, unit testing, and peer review -- all vital for developing these pipelines:
+
+- [Reproducible Analytical Pipelines (RAP) Resource](https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/) - This resource offers an overview of Reproducible Analytical Pipelines, covering benefits, case studies, and guidelines on building a RAP. It discusses minimising manual steps, using open source software like R or Python, enhancing quality assurance through peer review, and ensuring auditability with version control. It also addresses challenges and considerations for implementing RAPs, such as data access restrictions or confidentiality, and underscores the importance of collaborative development.
+
+- [Quality Assurance of Code for Analysis and Research](https://best-practice-and-impact.github.io/qa-of-code-guidance/intro.html) - This book details methods and practices for ensuring high-quality coding in research and analysis, including unit testing and peer reviews.
+
+- [PySpark Introduction and Training Book](https://best-practice-and-impact.github.io/ons-spark/intro.html) - An introduction to using PySpark for large-scale data processing.
+
 ## 🛡️ Licence
 
 Unless stated otherwise, the codebase is released under the [MIT License][mit].

@@ -102,15 +102,15 @@ Pre-commit hooks are used to automate checks and formatting before commits. Foll
 
 1. **Install pre-commit**: If you haven't already, install the pre-commit package:
 
-   ```bash
-   pip install pre-commit
-   ```
+```bash
+pip install pre-commit
+```
 
 2. **Install pre-commit hooks**: Install the hooks defined in `.pre-commit-config.yaml`:
 
-   ```bash
-   pre-commit install
-   ```
+```bash
+pre-commit install
+```
 
    This sets up the hooks to run automatically before each commit.
 
