@@ -1,4 +1,4 @@
-"""Write outputs on CDSW."""
+"""Write outputs on CDP."""
 import logging
 from typing import Union
 
@@ -7,8 +7,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.utils import AnalysisException
 
-from rdsa_utils.cdsw.helpers.hdfs_utils import delete_path, file_exists, rename
-from rdsa_utils.cdsw.io.input import load_and_validate_table
+from rdsa_utils.cdp.helpers.hdfs_utils import delete_path, file_exists, rename
+from rdsa_utils.cdp.io.input import load_and_validate_table
 from rdsa_utils.exceptions import (
     ColumnNotInDataframeError,
     DataframeEmptyError,

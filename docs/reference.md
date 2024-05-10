@@ -9,13 +9,13 @@ reference for the technical implementation of the`rdsa-utils` codebase.
 ::: rdsa_utils.typing
 ::: rdsa_utils.validation
 
-## CDSW
+## CDP
 
-::: rdsa_utils.cdsw.helpers.hdfs_utils
-::: rdsa_utils.cdsw.helpers.impala
-::: rdsa_utils.cdsw.io.pipeline_runlog
-::: rdsa_utils.cdsw.io.input
-::: rdsa_utils.cdsw.io.output
+::: rdsa_utils.cdp.helpers.hdfs_utils
+::: rdsa_utils.cdp.helpers.impala
+::: rdsa_utils.cdp.io.pipeline_runlog
+::: rdsa_utils.cdp.io.input
+::: rdsa_utils.cdp.io.output
 
 ## GCP
 

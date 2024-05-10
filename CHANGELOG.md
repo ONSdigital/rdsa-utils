@@ -10,9 +10,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- **Breaking Change**: Renamed module `cdsw` to `cdp` (Cloudera Data Platform).
 - Added a "Further Reading on Reproducible Analytical Pipelines" section to `README.md`
   to enhance resources on RAP best practices.
- - Added section on synchronising the `development` branch with `main` to 
+- Added section on synchronising the `development` branch with `main` to 
   the `branch_and_deploy_guide.md` file.  
 
 ### Deprecated
