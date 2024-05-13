@@ -77,12 +77,12 @@ def validate_bucket_name(bucket_name: str) -> str:
     # Bucket name must be between 3 and 63 characters long
     if len(bucket_name) < 3 or len(bucket_name) > 63:
         error_msg = 'Bucket name must be between 3 and 63 characters long.'
-        raise InvalidBucketNameError()
+        raise InvalidBucketNameError(error_msg)
 
     # Bucket name must not contain uppercase letters
     if bucket_name != bucket_name.lower():
         error_msg = 'Bucket name must not contain uppercase letters.'
-        raise InvalidBucketNameError()
+        raise InvalidBucketNameError(error_msg)
 
     # Bucket name must not contain underscores
     if '_' in bucket_name:
@@ -94,7 +94,7 @@ def validate_bucket_name(bucket_name: str) -> str:
         error_msg = (
             'Bucket name must start and end with a lowercase letter or number.'
         )
-        raise InvalidBucketNameError()
+        raise InvalidBucketNameError(error_msg)
 
     # Bucket name must not contain forward slashes
     if '/' in bucket_name:
