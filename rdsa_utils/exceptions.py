@@ -32,3 +32,8 @@ class TableNotFoundError(Exception):
     """Custom exception to raise when a table to be read is not found."""
 
     pass
+
+class InvalidBucketNameError(Exception):
+    """Exception raised for invalid S3 bucket names."""
+
+    pass
