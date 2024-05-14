@@ -11,6 +11,7 @@ reference for the technical implementation of the`rdsa-utils` codebase.
 
 ## CDP
 
+::: rdsa_utils.cdp.helpers.s3_utils
 ::: rdsa_utils.cdp.helpers.hdfs_utils
 ::: rdsa_utils.cdp.helpers.impala
 ::: rdsa_utils.cdp.io.pipeline_runlog
