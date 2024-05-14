@@ -770,11 +770,6 @@ def delete_folder(
     -------
     bool
         True if the folder was deleted successfully, otherwise False.
-
-    Raises
-    ------
-    ClientError
-        If the delete operation fails.
     """
     bucket_name = validate_bucket_name(bucket_name)
     folder_path = remove_leading_slash(folder_path)
