@@ -21,7 +21,6 @@ Note:
 - You can install it using `pip install raz-client` when needed.
 ```
 """
-
 import logging
 from pathlib import Path
 from typing import List, Optional
@@ -770,6 +769,12 @@ def delete_folder(
     -------
     bool
         True if the folder was deleted successfully, otherwise False.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> delete_folder(client, 'mybucket', 'path/to/folder/')
+    True
     """
     bucket_name = validate_bucket_name(bucket_name)
     folder_path = remove_leading_slash(folder_path)
