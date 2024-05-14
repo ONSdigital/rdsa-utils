@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.2.2] - 2024-05-14
+
+### Added
 - Added `s3_utils.py` module located in `cdp/helpers/`.
 
 ### Changed
@@ -280,6 +292,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.2.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.2) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.2.2/)
 - rdsa-utils v0.2.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.1) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.1/)
 - rdsa-utils v0.2.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.0) | 
