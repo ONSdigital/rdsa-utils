@@ -1,4 +1,5 @@
 """Tests for s3_utils.py module."""
+
 import boto3
 import pytest
 from moto import mock_aws
@@ -14,6 +15,9 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     upload_file,
     upload_folder,
     validate_bucket_name,
+    is_s3_directory,
+    move_file,
+    download_folder,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError
 
@@ -525,3 +529,146 @@ class TestCopyFile:
             )
             is True
         )
+
+
+class TestIsS3Directory:
+    """Tests for is_s3_directory function."""
+
+    def test_is_s3_directory_true(self, s3_client):
+        """Test is_s3_directory returns True when the key is a directory."""
+        s3_client.put_object(Bucket='test-bucket', Key='test-folder/')
+        assert is_s3_directory(s3_client, 'test-bucket', 'test-folder/') is True
+
+    def test_is_s3_directory_false(self, s3_client):
+        """Test is_s3_directory returns False when the key is not a directory."""
+        s3_client.put_object(
+            Bucket='test-bucket',
+            Key='test-file.txt',
+            Body=b'content',
+        )
+        assert (
+            is_s3_directory(s3_client, 'test-bucket', 'test-file.txt') is False
+        )
+
+
+class TestDownloadFolder:
+    """Tests for download_folder function."""
+
+    def test_download_folder_success(self, s3_client, tmp_path):
+        """Test download_folder successfully downloads a folder."""
+        s3_client.put_object(
+            Bucket='test-bucket',
+            Key='test-folder/file1.txt',
+            Body=b'content1',
+        )
+        s3_client.put_object(
+            Bucket='test-bucket',
+            Key='test-folder/file2.txt',
+            Body=b'content2',
+        )
+
+        local_path = tmp_path / 'local-folder'
+        success = download_folder(
+            s3_client,
+            'test-bucket',
+            'test-folder/',
+            str(local_path),
+            overwrite=True,
+        )
+
+        assert success is True
+        assert (local_path / 'file1.txt').exists()
+        assert (local_path / 'file2.txt').exists()
+
+    def test_download_folder_no_overwrite(self, s3_client, tmp_path):
+        """Test download_folder does not overwrite existing
+        files if overwrite is False.
+        """
+        s3_client.put_object(
+            Bucket='test-bucket',
+            Key='test-folder/file1.txt',
+            Body=b'content1',
+        )
+
+        local_path = tmp_path / 'local-folder'
+        local_path.mkdir(parents=True, exist_ok=True)
+        (local_path / 'file1.txt').write_text('existing content')
+
+        success = download_folder(
+            s3_client,
+            'test-bucket',
+            'test-folder/',
+            str(local_path),
+            overwrite=False,
+        )
+
+        assert success is True
+        assert (local_path / 'file1.txt').read_text() == 'existing content'
+
+    def test_download_folder_not_directory(self, s3_client, tmp_path):
+        """Test download_folder returns False when
+        the prefix is not a directory.
+        """
+        s3_client.put_object(
+            Bucket='test-bucket',
+            Key='not-a-folder.txt',
+            Body=b'content',
+        )
+
+        local_path = tmp_path / 'local-folder'
+        success = download_folder(
+            s3_client,
+            'test-bucket',
+            'not-a-folder.txt',
+            str(local_path),
+            overwrite=True,
+        )
+
+        assert success is False
+
+
+class TestMoveFile:
+    """Tests for move_file function."""
+
+    def test_move_file_success(self, s3_client):
+        """Test move_file successfully moves a file between buckets."""
+        s3_client.create_bucket(Bucket='dest-bucket')
+        s3_client.put_object(
+            Bucket='test-bucket',
+            Key='test-file.txt',
+            Body=b'content',
+        )
+
+        success = move_file(
+            s3_client,
+            'test-bucket',
+            'test-file.txt',
+            'dest-bucket',
+            'moved-file.txt',
+        )
+
+        assert success is True
+        assert (
+            s3_client.get_object(Bucket='dest-bucket', Key='moved-file.txt')[
+                'Body'
+            ].read()
+            == b'content'
+        )
+        assert 'Contents' not in s3_client.list_objects_v2(
+            Bucket='test-bucket',
+            Prefix='test-file.txt',
+        )
+
+    def test_move_file_source_not_exist(self, s3_client):
+        """Test move_file returns False when the source file does not exist."""
+        s3_client.create_bucket(Bucket='dest-bucket')
+
+        success = move_file(
+            s3_client,
+            'test-bucket',
+            'nonexistent.txt',
+            'dest-bucket',
+            'moved-file.txt',
+        )
+
+        assert success is False
