@@ -10,6 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Updated `README.md`; added Ruff and Python versions badges.
 
 ### Deprecated
 
