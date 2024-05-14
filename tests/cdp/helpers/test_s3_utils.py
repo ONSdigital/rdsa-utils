@@ -18,6 +18,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     is_s3_directory,
     move_file,
     download_folder,
+    delete_folder,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError
 
@@ -672,3 +673,30 @@ class TestMoveFile:
         )
 
         assert success is False
+
+
+class TestDeleteFolder:
+    """Tests for delete_folder function."""
+
+    def test_delete_folder_success(self, s3_client):
+        """Test delete_folder deletes all objects within a folder."""
+        s3_client.put_object(
+            Bucket='test-bucket', Key='folder/test-file1.txt', Body=b'content1',
+        )
+        s3_client.put_object(
+            Bucket='test-bucket', Key='folder/test-file2.txt', Body=b'content2',
+        )
+
+        result = delete_folder(s3_client, 'test-bucket', 'folder/')
+        assert result is True
+
+        # Verify that the folder is empty
+        objects = s3_client.list_objects_v2(
+            Bucket='test-bucket', Prefix='folder/',
+        )
+        assert 'Contents' not in objects
+
+    def test_delete_folder_nonexistent(self, s3_client):
+        """Test delete_folder when the folder does not exist."""
+        result = delete_folder(s3_client, 'test-bucket', 'nonexistent-folder/')
+        assert result is False
