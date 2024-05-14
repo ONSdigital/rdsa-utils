@@ -750,3 +750,50 @@ def move_file(
     else:
         logger.error('Source file does not exist.')
         return False
+
+
+def delete_folder(
+    client: boto3.client, bucket_name: str, folder_path: str,
+) -> bool:
+    """Delete a folder in an AWS S3 bucket.
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket.
+    folder_path : str
+        The path of the folder to delete.
+
+    Returns
+    -------
+    bool
+        True if the folder was deleted successfully, otherwise False.
+
+    Raises
+    ------
+    ClientError
+        If the delete operation fails.
+    """
+    bucket_name = validate_bucket_name(bucket_name)
+    folder_path = remove_leading_slash(folder_path)
+
+    if not is_s3_directory(client, bucket_name, folder_path):
+        logger.error(f'The provided path {folder_path} is not a directory.')
+        return False
+
+    paginator = client.get_paginator('list_objects_v2')
+    try:
+        for page in paginator.paginate(Bucket=bucket_name, Prefix=folder_path):
+            if 'Contents' in page:
+                for obj in page['Contents']:
+                    client.delete_object(Bucket=bucket_name, Key=obj['Key'])
+        logger.info(f'Deleted folder {folder_path} in bucket {bucket_name}')
+        return True
+    except client.exceptions.ClientError as e:
+        logger.error(
+            f'Failed to delete folder {folder_path} '
+            f'in bucket {bucket_name}: {str(e)}',
+        )
+        return False
