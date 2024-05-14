@@ -3,6 +3,9 @@
 [![Deploy to PyPI](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml)
 [![Deploy MkDocs](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml)
 [![PyPI version](https://badge.fury.io/py/rdsa-utils.svg)](https://pypi.org/project/rdsa-utils/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/rdsa-utils.svg)](#)
+[![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 
 A suite of PySpark, Pandas, and general pipeline utils for **Reproducible Data Science and Analysis (RDSA)** projects.
 
