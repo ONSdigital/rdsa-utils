@@ -38,11 +38,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Kerberos libraries
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libkrb5-dev
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

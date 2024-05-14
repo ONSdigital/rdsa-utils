@@ -14,6 +14,11 @@ client = boto3.client("s3")
 
 # Configure the client with RAZ and SSL certificate
 raz_client.configure_ranger_raz(client, ssl_file=ssl_file_path)
+
+Note:
+- The `raz-client` library is required only when running in a 
+  managed Cloudera environment.
+- You can install it using `pip install raz-client` when needed.
 ```
 """
 
