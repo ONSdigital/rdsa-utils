@@ -16,6 +16,7 @@ client = boto3.client("s3")
 raz_client.configure_ranger_raz(client, ssl_file=ssl_file_path)
 ```
 """
+
 import logging
 from pathlib import Path
 from typing import List, Optional
@@ -102,6 +103,41 @@ def validate_bucket_name(bucket_name: str) -> str:
         raise InvalidBucketNameError(error_msg)
 
     return bucket_name
+
+
+def is_s3_directory(client: boto3.client, bucket_name: str, key: str) -> bool:
+    """Check if an AWS S3 key is a directory by listing its contents.
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket.
+    key : str
+        The S3 object key to check.
+
+    Returns
+    -------
+    bool
+        True if the key represents a directory, False otherwise.
+    """
+    if not key.endswith('/'):
+        key += '/'
+    try:
+        response = client.list_objects_v2(
+            Bucket=bucket_name,
+            Prefix=key,
+            Delimiter='/',
+            MaxKeys=1,
+        )
+        if 'Contents' in response or 'CommonPrefixes' in response:
+            return True
+        else:
+            return False
+    except client.exceptions.ClientError as e:
+        logger.error(f'Failed to check if key is a directory: {str(e)}')
+        return False
 
 
 def file_exists(
@@ -577,3 +613,135 @@ def list_files(
     except client.exceptions.ClientError as e:
         logger.error(f'Failed to list files in bucket: {str(e)}')
         return []
+
+
+def download_folder(
+    client: boto3.client,
+    bucket_name: str,
+    s3_prefix: str,
+    local_path: str,
+    overwrite: bool = False,
+) -> bool:
+    """Download a folder from an AWS S3 bucket to a local directory.
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket from which to download the folder.
+    s3_prefix : str
+        The S3 prefix of the folder to download.
+    local_path : str
+        The local directory path where the downloaded folder will be saved.
+    overwrite : bool, optional
+        If True, overwrite existing local files if they exist.
+
+    Returns
+    -------
+    bool
+        True if the folder was downloaded successfully, False otherwise.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> download_folder(
+    ...     client,
+    ...     'mybucket',
+    ...     'folder/subfolder/',
+    ...     '/path/to/local_folder',
+    ...     overwrite=False
+    ... )
+    True
+    """
+    bucket_name = validate_bucket_name(bucket_name)
+    local_path = Path(local_path)
+
+    s3_prefix = remove_leading_slash(s3_prefix)
+    if not is_s3_directory(client, bucket_name, s3_prefix):
+        logger.error(f'The provided S3 prefix {s3_prefix} is not a directory.')
+        return False
+
+    if not local_path.exists():
+        local_path.mkdir(parents=True)
+
+    try:
+        paginator = client.get_paginator('list_objects_v2')
+        for page in paginator.paginate(Bucket=bucket_name, Prefix=s3_prefix):
+            for obj in page.get('Contents', []):
+                if is_s3_directory(client, bucket_name, obj['Key']):
+                    continue
+                target = local_path / Path(obj['Key']).relative_to(s3_prefix)
+                if not overwrite and target.exists():
+                    logger.info(f'Skipping {target} as it already exists.')
+                    continue
+                if not target.parent.exists():
+                    target.parent.mkdir(parents=True)
+                client.download_file(bucket_name, obj['Key'], str(target))
+                logger.info(f'Downloaded {obj["Key"]} to {target}')
+        return True
+    except client.exceptions.ClientError as e:
+        logger.error(f'Failed to download folder: {str(e)}')
+        return False
+
+
+def move_file(
+    client: boto3.client,
+    src_bucket: str,
+    src_key: str,
+    dest_bucket: str,
+    dest_key: str,
+) -> bool:
+    """Move a file within or between AWS S3 buckets.
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    src_bucket : str
+        The name of the source S3 bucket.
+    src_key : str
+        The S3 object key of the source file.
+    dest_bucket : str
+        The name of the destination S3 bucket.
+    dest_key : str
+        The S3 object key of the destination file.
+
+    Returns
+    -------
+    bool
+        True if the file was moved successfully, False otherwise.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> move_file(
+    ...     client,
+    ...     'sourcebucket',
+    ...     'source_folder/file.txt',
+    ...     'destbucket',
+    ...     'dest_folder/file.txt'
+    ... )
+    True
+    """
+    src_bucket = validate_bucket_name(src_bucket)
+    dest_bucket = validate_bucket_name(dest_bucket)
+
+    src_key = remove_leading_slash(src_key)
+    dest_key = remove_leading_slash(dest_key)
+
+    if file_exists(client, src_bucket, src_key):
+        try:
+            copy_source = {'Bucket': src_bucket, 'Key': src_key}
+            client.copy(copy_source, dest_bucket, dest_key)
+            client.delete_object(Bucket=src_bucket, Key=src_key)
+            logger.info(
+                f'Moved {src_bucket}/{src_key} to {dest_bucket}/{dest_key}',
+            )
+            return True
+        except client.exceptions.ClientError as e:
+            logger.error(f'Failed to move file: {str(e)}')
+            return False
+    else:
+        logger.error('Source file does not exist.')
+        return False
