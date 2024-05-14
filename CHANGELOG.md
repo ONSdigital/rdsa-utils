@@ -11,7 +11,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Added `s3_utils.py` module located in `cdp/helpers/`.
 
 ### Changed
-- Updated `reference.md`; included `s3_utils.py`
+- Updated `reference.md`; included `s3_utils.py`.
 
 ### Deprecated
 
