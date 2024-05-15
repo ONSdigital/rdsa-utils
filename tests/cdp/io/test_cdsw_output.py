@@ -1,10 +1,12 @@
 """Tests for the cdp/io/output.py module."""
+
 from typing import Callable
 from unittest.mock import Mock, patch
 
 import pytest
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import types as T
+from moto import mock_aws
 
 from rdsa_utils.cdp.io.output import *
 
@@ -290,7 +292,9 @@ class TestSaveCSVToHDFS:
         with pytest.raises(IOError):
             save_csv_to_hdfs(mock_df, file_name, file_path, overwrite=False)
 
-        mock_file_exists.assert_called_once_with(f"{file_path.rstrip('/')}/{file_name}")
+        mock_file_exists.assert_called_once_with(
+            f"{file_path.rstrip('/')}/{file_name}",
+        )
 
     def test_save_csv_to_hdfs_invalid_file_name(self, mock_df):
         """Test error raised when file name does not end with '.csv'."""
@@ -333,3 +337,212 @@ class TestSaveCSVToHDFS:
 
         # We're focusing on path handling, so just ensure it gets to the rename call
         mock_rename.assert_called_once()
+
+
+class TestSaveCSVToS3:
+    """Tests for save_csv_to_s3 function."""
+
+    @pytest.fixture(scope='class')
+    def _aws_credentials(self):
+        """Mock AWS Credentials for moto."""
+        boto3.setup_default_session(
+            aws_access_key_id='testing',
+            aws_secret_access_key='testing',
+            aws_session_token='testing',
+        )
+
+    @pytest.fixture(scope='class')
+    def s3_client(self, _aws_credentials):
+        """Provide a mocked AWS S3 client for testing
+        using moto with temporary credentials.
+        """
+        with mock_aws():
+            client = boto3.client('s3', region_name='us-east-1')
+            client.create_bucket(Bucket='test-bucket')
+            yield client
+
+    @pytest.fixture(scope='class')
+    def dummy_dataframe(self, spark_session):
+        """Create a dummy PySpark DataFrame for testing."""
+        data = [('John', 1), ('Jane', 2), ('Bob', 3)]
+        columns = ['name', 'id']
+        return spark_session.createDataFrame(data, columns)
+
+    @patch('rdsa_utils.cdp.io.output.SparkDF.write')
+    @patch('rdsa_utils.cdp.io.output.list_files')
+    @patch('rdsa_utils.cdp.io.output.copy_file')
+    @patch('rdsa_utils.cdp.io.output.delete_folder')
+    @patch('rdsa_utils.cdp.io.output.file_exists')
+    @patch('uuid.uuid4')
+    def test_save_csv_to_s3(
+        self,
+        mock_uuid,
+        mock_file_exists,
+        mock_delete_folder,
+        mock_copy_file,
+        mock_list_files,
+        mock_write,
+        dummy_dataframe,
+        s3_client,
+    ):
+        """Test saving a PySpark DataFrame to S3 as a CSV file."""
+        bucket_name = 'test-bucket'
+        file_name = 'data_output.csv'
+        file_path = 'data_folder/'
+
+        # Mock UUID to return a fixed value
+        mock_uuid.return_value.hex = '1234'
+
+        # Mock the relevant methods
+        mock_write.return_value.csv.return_value = None
+        mock_list_files.return_value = [
+            f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv',
+        ]
+        mock_delete_folder.return_value = None
+        mock_file_exists.side_effect = lambda client, bucket, key: (
+            False if key == f"{file_path.rstrip('/')}/{file_name}" else False
+        )
+
+        def copy_file_side_effect(
+            s3_client,
+            src_bucket_name,
+            src_key,
+            dest_bucket_name,
+            dest_key,
+            overwrite,
+        ):
+            # Simulate copying by creating an object in the destination
+            copy_source = {'Bucket': src_bucket_name, 'Key': src_key}
+            s3_client.copy_object(
+                CopySource=copy_source, Bucket=dest_bucket_name, Key=dest_key,
+            )
+            return True
+
+        mock_copy_file.side_effect = copy_file_side_effect
+
+        # Create the temporary file in the bucket to simulate the write operation
+        temp_key = (
+            f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv'
+        )
+        s3_client.put_object(Bucket=bucket_name, Key=temp_key, Body='data')
+
+        # Call the function
+        save_csv_to_s3(
+            df=dummy_dataframe,
+            bucket_name=bucket_name,
+            file_name=file_name,
+            file_path=file_path,
+            s3_client=s3_client,
+            overwrite=True,
+        )
+
+        # Check if the file is saved using boto3
+        destination_path = f"{file_path.rstrip('/')}/{file_name}"
+        response = s3_client.list_objects_v2(
+            Bucket=bucket_name, Prefix=file_path,
+        )
+        keys = [obj['Key'] for obj in response.get('Contents', [])]
+        assert destination_path in keys
+
+    @patch('rdsa_utils.cdp.io.output.SparkDF.write')
+    @patch('rdsa_utils.cdp.io.output.list_files')
+    @patch('rdsa_utils.cdp.io.output.copy_file')
+    @patch('rdsa_utils.cdp.io.output.delete_folder')
+    @patch('rdsa_utils.cdp.io.output.file_exists')
+    @patch('uuid.uuid4')
+    def test_save_csv_to_s3_overwrite_false(
+        self,
+        mock_uuid,
+        mock_file_exists,
+        mock_delete_folder,
+        mock_copy_file,
+        mock_list_files,
+        mock_write,
+        dummy_dataframe,
+        s3_client,
+    ):
+        """Test saving a PySpark DataFrame to S3 with overwrite set to False."""
+        bucket_name = 'test-bucket'
+        file_name = 'data_output.csv'
+        file_path = 'data_folder/'
+
+        # Mock UUID to return a fixed value
+        mock_uuid.return_value.hex = '1234'
+
+        # Mock the relevant methods
+        mock_write.return_value.csv.return_value = None
+        mock_list_files.return_value = [
+            f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv',
+        ]
+        mock_delete_folder.return_value = None
+
+        def copy_file_side_effect(
+            s3_client,
+            src_bucket_name,
+            src_key,
+            dest_bucket_name,
+            dest_key,
+            overwrite,
+        ):
+            # Simulate copying by creating an object in the destination
+            copy_source = {'Bucket': src_bucket_name, 'Key': src_key}
+            s3_client.copy_object(
+                CopySource=copy_source, Bucket=dest_bucket_name, Key=dest_key,
+            )
+            return True
+
+        mock_copy_file.side_effect = copy_file_side_effect
+
+        # Create the temporary file in the bucket to simulate the write operation
+        temp_key = (
+            f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv'
+        )
+        s3_client.put_object(Bucket=bucket_name, Key=temp_key, Body='data')
+
+        # Set up file_exists to return False initially, then True
+        mock_file_exists.side_effect = lambda client, bucket, key: (
+            True if key == f"{file_path.rstrip('/')}/{file_name}" else False
+        )
+
+        # Save the DataFrame once
+        save_csv_to_s3(
+            df=dummy_dataframe,
+            bucket_name=bucket_name,
+            file_name=file_name,
+            file_path=file_path,
+            s3_client=s3_client,
+            overwrite=True,
+        )
+
+        # Try to save the DataFrame again with overwrite set to False,
+        # which should raise IOError
+        with pytest.raises(IOError):
+            save_csv_to_s3(
+                df=dummy_dataframe,
+                bucket_name=bucket_name,
+                file_name=file_name,
+                file_path=file_path,
+                s3_client=s3_client,
+                overwrite=False,
+            )
+
+    @patch('rdsa_utils.cdp.io.output.SparkDF.write')
+    def test_save_csv_to_s3_invalid_extension(
+        self, mock_write, dummy_dataframe, s3_client,
+    ):
+        """Test saving a PySpark DataFrame to S3 with an invalid file extension."""
+        bucket_name = 'test-bucket'
+        file_name = 'data_output.txt'
+        file_path = 'data_folder/'
+
+        mock_write.return_value.csv.return_value = None
+
+        with pytest.raises(ValueError):
+            save_csv_to_s3(
+                df=dummy_dataframe,
+                bucket_name=bucket_name,
+                file_name=file_name,
+                file_path=file_path,
+                s3_client=s3_client,
+                overwrite=True,
+            )
