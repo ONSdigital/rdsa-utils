@@ -10,6 +10,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Modified docstrings in `cdp/io/input.py` & `cdp/io/output.py`; remove 
+  type-hints from docstrings, type-hints already in function signatures.
+
+
 
 ### Deprecated
 

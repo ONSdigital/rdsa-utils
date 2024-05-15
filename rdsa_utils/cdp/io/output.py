@@ -123,7 +123,7 @@ def write_and_read_hive_table(
         The name of the Hive table to write to and read from.
     database
         The Hive database name.
-    filter_id : Union[int, str]
+    filter_id
         The identifier to filter on when reading data back from the Hive table.
     filter_col
         The column name to use for filtering data when reading back from
