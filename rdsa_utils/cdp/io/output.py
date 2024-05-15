@@ -421,7 +421,8 @@ def save_csv_to_s3(
     )
 
     # Identify the part file using the list_files helper function
-    part_files = list_files(s3_client, bucket_name, temp_path)
+    part_file_prefix = f'{temp_path}/part-00000'
+    part_files = list_files(s3_client, bucket_name, part_file_prefix)
     if not part_files:
         error_msg = 'No part files found in the temporary directory.'
         raise IOError(error_msg)
