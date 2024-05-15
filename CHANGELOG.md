@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Modified docstrings in `cdp/helpers/s3_utils.py`; remove type-hints
+  from docstrings, type-hints already already in function signatures.
 
 ### Deprecated
 
