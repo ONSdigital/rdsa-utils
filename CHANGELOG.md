@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.2.3] - 2024-05-20
+
+### Added
 - Added `save_csv_to_s3` function in `cdp/io/output.py`.
 
 ### Changed
@@ -301,6 +313,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.2.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.3) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.2.3/)
 - rdsa-utils v0.2.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.2) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.2/)
 - rdsa-utils v0.2.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.1) | 
