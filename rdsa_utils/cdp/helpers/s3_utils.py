@@ -37,7 +37,7 @@ def remove_leading_slash(text: str) -> str:
 
     Parameters
     ----------
-    text : str
+    text
         The text from which the leading slash will be removed.
 
     Returns
@@ -58,7 +58,7 @@ def validate_bucket_name(bucket_name: str) -> str:
 
     Parameters
     ----------
-    bucket_name : str
+    bucket_name
         The name of the bucket to validate.
 
     Returns
@@ -114,11 +114,11 @@ def is_s3_directory(client: boto3.client, bucket_name: str, key: str) -> bool:
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    key : str
+    key
         The S3 object key to check.
 
     Returns
@@ -153,11 +153,11 @@ def file_exists(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client.
-    bucket_name : str
+    bucket_name
         The name of the bucket.
-    object_name : str
+    object_name
         The S3 object name to check for existence.
 
     Returns
@@ -196,16 +196,16 @@ def upload_file(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the target S3 bucket.
-    local_file_path : str
+    local_file_path
         The file path on the local system to upload.
-    s3_object_name : Optional[str]
+    s3_object_name
         The target S3 object name. If None, uses the base name of
         the local file path.
-    overwrite : bool, optional
+    overwrite
         If True, the existing file on S3 will be overwritten.
 
     Returns
@@ -265,15 +265,15 @@ def download_file(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket from which to download the file.
-    s3_object_name : str
+    s3_object_name
         The S3 object name of the file to download.
-    local_file_path : str
+    local_file_path
         The local file path where the downloaded file will be saved.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite the local file if it exists.
 
     Returns
@@ -332,13 +332,13 @@ def delete_file(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the bucket from which the file will be deleted.
-    object_name : str
+    object_name
         The S3 object name of the file to delete.
-    overwrite : bool, optional
+    overwrite
         If False, the function will not delete the file if it does not exist;
         set to True to ignore non-existence on delete.
 
@@ -381,17 +381,17 @@ def copy_file(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    source_bucket : str
+    source_bucket
         The name of the source bucket.
-    source_key : str
+    source_key
         The S3 object name of the source file.
-    dest_bucket : str
+    dest_bucket
         The name of the destination bucket.
-    dest_key : str
+    dest_key
         The S3 object name of the destination file.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite the destination file if it already exists.
 
     Returns
@@ -448,11 +448,11 @@ def create_folder_on_s3(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the bucket where the folder will be created.
-    folder_name : str
+    folder_name
         The name of the folder to create.
 
     Returns
@@ -503,15 +503,15 @@ def upload_folder(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the bucket to which the folder will be uploaded.
-    local_folder_path : str
+    local_folder_path
         The path to the local folder to upload.
-    s3_prefix : str, optional
+    s3_prefix
         The prefix to prepend to each object name when uploading to S3.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite existing files in the bucket.
 
     Returns
@@ -586,11 +586,11 @@ def list_files(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client.
-    bucket_name : str
+    bucket_name
         The name of the bucket.
-    prefix : str, optional
+    prefix
         The prefix to filter files, by default "".
 
     Returns
@@ -630,15 +630,15 @@ def download_folder(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket from which to download the folder.
-    s3_prefix : str
+    s3_prefix
         The S3 prefix of the folder to download.
-    local_path : str
+    local_path
         The local directory path where the downloaded folder will be saved.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite existing local files if they exist.
 
     Returns
@@ -700,15 +700,15 @@ def move_file(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    src_bucket : str
+    src_bucket
         The name of the source S3 bucket.
-    src_key : str
+    src_key
         The S3 object key of the source file.
-    dest_bucket : str
+    dest_bucket
         The name of the destination S3 bucket.
-    dest_key : str
+    dest_key
         The S3 object key of the destination file.
 
     Returns
@@ -758,11 +758,11 @@ def delete_folder(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    folder_path : str
+    folder_path
         The path of the folder to delete.
 
     Returns
