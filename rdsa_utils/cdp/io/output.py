@@ -1,13 +1,22 @@
 """Write outputs on CDP."""
 import logging
+import uuid
 from typing import Union
 
+import boto3
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.utils import AnalysisException
 
 from rdsa_utils.cdp.helpers.hdfs_utils import delete_path, file_exists, rename
+from rdsa_utils.cdp.helpers.s3_utils import (
+    copy_file,
+    delete_folder,
+    list_files,
+    remove_leading_slash,
+    validate_bucket_name,
+)
 from rdsa_utils.cdp.io.input import load_and_validate_table
 from rdsa_utils.exceptions import (
     ColumnNotInDataframeError,
@@ -308,3 +317,136 @@ def save_csv_to_hdfs(
     # Clean up the temporary directory
     delete_path(temp_path)
     logger.info(f'Temporary directory {temp_path} deleted')
+
+
+def save_csv_to_s3(
+    df: SparkDF,
+    bucket_name: str,
+    file_name: str,
+    file_path: str,
+    s3_client: boto3.client,
+    overwrite: bool = True,
+) -> None:
+    """Save DataFrame as CSV on S3, coalescing to a single partition.
+
+    This function saves a PySpark DataFrame to S3 in CSV format. By
+    coalescing the DataFrame into a single partition before saving, it
+    accomplishes two main objectives:
+
+    1. Single Part File: The output is a single CSV file rather than
+       multiple part files. This method reduces complexity and
+       cuts through the clutter of multi-part files, offering users
+       and systems a more cohesive and hassle-free experience.
+
+    2. Preserving Row Order: Coalescing into a single partition maintains
+       the order of rows as they appear in the DataFrame. This is essential
+       when the row order matters for subsequent processing or analysis.
+       It's important to note, however, that coalescing can have performance
+       implications for very large DataFrames by concentrating
+       all data processing on a single node.
+
+    Parameters
+    ----------
+    df
+        PySpark DataFrame to be saved.
+    bucket_name
+        The name of the S3 bucket where the CSV file should be saved.
+    file_name
+        Name of the CSV file. Must include the ".csv" extension.
+    file_path
+        S3 path where the CSV file should be saved.
+    s3_client
+        The boto3 S3 client instance.
+    overwrite
+        If True, overwrite any existing file with the same name. If False
+        and the file exists, the function will raise an error.
+
+    Raises
+    ------
+    ValueError
+        If the file_name does not end with ".csv".
+    IOError
+        If overwrite is False and the target file already exists.
+
+    Examples
+    --------
+    Saving to an S3 bucket:
+
+    ```python
+    # Assume `df` is a pre-defined PySpark DataFrame
+    file_name = "data_output.csv"
+    file_path = "data_folder/"
+    s3_client = boto3.client('s3')
+    save_csv_to_s3(
+        df,
+        'my-bucket',
+        file_name,
+        file_path,
+        s3_client,
+        overwrite=True
+    )
+    ```
+    """
+    bucket_name = validate_bucket_name(bucket_name)
+    file_path = remove_leading_slash(file_path)
+
+    if not file_name.endswith('.csv'):
+        error_msg = "The file_name must end with '.csv' extension."
+        raise ValueError(error_msg)
+
+    destination_path = f"{file_path.rstrip('/')}/{file_name}"
+
+    if not overwrite and file_exists(s3_client, bucket_name, destination_path):
+        error_msg = (
+            f"File '{destination_path}' already exists "
+            "and overwrite is set to False."
+        )
+        raise IOError(error_msg)
+
+    logger.info(
+        f'Saving DataFrame to {file_name} in S3 at s3://{bucket_name}/{file_path}',
+    )
+
+    # Coalesce the DataFrame to a single partition
+    df = df.coalesce(1)
+
+    # Temporary S3 path for saving the single part file
+    temp_path = f"{file_path.rstrip('/')}/temp_{uuid.uuid4().hex}_{file_name}"
+
+    # Save the DataFrame to S3 in CSV format in a temporary directory
+    df.write.csv(
+        f's3a://{bucket_name}/{temp_path}',
+        header=True,
+        mode='overwrite',
+    )
+
+    # Identify the part file using the list_files helper function
+    part_file_prefix = f'{temp_path}/part-00000'
+    part_files = list_files(s3_client, bucket_name, part_file_prefix)
+    if not part_files:
+        error_msg = 'No part files found in the temporary directory.'
+        raise IOError(error_msg)
+
+    # Get the first part file from the list
+    # Since the DataFrame is coalesced to a single partition, there should
+    # only be one part file
+    part_file_key = part_files[0]
+
+    # Rename the part file to the final file name
+    if not copy_file(
+        s3_client,
+        bucket_name,
+        part_file_key,
+        bucket_name,
+        destination_path,
+        overwrite,
+    ):
+        error_msg = f"Failed to rename the part file to '{destination_path}'"
+        raise IOError(error_msg)
+
+    logger.info(
+        f'DataFrame successfully saved to s3://{bucket_name}/{destination_path}',
+    )
+
+    # Clean up the temporary directory
+    delete_folder(s3_client, bucket_name, temp_path)
