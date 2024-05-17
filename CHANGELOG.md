@@ -12,6 +12,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Modified docstrings in `cdp/helpers/s3_utils.py`; remove type-hints
   from docstrings, type-hints already in function signatures.
+- Add Examples section in `delete_folder` function in `s3_utils.py`.
+- Modified docstrings in `cdp/io/input.py` & `cdp/io/output.py`; remove 
+  type-hints from docstrings, type-hints already in function signatures.
+- Updated `.gitignore` to exclude `metastore_db/` directory.
 
 ### Deprecated
 
