@@ -5,6 +5,7 @@
 [![PyPI version](https://badge.fury.io/py/rdsa-utils.svg)](https://pypi.org/project/rdsa-utils/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/rdsa-utils.svg)](#)
 [![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
 A suite of PySpark, Pandas, and general pipeline utils for **Reproducible Data Science and Analysis (RDSA)** projects.
