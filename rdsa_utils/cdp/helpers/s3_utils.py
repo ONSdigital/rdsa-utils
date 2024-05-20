@@ -21,7 +21,6 @@ Note:
 - You can install it using `pip install raz-client` when needed.
 ```
 """
-
 import logging
 from pathlib import Path
 from typing import List, Optional
@@ -38,7 +37,7 @@ def remove_leading_slash(text: str) -> str:
 
     Parameters
     ----------
-    text : str
+    text
         The text from which the leading slash will be removed.
 
     Returns
@@ -59,7 +58,7 @@ def validate_bucket_name(bucket_name: str) -> str:
 
     Parameters
     ----------
-    bucket_name : str
+    bucket_name
         The name of the bucket to validate.
 
     Returns
@@ -110,29 +109,33 @@ def validate_bucket_name(bucket_name: str) -> str:
     return bucket_name
 
 
-def is_s3_directory(client: boto3.client, bucket_name: str, key: str) -> bool:
+def is_s3_directory(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> bool:
     """Check if an AWS S3 key is a directory by listing its contents.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    key : str
-        The S3 object key to check.
+    object_name
+        The S3 object name to check.
 
     Returns
     -------
     bool
         True if the key represents a directory, False otherwise.
     """
-    if not key.endswith('/'):
-        key += '/'
+    if not object_name.endswith('/'):
+        object_name += '/'
     try:
         response = client.list_objects_v2(
             Bucket=bucket_name,
-            Prefix=key,
+            Prefix=object_name,
             Delimiter='/',
             MaxKeys=1,
         )
@@ -154,11 +157,11 @@ def file_exists(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client.
-    bucket_name : str
+    bucket_name
         The name of the bucket.
-    object_name : str
+    object_name
         The S3 object name to check for existence.
 
     Returns
@@ -189,24 +192,24 @@ def file_exists(
 def upload_file(
     client: boto3.client,
     bucket_name: str,
-    local_file_path: str,
-    s3_object_name: Optional[str] = None,
+    local_path: str,
+    object_name: Optional[str] = None,
     overwrite: bool = False,
 ) -> bool:
     """Upload a file to an Amazon S3 bucket from local directory.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the target S3 bucket.
-    local_file_path : str
+    local_path
         The file path on the local system to upload.
-    s3_object_name : Optional[str]
+    object_name
         The target S3 object name. If None, uses the base name of
         the local file path.
-    overwrite : bool, optional
+    overwrite
         If True, the existing file on S3 will be overwritten.
 
     Returns
@@ -227,24 +230,24 @@ def upload_file(
     """
     bucket_name = validate_bucket_name(bucket_name)
 
-    local_file_path = Path(local_file_path)
-    if not local_file_path.exists():
+    local_path = Path(local_path)
+    if not local_path.exists():
         logger.error('Local file does not exist.')
         return False
 
-    if s3_object_name is None:
-        s3_object_name = local_file_path.name
+    if object_name is None:
+        object_name = local_path.name
 
-    s3_object_name = remove_leading_slash(s3_object_name)
+    object_name = remove_leading_slash(object_name)
 
-    if not overwrite and file_exists(client, bucket_name, s3_object_name):
+    if not overwrite and file_exists(client, bucket_name, object_name):
         logger.error('File already exists in the bucket.')
         return False
 
     try:
-        client.upload_file(str(local_file_path), bucket_name, s3_object_name)
+        client.upload_file(str(local_path), bucket_name, object_name)
         logger.info(
-            f'Uploaded {local_file_path} to {bucket_name}/{s3_object_name}',
+            f'Uploaded {local_path} to {bucket_name}/{object_name}',
         )
         return True
     except FileNotFoundError:
@@ -258,23 +261,23 @@ def upload_file(
 def download_file(
     client: boto3.client,
     bucket_name: str,
-    s3_object_name: str,
-    local_file_path: str,
+    object_name: str,
+    local_path: str,
     overwrite: bool = False,
 ) -> bool:
     """Download a file from an AWS S3 bucket to a local directory.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket from which to download the file.
-    s3_object_name : str
+    object_name
         The S3 object name of the file to download.
-    local_file_path : str
+    local_path
         The local file path where the downloaded file will be saved.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite the local file if it exists.
 
     Returns
@@ -295,24 +298,23 @@ def download_file(
     """
     bucket_name = validate_bucket_name(bucket_name)
 
-    local_file_path = Path(local_file_path)
+    local_path = Path(local_path)
 
-    if not overwrite and local_file_path.exists():
+    if not overwrite and local_path.exists():
         logger.error('Local file already exists.')
         return False
 
-    s3_object_name = remove_leading_slash(s3_object_name)
+    object_name = remove_leading_slash(object_name)
 
-    if file_exists(client, bucket_name, s3_object_name):
+    if file_exists(client, bucket_name, object_name):
         try:
             client.download_file(
                 bucket_name,
-                s3_object_name,
-                str(local_file_path),
+                object_name,
+                str(local_path),
             )
             logger.info(
-                f'Downloaded {bucket_name}/{s3_object_name} '
-                f'to {local_file_path}',
+                f'Downloaded {bucket_name}/{object_name} to {local_path}',
             )
             return True
         except client.exceptions.ClientError as e:
@@ -333,13 +335,13 @@ def delete_file(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the bucket from which the file will be deleted.
-    object_name : str
+    object_name
         The S3 object name of the file to delete.
-    overwrite : bool, optional
+    overwrite
         If False, the function will not delete the file if it does not exist;
         set to True to ignore non-existence on delete.
 
@@ -372,27 +374,27 @@ def delete_file(
 
 def copy_file(
     client: boto3.client,
-    source_bucket: str,
-    source_key: str,
-    dest_bucket: str,
-    dest_key: str,
+    source_bucket_name: str,
+    source_object_name: str,
+    destination_bucket_name: str,
+    destination_object_name: str,
     overwrite: bool = False,
 ) -> bool:
     """Copy a file from one aWS S3 bucket to another.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    source_bucket : str
+    source_bucket_name
         The name of the source bucket.
-    source_key : str
+    source_object_name
         The S3 object name of the source file.
-    dest_bucket : str
+    destination_bucket_name
         The name of the destination bucket.
-    dest_key : str
+    destination_object_name
         The S3 object name of the destination file.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite the destination file if it already exists.
 
     Returns
@@ -408,31 +410,36 @@ def copy_file(
     ...     'source-bucket',
     ...     'source_file.txt',
     ...     'destination-bucket',
-    ...     'dest_file.txt'
+    ...     'destination_file.txt'
     ... )
     True
     """
-    source_bucket = validate_bucket_name(source_bucket)
-    dest_bucket = validate_bucket_name(dest_bucket)
+    source_bucket_name = validate_bucket_name(source_bucket_name)
+    destination_bucket_name = validate_bucket_name(destination_bucket_name)
 
-    source_key = remove_leading_slash(source_key)
-    dest_key = remove_leading_slash(dest_key)
+    source_object_name = remove_leading_slash(source_object_name)
+    destination_object_name = remove_leading_slash(destination_object_name)
 
-    if not overwrite and file_exists(client, dest_bucket, dest_key):
+    if not overwrite and file_exists(
+        client,
+        destination_bucket_name,
+        destination_object_name,
+    ):
         logger.error(
             'Destination file already exists in the destination bucket.',
         )
         return False
 
-    copy_source = {'Bucket': source_bucket, 'Key': source_key}
+    copy_source = {'Bucket': source_bucket_name, 'Key': source_object_name}
     try:
         client.copy_object(
             CopySource=copy_source,
-            Bucket=dest_bucket,
-            Key=dest_key,
+            Bucket=destination_bucket_name,
+            Key=destination_object_name,
         )
         logger.info(
-            f'Copied {source_bucket}/{source_key} to {dest_bucket}/{dest_key}',
+            f'Copied {source_bucket_name}/{source_object_name} to '
+            f'{destination_bucket_name}/{destination_object_name}',
         )
         return True
     except client.exceptions.ClientError as e:
@@ -443,17 +450,17 @@ def copy_file(
 def create_folder_on_s3(
     client: boto3.client,
     bucket_name: str,
-    folder_name: str,
+    folder_path: str,
 ) -> bool:
     """Create a folder in an AWS S3 bucket if it doesn't already exist.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the bucket where the folder will be created.
-    folder_name : str
+    folder_path
         The name of the folder to create.
 
     Returns
@@ -469,21 +476,21 @@ def create_folder_on_s3(
     True
     """
     bucket_name = validate_bucket_name(bucket_name)
-    folder_name = remove_leading_slash(folder_name)
+    folder_path = remove_leading_slash(folder_path)
 
-    if not folder_name.endswith('/'):
-        folder_name += '/'
+    if not folder_path.endswith('/'):
+        folder_path += '/'
 
     try:
-        client.head_object(Bucket=bucket_name, Key=folder_name)
-        logger.info(f"Folder '{folder_name}' already exists on S3.")
+        client.head_object(Bucket=bucket_name, Key=folder_path)
+        logger.info(f"Folder '{folder_path}' already exists on S3.")
         return True
     except client.exceptions.ClientError as e:
         if e.response['Error']['Code'] == '404':
             # Folder does not exist, create it
             try:
-                client.put_object(Bucket=bucket_name, Key=folder_name)
-                logger.info(f"Created folder '{folder_name}' on S3.")
+                client.put_object(Bucket=bucket_name, Key=folder_path)
+                logger.info(f"Created folder '{folder_path}' on S3.")
                 return True
             except client.exceptions.ClientError as e:
                 logger.error(f'Failed to create folder on S3: {str(e)}')
@@ -496,23 +503,23 @@ def create_folder_on_s3(
 def upload_folder(
     client: boto3.client,
     bucket_name: str,
-    local_folder_path: str,
-    s3_prefix: str = '',
+    local_path: str,
+    prefix: str = '',
     overwrite: bool = False,
 ) -> bool:
     """Upload an entire folder from the local file system to an AWS S3 bucket.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the bucket to which the folder will be uploaded.
-    local_folder_path : str
+    local_path
         The path to the local folder to upload.
-    s3_prefix : str, optional
+    prefix
         The prefix to prepend to each object name when uploading to S3.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite existing files in the bucket.
 
     Returns
@@ -533,41 +540,39 @@ def upload_folder(
     True
     """
     bucket_name = validate_bucket_name(bucket_name)
-    local_folder_path = Path(local_folder_path)
+    local_path = Path(local_path)
 
     # Check if the local folder exists
-    if not local_folder_path.is_dir():
+    if not local_path.is_dir():
         logger.error('Local folder does not exist.')
         return False
 
-    s3_prefix = remove_leading_slash(s3_prefix)
+    prefix = remove_leading_slash(prefix)
 
     # Ensure the folder exists on S3
-    if not create_folder_on_s3(client, bucket_name, s3_prefix):
+    if not create_folder_on_s3(client, bucket_name, prefix):
         logger.error('Failed to create folder on S3.')
         return False
 
     # Iterate over files in the local folder and its subdirectories
-    for file_path in local_folder_path.rglob('*'):
+    for file_path in local_path.rglob('*'):
         if file_path.is_file():
             # Determine the S3 object key
-            s3_object_key = (
-                s3_prefix + '/' + str(file_path.relative_to(local_folder_path))
-            )
+            object_name = prefix + '/' + str(file_path.relative_to(local_path))
             # Check if the file already exists in the bucket
             if not overwrite and file_exists(
                 client,
                 bucket_name,
-                s3_object_key,
+                object_name,
             ):
                 logger.error(
-                    f"File '{s3_object_key}' already exists in the bucket.",
+                    f"File '{object_name}' already exists in the bucket.",
                 )
                 return False
             # Upload the file to S3
             try:
-                client.upload_file(str(file_path), bucket_name, s3_object_key)
-                logger.info(f"Uploaded '{file_path}' to '{s3_object_key}'.")
+                client.upload_file(str(file_path), bucket_name, object_name)
+                logger.info(f"Uploaded '{file_path}' to '{object_name}'.")
             except FileNotFoundError:
                 logger.error(f"The local file '{file_path}' was not found.")
                 return False
@@ -587,11 +592,11 @@ def list_files(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client.
-    bucket_name : str
+    bucket_name
         The name of the bucket.
-    prefix : str, optional
+    prefix
         The prefix to filter files, by default "".
 
     Returns
@@ -623,7 +628,7 @@ def list_files(
 def download_folder(
     client: boto3.client,
     bucket_name: str,
-    s3_prefix: str,
+    prefix: str,
     local_path: str,
     overwrite: bool = False,
 ) -> bool:
@@ -631,15 +636,15 @@ def download_folder(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket from which to download the folder.
-    s3_prefix : str
+    prefix
         The S3 prefix of the folder to download.
-    local_path : str
+    local_path
         The local directory path where the downloaded folder will be saved.
-    overwrite : bool, optional
+    overwrite
         If True, overwrite existing local files if they exist.
 
     Returns
@@ -662,9 +667,9 @@ def download_folder(
     bucket_name = validate_bucket_name(bucket_name)
     local_path = Path(local_path)
 
-    s3_prefix = remove_leading_slash(s3_prefix)
-    if not is_s3_directory(client, bucket_name, s3_prefix):
-        logger.error(f'The provided S3 prefix {s3_prefix} is not a directory.')
+    prefix = remove_leading_slash(prefix)
+    if not is_s3_directory(client, bucket_name, prefix):
+        logger.error(f'The provided S3 prefix {prefix} is not a directory.')
         return False
 
     if not local_path.exists():
@@ -672,11 +677,11 @@ def download_folder(
 
     try:
         paginator = client.get_paginator('list_objects_v2')
-        for page in paginator.paginate(Bucket=bucket_name, Prefix=s3_prefix):
+        for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
             for obj in page.get('Contents', []):
                 if is_s3_directory(client, bucket_name, obj['Key']):
                     continue
-                target = local_path / Path(obj['Key']).relative_to(s3_prefix)
+                target = local_path / Path(obj['Key']).relative_to(prefix)
                 if not overwrite and target.exists():
                     logger.info(f'Skipping {target} as it already exists.')
                     continue
@@ -692,25 +697,25 @@ def download_folder(
 
 def move_file(
     client: boto3.client,
-    src_bucket: str,
-    src_key: str,
-    dest_bucket: str,
-    dest_key: str,
+    source_bucket_name: str,
+    source_object_name: str,
+    destination_bucket_name: str,
+    destination_object_name: str,
 ) -> bool:
     """Move a file within or between AWS S3 buckets.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    src_bucket : str
+    source_bucket_name
         The name of the source S3 bucket.
-    src_key : str
-        The S3 object key of the source file.
-    dest_bucket : str
+    source_object_name
+        The S3 object name of the source file.
+    destination_bucket_name
         The name of the destination S3 bucket.
-    dest_key : str
-        The S3 object key of the destination file.
+    destination_object_name
+        The S3 object name of the destination file.
 
     Returns
     -------
@@ -729,19 +734,30 @@ def move_file(
     ... )
     True
     """
-    src_bucket = validate_bucket_name(src_bucket)
-    dest_bucket = validate_bucket_name(dest_bucket)
+    source_bucket_name = validate_bucket_name(source_bucket_name)
+    destination_bucket_name = validate_bucket_name(destination_bucket_name)
 
-    src_key = remove_leading_slash(src_key)
-    dest_key = remove_leading_slash(dest_key)
+    source_object_name = remove_leading_slash(source_object_name)
+    destination_object_name = remove_leading_slash(destination_object_name)
 
-    if file_exists(client, src_bucket, src_key):
+    if file_exists(client, source_bucket_name, source_object_name):
         try:
-            copy_source = {'Bucket': src_bucket, 'Key': src_key}
-            client.copy(copy_source, dest_bucket, dest_key)
-            client.delete_object(Bucket=src_bucket, Key=src_key)
+            copy_source = {
+                'Bucket': source_bucket_name,
+                'Key': source_object_name,
+            }
+            client.copy(
+                copy_source,
+                destination_bucket_name,
+                destination_object_name,
+            )
+            client.delete_object(
+                Bucket=source_bucket_name,
+                Key=source_object_name,
+            )
             logger.info(
-                f'Moved {src_bucket}/{src_key} to {dest_bucket}/{dest_key}',
+                f'Moved {source_bucket_name}/{source_object_name} to '
+                f'{destination_bucket_name}/{destination_object_name}',
             )
             return True
         except client.exceptions.ClientError as e:
@@ -753,23 +769,31 @@ def move_file(
 
 
 def delete_folder(
-    client: boto3.client, bucket_name: str, folder_path: str,
+    client: boto3.client,
+    bucket_name: str,
+    folder_path: str,
 ) -> bool:
     """Delete a folder in an AWS S3 bucket.
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    folder_path : str
+    folder_path
         The path of the folder to delete.
 
     Returns
     -------
     bool
         True if the folder was deleted successfully, otherwise False.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> delete_folder(client, 'mybucket', 'path/to/folder/')
+    True
     """
     bucket_name = validate_bucket_name(bucket_name)
     folder_path = remove_leading_slash(folder_path)

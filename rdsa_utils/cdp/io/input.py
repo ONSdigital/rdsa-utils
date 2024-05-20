@@ -37,9 +37,9 @@ def extract_database_name(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         Active SparkSession.
-    long_table_name : str
+    long_table_name
         Full name of the table, which can include the GCP project
         and/or database name.
 
