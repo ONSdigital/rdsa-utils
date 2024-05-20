@@ -47,7 +47,7 @@ class TestParseYaml:
         assert actual == expected_standard_config
 
 
-@pytest.mark.skip(reason='test shell')
+@pytest.mark.skip(reason="test shell")
 class TestReadFile:
     """Tests for read_file function."""
 

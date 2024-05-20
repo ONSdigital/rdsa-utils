@@ -1,14 +1,10 @@
 from typing import List
 
-from pydantic import BaseModel, ValidationError
 import pytest
-
-from tests.conftest import (
-    Case,
-    parametrize_cases,
-)
+from pydantic import BaseModel, ValidationError
 
 from rdsa_utils.io.config import *
+from tests.conftest import Case, parametrize_cases
 
 
 class ValidatorSection1(BaseModel):
@@ -47,63 +43,63 @@ class ValidatorSection4(BaseModel):
 class TestLoadConfig:
     """Tests for the LoadConfig class."""
 
-    @pytest.fixture(scope='class')
+    @pytest.fixture(scope="class")
     def config_json(self, json_config_string, tmp_path_factory) -> Path:
         """Fixture to create json file that exists for the length of the class tests."""
-        config_file = tmp_path_factory.mktemp('data') / 'config.json'
+        config_file = tmp_path_factory.mktemp("data") / "config.json"
         config_file.write_text(json_config_string)
         return config_file
 
-    @pytest.fixture(scope='class')
+    @pytest.fixture(scope="class")
     def config_toml(self, toml_config_string, tmp_path_factory) -> Path:
         """Fixture to create toml file that exists for the length of the class tests."""
-        config_file = tmp_path_factory.mktemp('data') / 'config.toml'
+        config_file = tmp_path_factory.mktemp("data") / "config.toml"
         config_file.write_text(toml_config_string)
         return config_file
 
-    @pytest.fixture(scope='class')
+    @pytest.fixture(scope="class")
     def config_yaml(self, yaml_config_string, tmp_path_factory) -> Path:
         """Fixture to create yaml file that exists for the length of the class tests."""
-        config_file = tmp_path_factory.mktemp('data') / 'config.yaml'
+        config_file = tmp_path_factory.mktemp("data") / "config.yaml"
         config_file.write_text(yaml_config_string)
         return config_file
 
     @parametrize_cases(
         Case(
-            label='json_with_config_type_specified',
-            config_file=pytest.lazy_fixture('config_json'),
-            config_type='json',
-            expected_config=pytest.lazy_fixture('expected_standard_config'),
+            label="json_with_config_type_specified",
+            config_file=pytest.lazy_fixture("config_json"),
+            config_type="json",
+            expected_config=pytest.lazy_fixture("expected_standard_config"),
         ),
         Case(
-            label='json_no_config_type_specified',
-            config_file=pytest.lazy_fixture('config_json'),
+            label="json_no_config_type_specified",
+            config_file=pytest.lazy_fixture("config_json"),
             config_type=None,
-            expected_config=pytest.lazy_fixture('expected_standard_config'),
+            expected_config=pytest.lazy_fixture("expected_standard_config"),
         ),
         Case(
-            label='toml_with_config_type_specified',
-            config_file=pytest.lazy_fixture('config_toml'),
-            config_type='toml',
-            expected_config=pytest.lazy_fixture('expected_standard_config'),
+            label="toml_with_config_type_specified",
+            config_file=pytest.lazy_fixture("config_toml"),
+            config_type="toml",
+            expected_config=pytest.lazy_fixture("expected_standard_config"),
         ),
         Case(
-            label='toml_no_config_type_specified',
-            config_file=pytest.lazy_fixture('config_toml'),
+            label="toml_no_config_type_specified",
+            config_file=pytest.lazy_fixture("config_toml"),
             config_type=None,
-            expected_config=pytest.lazy_fixture('expected_standard_config'),
+            expected_config=pytest.lazy_fixture("expected_standard_config"),
         ),
         Case(
-            label='yaml_with_config_type_specified',
-            config_file=pytest.lazy_fixture('config_yaml'),
-            config_type='yaml',
-            expected_config=pytest.lazy_fixture('expected_standard_config'),
+            label="yaml_with_config_type_specified",
+            config_file=pytest.lazy_fixture("config_yaml"),
+            config_type="yaml",
+            expected_config=pytest.lazy_fixture("expected_standard_config"),
         ),
         Case(
-            label='yaml_no_config_type_specified',
-            config_file=pytest.lazy_fixture('config_yaml'),
+            label="yaml_no_config_type_specified",
+            config_file=pytest.lazy_fixture("config_yaml"),
             config_type=None,
-            expected_config=pytest.lazy_fixture('expected_standard_config'),
+            expected_config=pytest.lazy_fixture("expected_standard_config"),
         ),
     )
     def test_load_config_file_type(
@@ -140,10 +136,13 @@ class TestLoadConfig:
         config_yaml,
     ):
         """Test class can raises ConfigError for unsupported config file type."""
-        with pytest.raises(ConfigError, match='No config parser present for file type = xlsx'):
+        with pytest.raises(
+            ConfigError,
+            match="No config parser present for file type = xlsx",
+        ):
             LoadConfig(
                 config_path=config_yaml,
-                config_type='xlsx',
+                config_type="xlsx",
             )
 
     def test_expected_applying_config_override(
@@ -153,19 +152,19 @@ class TestLoadConfig:
     ):
         """Test class applies config overrides."""
         config_overrides = {
-            'section_1': {
-                'value_1_2': 'z',
+            "section_1": {
+                "value_1_2": "z",
             },
-            'section_2': {
-                'value_2_2': [9, 8, 7],
+            "section_2": {
+                "value_2_2": [9, 8, 7],
             },
-            'section_3': {
-                'value_3_1': {
-                    'value_3_1_2': 'y',
+            "section_3": {
+                "value_3_1": {
+                    "value_3_1_2": "y",
                 },
             },
-            'section_4': {
-                'value_4_1': True,
+            "section_4": {
+                "value_4_1": True,
             },
         }
 
@@ -175,22 +174,22 @@ class TestLoadConfig:
         )
 
         expected = {
-            'section_1': {
-                'value_1_1': 1,
-                'value_1_2': 'z',
+            "section_1": {
+                "value_1_1": 1,
+                "value_1_2": "z",
             },
-            'section_2': {
-                'value_2_1': [3, 4],
-                'value_2_2': [9, 8, 7],
+            "section_2": {
+                "value_2_1": [3, 4],
+                "value_2_2": [9, 8, 7],
             },
-            'section_3': {
-                'value_3_1': {
-                    'value_3_1_1': 2,
-                    'value_3_1_2': 'y',
+            "section_3": {
+                "value_3_1": {
+                    "value_3_1_1": 2,
+                    "value_3_1_2": "y",
                 },
             },
-            'section_4': {
-                'value_4_1': True,
+            "section_4": {
+                "value_4_1": True,
             },
         }
 
@@ -203,10 +202,10 @@ class TestLoadConfig:
         config_yaml,
     ):
         """Test class raises ConfigError for bad config overrides."""
-        with pytest.raises(ConfigError, match='not in the base dictionary'):
+        with pytest.raises(ConfigError, match="not in the base dictionary"):
             LoadConfig(
                 config_path=config_yaml,
-                config_overrides={'section_4': {'value_4_2': 'not in base config'}},
+                config_overrides={"section_4": {"value_4_2": "not in base config"}},
             )
 
     def test_expected_apply_all_config_validators(
@@ -218,10 +217,10 @@ class TestLoadConfig:
         actual = LoadConfig(
             config_path=config_yaml,
             config_validators={
-                'section_1': ValidatorSection1,
-                'section_2': ValidatorSection2,
-                'section_3': ValidatorSection3,
-                'section_4': ValidatorSection4,
+                "section_1": ValidatorSection1,
+                "section_2": ValidatorSection2,
+                "section_3": ValidatorSection3,
+                "section_4": ValidatorSection4,
             },
         )
 
@@ -229,20 +228,20 @@ class TestLoadConfig:
 
     @parametrize_cases(
         Case(
-            label='section_not_specified',
+            label="section_not_specified",
             config_validators={
-                'section_2': ValidatorSection2,
-                'section_3': ValidatorSection3,
-                'section_4': ValidatorSection4,
+                "section_2": ValidatorSection2,
+                "section_3": ValidatorSection3,
+                "section_4": ValidatorSection4,
             },
         ),
         Case(
-            label='section_specified_as_none',
+            label="section_specified_as_none",
             config_validators={
-                'section_1': None,
-                'section_2': ValidatorSection2,
-                'section_3': ValidatorSection3,
-                'section_4': ValidatorSection4,
+                "section_1": None,
+                "section_2": ValidatorSection2,
+                "section_3": ValidatorSection3,
+                "section_4": ValidatorSection4,
             },
         ),
     )
@@ -253,7 +252,10 @@ class TestLoadConfig:
         expected_standard_config,
     ):
         """Test applying only some validators raises appropriate warnings."""
-        with pytest.warns(UserWarning, match='No validator provided, config contents unvalidated.'):
+        with pytest.warns(
+            UserWarning,
+            match="No validator provided, config contents unvalidated.",
+        ):
             actual = LoadConfig(
                 config_path=config_yaml,
                 config_validators=config_validators,
@@ -265,14 +267,14 @@ class TestLoadConfig:
         config_yaml,
     ):
         """Test that if config override changes value type and using validators then validation error raised."""
-        with pytest.raises(ValidationError, match='value_4_1'):
+        with pytest.raises(ValidationError, match="value_4_1"):
             LoadConfig(
                 config_path=config_yaml,
-                config_overrides={'section_4': {'value_4_1': 'should be bool'}},
+                config_overrides={"section_4": {"value_4_1": "should be bool"}},
                 config_validators={
-                    'section_1': ValidatorSection1,
-                    'section_2': ValidatorSection2,
-                    'section_3': ValidatorSection3,
-                    'section_4': ValidatorSection4,
+                    "section_1": ValidatorSection1,
+                    "section_2": ValidatorSection2,
+                    "section_3": ValidatorSection3,
+                    "section_4": ValidatorSection4,
                 },
             )

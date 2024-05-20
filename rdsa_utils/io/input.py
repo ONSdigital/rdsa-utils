@@ -1,4 +1,5 @@
 """Module containing generic input functionality code."""
+
 import json
 import logging
 from pathlib import Path
@@ -7,6 +8,7 @@ from typing import Union
 import tomli
 import yaml
 from cloudpathlib import CloudPath
+
 from rdsa_utils.typing import Config
 
 logger = logging.getLogger(__name__)
@@ -105,6 +107,6 @@ def read_file(file: Union[CloudPath, Path]) -> str:
     if file.exists():
         return file.read_text()
     else:
-        msg = f'{file=} cannot be found.'
+        msg = f"{file=} cannot be found."
         logger.error(msg)
         raise FileNotFoundError(msg)

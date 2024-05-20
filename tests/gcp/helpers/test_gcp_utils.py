@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.skip(reason='requires query')
+@pytest.mark.skip(reason="requires query")
 class TestRunBqQuery:
     """Test for run_bq_query function.."""
 
@@ -10,7 +10,7 @@ class TestRunBqQuery:
         pass
 
 
-@pytest.mark.skip(reason='requires table path')
+@pytest.mark.skip(reason="requires table path")
 class TestGetTableColumns:
     """Test for get_table_columns function.."""
 
@@ -19,7 +19,7 @@ class TestGetTableColumns:
         pass
 
 
-@pytest.mark.skip(reason='requires table path')
+@pytest.mark.skip(reason="requires table path")
 class TestTableExists:
     """Test for table_exists function."""
 
@@ -28,7 +28,7 @@ class TestTableExists:
         pass
 
 
-@pytest.mark.skip(reason='requires GCP')
+@pytest.mark.skip(reason="requires GCP")
 class TestLoadConfigGcp:
     """Test for load_config_gcp function."""
 

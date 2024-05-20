@@ -1,14 +1,14 @@
 """Miscellaneous helper functions for Python."""
-from datetime import datetime, time
+
 import itertools
 import json
 import logging
+from datetime import datetime, time
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
 import pandas as pd
-from pandas.tseries.offsets import MonthEnd
 from more_itertools import always_iterable
-
+from pandas.tseries.offsets import MonthEnd
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,8 @@ def extend_lists(
 
 
 def overwrite_dictionary(
-    base_dict: Mapping[str, Any], override_dict: Mapping[str, Any],
+    base_dict: Mapping[str, Any],
+    override_dict: Mapping[str, Any],
 ) -> Dict[str, Any]:
     """Overwrite dictionary values with user defined values.
 
@@ -156,13 +157,14 @@ def overwrite_dictionary(
     ------
     ValueError
         If a key is present in override_dict but not base_dict.
-    """ # noqa: E501
+    """  # noqa: E501
     for key, val in base_dict.items():
         if type(val) == dict:
             if key in override_dict and type(override_dict[key]) == dict:
                 overwrite_dictionary(base_dict[key], override_dict[key])
             elif key in override_dict and type(override_dict[key]) != dict:
-                logger.warning(f"""
+                logger.warning(
+                    f"""
                 Not overriding key: {key} in base dictionary as the value type
                 for the base dictionary are of higher priority than the
                 override.
@@ -176,7 +178,8 @@ def overwrite_dictionary(
                 {type(override_dict[key])}
                 and have values:
                 {override_dict[key]}
-                """)
+                """,
+                )
             else:
                 # Key in base_dict not present in override_dict so do nothing.
                 pass
@@ -265,18 +268,18 @@ def convert_date_strings_to_datetimes(
     shift_end_date_to_month_end = False
 
     year_month_formats = [
-        '%B %Y',  # January 2020
-        '%b %Y',  # Jan 2020
-        '%Y %B',  # 2020 January
-        '%Y %b',  # 2020 Jan
+        "%B %Y",  # January 2020
+        "%b %Y",  # Jan 2020
+        "%Y %B",  # 2020 January
+        "%Y %b",  # 2020 Jan
         # '%Y-%m',  # 2020-01 - also matches 2020-01-01
         # '%Y-%-m',  # 2020-1 - also matches 2020-01-01
         # '%Y %m',  # 2020 01 - also matches 2020-01-01
         # '%Y %-m',  # 2020 1 - also matches 2020-01-01
-        '%m-%Y',  # 01-2020
-        '%-m-%Y',  # 1-2020
-        '%m %Y',  # 01 2020
-        '%-m %Y',  # 1 2020
+        "%m-%Y",  # 01-2020
+        "%-m-%Y",  # 1-2020
+        "%m %Y",  # 01 2020
+        "%-m %Y",  # 1 2020
     ]
 
     # if the end_date format matches one of the above then it is assumed the

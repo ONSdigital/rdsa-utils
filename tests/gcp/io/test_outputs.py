@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.skip(reason='requires table path')
+@pytest.mark.skip(reason="requires table path")
 class TestWriteTable:
     """Test for write_table function."""
 

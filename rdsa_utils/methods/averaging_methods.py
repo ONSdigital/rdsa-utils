@@ -1,10 +1,9 @@
 """Weighted and unweighted averaging functions."""
+
 from typing import Optional, Sequence, Union
 
-from pyspark.sql import (
-    Column as SparkCol,
-    functions as F,
-)
+from pyspark.sql import Column as SparkCol
+from pyspark.sql import functions as F
 
 from rdsa_utils.helpers.pyspark import get_window_spec
 

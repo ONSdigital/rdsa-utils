@@ -1,44 +1,22 @@
 """Read from BigQuery."""
+
 import logging
 import textwrap
-from typing import (
-    Dict,
-    Optional,
-    Sequence,
-    Tuple,
-    Union,
-)
+from typing import Dict, Optional, Sequence, Tuple, Union
 
-from pyspark.sql import (
-    DataFrame as SparkDF,
-    SparkSession,
-)
+from pyspark.sql import DataFrame as SparkDF
+from pyspark.sql import SparkSession
 
-from rdsa_utils.exceptions import (
-    ColumnNotInDataframeError,
-    TableNotFoundError,
-)
-from rdsa_utils.logging import (
-    log_spark_df_schema,
-)
-from rdsa_utils.typing import (
-    BigQueryTimePartitions,
-    TablePath,
-)
-from rdsa_utils.gcp.helpers.gcp_utils import (
-    get_table_columns,
-    table_exists,
-)
-from rdsa_utils.helpers.pyspark import (
-    is_df_empty,
-    convert_struc_col_to_columns,
-)
+from rdsa_utils.exceptions import ColumnNotInDataframeError, TableNotFoundError
+from rdsa_utils.gcp.helpers.gcp_utils import get_table_columns, table_exists
+from rdsa_utils.helpers.pyspark import convert_struc_col_to_columns, is_df_empty
 from rdsa_utils.helpers.python import (
     convert_date_strings_to_datetimes,
     list_convert,
     tuple_convert,
 )
-
+from rdsa_utils.logging import log_spark_df_schema
+from rdsa_utils.typing import BigQueryTimePartitions, TablePath
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +29,7 @@ def read_table(
     date_column: Optional[str] = None,
     date_range: Optional[Sequence[str]] = None,
     column_filter_dict: Optional[Dict[str, Sequence[str]]] = None,
-    run_id_column: Optional[str] = 'run_id',
+    run_id_column: Optional[str] = "run_id",
     run_id: Optional[str] = None,
     flatten_struct_cols: bool = False,
     partition_column: Optional[str] = None,
@@ -100,7 +78,7 @@ def read_table(
     SparkDF
     """
     if not table_exists(table_path=table_path):
-        msg = f'{table_path=} cannot be found.'
+        msg = f"{table_path=} cannot be found."
         logger.error(msg)
         raise TableNotFoundError(msg)
 
@@ -110,9 +88,7 @@ def read_table(
     # If columns are specified, ensure they exist in the table to be read.
     if columns:
         table_cols = get_table_columns(table_path)
-        list_cols_not_in_table_cols = [
-            col for col in columns if col not in table_cols
-        ]
+        list_cols_not_in_table_cols = [col for col in columns if col not in table_cols]
         if list_cols_not_in_table_cols:
             message = f"""
             Columns: {list_cols_not_in_table_cols} are not in dateset.
@@ -137,12 +113,12 @@ def read_table(
         partition_value=partition_value,
     )
 
-    logger.info(f'Reading table using query: \n{query}')
+    logger.info(f"Reading table using query: \n{query}")
 
-    df = spark.read.load(query, format='bigquery')
+    df = spark.read.load(query, format="bigquery")
 
     if is_df_empty(df):
-        logger.warning(f'No data has been read from {table_path}')
+        logger.warning(f"No data has been read from {table_path}")
 
     if flatten_struct_cols:
         df = convert_struc_col_to_columns(df=df)
@@ -201,17 +177,17 @@ def build_sql_query(  # noqa: C901
     first_filter_applied = False
 
     filter_start = {
-        False: 'WHERE',
-        True: 'AND',
+        False: "WHERE",
+        True: "AND",
     }
 
     # Join columns to comma-separated string for the SQL query.
-    selection = ', '.join(columns) if columns else '*'
+    selection = ", ".join(columns) if columns else "*"
 
-    sql_query.append(f'SELECT {selection}\nFROM {table_path}')
+    sql_query.append(f"SELECT {selection}\nFROM {table_path}")
 
     if partition_column and partition_value and partition_type:
-        sql_query.append(f'{filter_start[first_filter_applied]} (')
+        sql_query.append(f"{filter_start[first_filter_applied]} (")
 
         # If a single partition value is being used we use an "=" for
         # comparison, otherwise we use the "BETWEEN" SQL function.
@@ -226,24 +202,24 @@ def build_sql_query(  # noqa: C901
                 *partition_value,
             )
 
-            sql_query.append(f'{partition_column}')
+            sql_query.append(f"{partition_column}")
             sql_query.append(f"BETWEEN '{partition_value[0]}'")
             sql_query.append(f"AND '{partition_value[1]}'")
 
         else:
-            msg = f'{partition_value=} must have either 1 or 2 values only.'
+            msg = f"{partition_value=} must have either 1 or 2 values only."
             logger.error(msg)
             raise ValueError(msg)
 
-        sql_query.append(')')
+        sql_query.append(")")
 
         first_filter_applied = True
 
     if date_column and date_range:
-        sql_query.append(f'{filter_start[first_filter_applied]} (')
+        sql_query.append(f"{filter_start[first_filter_applied]} (")
         sql_query.append(f"{date_column} >= '{date_range[0]}'")
         sql_query.append(f"AND {date_column} < '{date_range[1]}'")
-        sql_query.append(')')
+        sql_query.append(")")
 
         first_filter_applied = True
 
@@ -257,7 +233,7 @@ def build_sql_query(  # noqa: C901
                 column_filter_dict[column],
             )
 
-            sql_query.append(f'{filter_start[first_filter_applied]} (\n')
+            sql_query.append(f"{filter_start[first_filter_applied]} (\n")
 
             # If the value is a string we wrap it in quotes, otherwise we don't
             # which avoids turning e.g. an integer into a string (1 -> '1').
@@ -267,7 +243,7 @@ def build_sql_query(  # noqa: C901
                 )
             else:
                 sql_query.append(
-                    f'{column} = {column_filter_dict[column][0]}',
+                    f"{column} = {column_filter_dict[column][0]}",
                 )
 
             first_filter_applied = True
@@ -278,12 +254,12 @@ def build_sql_query(  # noqa: C901
                     if isinstance(item, str):
                         sql_query.append(f"OR {column} = '{item}'\n")
                     else:
-                        sql_query.append(f'OR {column} = {item}\n')
+                        sql_query.append(f"OR {column} = {item}\n")
 
             # close off the column filter query
-            sql_query.append(')\n')
+            sql_query.append(")\n")
 
     # Join entries in list into one nicely formatted string for easier unit
     # testing. Use textwrap.dedent to remove leading whitespace from multiline
     # strings.
-    return '\n'.join([textwrap.dedent(line.strip()) for line in sql_query])
+    return "\n".join([textwrap.dedent(line.strip()) for line in sql_query])

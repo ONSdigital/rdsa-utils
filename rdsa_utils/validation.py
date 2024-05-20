@@ -1,14 +1,14 @@
 """Functions that support the use of pydantic validators."""
+
 import json
 import logging
-from typing import Any, Callable, Mapping, Optional
 import warnings
+from typing import Any, Callable, Mapping, Optional
 
 import pandas as pd
 from pydantic import BaseModel, validator
 
 from rdsa_utils.helpers.python import list_convert
-
 
 logger = logging.getLogger(__name__)
 
@@ -36,16 +36,18 @@ def apply_validation(
         The input config after being passed through the validator.
     """
     if not Validator:
-        msg = 'No validator provided, config contents unvalidated.'
+        msg = "No validator provided, config contents unvalidated."
         logger.warning(msg)
         warnings.warn(msg, stacklevel=2)
         return config
 
     validated_config = Validator(**config).model_dump(exclude_unset=True)
 
-    logger.info(f"""Validated config using {Validator.__name__}:
+    logger.info(
+        f"""Validated config using {Validator.__name__}:
     {json.dumps(validated_config, indent=4)}
-    """)
+    """,
+    )
     return validated_config
 
 

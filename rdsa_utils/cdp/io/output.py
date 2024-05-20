@@ -1,4 +1,5 @@
 """Write outputs on CDP."""
+
 import logging
 import uuid
 from typing import Union
@@ -66,11 +67,11 @@ def insert_df_to_hive_table(
     Exception
         For other general exceptions when writing data to the table.
     """
-    logger.info(f'Preparing to write data to {table_name}.')
+    logger.info(f"Preparing to write data to {table_name}.")
 
     # Validate SparkDF before writing
     if is_df_empty(df):
-        msg = f'Cannot write an empty SparkDF to {table_name}'
+        msg = f"Cannot write an empty SparkDF to {table_name}"
         raise DataframeEmptyError(
             msg,
         )
@@ -80,8 +81,8 @@ def insert_df_to_hive_table(
     except AnalysisException:
         logger.error(
             (
-                f'Error reading table {table_name}. '
-                f'Make sure the table exists and you have access to it.'
+                f"Error reading table {table_name}. "
+                f"Make sure the table exists and you have access to it."
             ),
         )
 
@@ -105,9 +106,9 @@ def insert_df_to_hive_table(
 
     try:
         df.write.insertInto(table_name, overwrite)
-        logger.info(f'Successfully wrote data to {table_name}.')
+        logger.info(f"Successfully wrote data to {table_name}.")
     except Exception:
-        logger.error(f'Error writing data to {table_name}.')
+        logger.error(f"Error writing data to {table_name}.")
         raise
 
 
@@ -117,7 +118,7 @@ def write_and_read_hive_table(
     table_name: str,
     database: str,
     filter_id: Union[int, str],
-    filter_col: str = 'run_id',
+    filter_col: str = "run_id",
     fill_missing_cols: bool = False,
 ) -> SparkDF:
     """Write a SparkDF to an existing Hive table and then read it back.
@@ -176,10 +177,7 @@ def write_and_read_hive_table(
     try:
         # Check for existence of the Hive table
         if not spark.catalog.tableExists(database, table_name):
-            msg = (
-                f'The specified Hive table {database}.'
-                f'{table_name} does not exist.'
-            )
+            msg = f"The specified Hive table {database}.{table_name} does not exist."
             raise TableNotFoundError(
                 msg,
             )
@@ -198,14 +196,14 @@ def write_and_read_hive_table(
         insert_df_to_hive_table(
             spark,
             df,
-            f'{database}.{table_name}',
+            f"{database}.{table_name}",
             fill_missing_cols=fill_missing_cols,
         )
 
         # Read DataFrame back from Hive with filter condition
         df_read = load_and_validate_table(
             spark,
-            f'{database}.{table_name}',
+            f"{database}.{table_name}",
             skip_validation=False,
             err_msg=None,
             filter_cond=f"{filter_col} = '{filter_id}'",
@@ -213,7 +211,7 @@ def write_and_read_hive_table(
         return df_read
 
     except Exception as e:
-        logger.error(f'An error occurred: {e}')
+        logger.error(f"An error occurred: {e}")
         raise
 
 
@@ -280,7 +278,7 @@ def save_csv_to_hdfs(
     save_csv_to_hdfs(df, file_name, file_path, overwrite=True)
     ```
     """
-    if not file_name.endswith('.csv'):
+    if not file_name.endswith(".csv"):
         error_msg = "The file_name must end with '.csv' extension."
         raise ValueError(error_msg)
 
@@ -293,7 +291,7 @@ def save_csv_to_hdfs(
         )
         raise IOError(error_msg)
 
-    logger.info(f'Saving DataFrame to {file_name} in HDFS at {file_path}')
+    logger.info(f"Saving DataFrame to {file_name} in HDFS at {file_path}")
 
     # Coalesce the DataFrame to a single partition
     df = df.coalesce(1)
@@ -302,21 +300,21 @@ def save_csv_to_hdfs(
     temp_path = f"{file_path.rstrip('/')}/temp_{file_name}"
 
     # Save the DataFrame to HDFS in CSV format in a temporary directory
-    df.write.csv(temp_path, header=True, mode='overwrite')
+    df.write.csv(temp_path, header=True, mode="overwrite")
 
     # Identify the part file: pattern matching for the single part file
-    part_file = f'{temp_path}/part-00000*.csv'
+    part_file = f"{temp_path}/part-00000*.csv"
 
     # Rename the part file to the final file name
     if not rename(part_file, destination_path, overwrite):
         error_msg = f"Failed to rename the part file to '{destination_path}'"
         raise IOError(error_msg)
 
-    logger.info(f'DataFrame successfully saved to {destination_path}')
+    logger.info(f"DataFrame successfully saved to {destination_path}")
 
     # Clean up the temporary directory
     delete_path(temp_path)
-    logger.info(f'Temporary directory {temp_path} deleted')
+    logger.info(f"Temporary directory {temp_path} deleted")
 
 
 def save_csv_to_s3(
@@ -390,7 +388,7 @@ def save_csv_to_s3(
     bucket_name = validate_bucket_name(bucket_name)
     file_path = remove_leading_slash(file_path)
 
-    if not file_name.endswith('.csv'):
+    if not file_name.endswith(".csv"):
         error_msg = "The file_name must end with '.csv' extension."
         raise ValueError(error_msg)
 
@@ -404,7 +402,7 @@ def save_csv_to_s3(
         raise IOError(error_msg)
 
     logger.info(
-        f'Saving DataFrame to {file_name} in S3 at s3://{bucket_name}/{file_path}',
+        f"Saving DataFrame to {file_name} in S3 at s3://{bucket_name}/{file_path}",
     )
 
     # Coalesce the DataFrame to a single partition
@@ -415,16 +413,16 @@ def save_csv_to_s3(
 
     # Save the DataFrame to S3 in CSV format in a temporary directory
     df.write.csv(
-        f's3a://{bucket_name}/{temp_path}',
+        f"s3a://{bucket_name}/{temp_path}",
         header=True,
-        mode='overwrite',
+        mode="overwrite",
     )
 
     # Identify the part file using the list_files helper function
-    part_file_prefix = f'{temp_path}/part-00000'
+    part_file_prefix = f"{temp_path}/part-00000"
     part_files = list_files(s3_client, bucket_name, part_file_prefix)
     if not part_files:
-        error_msg = 'No part files found in the temporary directory.'
+        error_msg = "No part files found in the temporary directory."
         raise IOError(error_msg)
 
     # Get the first part file from the list
@@ -445,7 +443,7 @@ def save_csv_to_s3(
         raise IOError(error_msg)
 
     logger.info(
-        f'DataFrame successfully saved to s3://{bucket_name}/{destination_path}',
+        f"DataFrame successfully saved to s3://{bucket_name}/{destination_path}",
     )
 
     # Clean up the temporary directory

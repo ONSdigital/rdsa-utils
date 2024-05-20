@@ -1,4 +1,5 @@
 """Tests for hdfs_utils.py module."""
+
 import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -64,11 +65,11 @@ class BaseTest:
         def mock_popen(*args, **kwargs):
             process_mock = MagicMock()
             process_mock.returncode = 0
-            process_mock.communicate.return_value = (b'', b'')
+            process_mock.communicate.return_value = (b"", b"")
 
             return process_mock
 
-        monkeypatch.setattr(subprocess, 'Popen', mock_popen)
+        monkeypatch.setattr(subprocess, "Popen", mock_popen)
 
     @pytest.fixture()
     def mock_subprocess_popen_date_modifed(self):
@@ -89,9 +90,9 @@ class BaseTest:
         MagicMock
             The MagicMock object that simulates the behavior of subprocess.Popen.
         """
-        with patch('subprocess.Popen') as mock_popen:
+        with patch("subprocess.Popen") as mock_popen:
             mock_stdout = MagicMock()
-            mock_stdout.read.return_value.decode.return_value = '2023-05-25'
+            mock_stdout.read.return_value.decode.return_value = "2023-05-25"
             mock_popen.return_value.communicate.return_value = (mock_stdout, None)
             yield mock_popen
 
@@ -101,7 +102,7 @@ class TestPerform(BaseTest):
 
     def test__perform(self, mock_subprocess_popen):
         """Check _perform function behavior on successful command execution."""
-        command = ['ls', '-l', '/home/user']
+        command = ["ls", "-l", "/home/user"]
         assert _perform(command) is True
 
 
@@ -114,19 +115,19 @@ class TestChangePermissons(BaseTest):
         Checks if the command is correctly constructed based on the provided arguments.
         """
         # Test case 1: Test change_permissions without recursive option
-        path = '/user/example'
-        permission = 'go+rwx'
-        command = ['hadoop', 'fs', '-chmod', permission, path]
+        path = "/user/example"
+        permission = "go+rwx"
+        command = ["hadoop", "fs", "-chmod", permission, path]
         assert change_permissions(path, permission) == _perform(command)
 
         # Test case 2: Test change_permissions with recursive option
-        recursive_path = '/user/example'
-        recursive_permission = '777'
+        recursive_path = "/user/example"
+        recursive_permission = "777"
         recursive_command = [
-            'hadoop',
-            'fs',
-            '-chmod',
-            '-R',
+            "hadoop",
+            "fs",
+            "-chmod",
+            "-R",
             recursive_permission,
             recursive_path,
         ]
@@ -146,19 +147,19 @@ class TestCopy(BaseTest):
         Checks if the command is correctly constructed based on the provided arguments.
         """
         # Test case 1: Test copy without overwrite option
-        from_path = '/user/example/file.txt'
-        to_path = '/user/backup/file.txt'
-        command = ['hadoop', 'fs', '-cp', from_path, to_path]
+        from_path = "/user/example/file.txt"
+        to_path = "/user/backup/file.txt"
+        command = ["hadoop", "fs", "-cp", from_path, to_path]
         assert copy(from_path, to_path) == _perform(command)
 
         # Test case 2: Test copy with overwrite option
-        overwrite_from_path = '/user/example/file.txt'
-        overwrite_to_path = '/user/backup/file.txt'
+        overwrite_from_path = "/user/example/file.txt"
+        overwrite_to_path = "/user/backup/file.txt"
         overwrite_command = [
-            'hadoop',
-            'fs',
-            '-cp',
-            '-f',
+            "hadoop",
+            "fs",
+            "-cp",
+            "-f",
             overwrite_from_path,
             overwrite_to_path,
         ]
@@ -176,19 +177,19 @@ class TestCopyLocalToHDFS(BaseTest):
         Checks if the command is correctly constructed based on the provided arguments.
         """
         # Test case 1: Test copy_local_to_hdfs without overwrite option
-        from_path = '/local/path/file.txt'
-        to_path = '/user/hdfs/path/file.txt'
-        command = ['hadoop', 'fs', '-copyFromLocal', from_path, to_path]
+        from_path = "/local/path/file.txt"
+        to_path = "/user/hdfs/path/file.txt"
+        command = ["hadoop", "fs", "-copyFromLocal", from_path, to_path]
         assert copy_local_to_hdfs(from_path, to_path) == _perform(command)
 
         # Test case 2: Test copy_local_to_hdfs with overwrite option
-        overwrite_from_path = '/local/path/file.txt'
-        overwrite_to_path = '/user/hdfs/path/file.txt'
+        overwrite_from_path = "/local/path/file.txt"
+        overwrite_to_path = "/user/hdfs/path/file.txt"
         overwrite_command = [
-            'hadoop',
-            'fs',
-            '-copyFromLocal',
-            '-f',
+            "hadoop",
+            "fs",
+            "-copyFromLocal",
+            "-f",
             overwrite_from_path,
             overwrite_to_path,
         ]
@@ -206,8 +207,8 @@ class TestCreateDir(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test create_dir with a valid path
-        path = '/user/new_directory'
-        command = ['hadoop', 'fs', '-mkdir', path]
+        path = "/user/new_directory"
+        command = ["hadoop", "fs", "-mkdir", path]
         assert create_dir(path) == _perform(command)
 
 
@@ -215,17 +216,17 @@ class TestCreateTxtFromString:
     """Tests for create_txt_from_string function."""
 
     @pytest.mark.parametrize(
-        ('path', 'string_to_write', 'replace', 'expected_call'),
+        ("path", "string_to_write", "replace", "expected_call"),
         [
             (
-                '/some/directory/newfile.txt',
-                'Hello, world!',
+                "/some/directory/newfile.txt",
+                "Hello, world!",
                 False,
                 ['echo "Hello, world!" | hadoop fs -put - /some/directory/newfile.txt'],
             ),
             (
-                '/some/directory/newfile.txt',
-                'Hello, world!',
+                "/some/directory/newfile.txt",
+                "Hello, world!",
                 True,
                 ['echo "Hello, world!" | hadoop fs -put - /some/directory/newfile.txt'],
             ),
@@ -239,10 +240,10 @@ class TestCreateTxtFromString:
         expected_call,
     ):
         """Verify 'echo | hadoop fs -put -' command execution by create_txt_from_string."""
-        with patch('subprocess.call') as subprocess_mock, patch(
-            'rdsa_utils.cdp.helpers.hdfs_utils.file_exists',
+        with patch("subprocess.call") as subprocess_mock, patch(
+            "rdsa_utils.cdp.helpers.hdfs_utils.file_exists",
         ) as file_exists_mock, patch(
-            'rdsa_utils.cdp.helpers.hdfs_utils.delete_file',
+            "rdsa_utils.cdp.helpers.hdfs_utils.delete_file",
         ) as delete_file_mock:
             file_exists_mock.return_value = (
                 replace  # Assume file exists if replace is True
@@ -258,7 +259,7 @@ class TestCreateTxtFromString:
                     create_txt_from_string(path, string_to_write, replace)
                 assert (
                     str(excinfo.value)
-                    == f'File {path} already exists and replace is set to False.'
+                    == f"File {path} already exists and replace is set to False."
                 )
 
             # Verify if file_exists mock is called correctly
@@ -282,8 +283,8 @@ class TestDeleteDir(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test delete_dir with a valid path
-        path = '/user/directory'
-        command = ['hadoop', 'fs', '-rmdir', path]
+        path = "/user/directory"
+        command = ["hadoop", "fs", "-rmdir", path]
         assert delete_dir(path) == _perform(command)
 
 
@@ -296,8 +297,8 @@ class TestDeleteFile(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test delete_file with a valid path
-        path = '/user/file.txt'
-        command = ['hadoop', 'fs', '-rm', path]
+        path = "/user/file.txt"
+        command = ["hadoop", "fs", "-rm", path]
         assert delete_file(path) == _perform(command)
 
 
@@ -310,8 +311,8 @@ class TestDeletePath(BaseTest):
         Checks if the command is correctly constructed based on the provided file path.
         """
         # Test case: Test delete_path with a valid file path
-        file_path = '/user/testfile.txt'
-        command = ['hadoop', 'fs', '-rm', '-r', file_path]
+        file_path = "/user/testfile.txt"
+        command = ["hadoop", "fs", "-rm", "-r", file_path]
         assert delete_path(file_path) == _perform(command)
 
     def test_delete_directory_with_delete_path(self, mock_subprocess_popen):
@@ -320,8 +321,8 @@ class TestDeletePath(BaseTest):
         Checks if the command is correctly constructed based on the provided directory path.
         """
         # Test case: Test delete_path with a valid directory path
-        dir_path = '/user/testdir'
-        command = ['hadoop', 'fs', '-rm', '-r', dir_path]
+        dir_path = "/user/testdir"
+        command = ["hadoop", "fs", "-rm", "-r", dir_path]
         assert delete_path(dir_path) == _perform(command)
 
 
@@ -334,13 +335,13 @@ class TestFileExits(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test file_exists with an existing file
-        path = '/user/file.txt'
-        command = ['hadoop', 'fs', '-test', '-e', path]
+        path = "/user/file.txt"
+        command = ["hadoop", "fs", "-test", "-e", path]
         assert file_exists(path) == _perform(command)
 
         # Test case 2: Test file_exists with a non-existing file
-        non_existing_path = '/user/non_existing_file.txt'
-        non_existing_command = ['hadoop', 'fs', '-test', '-e', non_existing_path]
+        non_existing_path = "/user/non_existing_file.txt"
+        non_existing_command = ["hadoop", "fs", "-test", "-e", non_existing_path]
         assert file_exists(non_existing_path) == _perform(non_existing_command)
 
 
@@ -353,13 +354,13 @@ class TestDateModified(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case: Test get_date_modified with a valid path
-        filepath = '/user/file.txt'
+        filepath = "/user/file.txt"
         command_mock = mock_subprocess_popen_date_modifed.return_value
         stdout_mock = command_mock.stdout
         stdout_mock.read.return_value.decode.return_value.__getitem__.return_value = (
-            '2023-05-25'
+            "2023-05-25"
         )
-        expected_output = '2023-05-25'
+        expected_output = "2023-05-25"
         assert get_date_modified(filepath) == expected_output
 
 
@@ -372,13 +373,13 @@ class TestIsDir(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test is_dir with an existing directory
-        path = '/user/directory'
-        command = ['hadoop', 'fs', '-test', '-d', path]
+        path = "/user/directory"
+        command = ["hadoop", "fs", "-test", "-d", path]
         assert is_dir(path) == _perform(command)
 
         # Test case 2: Test is_dir with a non-existing directory
-        non_existing_path = '/user/non_existing_directory'
-        non_existing_command = ['hadoop', 'fs', '-test', '-d', non_existing_path]
+        non_existing_path = "/user/non_existing_directory"
+        non_existing_command = ["hadoop", "fs", "-test", "-d", non_existing_path]
         assert is_dir(non_existing_path) == _perform(non_existing_command)
 
 
@@ -391,18 +392,18 @@ class TestMoveLocalToHDFS(BaseTest):
         Checks if the command is correctly constructed based on the provided arguments.
         """
         # Test case 1: Test move_local_to_hdfs without overwrite option
-        from_path = '/local/path/file.txt'
-        to_path = '/user/hdfs/path/file.txt'
-        command = ['hadoop', 'fs', '-moveFromLocal', from_path, to_path]
+        from_path = "/local/path/file.txt"
+        to_path = "/user/hdfs/path/file.txt"
+        command = ["hadoop", "fs", "-moveFromLocal", from_path, to_path]
         assert move_local_to_hdfs(from_path, to_path) == _perform(command)
 
         # Test case 2: Test move_local_to_hdfs with overwrite option
-        overwrite_from_path = '/local/path/file.txt'
-        overwrite_to_path = '/user/hdfs/path/file.txt'
+        overwrite_from_path = "/local/path/file.txt"
+        overwrite_to_path = "/user/hdfs/path/file.txt"
         overwrite_command = [
-            'hadoop',
-            'fs',
-            '-moveFromLocal',
+            "hadoop",
+            "fs",
+            "-moveFromLocal",
             overwrite_from_path,
             overwrite_to_path,
         ]
@@ -420,12 +421,12 @@ class TestReadDir(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test read_dir with a valid path
-        path = '/user/directory'
-        ls = subprocess.Popen(['hadoop', 'fs', '-ls', path], stdout=subprocess.PIPE)
+        path = "/user/directory"
+        ls = subprocess.Popen(["hadoop", "fs", "-ls", path], stdout=subprocess.PIPE)
         expected_files = [
-            line.decode('utf-8').split()[-1]
+            line.decode("utf-8").split()[-1]
             for line in ls.stdout
-            if 'Found' not in line.decode('utf-8')
+            if "Found" not in line.decode("utf-8")
         ]
         assert read_dir(path) == expected_files
 
@@ -436,7 +437,7 @@ class TestReadDirFiles(BaseTest):
     def test_read_dir_files(self, mock_subprocess_popen):
         """Verify proper extraction of filenames from paths by the read_dir_files function."""
         # Test case 1: Test read_dir_files with a valid path
-        path = '/user/directory'
+        path = "/user/directory"
         expected_files = [Path(p).name for p in read_dir(path)]
         assert read_dir_files(path) == expected_files
 
@@ -450,21 +451,21 @@ class TestReadDirFilesRecursive(BaseTest):
         Checks if the command is correctly constructed based on the provided path.
         """
         # Test case 1: Test read_dir_files_recursive without return_path option
-        path = '/user/directory'
+        path = "/user/directory"
         command = subprocess.Popen(
             f"hadoop fs -ls -R {path} | grep -v ^d | tr -s ' ' | cut -d ' ' -f 8-",
             stdout=subprocess.PIPE,
             shell=True,
         )
         expected_files = [
-            obj.decode('utf-8') for obj in command.stdout.read().splitlines()
+            obj.decode("utf-8") for obj in command.stdout.read().splitlines()
         ]
         assert read_dir_files_recursive(path) == expected_files
 
         # Test case 2: Test read_dir_files_recursive with return_path option
         return_path = True
         return_path_files = [
-            obj.decode('utf-8') for obj in command.stdout.read().splitlines()
+            obj.decode("utf-8") for obj in command.stdout.read().splitlines()
         ]
         assert read_dir_files_recursive(path, return_path) == return_path_files
 
@@ -478,18 +479,18 @@ class TestRename(BaseTest):
         Checks if the command is correctly constructed based on the provided arguments.
         """
         # Test case 1: Test rename without overwrite option
-        from_path = '/user/old_file.txt'
-        to_path = '/user/new_file.txt'
-        command = ['hadoop', 'fs', '-mv', from_path, to_path]
+        from_path = "/user/old_file.txt"
+        to_path = "/user/new_file.txt"
+        command = ["hadoop", "fs", "-mv", from_path, to_path]
         assert rename(from_path, to_path) == _perform(command)
 
         # Test case 2: Test rename with overwrite option
-        overwrite_from_path = '/user/old_file.txt'
-        overwrite_to_path = '/user/new_file.txt'
+        overwrite_from_path = "/user/old_file.txt"
+        overwrite_to_path = "/user/new_file.txt"
         overwrite_command = [
-            'hadoop',
-            'fs',
-            '-mv',
+            "hadoop",
+            "fs",
+            "-mv",
             overwrite_from_path,
             overwrite_to_path,
         ]

@@ -4,6 +4,8 @@ The purpose of these is to provide a clearer indication of why an error is
 being raised over the standard builtin errors (e.g. `ColumnNotInDataframeError`
 vs `ValueError`).
 """
+
+
 class ColumnNotInDataframeError(Exception):
     """Custom exception to raise when a column is not present in dataframe."""
 
@@ -32,6 +34,7 @@ class TableNotFoundError(Exception):
     """Custom exception to raise when a table to be read is not found."""
 
     pass
+
 
 class InvalidBucketNameError(Exception):
     """Custom exception to raise when an AWS S3 bucket name is invalid."""
