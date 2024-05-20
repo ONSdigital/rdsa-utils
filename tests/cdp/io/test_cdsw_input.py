@@ -1,5 +1,6 @@
 """Tests for the cdp/io/input.py module."""
 
+from typing import Generator
 from unittest.mock import MagicMock
 
 import pytest
@@ -16,7 +17,7 @@ class TestGetCurrentDatabase:
     def setup_and_teardown_database(  # noqa: PT004
         self,
         spark_session: SparkSession,
-    ) -> None:
+    ) -> Generator[None, None, None]:
         """
         Fixture that sets up a dummy Spark database for testing.
 
@@ -68,7 +69,10 @@ class TestExtractDatabaseName:
     """Tests for extract_database_name function."""
 
     @pytest.fixture()
-    def dummy_database_and_table(self, spark_session: SparkSession) -> str:
+    def dummy_database_and_table(
+        self,
+        spark_session: SparkSession,
+    ) -> Generator[None, None, None]:
         """Fixture that creates a dummy Spark database and table for testing.
 
         This fixture creates a test database named 'test_db' and a test table
