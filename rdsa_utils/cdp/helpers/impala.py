@@ -1,4 +1,5 @@
 """Utilities for working with Impala."""
+
 import logging
 import subprocess
 from typing import Optional
@@ -59,15 +60,15 @@ def invalidate_impala_metadata(
     """
     result = subprocess.run(
         [
-            'impala-shell',
-            '-k',
-            '--ssl',
-            '-i',
+            "impala-shell",
+            "-k",
+            "--ssl",
+            "-i",
             impalad_address_port,
-            '--ca_cert',
+            "--ca_cert",
             impalad_ca_cert,
-            '-q',
-            f'invalidate metadata {table};',
+            "-q",
+            f"invalidate metadata {table};",
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

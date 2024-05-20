@@ -1,4 +1,5 @@
 """A selection of helper functions for building in pyspark."""
+
 import functools
 import itertools
 import logging
@@ -76,8 +77,8 @@ def melt(
     df: SparkDF,
     id_vars: Union[str, Sequence[str]],
     value_vars: Union[str, Sequence[str]],
-    var_name: str = 'variable',
-    value_name: str = 'value',
+    var_name: str = "variable",
+    value_name: str = "value",
 ) -> SparkDF:
     """Melt a spark dataframe in a pandas like fashion.
 
@@ -145,11 +146,11 @@ def melt(
     )
 
     # Add to the DataFrame and explode, which extends the dataframe
-    _tmp = df.withColumn('_vars_and_vals', F.explode(_vars_and_vals))
+    _tmp = df.withColumn("_vars_and_vals", F.explode(_vars_and_vals))
 
     # We only want to select certain columns
     cols = id_vars + [
-        F.col('_vars_and_vals')[x].alias(x) for x in [var_name, value_name]
+        F.col("_vars_and_vals")[x].alias(x) for x in [var_name, value_name]
     ]
 
     return _tmp.select(*cols)
@@ -179,12 +180,18 @@ def to_spark_col(_func=None, *, exclude: Sequence[str] = None) -> Callable:
             varnames = func.__code__.co_varnames
             if args:
                 args = [
-                    _convert_to_spark_col(arg) if varnames[i] not in exclude else arg # noqa: E501
+                    (
+                        _convert_to_spark_col(arg)
+                        if varnames[i] not in exclude
+                        else arg
+                    )  # noqa: E501
                     for i, arg in enumerate(args)
                 ]
             if kwargs:
                 kwargs = {
-                    k: _convert_to_spark_col(kwarg) if k not in exclude else kwarg # noqa: E501
+                    k: (
+                        _convert_to_spark_col(kwarg) if k not in exclude else kwarg
+                    )  # noqa: E501
                     for k, kwarg in kwargs.items()
                 }
             return func(*args, **kwargs)
@@ -233,8 +240,7 @@ def map_column_names(df: SparkDF, mapper: Mapping[str, str]) -> SparkDF:
     If the column name is not in the mapper the name doesn't change.
     """
     cols = [
-        F.col(col_name).alias(mapper.get(col_name, col_name))
-        for col_name in df.columns
+        F.col(col_name).alias(mapper.get(col_name, col_name)) for col_name in df.columns
     ]
     return df.select(*cols)
 
@@ -367,7 +373,7 @@ def rank_numeric(
 
 def calc_median_price(
     groups: Union[str, Sequence[str]],
-    price_col: str = 'price',
+    price_col: str = "price",
 ) -> SparkCol:
     """Calculate the median price per grouping level.
 
@@ -384,7 +390,7 @@ def calc_median_price(
         A single entry for each grouping level, and its median price.
     """
     # Note median in [1,2,3,4] would return as 2 using below.
-    median = f'percentile_approx({price_col}, 0.5)'
+    median = f"percentile_approx({price_col}, 0.5)"
 
     return F.expr(median).over(Window.partitionBy(groups))
 
@@ -440,16 +446,12 @@ def convert_cols_to_struct_col(
 
     if not struct_cols:
         df = df.withColumn(
-            f'no_{struct_col_name}',
+            f"no_{struct_col_name}",
             F.lit(no_struct_col_value).cast(no_struct_col_type),
         )
-        struct_cols = [f'no_{struct_col_name}']
+        struct_cols = [f"no_{struct_col_name}"]
 
-    return (
-        df
-        .withColumn(struct_col_name, F.struct(*struct_cols))
-        .drop(*struct_cols)
-    )
+    return df.withColumn(struct_col_name, F.struct(*struct_cols)).drop(*struct_cols)
 
 
 def select_first_obs_appearing_in_group(
@@ -491,12 +493,7 @@ def select_first_obs_appearing_in_group(
         group=group,
         ascending=ascending,
     )
-    return (
-        df
-        .withColumn('rank', rank_by_date)
-        .filter(F.col('rank') == 1)
-        .drop('rank')
-    )
+    return df.withColumn("rank", rank_by_date).filter(F.col("rank") == 1).drop("rank")
 
 
 @log_spark_df_schema
@@ -531,13 +528,11 @@ def convert_struc_col_to_columns(
         *[col for col in df.columns if col not in struct_cols],
         # All columns identified as being struct type, but expand the struct
         # to individual columns using .* notation.
-        *[f'{col}.*' for col in struct_cols],
+        *[f"{col}.*" for col in struct_cols],
     )
 
-    if (
-        convert_nested_structs and
-        any(isinstance(field.dataType, T.StructType)
-        for field in df.schema.fields)
+    if convert_nested_structs and any(
+        isinstance(field.dataType, T.StructType) for field in df.schema.fields
     ):
         df = convert_struc_col_to_columns(df=df)
 
@@ -577,7 +572,7 @@ def cut_lineage(df: SparkDF) -> SparkDF:
     >>> new_df.count()
     3
     """
-    logger.info('Converting SparkDF to Java RDD.')
+    logger.info("Converting SparkDF to Java RDD.")
 
     try:
         jrdd = df._jdf.toJavaRDD()
@@ -589,12 +584,12 @@ def cut_lineage(df: SparkDF) -> SparkDF:
         except AttributeError:
             java_sql_ctx = sql_ctx._ssql_ctx
 
-        logger.info('Creating new SparkDF from Java RDD.')
+        logger.info("Creating new SparkDF from Java RDD.")
         new_java_df = java_sql_ctx.createDataFrame(jrdd, jschema)
         new_df = SparkDF(new_java_df, sql_ctx)
         return new_df
     except Exception:
-        logger.error('An error occurred during the lineage cutting process.')
+        logger.error("An error occurred during the lineage cutting process.")
         raise
 
 
@@ -629,22 +624,22 @@ def find_spark_dataframes(
     frames = {}
 
     for key, value in locals_dict.items():
-        if key in ['_', '__', '___']:
+        if key in ["_", "__", "___"]:
             continue
 
         if isinstance(value, SparkDF):
             frames[key] = value
-            logger.info(f'SparkDF found: {key}')
+            logger.info(f"SparkDF found: {key}")
         elif (
             isinstance(value, dict)
             and value
             and isinstance(next(iter(value.values())), SparkDF)
         ):
             frames[key] = value
-            logger.info(f'Dictionary of SparkDFs found: {key}')
+            logger.info(f"Dictionary of SparkDFs found: {key}")
         else:
             logger.debug(
-                f'Skipping non-SparkDF item: {key}, Type: {type(value)}',
+                f"Skipping non-SparkDF item: {key}, Type: {type(value)}",
             )
 
     return frames
@@ -652,7 +647,7 @@ def find_spark_dataframes(
 
 def create_spark_session(
     app_name: Optional[str] = None,
-    size: Optional[Literal['small', 'medium', 'large', 'extra-large']] = None,
+    size: Optional[Literal["small", "medium", "large", "extra-large"]] = None,
     extra_configs: Optional[Dict[str, str]] = None,
 ) -> SparkSession:
     """Create a PySpark Session based on the specified size.
@@ -728,62 +723,61 @@ def create_spark_session(
     try:
         if size:
             size = size.lower()
-            valid_sizes = ['small', 'medium', 'large', 'extra-large']
+            valid_sizes = ["small", "medium", "large", "extra-large"]
             if size not in valid_sizes:
-                msg = (
-                    f"Invalid '{size=}'. "
-                    f"If specified must be one of {valid_sizes}."
-                )
+                msg = f"Invalid '{size=}'. If specified must be one of {valid_sizes}."
                 raise ValueError(msg)
 
         logger.info(
-            f"Creating a '{size}' Spark session..."
-            if size
-            else 'Creating a basic Spark session...',
+            (
+                f"Creating a '{size}' Spark session..."
+                if size
+                else "Creating a basic Spark session..."
+            ),
         )
 
         if app_name:
-            builder = SparkSession.builder.appName(f'{app_name}')
+            builder = SparkSession.builder.appName(f"{app_name}")
         else:
             builder = SparkSession.builder
 
         # fmt: off
-        if size == 'small':
+        if size == "small":
             builder = (
-                builder.config('spark.executor.memory', '1g')
-                .config('spark.executor.cores', 1)
-                .config('spark.dynamicAllocation.maxExecutors', 3)
-                .config('spark.sql.shuffle.partitions', 12)
+                builder.config("spark.executor.memory", "1g")
+                .config("spark.executor.cores", 1)
+                .config("spark.dynamicAllocation.maxExecutors", 3)
+                .config("spark.sql.shuffle.partitions", 12)
             )
-        elif size == 'medium':
+        elif size == "medium":
             builder = (
-                builder.config('spark.executor.memory', '6g')
-                .config('spark.executor.cores', 3)
-                .config('spark.dynamicAllocation.maxExecutors', 3)
-                .config('spark.sql.shuffle.partitions', 18)
+                builder.config("spark.executor.memory", "6g")
+                .config("spark.executor.cores", 3)
+                .config("spark.dynamicAllocation.maxExecutors", 3)
+                .config("spark.sql.shuffle.partitions", 18)
             )
-        elif size == 'large':
+        elif size == "large":
             builder = (
-                builder.config('spark.executor.memory', '10g')
-                .config('spark.yarn.executor.memoryOverhead', '1g')
-                .config('spark.executor.cores', 5)
-                .config('spark.dynamicAllocation.maxExecutors', 5)
-                .config('spark.sql.shuffle.partitions', 200)
+                builder.config("spark.executor.memory", "10g")
+                .config("spark.yarn.executor.memoryOverhead", "1g")
+                .config("spark.executor.cores", 5)
+                .config("spark.dynamicAllocation.maxExecutors", 5)
+                .config("spark.sql.shuffle.partitions", 200)
             )
-        elif size == 'extra-large':
+        elif size == "extra-large":
             builder = (
-                builder.config('spark.executor.memory', '20g')
-                .config('spark.yarn.executor.memoryOverhead', '2g')
-                .config('spark.executor.cores', 5)
-                .config('spark.dynamicAllocation.maxExecutors', 12)
-                .config('spark.sql.shuffle.partitions', 240)
+                builder.config("spark.executor.memory", "20g")
+                .config("spark.yarn.executor.memoryOverhead", "2g")
+                .config("spark.executor.cores", 5)
+                .config("spark.dynamicAllocation.maxExecutors", 12)
+                .config("spark.sql.shuffle.partitions", 240)
             )
 
         # Common configurations for all sizes
         builder = (
-            builder.config('spark.dynamicAllocation.enabled', 'true')
-            .config('spark.shuffle.service.enabled', 'true')
-            .config('spark.ui.showConsoleProgress', 'false')
+            builder.config("spark.dynamicAllocation.enabled", "true")
+            .config("spark.shuffle.service.enabled", "true")
+            .config("spark.ui.showConsoleProgress", "false")
         ).enableHiveSupport()
         # fmt: on
 
@@ -792,8 +786,8 @@ def create_spark_session(
             for key, value in extra_configs.items():
                 builder = builder.config(key, value)
 
-        logger.info('Spark session created successfully!')
+        logger.info("Spark session created successfully!")
         return builder.getOrCreate()
     except Exception as e:
-        logger.error(f'An error occurred while creating the Spark session: {e}')
+        logger.error(f"An error occurred while creating the Spark session: {e}")
         raise

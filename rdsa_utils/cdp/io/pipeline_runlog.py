@@ -1,4 +1,5 @@
 """Utilities for managing a Pipeline Runlog using Hive Tables."""
+
 import json
 import logging
 import os
@@ -33,13 +34,13 @@ def _write_entry(entry_df: DataFrame, log_table: str) -> None:
     try:
         entry_df.write.insertInto(log_table)
     except AnalysisException as e:
-        logger.error(f'Error writing entry to table {log_table}: {e}')
+        logger.error(f"Error writing entry to table {log_table}: {e}")
 
 
 def create_runlog_table(
     spark: SparkSession,
     database: str,
-    tablename: Optional[str] = 'pipeline_runlog',
+    tablename: Optional[str] = "pipeline_runlog",
 ) -> None:
     """Create runlog and _reserved_ids tables in the target database if needed.
 
@@ -96,7 +97,7 @@ def create_runlog_table(
 
 def reserve_id(
     spark: SparkSession,
-    log_table: Optional[str] = 'pipeline_runlog',
+    log_table: Optional[str] = "pipeline_runlog",
 ) -> int:
     """Reserve a run id in the reserved ids table linked to the runlog table.
 
@@ -120,15 +121,15 @@ def reserve_id(
     current_time = datetime.now()  # noqa: DTZ005
 
     last_id = (
-        spark.read.table(f'{log_table}_reserved_ids').select(F.max('run_id')).first()[0]
+        spark.read.table(f"{log_table}_reserved_ids").select(F.max("run_id")).first()[0]
     )
 
     new_id = last_id + 1 if last_id else 1
 
     new_entry = [(new_id, current_time)]
-    df = spark.createDataFrame(new_entry, 'run_id INT, reserved_date TIMESTAMP')
+    df = spark.createDataFrame(new_entry, "run_id INT, reserved_date TIMESTAMP")
 
-    _write_entry(df, f'{log_table}_reserved_ids')
+    _write_entry(df, f"{log_table}_reserved_ids")
 
     return new_id
 
@@ -137,7 +138,7 @@ def _get_run_ids(
     spark: SparkSession,
     limit: int,
     pipeline: Optional[str] = None,
-    log_table: str = 'pipeline_runlog',
+    log_table: str = "pipeline_runlog",
 ) -> List[int]:
     """Retrieve the most recent run ids.
 
@@ -165,8 +166,7 @@ def _get_run_ids(
         log = log.filter(log.pipeline_name == pipeline)
 
     result = (
-        log.orderBy('datetime', ascending=False)
-        .select('run_id').limit(limit).collect()
+        log.orderBy("datetime", ascending=False).select("run_id").limit(limit).collect()
     )
 
     return [row[0] for row in result]
@@ -175,7 +175,7 @@ def _get_run_ids(
 def get_last_run_id(
     spark: SparkSession,
     pipeline: Optional[str] = None,
-    log_table: str = 'pipeline_runlog',
+    log_table: str = "pipeline_runlog",
 ) -> Optional[int]:
     """Retrieve the last run_id, either in general or for a specific pipeline.
 
@@ -205,7 +205,7 @@ def get_last_run_id(
 def get_penultimate_run_id(
     spark: SparkSession,
     pipeline: Optional[str] = None,
-    log_table: str = 'pipeline_runlog',
+    log_table: str = "pipeline_runlog",
 ) -> Optional[int]:
     """Retrieve penultimate run_id in general or a specific pipeline.
 
@@ -264,15 +264,15 @@ def create_runlog_entry(
         The log entry returned as a spark dataframe.
     """
     cols = [
-        'run_id',
-        'desc',
-        'user',
-        'datetime',
-        'pipeline_name',
-        'pipeline_version',
-        'config',
+        "run_id",
+        "desc",
+        "user",
+        "datetime",
+        "pipeline_name",
+        "pipeline_version",
+        "config",
     ]
-    user = os.getenv('HADOOP_USER_NAME', 'unknown')
+    user = os.getenv("HADOOP_USER_NAME", "unknown")
 
     if not pipeline:
         pipeline = spark.sparkContext.appName
@@ -285,9 +285,9 @@ def create_runlog_entry(
         )
     except Exception as err:
         msg = (
-            'Problem converting config object. '
-            'Either use a ConfigParser object or '
-            'something that can be encoded with json.dumps'
+            "Problem converting config object. "
+            "Either use a ConfigParser object or "
+            "something that can be encoded with json.dumps"
         )
         raise ValueError(msg) from err
 
@@ -301,7 +301,7 @@ def add_runlog_entry(
     version: str,
     config: Union[ConfigParser, Dict[str, str]],
     pipeline: Optional[str] = None,
-    log_table: str = 'pipeline_runlog',
+    log_table: str = "pipeline_runlog",
     run_id: Optional[int] = None,
 ) -> DataFrame:
     """Add an entry to a target runlog.
@@ -359,22 +359,21 @@ def _parse_runlog_as_string(
     str
         Parsed runlog entry.
     """
-    query = f'SELECT * FROM {runlog_table} WHERE run_id = {runlog_id}'
+    query = f"SELECT * FROM {runlog_table} WHERE run_id = {runlog_id}"
     df = spark.sql(query)
 
-    config = literal_eval(df.select('config').first()[0])
+    config = literal_eval(df.select("config").first()[0])
 
-    meta = '\n'.join(
-        f'{col}: {df.select(col).first()[0]}'
-        for col in df.drop('config').columns
+    meta = "\n".join(
+        f"{col}: {df.select(col).first()[0]}" for col in df.drop("config").columns
     )
-    config_str = '\n\n'.join(
+    config_str = "\n\n".join(
         f"{k.replace('_', ' ').title()}:\n\n"
-        + '\n'.join(f'{key}: {value}' for key, value in v.items())
+        + "\n".join(f"{key}: {value}" for key, value in v.items())
         for k, v in config.items()
     )
 
-    return f'Metadata:\n\n{meta}\n\n{config_str}\n'.replace('$', '')
+    return f"Metadata:\n\n{meta}\n\n{config_str}\n".replace("$", "")
 
 
 def write_runlog_file(

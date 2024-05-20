@@ -1,4 +1,5 @@
 """Tests for impala.py module."""
+
 import subprocess
 
 from rdsa_utils.cdp.helpers.impala import invalidate_impala_metadata
@@ -25,15 +26,15 @@ class TestInvalidateImpalaMetadata:
            when keep_stderr is True.
         """
         # Mock the subprocess.run() call
-        mock_subprocess_run = mocker.patch('subprocess.run')
+        mock_subprocess_run = mocker.patch("subprocess.run")
 
         # Set up test parameters
-        table = 'test_table'
-        impalad_address_port = 'localhost:21050'
-        impalad_ca_cert = '/path/to/ca_cert.pem'
+        table = "test_table"
+        impalad_address_port = "localhost:21050"
+        impalad_ca_cert = "/path/to/ca_cert.pem"
 
         # Mock logger.info
-        mock_logger_info = mocker.patch('logging.Logger.info')
+        mock_logger_info = mocker.patch("logging.Logger.info")
 
         # Call the function without keep_stderr
         invalidate_impala_metadata(table, impalad_address_port, impalad_ca_cert)
@@ -41,15 +42,15 @@ class TestInvalidateImpalaMetadata:
         # Check that subprocess.run() was called with the correct arguments
         mock_subprocess_run.assert_called_with(
             [
-                'impala-shell',
-                '-k',
-                '--ssl',
-                '-i',
+                "impala-shell",
+                "-k",
+                "--ssl",
+                "-i",
                 impalad_address_port,
-                '--ca_cert',
+                "--ca_cert",
                 impalad_ca_cert,
-                '-q',
-                f'invalidate metadata {table};',
+                "-q",
+                f"invalidate metadata {table};",
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -60,7 +61,10 @@ class TestInvalidateImpalaMetadata:
 
         # Call the function with keep_stderr
         result = subprocess.CompletedProcess(
-            args=['dummy'], returncode=0, stdout=b'', stderr=b'Test Error',
+            args=["dummy"],
+            returncode=0,
+            stdout=b"",
+            stderr=b"Test Error",
         )
         mock_subprocess_run.return_value = result
 
@@ -75,17 +79,17 @@ class TestInvalidateImpalaMetadata:
         # and logger.info() was called with the expected error message.
         mock_subprocess_run.assert_called_with(
             [
-                'impala-shell',
-                '-k',
-                '--ssl',
-                '-i',
+                "impala-shell",
+                "-k",
+                "--ssl",
+                "-i",
                 impalad_address_port,
-                '--ca_cert',
+                "--ca_cert",
                 impalad_ca_cert,
-                '-q',
-                f'invalidate metadata {table};',
+                "-q",
+                f"invalidate metadata {table};",
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        mock_logger_info.assert_called_once_with('Test Error')
+        mock_logger_info.assert_called_once_with("Test Error")

@@ -1,31 +1,15 @@
 """Write outputs to GCP."""
+
 import logging
-from typing import (
-    List,
-    Literal,
-    Optional,
-    Union,
-)
+from typing import List, Literal, Optional, Union
 
 from pandas import DataFrame as PandasDF
-from pyspark.sql import (
-    DataFrame as SparkDF,
-)
+from pyspark.sql import DataFrame as SparkDF
 
-from rdsa_utils.typing import (
-    BigQueryTimePartitions,
-    TablePath,
-)
-from rdsa_utils.gcp.helpers.gcp_utils import (
-    run_bq_query,
-)
-from rdsa_utils.helpers.pyspark import (
-    is_df_empty,
-)
-from rdsa_utils.helpers.python import (
-    list_convert,
-)
-
+from rdsa_utils.gcp.helpers.gcp_utils import run_bq_query
+from rdsa_utils.helpers.pyspark import is_df_empty
+from rdsa_utils.helpers.python import list_convert
+from rdsa_utils.typing import BigQueryTimePartitions, TablePath
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +17,12 @@ logger = logging.getLogger(__name__)
 def write_table(
     df: Union[PandasDF, SparkDF],
     table_name: TablePath,
-    mode: Literal['append', 'error', 'ignore', 'overwrite'] = 'error',
+    mode: Literal["append", "error", "ignore", "overwrite"] = "error",
     partition_col: Optional[str] = None,
     partition_type: Optional[BigQueryTimePartitions] = None,
     partition_expiry_days: Optional[float] = None,
     clustered_fields: Optional[Union[str, List[str]]] = None,
- ) -> None:
+) -> None:
     """Write dataframe out to a Google BigQuery table.
 
     In the case the table already exists, behavior of this function depends on
@@ -111,63 +95,58 @@ def write_table(
     -------
     None
     """  # noqa: E501
-    logger.info(f'Writing to table {table_name} with mode {mode.upper()}')
+    logger.info(f"Writing to table {table_name} with mode {mode.upper()}")
 
     # Pandas df should always be small enough to be saved as a single
     # file/partition.
     if isinstance(df, PandasDF):
-        logger.debug('Converting pandas dataframe to spark')
+        logger.debug("Converting pandas dataframe to spark")
         df = df.sql_ctx.createDataFrame(df).coalesce(1)
 
     logger.info(
-        f'Output dataframe has schema\n{df._jdf.schema().treeString()}',
+        f"Output dataframe has schema\n{df._jdf.schema().treeString()}",
     )
 
     if is_df_empty(df):
         logger.warning(
-            'The output contains no records. No data will be appended to the '
-            f'{table_name} table.',
+            "The output contains no records. No data will be appended to the "
+            f"{table_name} table.",
         )
 
-    write = (
-        df
-        .write
-        .format('bigquery')
-        .mode(mode)
-    )
+    write = df.write.format("bigquery").mode(mode)
 
     if partition_col:
-        logger.info(f'Data in BigQuery will be partitioned on {partition_col}')
-        write = write.option('partitionField', partition_col)
+        logger.info(f"Data in BigQuery will be partitioned on {partition_col}")
+        write = write.option("partitionField", partition_col)
 
     if partition_type:
         logger.info(
-            f'Data in BigQuery will be partitioned by {partition_type}',
+            f"Data in BigQuery will be partitioned by {partition_type}",
         )
-        write = write.option('partitionType', partition_type.upper())
+        write = write.option("partitionType", partition_type.upper())
 
     if clustered_fields:
         clustered_fields = list_convert(clustered_fields)
 
         if len(clustered_fields) > 4:
             msg = (
-                f'Cannot save {table_name=} with clustered columns'
-                f'Number of columns specified = {len(clustered_fields)} > 4'
+                f"Cannot save {table_name=} with clustered columns"
+                f"Number of columns specified = {len(clustered_fields)} > 4"
             )
             logger.error(msg)
             raise ValueError(msg)
 
-        cluster_string = ','.join(clustered_fields)
+        cluster_string = ",".join(clustered_fields)
 
-        logger.info(f'Data in BigQuery will be clustered on {cluster_string}')
-        write = write.option('clusteredFields', cluster_string)
+        logger.info(f"Data in BigQuery will be clustered on {cluster_string}")
+        write = write.option("clusteredFields", cluster_string)
 
     write.save(table_name)
 
     # For any partitioned table it is best practice to require partition
     # filtering for any SQL queries in BigQuery.
     if partition_col or partition_type:
-        logger.info('Setting BigQuery require_partition_filter to True')
+        logger.info("Setting BigQuery require_partition_filter to True")
         run_bq_query(
             f"""
             ALTER TABLE {table_name}
@@ -178,7 +157,7 @@ def write_table(
         )
 
     if partition_expiry_days:
-        logger.info(f'Setting BigQuery {partition_expiry_days=}')
+        logger.info(f"Setting BigQuery {partition_expiry_days=}")
         run_bq_query(
             f"""
             ALTER TABLE {table_name}

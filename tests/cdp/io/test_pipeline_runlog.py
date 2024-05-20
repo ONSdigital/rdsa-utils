@@ -26,10 +26,10 @@ class TestWriteEntry:
         mock_df.write.insertInto.return_value = None
 
         # Call function with mock DataFrame and table name
-        _write_entry(mock_df, 'test_table')
+        _write_entry(mock_df, "test_table")
 
         # Assert that DataFrame write method was called with correct arguments
-        mock_df.write.insertInto.assert_called_once_with('test_table')
+        mock_df.write.insertInto.assert_called_once_with("test_table")
 
     def test_write_entry_edge_cases(self, mocker):
         """Test for no exceptions with empty entry_df or log_table as empty string."""
@@ -38,11 +38,11 @@ class TestWriteEntry:
         mock_df.write.insertInto.return_value = None
 
         # Call function with empty DataFrame and empty table name
-        _write_entry(mock_df, '')
+        _write_entry(mock_df, "")
 
         # Assert that DataFrame write method was called once with
         # empty string as argument
-        mock_df.write.insertInto.assert_called_once_with('')
+        mock_df.write.insertInto.assert_called_once_with("")
 
 
 class TestCreateRunlogTable:
@@ -54,7 +54,7 @@ class TestCreateRunlogTable:
         mock_spark = mocker.Mock()
 
         # Call function with default tablename
-        create_runlog_table(mock_spark, 'test_db')
+        create_runlog_table(mock_spark, "test_db")
 
         # Assert that the main table and _reserved_ids table were created
         # with correct names
@@ -88,7 +88,7 @@ class TestCreateRunlogTable:
         mock_spark = mocker.Mock()
 
         # Call function with custom tablename
-        create_runlog_table(mock_spark, 'test_db', 'custom_table')
+        create_runlog_table(mock_spark, "test_db", "custom_table")
 
         # Assert that the main table and _reserved_ids table were created
         # with correct names
@@ -134,11 +134,11 @@ class TestReserveId:
 
         # Mock _write_entry function
         mock_write_entry = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
+            "rdsa_utils.cdp.io.pipeline_runlog._write_entry",
         )
 
         # Mock pyspark.sql.functions.max
-        mocker.patch('pyspark.sql.functions.max', return_value=mocker.Mock())
+        mocker.patch("pyspark.sql.functions.max", return_value=mocker.Mock())
 
         # Call function
         result = reserve_id(spark_mock)
@@ -147,14 +147,14 @@ class TestReserveId:
         assert result == 2
 
         # Assert SparkSession methods were called correctly
-        spark_mock.read.table.assert_called_once_with('pipeline_runlog_reserved_ids')
+        spark_mock.read.table.assert_called_once_with("pipeline_runlog_reserved_ids")
         spark_mock.createDataFrame.assert_called_once_with(
             [(2, mocker.ANY)],
-            'run_id INT, reserved_date TIMESTAMP',
+            "run_id INT, reserved_date TIMESTAMP",
         )
         mock_write_entry.assert_called_once_with(
             mocker.ANY,
-            'pipeline_runlog_reserved_ids',
+            "pipeline_runlog_reserved_ids",
         )
 
     def test_reserve_id_edge_case(self, mocker):
@@ -173,11 +173,11 @@ class TestReserveId:
 
         # Mock _write_entry function
         mock_write_entry = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
+            "rdsa_utils.cdp.io.pipeline_runlog._write_entry",
         )
 
         # Mock pyspark.sql.functions.max
-        mocker.patch('pyspark.sql.functions.max', return_value=mocker.Mock())
+        mocker.patch("pyspark.sql.functions.max", return_value=mocker.Mock())
 
         # Call function
         result = reserve_id(spark_mock)
@@ -186,14 +186,14 @@ class TestReserveId:
         assert result == 1
 
         # Assert SparkSession methods were called correctly
-        spark_mock.read.table.assert_called_once_with('pipeline_runlog_reserved_ids')
+        spark_mock.read.table.assert_called_once_with("pipeline_runlog_reserved_ids")
         spark_mock.createDataFrame.assert_called_once_with(
             [(1, mocker.ANY)],
-            'run_id INT, reserved_date TIMESTAMP',
+            "run_id INT, reserved_date TIMESTAMP",
         )
         mock_write_entry.assert_called_once_with(
             mocker.ANY,
-            'pipeline_runlog_reserved_ids',
+            "pipeline_runlog_reserved_ids",
         )
 
 
@@ -204,15 +204,15 @@ class TestGetRunIds:
         """Tests correct retrieval of recent run IDs for specific and all pipelines."""
         # Mock SparkSession and log table
         spark_mock = mocker.Mock()
-        log_table = 'test_log_table'
+        log_table = "test_log_table"
 
         # Create test data
         test_data = [
-            (1, 'pipeline1', '2022-01-01 00:00:00'),
-            (2, 'pipeline1', '2022-01-06 00:00:00'),
-            (3, 'pipeline2', '2022-01-03 00:00:00'),
-            (4, 'pipeline2', '2022-01-04 00:00:00'),
-            (5, 'pipeline2', '2022-01-05 00:00:00'),
+            (1, "pipeline1", "2022-01-01 00:00:00"),
+            (2, "pipeline1", "2022-01-06 00:00:00"),
+            (3, "pipeline2", "2022-01-03 00:00:00"),
+            (4, "pipeline2", "2022-01-04 00:00:00"),
+            (5, "pipeline2", "2022-01-05 00:00:00"),
         ]
 
         # Sort the test data by datetime in descending order
@@ -237,12 +237,12 @@ class TestGetRunIds:
 
         # Call function for specific pipeline
         test_df.collect.return_value = [
-            (x[0],) for x in test_data_sorted if x[1] == 'pipeline2'
+            (x[0],) for x in test_data_sorted if x[1] == "pipeline2"
         ][:2]
         result_pipeline = _get_run_ids(
             spark_mock,
             2,
-            pipeline='pipeline2',
+            pipeline="pipeline2",
             log_table=log_table,
         )
 
@@ -253,16 +253,16 @@ class TestGetRunIds:
         ]
 
         # Assert DataFrame methods were called correctly
-        test_df.orderBy.assert_called_with('datetime', ascending=False)
-        test_df.select.assert_called_with('run_id')
-        test_df.filter.assert_called_with(test_df.pipeline_name == 'pipeline2')
+        test_df.orderBy.assert_called_with("datetime", ascending=False)
+        test_df.select.assert_called_with("run_id")
+        test_df.filter.assert_called_with(test_df.pipeline_name == "pipeline2")
         test_df.limit.assert_called_with(2)
 
     def test_get_run_ids_empty_table(self, mocker):
         """Test the function for returning an empty list when the log table is empty."""
         # Mock SparkSession and log table
         spark_mock = mocker.Mock()
-        log_table = 'test_log_table'
+        log_table = "test_log_table"
 
         # Mock DataFrame methods for an empty DataFrame
         test_df = mocker.Mock()
@@ -284,8 +284,8 @@ class TestGetRunIds:
         assert result_empty == []
 
         # Assert DataFrame methods were called correctly
-        test_df.orderBy.assert_called_with('datetime', ascending=False)
-        test_df.select.assert_called_with('run_id')
+        test_df.orderBy.assert_called_with("datetime", ascending=False)
+        test_df.select.assert_called_with("run_id")
         test_df.limit.assert_called_with(3)
 
 
@@ -299,7 +299,7 @@ class TestGetLastRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
+            "rdsa_utils.cdp.io.pipeline_runlog._get_run_ids",
             return_value=[3, 2, 1],
         )
 
@@ -310,7 +310,7 @@ class TestGetLastRunId:
         assert result == 3
 
         # Assert _get_run_ids was called correctly
-        get_run_ids_mock.assert_called_once_with(spark_mock, 1, None, 'pipeline_runlog')
+        get_run_ids_mock.assert_called_once_with(spark_mock, 1, None, "pipeline_runlog")
 
     def test_get_last_run_id_specific_pipeline_empty(self, mocker):
         """Test retrieving the last run ID for a specific pipeline with no log entries."""
@@ -319,12 +319,12 @@ class TestGetLastRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
+            "rdsa_utils.cdp.io.pipeline_runlog._get_run_ids",
             return_value=[],
         )
 
         # Call function with specific pipeline and empty log table
-        result = get_last_run_id(spark_mock, pipeline='test_pipeline')
+        result = get_last_run_id(spark_mock, pipeline="test_pipeline")
 
         # Assert result is None
         assert result is None
@@ -333,8 +333,8 @@ class TestGetLastRunId:
         get_run_ids_mock.assert_called_once_with(
             spark_mock,
             1,
-            'test_pipeline',
-            'pipeline_runlog',
+            "test_pipeline",
+            "pipeline_runlog",
         )
 
 
@@ -352,12 +352,12 @@ class TestGetPenultimateRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
+            "rdsa_utils.cdp.io.pipeline_runlog._get_run_ids",
             return_value=[3, 2, 1],
         )
 
         # Call function
-        result = get_penultimate_run_id(spark_mock, pipeline='test_pipeline')
+        result = get_penultimate_run_id(spark_mock, pipeline="test_pipeline")
 
         # Assert result
         assert result == 2
@@ -366,8 +366,8 @@ class TestGetPenultimateRunId:
         get_run_ids_mock.assert_called_once_with(
             spark_mock,
             2,
-            'test_pipeline',
-            'pipeline_runlog',
+            "test_pipeline",
+            "pipeline_runlog",
         )
 
     def test_penultimate_run_id_edge_cases(self, mocker):
@@ -387,12 +387,12 @@ class TestGetPenultimateRunId:
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
+            "rdsa_utils.cdp.io.pipeline_runlog._get_run_ids",
             return_value=[1],
         )
 
         # Call function with specific pipeline and non-empty log table
-        result = get_penultimate_run_id(spark_mock, pipeline='test_pipeline')
+        result = get_penultimate_run_id(spark_mock, pipeline="test_pipeline")
 
         # Assert result is None
         assert result is None
@@ -401,20 +401,20 @@ class TestGetPenultimateRunId:
         get_run_ids_mock.assert_called_once_with(
             spark_mock,
             2,
-            'test_pipeline',
-            'pipeline_runlog',
+            "test_pipeline",
+            "pipeline_runlog",
         )
 
         ## Test Case 2
 
         # Patch _get_run_ids function and return a Mock object
         get_run_ids_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._get_run_ids',
+            "rdsa_utils.cdp.io.pipeline_runlog._get_run_ids",
             return_value=[],
         )
 
         # Call function with specific pipeline and empty log table
-        result = get_penultimate_run_id(spark_mock, pipeline='test_pipeline')
+        result = get_penultimate_run_id(spark_mock, pipeline="test_pipeline")
 
         # Assert result is None
         assert result is None
@@ -423,8 +423,8 @@ class TestGetPenultimateRunId:
         get_run_ids_mock.assert_called_once_with(
             spark_mock,
             2,
-            'test_pipeline',
-            'pipeline_runlog',
+            "test_pipeline",
+            "pipeline_runlog",
         )
 
 
@@ -438,21 +438,21 @@ class TestCreateRunlogEntry:
 
         # Set up test data
         run_id = 1
-        desc = 'test description'
-        version = '1.0'
-        config = {'param1': 'value1', 'param2': 'value2'}
-        pipeline = 'test_pipeline'
+        desc = "test description"
+        version = "1.0"
+        config = {"param1": "value1", "param2": "value2"}
+        pipeline = "test_pipeline"
 
         # Mock createDataFrame function
         mock_df = mocker.Mock()
         mock_df.columns = [
-            'run_id',
-            'desc',
-            'user',
-            'datetime',
-            'pipeline_name',
-            'pipeline_version',
-            'config',
+            "run_id",
+            "desc",
+            "user",
+            "datetime",
+            "pipeline_name",
+            "pipeline_version",
+            "config",
         ]
         spark_mock.createDataFrame.return_value = mock_df
 
@@ -469,13 +469,13 @@ class TestCreateRunlogEntry:
         # Assert result is a DataFrame with the correct columns and values
         assert result == mock_df
         assert result.columns == [
-            'run_id',
-            'desc',
-            'user',
-            'datetime',
-            'pipeline_name',
-            'pipeline_version',
-            'config',
+            "run_id",
+            "desc",
+            "user",
+            "datetime",
+            "pipeline_name",
+            "pipeline_version",
+            "config",
         ]
 
     def test_create_runlog_entry_edge_cases(self, mocker):
@@ -485,10 +485,10 @@ class TestCreateRunlogEntry:
 
         # Set up test data with invalid config object
         run_id = 1
-        desc = 'test description'
-        version = '1.0'
+        desc = "test description"
+        version = "1.0"
         config = object()
-        pipeline = 'test_pipeline'
+        pipeline = "test_pipeline"
 
         # Call function and assert it raises a ValueError
         with pytest.raises(ValueError):
@@ -504,24 +504,24 @@ class TestAddRunlogEntry:
         spark_mock = mocker.Mock()
 
         # Set up test data
-        desc = 'test description'
-        version = '1.0'
-        config = {'param1': 'value1', 'param2': 'value2'}
-        pipeline = 'test_pipeline'
-        log_table = 'test_log_table'
+        desc = "test description"
+        version = "1.0"
+        config = {"param1": "value1", "param2": "value2"}
+        pipeline = "test_pipeline"
+        log_table = "test_log_table"
 
         # Mock reserve_id, create_runlog_entry, _write_entry
         reserve_id_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog.reserve_id',
+            "rdsa_utils.cdp.io.pipeline_runlog.reserve_id",
             return_value=1,
         )
         entry_mock = mocker.Mock()
         create_runlog_entry_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry',
+            "rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry",
             return_value=entry_mock,
         )
         _write_entry_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
+            "rdsa_utils.cdp.io.pipeline_runlog._write_entry",
         )
 
         # Call function
@@ -556,20 +556,20 @@ class TestAddRunlogEntry:
 
         # Set up test data
         run_id = 2
-        desc = 'test description'
-        version = '1.0'
-        config = {'param1': 'value1', 'param2': 'value2'}
-        pipeline = 'test_pipeline'
-        log_table = 'test_log_table'
+        desc = "test description"
+        version = "1.0"
+        config = {"param1": "value1", "param2": "value2"}
+        pipeline = "test_pipeline"
+        log_table = "test_log_table"
 
         # Mock create_runlog_entry, _write_entry
         entry_mock = mocker.Mock()
         create_runlog_entry_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry',
+            "rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry",
             return_value=entry_mock,
         )
         _write_entry_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._write_entry',
+            "rdsa_utils.cdp.io.pipeline_runlog._write_entry",
         )
 
         # Call function
@@ -607,17 +607,17 @@ class TestWriteRunlogFile:
         spark_mock = mocker.Mock()
 
         # Set up test data
-        runlog_table = 'test_log_table'
+        runlog_table = "test_log_table"
         runlog_id = 1
-        path = '/test/path'
+        path = "/test/path"
 
         # Mock _parse_runlog_as_string and create_txt_from_string
         parse_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string',
+            "rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string",
         )
-        parse_mock.return_value = 'test metadata'
+        parse_mock.return_value = "test metadata"
         create_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog.create_txt_from_string',
+            "rdsa_utils.cdp.io.pipeline_runlog.create_txt_from_string",
         )
 
         # Call function
@@ -625,7 +625,7 @@ class TestWriteRunlogFile:
 
         # Assert functions were called correctly
         parse_mock.assert_called_once_with(spark_mock, runlog_table, runlog_id)
-        create_mock.assert_called_once_with(path, 'test metadata')
+        create_mock.assert_called_once_with(path, "test metadata")
 
     def test_write_runlog_file_edge_case(self, mocker):
         """Tests FileNotFoundError when the specified path is not found."""
@@ -633,15 +633,15 @@ class TestWriteRunlogFile:
         spark_mock = mocker.Mock()
 
         # Set up test data
-        runlog_table = 'test_log_table'
+        runlog_table = "test_log_table"
         runlog_id = 1
-        path = '/nonexistent/path'
+        path = "/nonexistent/path"
 
         # Mock _parse_runlog_as_string
         parse_mock = mocker.patch(
-            'rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string',
+            "rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string",
         )
-        parse_mock.return_value = 'test metadata'
+        parse_mock.return_value = "test metadata"
 
         # Call function and assert FileNotFoundError is raised
         with pytest.raises(FileNotFoundError):

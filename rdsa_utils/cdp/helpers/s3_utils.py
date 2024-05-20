@@ -21,6 +21,7 @@ Note:
 - You can install it using `pip install raz-client` when needed.
 ```
 """
+
 import logging
 from pathlib import Path
 from typing import List, Optional
@@ -50,7 +51,7 @@ def remove_leading_slash(text: str) -> str:
     >>> remove_leading_slash('/example/path')
     'example/path'
     """
-    return text.lstrip('/')
+    return text.lstrip("/")
 
 
 def validate_bucket_name(bucket_name: str) -> str:
@@ -81,29 +82,27 @@ def validate_bucket_name(bucket_name: str) -> str:
     """
     # Bucket name must be between 3 and 63 characters long
     if len(bucket_name) < 3 or len(bucket_name) > 63:
-        error_msg = 'Bucket name must be between 3 and 63 characters long.'
+        error_msg = "Bucket name must be between 3 and 63 characters long."
         raise InvalidBucketNameError(error_msg)
 
     # Bucket name must not contain uppercase letters
     if bucket_name != bucket_name.lower():
-        error_msg = 'Bucket name must not contain uppercase letters.'
+        error_msg = "Bucket name must not contain uppercase letters."
         raise InvalidBucketNameError(error_msg)
 
     # Bucket name must not contain underscores
-    if '_' in bucket_name:
-        error_msg = 'Bucket name must not contain underscores.'
+    if "_" in bucket_name:
+        error_msg = "Bucket name must not contain underscores."
         raise InvalidBucketNameError(error_msg)
 
     # Bucket name must start and end with a lowercase letter or number
     if not bucket_name[0].isalnum() or not bucket_name[-1].isalnum():
-        error_msg = (
-            'Bucket name must start and end with a lowercase letter or number.'
-        )
+        error_msg = "Bucket name must start and end with a lowercase letter or number."
         raise InvalidBucketNameError(error_msg)
 
     # Bucket name must not contain forward slashes
-    if '/' in bucket_name:
-        error_msg = 'Bucket name must not contain forward slashes.'
+    if "/" in bucket_name:
+        error_msg = "Bucket name must not contain forward slashes."
         raise InvalidBucketNameError(error_msg)
 
     return bucket_name
@@ -130,21 +129,21 @@ def is_s3_directory(
     bool
         True if the key represents a directory, False otherwise.
     """
-    if not object_name.endswith('/'):
-        object_name += '/'
+    if not object_name.endswith("/"):
+        object_name += "/"
     try:
         response = client.list_objects_v2(
             Bucket=bucket_name,
             Prefix=object_name,
-            Delimiter='/',
+            Delimiter="/",
             MaxKeys=1,
         )
-        if 'Contents' in response or 'CommonPrefixes' in response:
+        if "Contents" in response or "CommonPrefixes" in response:
             return True
         else:
             return False
     except client.exceptions.ClientError as e:
-        logger.error(f'Failed to check if key is a directory: {str(e)}')
+        logger.error(f"Failed to check if key is a directory: {str(e)}")
         return False
 
 
@@ -182,10 +181,10 @@ def file_exists(
         client.head_object(Bucket=bucket_name, Key=object_name)
         return True
     except client.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == '404':
+        if e.response["Error"]["Code"] == "404":
             return False
         else:
-            logger.error(f'Failed to check file existence: {str(e)}')
+            logger.error(f"Failed to check file existence: {str(e)}")
             return False
 
 
@@ -232,7 +231,7 @@ def upload_file(
 
     local_path = Path(local_path)
     if not local_path.exists():
-        logger.error('Local file does not exist.')
+        logger.error("Local file does not exist.")
         return False
 
     if object_name is None:
@@ -241,20 +240,20 @@ def upload_file(
     object_name = remove_leading_slash(object_name)
 
     if not overwrite and file_exists(client, bucket_name, object_name):
-        logger.error('File already exists in the bucket.')
+        logger.error("File already exists in the bucket.")
         return False
 
     try:
         client.upload_file(str(local_path), bucket_name, object_name)
         logger.info(
-            f'Uploaded {local_path} to {bucket_name}/{object_name}',
+            f"Uploaded {local_path} to {bucket_name}/{object_name}",
         )
         return True
     except FileNotFoundError:
-        logger.error('The local file was not found.')
+        logger.error("The local file was not found.")
         return False
     except client.exceptions.NoCredentialsError:
-        logger.error('Credentials not available.')
+        logger.error("Credentials not available.")
         return False
 
 
@@ -301,7 +300,7 @@ def download_file(
     local_path = Path(local_path)
 
     if not overwrite and local_path.exists():
-        logger.error('Local file already exists.')
+        logger.error("Local file already exists.")
         return False
 
     object_name = remove_leading_slash(object_name)
@@ -314,14 +313,14 @@ def download_file(
                 str(local_path),
             )
             logger.info(
-                f'Downloaded {bucket_name}/{object_name} to {local_path}',
+                f"Downloaded {bucket_name}/{object_name} to {local_path}",
             )
             return True
         except client.exceptions.ClientError as e:
-            logger.error(f'Failed to download file: {str(e)}')
+            logger.error(f"Failed to download file: {str(e)}")
             return False
     else:
-        logger.error('File does not exist in the bucket.')
+        logger.error("File does not exist in the bucket.")
         return False
 
 
@@ -360,15 +359,15 @@ def delete_file(
     object_name = remove_leading_slash(object_name)
 
     if not overwrite and not file_exists(client, bucket_name, object_name):
-        logger.error('File does not exist in the bucket.')
+        logger.error("File does not exist in the bucket.")
         return False
 
     try:
         client.delete_object(Bucket=bucket_name, Key=object_name)
-        logger.info(f'Deleted {bucket_name}/{object_name}')
+        logger.info(f"Deleted {bucket_name}/{object_name}")
         return True
     except client.exceptions.ClientError as e:
-        logger.error(f'Failed to delete file: {str(e)}')
+        logger.error(f"Failed to delete file: {str(e)}")
         return False
 
 
@@ -426,11 +425,11 @@ def copy_file(
         destination_object_name,
     ):
         logger.error(
-            'Destination file already exists in the destination bucket.',
+            "Destination file already exists in the destination bucket.",
         )
         return False
 
-    copy_source = {'Bucket': source_bucket_name, 'Key': source_object_name}
+    copy_source = {"Bucket": source_bucket_name, "Key": source_object_name}
     try:
         client.copy_object(
             CopySource=copy_source,
@@ -438,12 +437,12 @@ def copy_file(
             Key=destination_object_name,
         )
         logger.info(
-            f'Copied {source_bucket_name}/{source_object_name} to '
-            f'{destination_bucket_name}/{destination_object_name}',
+            f"Copied {source_bucket_name}/{source_object_name} to "
+            f"{destination_bucket_name}/{destination_object_name}",
         )
         return True
     except client.exceptions.ClientError as e:
-        logger.error(f'Failed to copy file: {str(e)}')
+        logger.error(f"Failed to copy file: {str(e)}")
         return False
 
 
@@ -478,25 +477,25 @@ def create_folder_on_s3(
     bucket_name = validate_bucket_name(bucket_name)
     folder_path = remove_leading_slash(folder_path)
 
-    if not folder_path.endswith('/'):
-        folder_path += '/'
+    if not folder_path.endswith("/"):
+        folder_path += "/"
 
     try:
         client.head_object(Bucket=bucket_name, Key=folder_path)
         logger.info(f"Folder '{folder_path}' already exists on S3.")
         return True
     except client.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == '404':
+        if e.response["Error"]["Code"] == "404":
             # Folder does not exist, create it
             try:
                 client.put_object(Bucket=bucket_name, Key=folder_path)
                 logger.info(f"Created folder '{folder_path}' on S3.")
                 return True
             except client.exceptions.ClientError as e:
-                logger.error(f'Failed to create folder on S3: {str(e)}')
+                logger.error(f"Failed to create folder on S3: {str(e)}")
                 return False
         else:
-            logger.error(f'Failed to check folder existence on S3: {str(e)}')
+            logger.error(f"Failed to check folder existence on S3: {str(e)}")
             return False
 
 
@@ -504,7 +503,7 @@ def upload_folder(
     client: boto3.client,
     bucket_name: str,
     local_path: str,
-    prefix: str = '',
+    prefix: str = "",
     overwrite: bool = False,
 ) -> bool:
     """Upload an entire folder from the local file system to an AWS S3 bucket.
@@ -544,21 +543,21 @@ def upload_folder(
 
     # Check if the local folder exists
     if not local_path.is_dir():
-        logger.error('Local folder does not exist.')
+        logger.error("Local folder does not exist.")
         return False
 
     prefix = remove_leading_slash(prefix)
 
     # Ensure the folder exists on S3
     if not create_folder_on_s3(client, bucket_name, prefix):
-        logger.error('Failed to create folder on S3.')
+        logger.error("Failed to create folder on S3.")
         return False
 
     # Iterate over files in the local folder and its subdirectories
-    for file_path in local_path.rglob('*'):
+    for file_path in local_path.rglob("*"):
         if file_path.is_file():
             # Determine the S3 object key
-            object_name = prefix + '/' + str(file_path.relative_to(local_path))
+            object_name = prefix + "/" + str(file_path.relative_to(local_path))
             # Check if the file already exists in the bucket
             if not overwrite and file_exists(
                 client,
@@ -577,7 +576,7 @@ def upload_folder(
                 logger.error(f"The local file '{file_path}' was not found.")
                 return False
             except client.exceptions.NoCredentialsError:
-                logger.error('Credentials not available.')
+                logger.error("Credentials not available.")
                 return False
 
     return True
@@ -586,7 +585,7 @@ def upload_folder(
 def list_files(
     client: boto3.client,
     bucket_name: str,
-    prefix: str = '',
+    prefix: str = "",
 ) -> List[str]:
     """List files in an AWS S3 bucket that match a specific prefix.
 
@@ -616,12 +615,12 @@ def list_files(
     try:
         response = client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         files = []
-        if 'Contents' in response:
-            for obj in response['Contents']:
-                files.append(obj['Key'])
+        if "Contents" in response:
+            for obj in response["Contents"]:
+                files.append(obj["Key"])
         return files
     except client.exceptions.ClientError as e:
-        logger.error(f'Failed to list files in bucket: {str(e)}')
+        logger.error(f"Failed to list files in bucket: {str(e)}")
         return []
 
 
@@ -669,29 +668,29 @@ def download_folder(
 
     prefix = remove_leading_slash(prefix)
     if not is_s3_directory(client, bucket_name, prefix):
-        logger.error(f'The provided S3 prefix {prefix} is not a directory.')
+        logger.error(f"The provided S3 prefix {prefix} is not a directory.")
         return False
 
     if not local_path.exists():
         local_path.mkdir(parents=True)
 
     try:
-        paginator = client.get_paginator('list_objects_v2')
+        paginator = client.get_paginator("list_objects_v2")
         for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
-            for obj in page.get('Contents', []):
-                if is_s3_directory(client, bucket_name, obj['Key']):
+            for obj in page.get("Contents", []):
+                if is_s3_directory(client, bucket_name, obj["Key"]):
                     continue
-                target = local_path / Path(obj['Key']).relative_to(prefix)
+                target = local_path / Path(obj["Key"]).relative_to(prefix)
                 if not overwrite and target.exists():
-                    logger.info(f'Skipping {target} as it already exists.')
+                    logger.info(f"Skipping {target} as it already exists.")
                     continue
                 if not target.parent.exists():
                     target.parent.mkdir(parents=True)
-                client.download_file(bucket_name, obj['Key'], str(target))
+                client.download_file(bucket_name, obj["Key"], str(target))
                 logger.info(f'Downloaded {obj["Key"]} to {target}')
         return True
     except client.exceptions.ClientError as e:
-        logger.error(f'Failed to download folder: {str(e)}')
+        logger.error(f"Failed to download folder: {str(e)}")
         return False
 
 
@@ -743,8 +742,8 @@ def move_file(
     if file_exists(client, source_bucket_name, source_object_name):
         try:
             copy_source = {
-                'Bucket': source_bucket_name,
-                'Key': source_object_name,
+                "Bucket": source_bucket_name,
+                "Key": source_object_name,
             }
             client.copy(
                 copy_source,
@@ -756,15 +755,15 @@ def move_file(
                 Key=source_object_name,
             )
             logger.info(
-                f'Moved {source_bucket_name}/{source_object_name} to '
-                f'{destination_bucket_name}/{destination_object_name}',
+                f"Moved {source_bucket_name}/{source_object_name} to "
+                f"{destination_bucket_name}/{destination_object_name}",
             )
             return True
         except client.exceptions.ClientError as e:
-            logger.error(f'Failed to move file: {str(e)}')
+            logger.error(f"Failed to move file: {str(e)}")
             return False
     else:
-        logger.error('Source file does not exist.')
+        logger.error("Source file does not exist.")
         return False
 
 
@@ -799,20 +798,20 @@ def delete_folder(
     folder_path = remove_leading_slash(folder_path)
 
     if not is_s3_directory(client, bucket_name, folder_path):
-        logger.error(f'The provided path {folder_path} is not a directory.')
+        logger.error(f"The provided path {folder_path} is not a directory.")
         return False
 
-    paginator = client.get_paginator('list_objects_v2')
+    paginator = client.get_paginator("list_objects_v2")
     try:
         for page in paginator.paginate(Bucket=bucket_name, Prefix=folder_path):
-            if 'Contents' in page:
-                for obj in page['Contents']:
-                    client.delete_object(Bucket=bucket_name, Key=obj['Key'])
-        logger.info(f'Deleted folder {folder_path} in bucket {bucket_name}')
+            if "Contents" in page:
+                for obj in page["Contents"]:
+                    client.delete_object(Bucket=bucket_name, Key=obj["Key"])
+        logger.info(f"Deleted folder {folder_path} in bucket {bucket_name}")
         return True
     except client.exceptions.ClientError as e:
         logger.error(
-            f'Failed to delete folder {folder_path} '
-            f'in bucket {bucket_name}: {str(e)}',
+            f"Failed to delete folder {folder_path} "
+            f"in bucket {bucket_name}: {str(e)}",
         )
         return False

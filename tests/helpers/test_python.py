@@ -1,14 +1,12 @@
 """Tests for the helpers module."""
+
 import pytest
 
-from tests.conftest import (
-    Case,
-    parametrize_cases,
-)
 from rdsa_utils.helpers.python import *
+from tests.conftest import Case, parametrize_cases
 
 
-@pytest.mark.skip(reason='wrapper of third party function')
+@pytest.mark.skip(reason="wrapper of third party function")
 class TestAlwaysIterableLocal:
     """Tests for the always_iterable_local function."""
 
@@ -20,25 +18,25 @@ class TestTupleConvert:
 
     def test_leaves_tuple_as_is(self):
         """Test method."""
-        assert tuple_convert(('beans', 'toast')) == ('beans', 'toast')
+        assert tuple_convert(("beans", "toast")) == ("beans", "toast")
 
     def test_converts_list_to_tuple(self):
         """Test method."""
-        assert tuple_convert(['carnage', 'venom']) == ('carnage', 'venom')
+        assert tuple_convert(["carnage", "venom"]) == ("carnage", "venom")
 
     def test_wraps_string_in_tuple_container(self):
         """Test method."""
-        assert tuple_convert('rice') == ('rice',)
+        assert tuple_convert("rice") == ("rice",)
 
     def test_does_not_convert_dict(self):
         """Test that dictionary is not converted to just tuple of keys."""
-        assert tuple_convert({'key': 'value'}) == ({'key': 'value'},)
+        assert tuple_convert({"key": "value"}) == ({"key": "value"},)
 
     def test_converts_none_to_empty(self):
         """Test that when None passed tuple doesn't contain None value."""
         assert tuple_convert(None) == ()
 
-    @pytest.mark.parametrize('obj', [67, 2.75])
+    @pytest.mark.parametrize("obj", [67, 2.75])
     def test_wraps_other_objs_in_tuple_container(self, obj):
         """Test method."""
         assert tuple_convert(obj) == (obj,)
@@ -49,25 +47,25 @@ class TestListConvert:
 
     def test_leaves_list_as_is(self):
         """Test method."""
-        assert list_convert(['beans', 'toast']) == ['beans', 'toast']
+        assert list_convert(["beans", "toast"]) == ["beans", "toast"]
 
     def test_converts_tuple_to_list(self):
         """Test method."""
-        assert list_convert(('carnage', 'venom')) == ['carnage', 'venom']
+        assert list_convert(("carnage", "venom")) == ["carnage", "venom"]
 
     def test_wraps_string_in_list_container(self):
         """Test method."""
-        assert list_convert('rice') == ['rice']
+        assert list_convert("rice") == ["rice"]
 
     def test_does_not_convert_dict(self):
         """Test that dictionary is not converted to just list of keys."""
-        assert list_convert({'key': 'value'}) == [{'key': 'value'}]
+        assert list_convert({"key": "value"}) == [{"key": "value"}]
 
     def test_converts_none_to_empty(self):
         """Test that when None passed list doesn't contain None value."""
         assert list_convert(None) == []
 
-    @pytest.mark.parametrize('obj', [67, 2.75])
+    @pytest.mark.parametrize("obj", [67, 2.75])
     def test_wraps_other_objs_in_list_container(self, obj):
         """Test method."""
         assert list_convert(obj) == [obj]
@@ -95,58 +93,58 @@ class TestOverwriteDictionary:
     def base_dict(self):
         """Create base dictionary used across all tests."""
         return {
-            'var1': 'value1',
-            'var2': {'var3': 1.1, 'var4': 4.4},
-            'var5': [1, 2, 3],
-            'var6': {
-                'var7': {
-                    'var9': 'helo',
+            "var1": "value1",
+            "var2": {"var3": 1.1, "var4": 4.4},
+            "var5": [1, 2, 3],
+            "var6": {
+                "var7": {
+                    "var9": "helo",
                 },
             },
         }
 
     @parametrize_cases(
         Case(
-            label='overwrites_top_level_argument',
-            config=pytest.lazy_fixture('base_dict'),
-            override_dict={'var1': 'value99'},
+            label="overwrites_top_level_argument",
+            config=pytest.lazy_fixture("base_dict"),
+            override_dict={"var1": "value99"},
             expected={
-                'var1': 'value99',
-                'var2': {'var3': 1.1, 'var4': 4.4},
-                'var5': [1, 2, 3],
-                'var6': {
-                    'var7': {
-                        'var9': 'helo',
+                "var1": "value99",
+                "var2": {"var3": 1.1, "var4": 4.4},
+                "var5": [1, 2, 3],
+                "var6": {
+                    "var7": {
+                        "var9": "helo",
                     },
                 },
             },
         ),
         Case(
-            label='overwrites_nested_level_argument',
-            config=pytest.lazy_fixture('base_dict'),
-            override_dict={'var6': {'var7': {'var9': 'hwyl fawr'}}},
+            label="overwrites_nested_level_argument",
+            config=pytest.lazy_fixture("base_dict"),
+            override_dict={"var6": {"var7": {"var9": "hwyl fawr"}}},
             expected={
-                'var1': 'value1',
-                'var2': {'var3': 1.1, 'var4': 4.4},
-                'var5': [1, 2, 3],
-                'var6': {
-                    'var7': {
-                        'var9': 'hwyl fawr',
+                "var1": "value1",
+                "var2": {"var3": 1.1, "var4": 4.4},
+                "var5": [1, 2, 3],
+                "var6": {
+                    "var7": {
+                        "var9": "hwyl fawr",
                     },
                 },
             },
         ),
         Case(
-            label='does_not_overwrite_dict_with_value',
-            config=pytest.lazy_fixture('base_dict'),
-            override_dict={'var2': 'value99', 'var6': ['a', 'b', 'c', 'ch']},
+            label="does_not_overwrite_dict_with_value",
+            config=pytest.lazy_fixture("base_dict"),
+            override_dict={"var2": "value99", "var6": ["a", "b", "c", "ch"]},
             expected={
-                'var1': 'value1',
-                'var2': {'var3': 1.1, 'var4': 4.4},
-                'var5': [1, 2, 3],
-                'var6': {
-                    'var7': {
-                        'var9': 'helo',
+                "var1": "value1",
+                "var2": {"var3": 1.1, "var4": 4.4},
+                "var5": [1, 2, 3],
+                "var6": {
+                    "var7": {
+                        "var9": "helo",
                     },
                 },
             },
@@ -159,7 +157,7 @@ class TestOverwriteDictionary:
 
     def test_raises_when_key_missing(self, base_dict):
         """Test error raised if override key isn't present in base_dict."""
-        override_dict = {'var10': 'value404'}
+        override_dict = {"var10": "value404"}
         with pytest.raises(ValueError):
             overwrite_dictionary(base_dict, override_dict)
 
@@ -169,29 +167,29 @@ class TestCalcProductOfDictValues:
 
     def test_with_single_input(self):
         """Test method functionality with single input."""
-        input_dict = {'key1': 1, 'key2': [2, 3, 4]}
+        input_dict = {"key1": 1, "key2": [2, 3, 4]}
         result = list(calc_product_of_dict_values(**input_dict))
 
         expected = [
-            {'key1': 1, 'key2': 2},
-            {'key1': 1, 'key2': 3},
-            {'key1': 1, 'key2': 4},
+            {"key1": 1, "key2": 2},
+            {"key1": 1, "key2": 3},
+            {"key1": 1, "key2": 4},
         ]
         assert result == expected
 
     def test_with_many_input(self):
         """Test method functionality with many inputs."""
-        input_dict1 = {'key1': 1, 'key2': [2, 3, 4]}
-        input_dict2 = {'key3': 'raaaaa', 'key4': ['a', 'b']}
+        input_dict1 = {"key1": 1, "key2": [2, 3, 4]}
+        input_dict2 = {"key3": "raaaaa", "key4": ["a", "b"]}
         result = list(calc_product_of_dict_values(**input_dict1, **input_dict2))
 
         expected = [
-            {'key1': 1, 'key2': 2, 'key3': 'raaaaa', 'key4': 'a'},
-            {'key1': 1, 'key2': 2, 'key3': 'raaaaa', 'key4': 'b'},
-            {'key1': 1, 'key2': 3, 'key3': 'raaaaa', 'key4': 'a'},
-            {'key1': 1, 'key2': 3, 'key3': 'raaaaa', 'key4': 'b'},
-            {'key1': 1, 'key2': 4, 'key3': 'raaaaa', 'key4': 'a'},
-            {'key1': 1, 'key2': 4, 'key3': 'raaaaa', 'key4': 'b'},
+            {"key1": 1, "key2": 2, "key3": "raaaaa", "key4": "a"},
+            {"key1": 1, "key2": 2, "key3": "raaaaa", "key4": "b"},
+            {"key1": 1, "key2": 3, "key3": "raaaaa", "key4": "a"},
+            {"key1": 1, "key2": 3, "key3": "raaaaa", "key4": "b"},
+            {"key1": 1, "key2": 4, "key3": "raaaaa", "key4": "a"},
+            {"key1": 1, "key2": 4, "key3": "raaaaa", "key4": "b"},
         ]
         assert result == expected
 
@@ -202,17 +200,17 @@ class TestCalcProductOfDictValues:
         compute product of its values).
         """
         input_dict = {
-            'key1': 1,
-            'key2': [2, 3, 4],
-            'key3': {'key4': [7, 8, 9], 'key5': [4, 5, 6]},
+            "key1": 1,
+            "key2": [2, 3, 4],
+            "key3": {"key4": [7, 8, 9], "key5": [4, 5, 6]},
         }
 
         result = list(calc_product_of_dict_values(**input_dict))
 
         expected = [
-            {'key1': 1, 'key2': 2, 'key3': {'key4': [7, 8, 9], 'key5': [4, 5, 6]}},
-            {'key1': 1, 'key2': 3, 'key3': {'key4': [7, 8, 9], 'key5': [4, 5, 6]}},
-            {'key1': 1, 'key2': 4, 'key3': {'key4': [7, 8, 9], 'key5': [4, 5, 6]}},
+            {"key1": 1, "key2": 2, "key3": {"key4": [7, 8, 9], "key5": [4, 5, 6]}},
+            {"key1": 1, "key2": 3, "key3": {"key4": [7, 8, 9], "key5": [4, 5, 6]}},
+            {"key1": 1, "key2": 4, "key3": {"key4": [7, 8, 9], "key5": [4, 5, 6]}},
         ]
         assert result == expected
 
@@ -222,36 +220,36 @@ class TestConvertDateStringsToDatetimes:
 
     @parametrize_cases(
         Case(
-            label='MMMM YYYY',
-            dates=('January 2021', 'March 2021'),
+            label="MMMM YYYY",
+            dates=("January 2021", "March 2021"),
         ),
         Case(
-            label='MMM YYYY',
-            dates=('Jan 2021', 'Mar 2021'),
+            label="MMM YYYY",
+            dates=("Jan 2021", "Mar 2021"),
         ),
         Case(
-            label='YYYY MMMM',
-            dates=('2021 January', '2021 March'),
+            label="YYYY MMMM",
+            dates=("2021 January", "2021 March"),
         ),
         Case(
-            label='YYYY MMM',
-            dates=('2021 Jan', '2021 Mar'),
+            label="YYYY MMM",
+            dates=("2021 Jan", "2021 Mar"),
         ),
         Case(
-            label='MM YYYY',
-            dates=('01 2021', '03 2021'),
+            label="MM YYYY",
+            dates=("01 2021", "03 2021"),
         ),
         Case(
-            label='-M YYYY',
-            dates=('1 2021', '3 2021'),
+            label="-M YYYY",
+            dates=("1 2021", "3 2021"),
         ),
         Case(
-            label='MM-YYYY',
-            dates=('01-2021', '03-2021'),
+            label="MM-YYYY",
+            dates=("01-2021", "03-2021"),
         ),
         Case(
-            label='-M-YYYY',
-            dates=('1-2021', '3-2021'),
+            label="-M-YYYY",
+            dates=("1-2021", "3-2021"),
         ),
     )
     def test_year_month_format(
@@ -262,19 +260,19 @@ class TestConvertDateStringsToDatetimes:
         actual = convert_date_strings_to_datetimes(*dates)
 
         expected = (
-            pd.Timestamp('2021-01-01 00:00:00'),
-            pd.Timestamp('2021-03-31 23:59:59.999999'),
+            pd.Timestamp("2021-01-01 00:00:00"),
+            pd.Timestamp("2021-03-31 23:59:59.999999"),
         )
         assert actual == expected
 
     def test_year_month_day_format(self):
         """Test for yyyy-mm-dd format."""
-        dates = ('2021-01-01', '2021-03-01')
+        dates = ("2021-01-01", "2021-03-01")
 
         actual = convert_date_strings_to_datetimes(*dates)
 
         expected = (
-            pd.Timestamp('2021-01-01 00:00:00'),
-            pd.Timestamp('2021-03-01 23:59:59.999999'),
+            pd.Timestamp("2021-01-01 00:00:00"),
+            pd.Timestamp("2021-03-01 23:59:59.999999"),
         )
         assert actual == expected
