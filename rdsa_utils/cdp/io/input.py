@@ -1,4 +1,5 @@
 """Read inputs on CDP."""
+
 import logging
 from typing import Tuple
 
@@ -9,15 +10,15 @@ from rdsa_utils.exceptions import DataframeEmptyError
 
 logger = logging.getLogger(__name__)
 
+
 def get_current_database(spark: SparkSession) -> str:
     """Retrieve the current database from the active SparkSession."""
-    return spark.sql('SELECT current_database()').collect()[0][
-        'current_database()'
-    ]
+    return spark.sql("SELECT current_database()").collect()[0]["current_database()"]
 
 
 def extract_database_name(
-    spark: SparkSession, long_table_name: str,
+    spark: SparkSession,
+    long_table_name: str,
 ) -> Tuple[str, str]:
     """Extract the database component and table name from a compound table name.
 
@@ -53,7 +54,7 @@ def extract_database_name(
     ValueError
         If the table name doesn't match any of the expected formats.
     """
-    parts = long_table_name.split('.')
+    parts = long_table_name.split(".")
 
     if len(parts) == 3:  # GCP format: project.database.table
         _, db_name, table_name = parts
@@ -67,16 +68,16 @@ def extract_database_name(
 
     else:
         error_msg = (
-            f'Table name {long_table_name} is incorrectly formatted. '
-            'Expected formats: <project>.<database>.<table>, '
-            '<database>.<table>, or <table>'
+            f"Table name {long_table_name} is incorrectly formatted. "
+            "Expected formats: <project>.<database>.<table>, "
+            "<database>.<table>, or <table>"
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
 
     logger.info(
-        f'Extracted database name: {db_name}, table name: '
-        f'{table_name} from {long_table_name}',
+        f"Extracted database name: {db_name}, table name: "
+        f"{table_name} from {long_table_name}",
     )
     return db_name, table_name
 
@@ -119,20 +120,20 @@ def load_and_validate_table(
     """
     try:
         df = spark.read.table(table_name)
-        logger.info(f'Successfully loaded table {table_name}.')
+        logger.info(f"Successfully loaded table {table_name}.")
     except Exception as e:
         db_name, _ = extract_database_name(spark, table_name)
         db_err = (
-            f'Error accessing {table_name} in the {db_name} database. '
-            'Check you have access to the database and that '
-            'the table name is correct.'
+            f"Error accessing {table_name} in the {db_name} database. "
+            "Check you have access to the database and that "
+            "the table name is correct."
         )
         logger.error(db_err)
         raise PermissionError(db_err) from e
 
     if not skip_validation:
         if df.rdd.isEmpty():
-            err_msg = err_msg or f'Table {table_name} is empty.'
+            err_msg = err_msg or f"Table {table_name} is empty."
             raise DataframeEmptyError(err_msg)
 
     if filter_cond:
@@ -140,15 +141,15 @@ def load_and_validate_table(
         if not skip_validation and df.rdd.isEmpty():
             err_msg = (
                 err_msg
-                or f'Table {table_name} is empty after applying '
-                f'filter condition [{filter_cond}].'
+                or f"Table {table_name} is empty after applying "
+                f"filter condition [{filter_cond}]."
             )
             raise DataframeEmptyError(err_msg)
 
     logger.info(
         (
-            f'Loaded and validated table {table_name}. '
-            f'Filter condition applied: {filter_cond}'
+            f"Loaded and validated table {table_name}. "
+            f"Filter condition applied: {filter_cond}"
         ),
     )
 

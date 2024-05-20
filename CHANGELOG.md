@@ -17,6 +17,26 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.3.0] - 2024-05-20
+
+### Added
+- Added `.isort.cfg` to configure `isort` with the `black` profile 
+  and recognize `rdsa-utils` as a local repository.
+- Reformatted the entire codebase using `black` and `isort`.
+
+### Changed
+- Updated `.pre-commit-config.yaml` to include `black` and `isort` 
+  as pre-commit hooks for code formatting.
+- Updated `setup.cfg` to include `black` and `isort` in the `dev` requirements.
+- Updated `README.md` to include `black` formatting badge.
+- Updated `ruff.toml` to align with `black`'s formatting rules.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [v0.2.3] - 2024-05-20
 
 ### Added
@@ -313,6 +333,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.0) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.0/)
 - rdsa-utils v0.2.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.3) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.3/)
 - rdsa-utils v0.2.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.2) | 

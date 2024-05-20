@@ -1,21 +1,14 @@
 """General helper functions for GCP."""
+
 import json
 import logging
-from typing import (
-    Dict,
-    List,
-    Tuple,
-)
+from typing import Dict, List, Tuple
 
-from google.cloud import (
-    bigquery,
-    storage,
-)
-from google.cloud.exceptions import NotFound
 import yaml
+from google.cloud import bigquery, storage
+from google.cloud.exceptions import NotFound
 
 from rdsa_utils.typing import TablePath
-
 
 logger = logging.getLogger(__name__)
 
@@ -54,11 +47,11 @@ def table_exists(table_path: TablePath) -> bool:
     try:
         bigquery.Client().get_table(table_path)
         table_exists = True
-        logger.debug(f'Table {table_path} exists.')
+        logger.debug(f"Table {table_path} exists.")
 
     except NotFound:
         table_exists = False
-        logger.warning(f'Table {table_path} not found.')
+        logger.warning(f"Table {table_path} not found.")
 
     return table_exists
 
@@ -80,8 +73,8 @@ def load_config_gcp(config_path: str) -> Tuple[Dict, Dict]:
 
     storage_client = storage.Client()
 
-    bucket_name = config_path.split('//')[1].split('/')[0]
-    blob_name = '/'.join(config_path.split('//')[1].split('/')[1:])
+    bucket_name = config_path.split("//")[1].split("/")[0]
+    blob_name = "/".join(config_path.split("//")[1].split("/")[1:])
 
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)

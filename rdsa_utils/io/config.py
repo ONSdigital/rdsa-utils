@@ -1,32 +1,19 @@
 """Module for code relating to loading config files."""
+
 import copy
 import json
 import logging
 from pathlib import Path
-from typing import (
-    Callable,
-    Dict,
-    Literal,
-    Optional,
-    Union,
-)
+from typing import Callable, Dict, Literal, Optional, Union
 
 from cloudpathlib import CloudPath
 from pydantic import BaseModel
 
 from rdsa_utils.exceptions import ConfigError
 from rdsa_utils.helpers.python import overwrite_dictionary
-from rdsa_utils.io.input import (
-    parse_json,
-    parse_toml,
-    parse_yaml,
-    read_file,
-)
+from rdsa_utils.io.input import parse_json, parse_toml, parse_yaml, read_file
 from rdsa_utils.typing import Config
-from rdsa_utils.validation import (
-    apply_validation,
-)
-
+from rdsa_utils.validation import apply_validation
 
 logger = logging.getLogger(__name__)
 
@@ -59,10 +46,10 @@ class LoadConfig:
     """
 
     def __init__(
-        self: 'LoadConfig',
+        self: "LoadConfig",
         config_path: Union[CloudPath, Path],
         config_overrides: Optional[Config] = None,
-        config_type: Optional[Literal['json', 'toml', 'yaml']] = None,
+        config_type: Optional[Literal["json", "toml", "yaml"]] = None,
         config_validators: Optional[Dict[str, BaseModel]] = None,
     ) -> None:
         """Init method.
@@ -95,19 +82,21 @@ class LoadConfig:
         self.config_validators = config_validators
 
         if not self.config_type:
-            self.config_type = self.config_path.suffix.lstrip('.')
+            self.config_type = self.config_path.suffix.lstrip(".")
 
-        logger.info(f'Loading config from file: {self.config_path}')
+        logger.info(f"Loading config from file: {self.config_path}")
         self._config_contents = read_file(self.config_path)
 
         self.config = self._get_config_parser()(self._config_contents)
 
         # Save the original config prior to mutating it.
         self.config_original = copy.deepcopy(self.config)
-        logger.debug(self._print_config_string(
-            'loaded config',
-            self.config_original,
-        ))
+        logger.debug(
+            self._print_config_string(
+                "loaded config",
+                self.config_original,
+            ),
+        )
 
         if self.config_overrides:
             try:
@@ -118,26 +107,30 @@ class LoadConfig:
             except ValueError as e:
                 raise ConfigError(e) from e
 
-            logger.debug(self._print_config_string(
-                'config after applying overrides',
-                self.config,
-            ))
+            logger.debug(
+                self._print_config_string(
+                    "config after applying overrides",
+                    self.config,
+                ),
+            )
 
         if self.config_validators:
             self._apply_config_validators()
-            logger.debug(self._print_config_string(
-                'config after applying validation',
-                self.config,
-            ))
+            logger.debug(
+                self._print_config_string(
+                    "config after applying validation",
+                    self.config,
+                ),
+            )
 
-        logger.info(self._print_config_string('using config', self.config))
+        logger.info(self._print_config_string("using config", self.config))
 
-        # Assign every key in the config as an attribute in the class. This
-        # means all config sections can be accessed via Config.<key>.
+        # Assign every key in the config as an attribute in the class. This
+        # means all config sections can be accessed via Config.<key>.
         for key, value in self.config.items():
             setattr(self, key, value)
 
-    def _get_config_parser(self: 'LoadConfig') -> Callable[[str], Config]:
+    def _get_config_parser(self: "LoadConfig") -> Callable[[str], Config]:
         """Return the appropriate config parsing function.
 
         Returns
@@ -152,22 +145,20 @@ class LoadConfig:
             implemented.
         """
         readers = {
-            'json': parse_json,
-            'toml': parse_toml,
-            'yaml': parse_yaml,
+            "json": parse_json,
+            "toml": parse_toml,
+            "yaml": parse_yaml,
         }
 
         if config := readers.get(self.config_type):
             return config
         else:
-            msg = (
-                f'No config parser present for file type = {self.config_type}'
-            )
+            msg = f"No config parser present for file type = {self.config_type}"
 
             logger.error(msg)
             raise ConfigError(msg)
 
-    def _apply_config_validators(self: 'LoadConfig') -> None:
+    def _apply_config_validators(self: "LoadConfig") -> None:
         """Apply validators to every key in config.
 
         Warnings are raised if a key doesn't have a validator.
@@ -179,7 +170,7 @@ class LoadConfig:
             )
 
     def _print_config_string(
-        self: 'LoadConfig',
+        self: "LoadConfig",
         text: str,
         data: Config,
     ) -> str:
@@ -197,4 +188,4 @@ class LoadConfig:
         str
             String with nicely formatted dictionary.
         """
-        return f'\n{text}\n{json.dumps(data, indent=4)}'
+        return f"\n{text}\n{json.dumps(data, indent=4)}"
