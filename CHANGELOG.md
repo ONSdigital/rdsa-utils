@@ -8,6 +8,11 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `black` and `isort` as pre-commit hooks for code formatting.
+- Updated `.isort.cfg` to configure `isort` with the `black` profile 
+  and recognize `rdsa-utils` as a local repository.
+- Updated `ruff.toml` to align with `black`'s formatting rules.
+- Reformatted the entire codebase using `black` and `isort`.
 
 ### Changed
 

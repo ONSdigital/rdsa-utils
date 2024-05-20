@@ -1,4 +1,4 @@
-line-length = 80
+line-length = 88
 
 [lint]
 select = [
@@ -29,7 +29,7 @@ ignore = ["N812", "PD901", "E712", "E721"]
 convention = "numpy"
 
 [lint.flake8-quotes]
-inline-quotes = "single"
+inline-quotes = "double"
 
 [lint.per-file-ignores]
 "*/__init__.py" = ["D104"]
