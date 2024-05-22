@@ -37,6 +37,6 @@ class TableNotFoundError(Exception):
 
 
 class InvalidBucketNameError(Exception):
-    """Custom exception to raise when an AWS S3 bucket name is invalid."""
+    """Custom exception to raise when an AWS S3 or GCS bucket name is invalid."""
 
     pass
