@@ -11,6 +11,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Added `zip_folder` function to `io/output.py`.
 
 ### Changed
+- Modified `gcp_utils.py`, added more helper functions for GCS.
+- Modified docstring for `InvalidBucketNameError` in `exceptions.py`.
 
 ### Deprecated
 
