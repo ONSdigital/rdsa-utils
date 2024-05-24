@@ -17,6 +17,21 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.3.1] - 2024-05-24
+
+### Added
+- Added `zip_folder` function to `io/output.py`.
+
+### Changed
+- Modified `gcp_utils.py`, added more helper functions for GCS.
+- Modified docstring for `InvalidBucketNameError` in `exceptions.py`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [v0.3.0] - 2024-05-20
 
 ### Added
@@ -333,6 +348,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.1) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.1/)
 - rdsa-utils v0.3.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.0) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.0/)
 - rdsa-utils v0.2.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.3) | 
