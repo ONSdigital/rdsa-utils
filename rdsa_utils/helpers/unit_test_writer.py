@@ -1,3 +1,10 @@
+"""CSV to Unit Test - Code Generator.
+
+This script processes CSV files and generates unit test code for functions that
+operate on pandas DataFrames. It automates the conversion of CSV data into a format
+suitable for unit tests by inferring column types and applying any specified overrides.
+"""
+
 import logging
 from dataclasses import dataclass, field
 from typing import Dict, List
@@ -15,7 +22,9 @@ logging.basicConfig(
 @dataclass
 class Config:
     """
-    Configuration for processing CSV files as inputs and generating unit test code for with
+    Configuration class.
+
+    Processes CSV files as inputs and generating unit test code for with
     pandas dataframes.
 
     Attributes
@@ -25,10 +34,11 @@ class Config:
     files : List[str]
         List of CSV filenames to process.
     function_name : str
-        Name of the function to be tested. This will populate the test code with given function_name
+        Name of the function to be tested. This will populate the test code with
+        given function_name
     column_type_override : Dict[str, List[str]]
-        Dictionary mapping column types to lists of columns to override the inferred types.
-        Currently supported type overrides are string & float.
+        Dictionary mapping column types to lists of columns to override the
+        inferred types. Currently supported type overrides are string & float.
 
     Examples
     --------
@@ -45,7 +55,7 @@ class Config:
     >>>     csv_path="D:/projects_data/randd_test_data/",
     >>>     files=["input1.csv", "input2.csv", "mapper.csv", "expected_output.csv"],
     >>>     function_name="dummy_function",
-    >>>     column_type_override={'string': ['names', 'references'], 'float': ['weights']}
+    >>>     column_type_override={'string': ['names', 'cars'], 'float': ['weights']}
     >>> )
     ```
     """
@@ -125,9 +135,9 @@ def infer_column_types(df: pd.DataFrame) -> Dict[str, List[str]]:
     """
     Infer the types of columns based on their values.
 
-    This function analyzes each column in the DataFrame and determines its predominant type
-    based on the values present. It categorizes columns as 'string', 'float', 'integer',
-    'boolean', 'date', or 'mixed' (if no predominant type is found).
+    This function analyzes each column in the DataFrame and determines its
+    predominant type based on the values present. It categorizes columns
+    as 'string', 'float', 'integer','boolean', 'date', or 'mixed'.
 
     Parameters
     ----------
@@ -137,8 +147,8 @@ def infer_column_types(df: pd.DataFrame) -> Dict[str, List[str]]:
     Returns
     -------
     Dict[str, List[str]]
-        A dictionary mapping column types to lists of column names. Columns with mixed types
-        are classified under 'mixed'.
+        A dictionary mapping column types to lists of column names. Columns with
+        mixed types are classified under 'mixed'.
     """
     type_dict: Dict[str, List[str]] = {
         "string": [],
@@ -198,8 +208,9 @@ def dataframe_to_string(df: pd.DataFrame, file: str, config: Config) -> str:
     """
     Convert a DataFrame to a formatted string representation suitable for unit tests.
 
-    This function infers column types and formats the DataFrame accordingly. Columns are converted
-    to string representations with specific formatting based on their inferred types.
+    This function infers column types and formats the DataFrame accordingly.
+    Columns are converted to string representations with specific formatting based
+    on their inferred types.
 
     Parameters
     ----------
@@ -233,7 +244,7 @@ def dataframe_to_string(df: pd.DataFrame, file: str, config: Config) -> str:
                     non_existent_columns.append(col)
         if non_existent_columns:
             logging.warning(
-                f"The following columns to override do not exist in the DataFrame '{file}': {', '.join(non_existent_columns)}",
+                f"The following columns to override do not exist in the DataFrame '{file}': {', '.join(non_existent_columns)}",  # noqa: E501
             )
 
     df = df.astype(str)
@@ -270,9 +281,9 @@ def generate_test_code(config: Config, data_strings: Dict[str, str]) -> str:
     """
     Generate a unit test code string based on configuration and data strings.
 
-    The function creates imports, class definitions, fixture functions, and test functions
-    necessary for unit testing a given function. It uses the configuration to customize
-    the class name and imports.
+    The function creates imports, class definitions, fixture functions,
+    and test functions necessary for unit testing a given function. It uses
+    the configuration to customize the class name and imports.
 
     Parameters
     ----------
@@ -290,7 +301,7 @@ def generate_test_code(config: Config, data_strings: Dict[str, str]) -> str:
         f"import pandas as pd\n"
         f"import numpy as np\n"
         f"import pytest\n"
-        f"import {config.function_name}  # Please insert correct pathway to function import\n"
+        f"import {config.function_name}  # Please insert correct pathway to function import\n"  # noqa: E501
     )
 
     class_def = (
@@ -313,10 +324,10 @@ def generate_test_code(config: Config, data_strings: Dict[str, str]) -> str:
         )
 
     test_def = (
-        f'\n    def test_{config.function_name}(self, {", ".join(fixture_names)}): # Please construct your function\n'
+        f'\n    def test_{config.function_name}(self, {", ".join(fixture_names)}): # Please construct your function\n'  # noqa: E501
         f'        """General tests for {config.function_name}."""\n'
         f"        output = {config.function_name}({list(data_strings.keys())[0]})\n"
-        f'        assert output.equals({fixture_names[-1]}), "{config.function_name} not behaving as expected"\n'
+        f'        assert output.equals({fixture_names[-1]}), "{config.function_name} not behaving as expected"\n'  # noqa: E501
     )
 
     return f"{imports}{class_def}{fixture_defs}{test_def}"
@@ -326,15 +337,16 @@ def process_dataframe(config: Config) -> None:
     """
     Process CSV files, generate unit test code, and save it to a Python (.py) file.
 
-    This function reads CSV files specified in the configuration, converts each DataFrame
-    to a string representation suitable for unit tests, and generates test code based on the
-    provided configuration. It handles file reading errors and logs relevant information.
+    This function reads CSV files specified in the configuration, converts each
+    DataFrameto a string representation suitable for unit tests, and generates
+    test code based on the provided configuration. It handles file reading errors
+    and logs relevant information.
 
     Parameters
     ----------
     config : Config
-        Configuration object containing settings such as file paths, function name to test,
-        and column type overrides.
+        Configuration object containing settings such as file paths, function name to
+        test,and column type overrides.
 
     Raises
     ------
@@ -381,7 +393,8 @@ def main() -> None:
     Initialize configuration and process CSV files for unit testing.
 
     This function sets up the configuration with paths, filenames, and function names,
-    and then calls `process_dataframe` to handle the CSV files and generate the test code.
+    and then calls `process_dataframe` to handle the CSV files and generate the test
+    code.
 
     Returns
     -------

@@ -20,7 +20,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.3.2] - 2024-07-30
 
 ### Added
-- Added new function to `tests\helpers\unit_test_writer.py` 
+- Added new function file to `rdsa_utils\helpers\unit_test_writer.py` 
 
 ### Changed
 
