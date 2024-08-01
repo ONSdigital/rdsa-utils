@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `truncate_external_hive_table` to `helpers/pyspark.py`.
 
 ### Changed
 
@@ -15,6 +16,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Temporarily pin `numpy==1.24.4` due to https://github.com/numpy/numpy/issues/267100
+
 ### Removed
 
 ## [v0.3.1] - 2024-05-24
