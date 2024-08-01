@@ -794,7 +794,7 @@ def create_spark_session(
 
 
 def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
-    """Truncate External Hive table stored on S3 or HDFS.
+    """Truncate External Hive Table stored on S3 or HDFS.
 
     Parameters
     ----------
