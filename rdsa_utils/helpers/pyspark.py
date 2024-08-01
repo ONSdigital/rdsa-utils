@@ -792,6 +792,7 @@ def create_spark_session(
         logger.error(f"An error occurred while creating the Spark session: {e}")
         raise
 
+
 def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
     """Truncate External Hive table stored on S3 or HDFS.
 
@@ -830,5 +831,7 @@ def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
         logger.info(f"Table '{table_name}' successfully truncated.")
 
     except Exception as e:
-        logger.error(f"An error occurred while truncating the table '{table_name}': {e}")
+        logger.error(
+            f"An error occurred while truncating the table '{table_name}': {e}",
+        )
         raise
