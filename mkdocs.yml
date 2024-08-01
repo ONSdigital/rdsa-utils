@@ -5,7 +5,11 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
-    - navigation.indexes
+    - navigation.sections
+    - toc.integrate
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
   language: en
   logo: assets/images/logo.svg
   favicon: assets/images/favicon.ico
