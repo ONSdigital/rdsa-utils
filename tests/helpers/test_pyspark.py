@@ -1074,3 +1074,54 @@ class TestCreateSparkSession:
             spark.conf.get("spark.ui.enabled") == "false"
         ), "Extra configurations should be applied."
         spark.stop()
+
+
+class TestTruncateExternalHiveTable:
+    """Tests for truncate_external_hive_table function."""
+
+    @pytest.fixture()
+    def create_external_table(self, spark_session: SparkSession):
+        """Create a mock external Hive table for testing."""
+        table_name = "test_db.test_table"
+        spark_session.sql("CREATE DATABASE IF NOT EXISTS test_db")
+        schema = T.StructType([T.StructField("name", T.StringType(), True)])
+        df = spark_session.createDataFrame([("Alice",), ("Bob",)], schema)
+        df.write.mode("overwrite").saveAsTable(table_name)
+        yield table_name
+        spark_session.sql(f"DROP TABLE {table_name}")
+        spark_session.sql("DROP DATABASE test_db")
+
+    def test_truncate_table(
+        self,
+        spark_session: SparkSession,
+        create_external_table: Callable,
+    ):
+        """Test truncating an external Hive table."""
+        table_name = create_external_table
+        truncate_external_hive_table(spark_session, table_name)
+        truncated_df = spark_session.table(table_name)
+        assert truncated_df.count() == 0
+
+    def test_schema_preservation(
+        self,
+        spark_session: SparkSession,
+        create_external_table: Callable,
+    ):
+        """Test schema preservation after truncation."""
+        table_name = create_external_table
+        original_schema = spark_session.table(table_name).schema
+        truncate_external_hive_table(spark_session, table_name)
+        truncated_schema = spark_session.table(table_name).schema
+        assert original_schema == truncated_schema
+
+    def test_no_exceptions(
+        self,
+        spark_session: SparkSession,
+        create_external_table: Callable,
+    ):
+        """Test no exceptions are raised during truncation."""
+        table_name = create_external_table
+        try:
+            truncate_external_hive_table(spark_session, table_name)
+        except Exception as e:
+            pytest.fail(f"Truncation raised an exception: {e}")
