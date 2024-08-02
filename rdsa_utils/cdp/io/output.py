@@ -504,6 +504,12 @@ def create_hive_table(
     >>> database_name = "example_db"
     >>> for table_name, schema in schemas.items():
     ...     create_hive_table(spark, database_name, table_name, schema)
+    >>> partitioned_schema = StructType([
+    ...     StructField("id", IntegerType(), True, metadata={"comment": "This is the ID"}),
+    ...     StructField("name", StringType(), True, metadata={"comment": "This is the name"}),
+    ...     StructField("year", IntegerType(), True, metadata={"comment": "This is the year", "partition": True})
+    ... ])
+    >>> create_hive_table(spark, database_name, "test_partitioned_table", partitioned_schema)
     """  # noqa: E501
     logger.info(f"Creating Hive Table {database_name}.{table_name}")
 
@@ -516,9 +522,19 @@ def create_hive_table(
     # Register the DataFrame as a temporary table
     df.createOrReplaceTempView(temp_table_name)
 
+    # Extract partition columns from metadata if present
+    partition_columns = [
+        field.name for field in schema.fields if field.metadata.get("partition", False)
+    ]
+    if partition_columns:
+        partition_clause = f"PARTITIONED BY ({', '.join(partition_columns)})"
+    else:
+        partition_clause = ""
+
     # SQL statement to create a table from the temporary table
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {database_name}.{table_name}
+    {partition_clause}
     AS SELECT * FROM {temp_table_name}
     """
 
