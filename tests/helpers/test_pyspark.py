@@ -1098,14 +1098,14 @@ class TestTruncateExternalHiveTable:
         spark.sql("DROP DATABASE test_db")
         spark.stop()
 
-    def test_truncate_table(self, create_external_table) -> None:
+    def test_truncate_table(self, create_external_table):
         """Test truncating an external Hive table."""
         table_name, spark_session = create_external_table
         truncate_external_hive_table(spark_session, table_name)
         truncated_df = spark_session.table(table_name)
         assert truncated_df.count() == 0
 
-    def test_schema_preservation(self, create_external_table) -> None:
+    def test_schema_preservation(self, create_external_table):
         """Test schema preservation after truncation."""
         table_name, spark_session = create_external_table
         original_schema = spark_session.table(table_name).schema
@@ -1113,7 +1113,7 @@ class TestTruncateExternalHiveTable:
         truncated_schema = spark_session.table(table_name).schema
         assert original_schema == truncated_schema
 
-    def test_no_exceptions(self, create_external_table) -> None:
+    def test_no_exceptions(self, create_external_table):
         """Test no exceptions are raised during truncation."""
         table_name, spark_session = create_external_table
         try:
