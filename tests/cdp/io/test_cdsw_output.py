@@ -550,3 +550,93 @@ class TestSaveCSVToS3:
                 s3_client=s3_client,
                 overwrite=True,
             )
+
+
+class TestCreateHiveTable:
+    """Tests for create_hive_table function."""
+
+    @pytest.fixture(scope="class")
+    def database_name(self, spark_session):
+        """Fixture for setting up and providing the database name."""
+        database_name = "test_db"
+        spark_session.sql(f"CREATE DATABASE IF NOT EXISTS {database_name}")
+        return database_name
+
+    def test_create_table_simple_schema(self, spark_session, database_name):
+        """Test creating a table with a simple schema."""
+        schema = StructType(
+            [
+                T.StructField("id", T.IntegerType(), True),
+                T.StructField("name", T.StringType(), True),
+            ],
+        )
+        create_hive_table(spark_session, database_name, "test_table_simple", schema)
+
+        # Verify table creation
+        result = spark_session.sql(
+            f"SHOW TABLES IN {database_name} LIKE 'test_table_simple'",
+        )
+        assert result.count() == 1
+
+    def test_create_table_with_comments(self, spark_session, database_name):
+        """Test creating a table with comments in the schema."""
+        schema = StructType(
+            [
+                T.StructField(
+                    "id",
+                    T.IntegerType(),
+                    True,
+                    metadata={"comment": "This is the ID"},
+                ),
+                T.StructField(
+                    "name",
+                    T.StringType(),
+                    True,
+                    metadata={"comment": "This is the name"},
+                ),
+            ],
+        )
+        create_hive_table(
+            spark_session,
+            database_name,
+            "test_table_with_comments",
+            schema,
+        )
+
+        # Verify table creation
+        result = spark_session.sql(
+            f"SHOW TABLES IN {database_name} LIKE 'test_table_with_comments'",
+        )
+        assert result.count() == 1
+
+        # Verify comments
+        desc_result = spark_session.sql(
+            f"DESCRIBE {database_name}.test_table_with_comments",
+        ).collect()
+        assert desc_result[0]["comment"] == "This is the ID"
+        assert desc_result[1]["comment"] == "This is the name"
+
+    def test_create_table_that_already_exists(self, spark_session, database_name):
+        """Test creating a table that already exists."""
+        schema = StructType(
+            [
+                T.StructField("id", T.IntegerType(), True),
+                T.StructField("name", T.StringType(), True),
+            ],
+        )
+        create_hive_table(spark_session, database_name, "test_table_exists", schema)
+
+        # Verify initial table creation
+        result = spark_session.sql(
+            f"SHOW TABLES IN {database_name} LIKE 'test_table_exists'",
+        )
+        assert result.count() == 1
+
+        # Attempt to create the same table again
+        create_hive_table(spark_session, database_name, "test_table_exists", schema)
+
+        # Verify table still exists
+        result = spark_session.sql(
+            f"SHOW TABLES IN {database_name} LIKE 'test_table_exists'",
+        )
+        assert result.count() == 1
