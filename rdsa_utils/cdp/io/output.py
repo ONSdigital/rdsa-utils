@@ -8,6 +8,7 @@ import boto3
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
+from pyspark.sql.types import StructType
 from pyspark.sql.utils import AnalysisException
 
 from rdsa_utils.cdp.helpers.hdfs_utils import delete_path, file_exists, rename
@@ -448,3 +449,88 @@ def save_csv_to_s3(
 
     # Clean up the temporary directory
     delete_folder(s3_client, bucket_name, temp_path)
+
+
+def create_hive_table(
+    spark: SparkSession,
+    database_name: str,
+    table_name: str,
+    schema: StructType,
+) -> None:
+    """Create a Hive table in the specified database using the provided schema.
+
+    Parameters
+    ----------
+    spark
+        The Spark session with Hive support enabled.
+    database_name
+        The name of the Hive database where the table will be created.
+    table_name
+        The name of the Hive table to be created.
+    schema
+        The schema definition for the DataFrame used to create the table.
+
+    Returns
+    -------
+    None
+        This function does not return any value. It creates a Hive table.
+
+    Notes
+    -----
+    This method leverages the creation of a temporary DataFrame to facilitate
+    the table creation, ensuring that the table is treated appropriately without
+    explicitly specifying the LOCATION clause. The LOCATION clause is automatically
+    handled by Spark, which places the table data in the default location for
+    external tables.
+
+    Examples
+    --------
+    >>> from pyspark.sql import SparkSession
+    >>> from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType
+    >>> spark = SparkSession.builder.appName("Example").enableHiveSupport().getOrCreate()
+    >>> schemas = {
+    ...     "table1": StructType([
+    ...         StructField("column1", StringType(), True, metadata={"comment": "This is column1"}),
+    ...         StructField("column2", IntegerType(), True, metadata={"comment": "This is column2"}),
+    ...         StructField("column3", DoubleType(), True, metadata={"comment": "This is column3"})
+    ...     ]),
+    ...     "table2": StructType([
+    ...         StructField("columnA", StringType(), True, metadata={"comment": "This is columnA"}),
+    ...         StructField("columnB", IntegerType(), True, metadata={"comment": "This is columnB"}),
+    ...         StructField("columnC", DoubleType(), True, metadata={"comment": "This is columnC"})
+    ...     ]),
+    ...     # Add more schemas as needed
+    ... }
+    >>> database_name = "example_db"
+    >>> for table_name, schema in schemas.items():
+    ...     create_hive_table(spark, database_name, table_name, schema)
+    """  # noqa: E501
+    logger.info(f"Creating Hive Table {database_name}.{table_name}")
+
+    # Generate a unique name for the temporary table
+    temp_table_name = f"temp_{table_name}_{uuid.uuid4().hex}"
+
+    # Create an empty DataFrame with the provided schema
+    df = spark.createDataFrame(spark.sparkContext.emptyRDD(), schema)
+
+    # Register the DataFrame as a temporary table
+    df.createOrReplaceTempView(temp_table_name)
+
+    # SQL statement to create a table from the temporary table
+    create_table_query = f"""
+    CREATE TABLE IF NOT EXISTS {database_name}.{table_name}
+    AS SELECT * FROM {temp_table_name}
+    """
+
+    # Execute the query to create the table
+    spark.sql(create_table_query)
+
+    # Add comments to the table columns
+    for field in schema.fields:
+        comment = field.metadata.get("comment", "")
+        if comment:
+            alter_table_query = f"""
+            ALTER TABLE {database_name}.{table_name}
+            CHANGE COLUMN {field.name} {field.name} {field.dataType.simpleString()} COMMENT '{comment}'
+            """  # noqa: E501
+            spark.sql(alter_table_query)

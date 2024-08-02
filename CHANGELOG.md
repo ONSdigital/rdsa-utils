@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `create_hive_table` function in `cdp/io/output.py`.
 
 ### Changed
 
