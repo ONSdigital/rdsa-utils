@@ -640,3 +640,102 @@ class TestCreateHiveTable:
             f"SHOW TABLES IN {database_name} LIKE 'test_table_exists'",
         )
         assert result.count() == 1
+
+    def test_create_table_with_one_partition_column(self, spark_session, database_name):
+        """Test creating a table with one partition column."""
+        schema = StructType(
+            [
+                T.StructField(
+                    "id",
+                    T.IntegerType(),
+                    True,
+                    metadata={"comment": "This is the ID"},
+                ),
+                T.StructField(
+                    "name",
+                    T.StringType(),
+                    True,
+                    metadata={"comment": "This is the name"},
+                ),
+                T.StructField(
+                    "year",
+                    T.IntegerType(),
+                    True,
+                    metadata={"comment": "This is the year", "partition": True},
+                ),
+            ],
+        )
+        create_hive_table(
+            spark_session,
+            database_name,
+            "test_table_one_partition",
+            schema,
+        )
+
+        # Verify table creation
+        result = spark_session.sql(
+            f"SHOW TABLES IN {database_name} LIKE 'test_table_one_partition'",
+        )
+        assert result.count() == 1
+
+        # Verify partition column
+        desc_result = spark_session.sql(
+            f"DESCRIBE {database_name}.test_table_one_partition",
+        ).collect()
+        assert desc_result[-1]["col_name"] == "# Partition Information"
+        assert desc_result[-2]["data_type"] == "year"
+
+    def test_create_table_with_two_partition_columns(
+        self,
+        spark_session,
+        database_name,
+    ):
+        """Test creating a table with two partition columns."""
+        schema = StructType(
+            [
+                T.StructField(
+                    "id",
+                    T.IntegerType(),
+                    True,
+                    metadata={"comment": "This is the ID"},
+                ),
+                T.StructField(
+                    "name",
+                    T.StringType(),
+                    True,
+                    metadata={"comment": "This is the name"},
+                ),
+                T.StructField(
+                    "year",
+                    T.IntegerType(),
+                    True,
+                    metadata={"comment": "This is the year", "partition": True},
+                ),
+                T.StructField(
+                    "month",
+                    T.IntegerType(),
+                    True,
+                    metadata={"comment": "This is the month", "partition": True},
+                ),
+            ],
+        )
+        create_hive_table(
+            spark_session,
+            database_name,
+            "test_table_two_partitions",
+            schema,
+        )
+
+        # Verify table creation
+        result = spark_session.sql(
+            f"SHOW TABLES IN {database_name} LIKE 'test_table_two_partitions'",
+        )
+        assert result.count() == 1
+
+        # Verify partition columns
+        desc_result = spark_session.sql(
+            f"DESCRIBE {database_name}.test_table_two_partitions",
+        ).collect()
+        assert desc_result[-3]["col_name"] == "# Partition Information"
+        assert desc_result[-2]["data_type"] == "year"
+        assert desc_result[-1]["data_type"] == "month"
