@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Removed `.config("spark.shuffle.service.enabled", "true")` 
+  from `create_spark_session()` not compatible with CDP.
 
 ### Deprecated
 
