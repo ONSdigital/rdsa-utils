@@ -1076,6 +1076,111 @@ class TestCreateSparkSession:
         spark.stop()
 
 
+class TestLoadCSV:
+    """Tests for load_csv function."""
+
+    data_basic = """col1,col2,col3
+1,A,foo
+2,B,bar
+3,C,baz
+"""
+
+    data_multiline = """col1,col2,col3
+1,A,"foo
+bar"
+2,B,"baz
+qux"
+"""
+
+    @pytest.fixture(scope="class")
+    def custom_spark_session(self):
+        """Spark session fixture for this test class."""
+        spark = (
+            SparkSession.builder.master("local[2]")
+            .appName("test_load_csv")
+            .getOrCreate()
+        )
+        yield spark
+        spark.stop()
+
+    def create_temp_csv(self, tmp_path, data):
+        """Create a temporary CSV file."""
+        temp_file = tmp_path / "test.csv"
+        temp_file.write_text(data)
+        return str(temp_file)
+
+    def test_load_csv_basic(self, custom_spark_session, tmp_path):
+        """Test loading CSV file."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        df = load_csv(custom_spark_session, temp_file)
+        assert df.count() == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_multiline(self, custom_spark_session, tmp_path):
+        """Test loading multiline CSV file."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_multiline)
+        df = load_csv(custom_spark_session, temp_file, multi_line=True)
+        assert df.count() == 2
+        assert len(df.columns) == 3
+
+    def test_load_csv_keep_columns(self, custom_spark_session, tmp_path):
+        """Test keeping specific columns."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        df = load_csv(custom_spark_session, temp_file, keep_columns=["col1", "col2"])
+        assert df.count() == 3
+        assert len(df.columns) == 2
+        assert "col1" in df.columns
+        assert "col2" in df.columns
+        assert "col3" not in df.columns
+
+    def test_load_csv_drop_columns(self, custom_spark_session, tmp_path):
+        """Test dropping specific columns."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        df = load_csv(custom_spark_session, temp_file, drop_columns=["col2"])
+        assert df.count() == 3
+        assert len(df.columns) == 2
+        assert "col1" in df.columns
+        assert "col3" in df.columns
+        assert "col2" not in df.columns
+
+    def test_load_csv_rename_columns(self, custom_spark_session, tmp_path):
+        """Test renaming columns."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        df = load_csv(
+            custom_spark_session,
+            temp_file,
+            rename_columns={"col1": "new_col1", "col3": "new_col3"},
+        )
+        assert df.count() == 3
+        assert len(df.columns) == 3
+        assert "new_col1" in df.columns
+        assert "col1" not in df.columns
+        assert "new_col3" in df.columns
+        assert "col3" not in df.columns
+
+    def test_load_csv_missing_keep_column(self, custom_spark_session, tmp_path):
+        """Test error when keep column is missing."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        with pytest.raises(ValueError):
+            load_csv(custom_spark_session, temp_file, keep_columns=["col4"])
+
+    def test_load_csv_missing_drop_column(self, custom_spark_session, tmp_path):
+        """Test error when drop column is missing."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        with pytest.raises(ValueError):
+            load_csv(custom_spark_session, temp_file, drop_columns=["col4"])
+
+    def test_load_csv_missing_rename_column(self, custom_spark_session, tmp_path):
+        """Test error when rename column is missing."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        with pytest.raises(ValueError):
+            load_csv(
+                custom_spark_session,
+                temp_file,
+                rename_columns={"col4": "new_col4"},
+            )
+
+
 class TestTruncateExternalHiveTable:
     """Tests for truncate_external_hive_table function."""
 

@@ -793,6 +793,117 @@ def create_spark_session(
         raise
 
 
+def load_csv(
+    spark: SparkSession,
+    filepath: str,
+    multi_line: bool = False,
+    keep_columns: Optional[List[str]] = None,
+    rename_columns: Optional[Dict[str, str]] = None,
+    drop_columns: Optional[List[str]] = None,
+) -> SparkDF:
+    """Load a CSV file into a PySpark DataFrame.
+
+    spark
+        Active SparkSession.
+    filepath
+        The full path and filename of the CSV file to load.
+    multi_line
+        Whether to use the multiLine parameter when reading the CSV.
+        Default value is False.
+    keep_columns
+        A list of column names to keep in the DataFrame, dropping all others.
+        Default value is None.
+    rename_columns
+        A dictionary to rename columns where keys are existing column
+        names and values are new column names.
+        Default value is None.
+    drop_columns
+        A list of column names to drop from the DataFrame.
+        Default value is None.
+
+    Returns
+    -------
+    SparkDF
+        PySpark DataFrame containing the data from the CSV file.
+
+    Raises
+    ------
+    Exception
+        If there is an error loading the file.
+    ValueError
+        If a column specified in rename_columns, drop_columns, or
+        keep_columns is not found in the DataFrame.
+
+    Examples
+    --------
+    Load a CSV file with multiline and rename columns:
+
+    >>> df = load_csv(
+            spark,
+            "/path/to/file.csv",
+            multi_line=True,
+            rename_columns={"old_name": "new_name"}
+        )
+
+    Load a CSV file and keep only specific columns:
+
+    >>> df = load_csv(spark, "/path/to/file.csv", keep_columns=["col1", "col2"])
+
+    Load a CSV file and drop specific columns:
+
+    >>> df = load_csv(spark, "/path/to/file.csv", drop_columns=["col1", "col2"])
+    """
+    try:
+        df = spark.read.csv(filepath, header=True, multiLine=multi_line)
+        logger.info(f"Loaded CSV file {filepath}")
+    except Exception as e:
+        error_message = f"Error loading file {filepath}: {e}"
+        logger.error(error_message)
+        raise Exception(error_message) from e
+
+    columns = [str(col) for col in df.columns]
+
+    # When multi_line is used it adds \r at the end of the final column
+    if multi_line:
+        columns[-1] = columns[-1].replace("\r", "")
+        df = df.withColumnRenamed(df.columns[-1], columns[-1])
+
+    if keep_columns:
+        missing_columns = [col for col in keep_columns if col not in columns]
+        if missing_columns:
+            error_message = (
+                f"Columns {missing_columns} not found in DataFrame and cannot be kept"
+            )
+            logger.error(error_message)
+            raise ValueError(error_message)
+        df = df.select(*keep_columns)
+
+    if drop_columns:
+        for col in drop_columns:
+            if col in columns:
+                df = df.drop(col)
+            else:
+                error_message = (
+                    f"Column '{col}' not found in DataFrame and cannot be dropped"
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+
+    if rename_columns:
+        for old_name, new_name in rename_columns.items():
+            if old_name in columns:
+                df = df.withColumnRenamed(old_name, new_name)
+            else:
+                error_message = (
+                    f"Column '{old_name}' not found in DataFrame and "
+                    "cannot be renamed to '{new_name}'"
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+
+    return df
+
+
 def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
     """Truncate External Hive Table stored on S3 or HDFS.
 

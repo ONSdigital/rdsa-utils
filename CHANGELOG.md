@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `load_csv` to `helpers/pyspark.py`.
 - Added `truncate_external_hive_table` to `helpers/pyspark.py`.
 
 ### Changed
