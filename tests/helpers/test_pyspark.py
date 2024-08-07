@@ -1074,3 +1074,87 @@ class TestCreateSparkSession:
             spark.conf.get("spark.ui.enabled") == "false"
         ), "Extra configurations should be applied."
         spark.stop()
+
+
+class TestLoadCSV:
+    """Tests for load_csv function."""
+
+    @pytest.fixture(scope="class")
+    def test_csv(self, tmpdir_factory):
+        """Create a temporary CSV file for testing."""
+        data = """col1,col2,col3
+        1,A,foo
+        2,B,bar
+        3,C,baz"""
+        csv_file = tmpdir_factory.mktemp("data").join("test.csv")
+        with open(csv_file, "w") as f:
+            f.write(data)
+        return str(csv_file)
+
+    def test_load_csv_basic(self, spark_session, test_csv):
+        """Test loading CSV file."""
+        df = load_csv(spark_session, test_csv)
+        assert df.count() == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_multiline(self, spark_session, tmpdir_factory):
+        """Test loading multiline CSV file."""
+        data = """col1,col2,col3
+        1,A,"foo
+        bar"
+        2,B,"baz
+        qux" """
+        csv_file = tmpdir_factory.mktemp("data").join("multiline_test.csv")
+        with open(csv_file, "w") as f:
+            f.write(data)
+
+        df = load_csv(spark_session, str(csv_file), multi_line=True)
+        assert df.count() == 2
+        assert len(df.columns) == 3
+
+    def test_load_csv_keep_columns(self, spark_session, test_csv):
+        """Test keeping specific columns."""
+        df = load_csv(spark_session, test_csv, keep_columns=["col1", "col2"])
+        assert df.count() == 3
+        assert len(df.columns) == 2
+        assert "col1" in df.columns
+        assert "col2" in df.columns
+        assert "col3" not in df.columns
+
+    def test_load_csv_drop_columns(self, spark_session, test_csv):
+        """Test dropping specific columns."""
+        df = load_csv(spark_session, test_csv, drop_columns=["col2"])
+        assert df.count() == 3
+        assert len(df.columns) == 2
+        assert "col1" in df.columns
+        assert "col3" in df.columns
+        assert "col2" not in df.columns
+
+    def test_load_csv_rename_columns(self, spark_session, test_csv):
+        """Test renaming columns."""
+        df = load_csv(
+            spark_session,
+            test_csv,
+            rename_columns={"col1": "new_col1", "col3": "new_col3"},
+        )
+        assert df.count() == 3
+        assert len(df.columns) == 3
+        assert "new_col1" in df.columns
+        assert "col1" not in df.columns
+        assert "new_col3" in df.columns
+        assert "col3" not in df.columns
+
+    def test_load_csv_missing_keep_column(self, spark_session, test_csv):
+        """Test error when keep column is missing."""
+        with pytest.raises(ValueError):
+            load_csv(spark_session, test_csv, keep_columns=["col4"])
+
+    def test_load_csv_missing_drop_column(self, spark_session, test_csv):
+        """Test error when drop column is missing."""
+        with pytest.raises(ValueError):
+            load_csv(spark_session, test_csv, drop_columns=["col4"])
+
+    def test_load_csv_missing_rename_column(self, spark_session, test_csv):
+        """Test error when rename column is missing."""
+        with pytest.raises(ValueError):
+            load_csv(spark_session, test_csv, rename_columns={"col4": "new_col4"})
