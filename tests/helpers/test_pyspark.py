@@ -1076,20 +1076,21 @@ class TestCreateSparkSession:
         spark.stop()
 
 
+@pytest.fixture(scope="module")
+def test_csv(tmpdir_factory):
+    """Create a temporary CSV file for testing."""
+    data = """col1,col2,col3
+    1,A,foo
+    2,B,bar
+    3,C,baz"""
+    csv_file = tmpdir_factory.mktemp("data").join("test.csv")
+    with open(csv_file, "w") as f:
+        f.write(data)
+    return str(csv_file)
+
+
 class TestLoadCSV:
     """Tests for load_csv function."""
-
-    @pytest.fixture(scope="class")
-    def test_csv(self, tmpdir_factory):
-        """Create a temporary CSV file for testing."""
-        data = """col1,col2,col3
-        1,A,foo
-        2,B,bar
-        3,C,baz"""
-        csv_file = tmpdir_factory.mktemp("data").join("test.csv")
-        with open(csv_file, "w") as f:
-            f.write(data)
-        return str(csv_file)
 
     def test_load_csv_basic(self, spark_session, test_csv):
         """Test loading CSV file."""
