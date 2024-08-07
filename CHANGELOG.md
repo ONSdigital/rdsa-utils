@@ -8,14 +8,16 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Add `load_csv` and `rename_columns` to `helpers/pyspark.py`.
- 
+- Added `load_csv` and `rename_columns` to `helpers/pyspark.py`.
+- Added `truncate_external_hive_table` to `helpers/pyspark.py`.
+
 ### Changed
 
 ### Deprecated
 
 ### Fixed
 - Temporarily pin `numpy==1.24.4` due to https://github.com/numpy/numpy/issues/267100
+
 ### Removed
 
 ## [v0.3.1] - 2024-05-24
