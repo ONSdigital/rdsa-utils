@@ -801,7 +801,7 @@ def load_csv(
     rename_columns: Optional[Dict[str, str]] = None,
     drop_columns: Optional[List[str]] = None,
 ) -> SparkDF:
-    """Load a CSV file into a Spark DataFrame.
+    """Load a CSV file into a PySpark DataFrame.
 
     Parameters
     ----------
