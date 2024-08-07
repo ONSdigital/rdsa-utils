@@ -8,7 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Add `load_csv` to `helpers/pyspark.py`.
+- Add `load_csv` and `rename_columns` to `helpers/pyspark.py`.
  
 ### Changed
 

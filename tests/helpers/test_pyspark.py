@@ -1179,3 +1179,52 @@ qux"
                 temp_file,
                 rename_columns={"col4": "new_col4"},
             )
+
+
+class TestRenameColumns:
+    """Tests for rename_columns function."""
+
+    @pytest.fixture(scope="class")
+    def custom_spark_session(self):
+        """Spark session fixture for this test class."""
+        spark = (
+            SparkSession.builder.master("local[2]")
+            .appName("test_rename_columns")
+            .getOrCreate()
+        )
+        yield spark
+        spark.stop()
+
+    @pytest.fixture()
+    def sample_df(self, custom_spark_session):
+        """Fixture to create a sample DataFrame."""
+        data = [("Alice", 1), ("Bob", 2)]
+        return custom_spark_session.createDataFrame(data, ["name", "id"])
+
+    def test_rename_columns(self, sample_df):
+        """Test renaming columns."""
+        rename_dict = {"name": "first_name", "id": "identifier"}
+        df_renamed = rename_columns(sample_df, rename_dict)
+        expected_columns = ["first_name", "identifier"]
+        assert df_renamed.columns == expected_columns
+
+    def test_no_rename(self, sample_df):
+        """Test with an empty rename dictionary."""
+        rename_dict = {}
+        df_renamed = rename_columns(sample_df, rename_dict)
+        expected_columns = ["name", "id"]
+        assert df_renamed.columns == expected_columns
+
+    def test_partial_rename(self, sample_df):
+        """Test partial renaming of columns."""
+        rename_dict = {"name": "first_name"}
+        df_renamed = rename_columns(sample_df, rename_dict)
+        expected_columns = ["first_name", "id"]
+        assert df_renamed.columns == expected_columns
+
+    def test_nonexistent_column(self, sample_df):
+        """Test renaming with a nonexistent column."""
+        rename_dict = {"nonexistent": "new_name"}
+        df_renamed = rename_columns(sample_df, rename_dict)
+        expected_columns = ["name", "id"]
+        assert df_renamed.columns == expected_columns
