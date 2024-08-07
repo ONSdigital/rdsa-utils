@@ -802,7 +802,7 @@ def load_csv(
     drop_columns: Optional[List[str]] = None,
 ) -> SparkDF:
     """Load a CSV file into a PySpark DataFrame.
-    
+
     spark
         Active SparkSession.
     filepath
@@ -940,24 +940,24 @@ def rename_columns(df: SparkDF, rename_dict: Dict[str, str]) -> SparkDF:
     for old_name, new_name in rename_dict.items():
         df = df.withColumnRenamed(old_name, new_name)
     return df
-  
- 
+
+
 def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
     """Truncate External Hive Table stored on S3 or HDFS.
-    
+
     Parameters
     ----------
     spark
         Active SparkSession.
     table_name
         The name of the external Hive table to truncate.
-    
+
     Returns
     -------
     None
         This function does not return any value. It performs an action of
         truncating the table.
-        
+
     Examples
     --------
     Truncate a Hive table named 'my_database.my_table':

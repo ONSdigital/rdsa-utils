@@ -1229,7 +1229,7 @@ class TestRenameColumns:
         expected_columns = ["name", "id"]
         assert df_renamed.columns == expected_columns
 
-        
+
 class TestTruncateExternalHiveTable:
     """Tests for truncate_external_hive_table function."""
 
