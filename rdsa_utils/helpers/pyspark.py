@@ -904,44 +904,6 @@ def load_csv(
     return df
 
 
-def rename_columns(df: SparkDF, rename_dict: Dict[str, str]) -> SparkDF:
-    """Rename columns in a PySpark DataFrame based on a provided dictionary.
-
-    Parameters
-    ----------
-    df
-        The input PySpark DataFrame whose columns are to be renamed.
-    rename_dict
-        A dictionary where the keys are the current column names
-        and the values are the new column names.
-
-    Returns
-    -------
-    SparkDF
-        A new DataFrame with the columns renamed
-        according to the provided dictionary.
-
-    Examples
-    --------
-    >>> from pyspark.sql import SparkSession
-    >>> spark = SparkSession.builder.appName("example").getOrCreate()
-    >>> data = [("Alice", 1), ("Bob", 2)]
-    >>> df = spark.createDataFrame(data, ["name", "id"])
-    >>> rename_dict = {"name": "first_name", "id": "identifier"}
-    >>> df_renamed = rename_columns(df, rename_dict)
-    >>> df_renamed.show()
-    +----------+----------+
-    |first_name|identifier|
-    +----------+----------+
-    |     Alice|         1|
-    |       Bob|         2|
-    +----------+----------+
-    """
-    for old_name, new_name in rename_dict.items():
-        df = df.withColumnRenamed(old_name, new_name)
-    return df
-
-
 def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
     """Truncate External Hive Table stored on S3 or HDFS.
 
