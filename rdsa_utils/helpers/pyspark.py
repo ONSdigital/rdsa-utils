@@ -801,11 +801,7 @@ def load_csv(
     rename_columns: Optional[Dict[str, str]] = None,
     drop_columns: Optional[List[str]] = None,
 ) -> SparkDF:
-    """
-    Load a CSV file into a Spark DataFrame.
-
-    If the file does not exist or there are problems loading the file,
-    this will raise errors.
+    """Load a CSV file into a Spark DataFrame.
 
     Parameters
     ----------
@@ -829,7 +825,7 @@ def load_csv(
 
     Returns
     -------
-    DataFrame
+    SparkDF
         A Spark DataFrame containing the data from the CSV file.
 
     Raises
