@@ -826,7 +826,7 @@ def load_csv(
     Returns
     -------
     SparkDF
-        A Spark DataFrame containing the data from the CSV file.
+        PySpark DataFrame containing the data from the CSV file.
 
     Raises
     ------
