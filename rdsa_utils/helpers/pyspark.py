@@ -896,7 +896,7 @@ def load_csv(
             else:
                 error_message = (
                     f"Column '{old_name}' not found in DataFrame and "
-                    "cannot be renamed to '{new_name}'"
+                    f"cannot be renamed to '{new_name}'"
                 )
                 logger.error(error_message)
                 raise ValueError(error_message)
