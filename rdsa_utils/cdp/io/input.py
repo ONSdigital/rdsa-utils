@@ -1,7 +1,7 @@
 """Read inputs on CDP."""
 
 import logging
-from typing import Tuple
+from typing import List, Tuple
 
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
@@ -14,6 +14,42 @@ logger = logging.getLogger(__name__)
 def get_current_database(spark: SparkSession) -> str:
     """Retrieve the current database from the active SparkSession."""
     return spark.sql("SELECT current_database()").collect()[0]["current_database()"]
+
+
+def get_tables_in_database(spark: SparkSession, database_name: str) -> List[str]:
+    """Get a list of tables in a given database.
+
+    Parameters
+    ----------
+    spark
+        Active SparkSession.
+    database_name
+        The name of the database from which to list tables.
+
+    Returns
+    -------
+    List[str]
+        A list of table names in the specified database.
+
+    Raises
+    ------
+    ValueError
+        If there is an error fetching tables from the specified database.
+
+    Examples
+    --------
+    >>> tables = get_tables_in_database(spark, "default")
+    >>> print(tables)
+    ['table1', 'table2', 'table3']
+    """
+    try:
+        tables_df = spark.sql(f"SHOW TABLES IN {database_name}")
+        tables = [row["tableName"] for row in tables_df.collect()]
+        return tables
+    except Exception as e:
+        error_msg = f"Error fetching tables from database {database_name}: {e}"
+        logger.error(error_msg)
+        raise ValueError(error_msg) from e
 
 
 def extract_database_name(
