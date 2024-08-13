@@ -800,6 +800,7 @@ def load_csv(
     keep_columns: Optional[List[str]] = None,
     rename_columns: Optional[Dict[str, str]] = None,
     drop_columns: Optional[List[str]] = None,
+    encoding: str = "UTF-8",
 ) -> SparkDF:
     """Load a CSV file into a PySpark DataFrame.
 
@@ -820,6 +821,9 @@ def load_csv(
     drop_columns
         A list of column names to drop from the DataFrame.
         Default value is None.
+    encoding
+        The character encoding to use when reading the CSV file.
+        Default value is "UTF-8".
 
     Returns
     -------
@@ -845,6 +849,10 @@ def load_csv(
             rename_columns={"old_name": "new_name"}
         )
 
+    Load a CSV file with a specific encoding:
+
+    >>> df = load_csv(spark, "/path/to/file.csv", encoding="ISO-8859-1")
+
     Load a CSV file and keep only specific columns:
 
     >>> df = load_csv(spark, "/path/to/file.csv", keep_columns=["col1", "col2"])
@@ -854,8 +862,13 @@ def load_csv(
     >>> df = load_csv(spark, "/path/to/file.csv", drop_columns=["col1", "col2"])
     """
     try:
-        df = spark.read.csv(filepath, header=True, multiLine=multi_line)
-        logger.info(f"Loaded CSV file {filepath}")
+        df = spark.read.csv(
+            filepath,
+            header=True,
+            multiLine=multi_line,
+            encoding=encoding,
+        )
+        logger.info(f"Loaded CSV file {filepath} with encoding {encoding}")
     except Exception as e:
         error_message = f"Error loading file {filepath}: {e}"
         logger.error(error_message)

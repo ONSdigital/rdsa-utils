@@ -8,7 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added `load_csv` to `helpers/pyspark.py`.
+- Added `load_csv` to `helpers/pyspark.py` with encoding parameter.
 - Added `truncate_external_hive_table` to `helpers/pyspark.py`.
 - Added `get_tables_in_database` to `cdp/io/input.py`.
 
