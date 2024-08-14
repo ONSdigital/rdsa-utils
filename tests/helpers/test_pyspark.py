@@ -1179,6 +1179,46 @@ qux"
                 temp_file,
                 rename_columns={"col4": "new_col4"},
             )
+    def test_load_csv_with_encoding(self, custom_spark_session, tmp_path):
+        """Test loading CSV with a specific encoding."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        df = load_csv(custom_spark_session, temp_file, encoding="ISO-8859-1")
+        assert df.count() == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_with_custom_delimiter(self, custom_spark_session, tmp_path):
+        """Test loading CSV with a custom delimiter."""
+        data_with_semicolon = """col1;col2;col3
+1;A;foo
+2;B;bar
+3;C;baz
+"""
+        temp_file = self.create_temp_csv(tmp_path, data_with_semicolon)
+        df = load_csv(custom_spark_session, temp_file, sep=";")
+        assert df.count() == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_with_infer_schema(self, custom_spark_session, tmp_path):
+        """Test loading CSV with schema inference."""
+        temp_file = self.create_temp_csv(tmp_path, self.data_basic)
+        df = load_csv(custom_spark_session, temp_file, inferSchema=True)
+        assert df.schema["col1"].dataType.typeName() == "integer"
+        assert df.schema["col2"].dataType.typeName() == "string"
+        assert df.schema["col3"].dataType.typeName() == "string"
+
+    def test_load_csv_with_custom_quote(self, custom_spark_session, tmp_path):
+        """Test loading CSV with a custom quote character."""
+        data_with_custom_quote = """col1,col2,col3
+1,A,foo
+2,B,'bar'
+3,C,'baz'
+"""
+        temp_file = self.create_temp_csv(tmp_path, data_with_custom_quote)
+        df = load_csv(custom_spark_session, temp_file, quote="'")
+        assert df.count() == 3
+        assert len(df.columns) == 3
+        assert df.filter(df.col3 == "bar").count() == 1
+        assert df.filter(df.col3 == "baz").count() == 1
 
 
 class TestTruncateExternalHiveTable:
