@@ -1119,7 +1119,7 @@ qux"
     def test_load_csv_multiline(self, custom_spark_session, tmp_path):
         """Test loading multiline CSV file."""
         temp_file = self.create_temp_csv(tmp_path, self.data_multiline)
-        df = load_csv(custom_spark_session, temp_file, multi_line=True)
+        df = load_csv(custom_spark_session, temp_file, multiLine=True)
         assert df.count() == 2
         assert len(df.columns) == 3
 
