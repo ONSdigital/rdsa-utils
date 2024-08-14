@@ -1179,6 +1179,7 @@ qux"
                 temp_file,
                 rename_columns={"col4": "new_col4"},
             )
+
     def test_load_csv_with_encoding(self, custom_spark_session, tmp_path):
         """Test loading CSV with a specific encoding."""
         temp_file = self.create_temp_csv(tmp_path, self.data_basic)
