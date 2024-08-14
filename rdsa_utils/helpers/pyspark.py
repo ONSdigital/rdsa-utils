@@ -862,11 +862,7 @@ def load_csv(
 
     """
     try:
-        df = spark.read.csv(
-            filepath,
-            header=True,
-            **kwargs
-        )
+        df = spark.read.csv(filepath, header=True, **kwargs)
         logger.info(f"Loaded CSV file {filepath} with parameters {kwargs}")
     except Exception as e:
         error_message = f"Error loading file {filepath}: {e}"
@@ -876,7 +872,7 @@ def load_csv(
     columns = [str(col) for col in df.columns]
 
     # When multi_line is used it adds \r at the end of the final column
-    if kwargs.get('multiLine', False):
+    if kwargs.get("multiLine", False):
         columns[-1] = columns[-1].replace("\r", "")
         df = df.withColumnRenamed(df.columns[-1], columns[-1])
 
