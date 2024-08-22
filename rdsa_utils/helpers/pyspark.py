@@ -834,6 +834,13 @@ def load_csv(
         If a column specified in rename_columns, drop_columns, or
         keep_columns is not found in the DataFrame.
 
+    Notes
+    -----
+    Transformation order:
+    1. Columns are kept according to `keep_columns`.
+    2. Columns are dropped according to `drop_columns`.
+    3. Columns are renamed according to `rename_columns`.
+
     Examples
     --------
     Load a CSV file with multiline and rename columns:
