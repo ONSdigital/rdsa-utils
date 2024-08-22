@@ -262,15 +262,15 @@ def dataframe_to_string(df: pd.DataFrame, file: str, config: Config) -> str:
     df = df.replace("nan", "np.nan")
 
     tab = " " * 4
-    col_string = "".join([f'{tab}{tab}"{col}",\n' for col in df.columns])
+    col_string = "".join([f'{tab}{tab}{tab}"{col}",\n' for col in df.columns])
 
     df["output"] = (
         f"{tab}[" + df[df.columns[:]].apply(lambda row: ", ".join(row), axis=1) + "],"
     )
-    rows_string = df["output"].str.cat(sep=f"\n{tab}")
+    rows_string = df["output"].str.cat(sep=f"\n{tab}{tab}")
 
-    data_string = f"""columns = [\n{col_string}{tab}]
-        data = [\n{tab}{rows_string}\n{tab}]\n"""
+    data_string = f"""columns = [\n{col_string}{tab}{tab}]\n
+        data = [\n{tab}{tab}{rows_string}\n{tab}{tab}]\n"""
 
     logging.info(f"Data string generated for file: {file}")
 
