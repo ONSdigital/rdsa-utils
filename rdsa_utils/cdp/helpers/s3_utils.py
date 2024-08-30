@@ -907,7 +907,6 @@ def load_csv(
             "path/to/file.csv",
             sep=";"
         )
-
     """
     try:
         # Get the CSV file from S3
