@@ -825,6 +825,13 @@ def load_csv(
     SparkDF
         PySpark DataFrame containing the data from the CSV file.
 
+    Notes
+    -----
+    Transformation order:
+    1. Columns are kept according to `keep_columns`.
+    2. Columns are dropped according to `drop_columns`.
+    3. Columns are renamed according to `rename_columns`.
+
     Raises
     ------
     Exception
@@ -876,6 +883,7 @@ def load_csv(
         columns[-1] = columns[-1].replace("\r", "")
         df = df.withColumnRenamed(df.columns[-1], columns[-1])
 
+    # Apply column transformations: keep, drop, rename
     if keep_columns:
         missing_columns = [col for col in keep_columns if col not in columns]
         if missing_columns:
