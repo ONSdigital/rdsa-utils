@@ -14,6 +14,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     file_exists,
     is_s3_directory,
     list_files,
+    load_csv,
     move_file,
     remove_leading_slash,
     upload_file,
@@ -698,3 +699,213 @@ class TestDeleteFolder:
         """Test delete_folder when the folder does not exist."""
         result = delete_folder(s3_client, "test-bucket", "nonexistent-folder/")
         assert result is False
+
+
+class TestLoadCSV:
+    """Tests for load_csv function."""
+
+    data_basic = """col1,col2,col3
+1,A,foo
+2,B,bar
+3,C,baz
+"""
+
+    data_multiline = """col1,col2,col3
+1,A,"foo
+bar"
+2,B,"baz
+qux"
+"""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="test-bucket")
+            yield s3
+
+    def upload_to_s3(self, s3_client, bucket_name, key, data):
+        """Upload a string as a CSV file to S3."""
+        s3_client.put_object(Bucket=bucket_name, Key=key, Body=data)
+
+    def test_load_csv_basic(self, s3_client):
+        """Test loading CSV file."""
+        self.upload_to_s3(s3_client, "test-bucket", "test_basic.csv", self.data_basic)
+        df = load_csv(s3_client, "test-bucket", "test_basic.csv")
+        assert len(df) == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_multiline(self, s3_client):
+        """Test loading multiline CSV file."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_multiline.csv",
+            self.data_multiline,
+        )
+        df = load_csv(s3_client, "test-bucket", "test_multiline.csv")
+        assert len(df) == 2
+        assert len(df.columns) == 3
+
+    def test_load_csv_keep_columns(self, s3_client):
+        """Test keeping specific columns."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_keep_columns.csv",
+            self.data_basic,
+        )
+        df = load_csv(
+            s3_client,
+            "test-bucket",
+            "test_keep_columns.csv",
+            keep_columns=["col1", "col2"],
+        )
+        assert len(df) == 3
+        assert len(df.columns) == 2
+        assert "col1" in df.columns
+        assert "col2" in df.columns
+        assert "col3" not in df.columns
+
+    def test_load_csv_drop_columns(self, s3_client):
+        """Test dropping specific columns."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_drop_columns.csv",
+            self.data_basic,
+        )
+        df = load_csv(
+            s3_client,
+            "test-bucket",
+            "test_drop_columns.csv",
+            drop_columns=["col2"],
+        )
+        assert len(df) == 3
+        assert len(df.columns) == 2
+        assert "col1" in df.columns
+        assert "col3" in df.columns
+        assert "col2" not in df.columns
+
+    def test_load_csv_rename_columns(self, s3_client):
+        """Test renaming columns."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_rename_columns.csv",
+            self.data_basic,
+        )
+        df = load_csv(
+            s3_client,
+            "test-bucket",
+            "test_rename_columns.csv",
+            rename_columns={"col1": "new_col1", "col3": "new_col3"},
+        )
+        assert len(df) == 3
+        assert len(df.columns) == 3
+        assert "new_col1" in df.columns
+        assert "col1" not in df.columns
+        assert "new_col3" in df.columns
+        assert "col3" not in df.columns
+
+    def test_load_csv_missing_keep_column(self, s3_client):
+        """Test error when keep column is missing."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_missing_keep_column.csv",
+            self.data_basic,
+        )
+        with pytest.raises(ValueError):
+            load_csv(
+                s3_client,
+                "test-bucket",
+                "test_missing_keep_column.csv",
+                keep_columns=["col4"],
+            )
+
+    def test_load_csv_missing_drop_column(self, s3_client):
+        """Test error when drop column is missing."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_missing_drop_column.csv",
+            self.data_basic,
+        )
+        with pytest.raises(ValueError):
+            load_csv(
+                s3_client,
+                "test-bucket",
+                "test_missing_drop_column.csv",
+                drop_columns=["col4"],
+            )
+
+    def test_load_csv_missing_rename_column(self, s3_client):
+        """Test error when rename column is missing."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_missing_rename_column.csv",
+            self.data_basic,
+        )
+        with pytest.raises(ValueError):
+            load_csv(
+                s3_client,
+                "test-bucket",
+                "test_missing_rename_column.csv",
+                rename_columns={"col4": "new_col4"},
+            )
+
+    def test_load_csv_with_encoding(self, s3_client):
+        """Test loading CSV with a specific encoding."""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_encoding.csv",
+            self.data_basic,
+        )
+        df = load_csv(
+            s3_client,
+            "test-bucket",
+            "test_encoding.csv",
+            encoding="ISO-8859-1",
+        )
+        assert len(df) == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_with_custom_delimiter(self, s3_client):
+        """Test loading CSV with a custom delimiter."""
+        data_with_semicolon = """col1;col2;col3
+1;A;foo
+2;B;bar
+3;C;baz
+"""
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_custom_delimiter.csv",
+            data_with_semicolon,
+        )
+        df = load_csv(s3_client, "test-bucket", "test_custom_delimiter.csv", sep=";")
+        assert len(df) == 3
+        assert len(df.columns) == 3
+
+    def test_load_csv_with_custom_quote(self, s3_client):
+        """Test loading CSV with a custom quote character."""
+        data_with_custom_quote = """col1,col2,col3
+    1,A,foo
+    2,B,'bar'
+    3,C,'baz'
+    """
+        self.upload_to_s3(
+            s3_client,
+            "test-bucket",
+            "test_custom_quote.csv",
+            data_with_custom_quote,
+        )
+        df = load_csv(s3_client, "test-bucket", "test_custom_quote.csv", quotechar="'")
+        assert len(df) == 3
+        assert len(df.columns) == 3
+        assert df[df["col3"] == "bar"].shape[0] == 1
+        assert df[df["col3"] == "baz"].shape[0] == 1
