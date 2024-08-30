@@ -819,7 +819,7 @@ def delete_folder(
 
 
 def load_csv(
-    s3_client: boto3.client,
+    client: boto3.client,
     bucket_name: str,
     filepath: str,
     keep_columns: Optional[List[str]] = None,
@@ -829,8 +829,10 @@ def load_csv(
 ) -> pd.DataFrame:
     """Load a CSV file from an S3 bucket into a Pandas DataFrame.
 
-    s3_client
-        Active Boto3 S3 client.
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
     bucket_name
         The name of the S3 bucket.
     filepath
@@ -873,7 +875,7 @@ def load_csv(
     Load a CSV file and rename columns:
 
     >>> df = load_csv(
-            s3_client,
+            client,
             "my-bucket",
             "path/to/file.csv",
             rename_columns={"old_name": "new_name"}
@@ -882,7 +884,7 @@ def load_csv(
     Load a CSV file and keep only specific columns:
 
     >>> df = load_csv(
-            s3_client,
+            client,
             "my-bucket",
             "path/to/file.csv",
             keep_columns=["col1", "col2"]
@@ -891,7 +893,7 @@ def load_csv(
     Load a CSV file and drop specific columns:
 
     >>> df = load_csv(
-            s3_client,
+            client,
             "my-bucket",
             "path/to/file.csv",
             drop_columns=["col1", "col2"]
@@ -900,7 +902,7 @@ def load_csv(
     Load a CSV file with custom delimiter:
 
     >>> df = load_csv(
-            s3_client,
+            client,
             "my-bucket",
             "path/to/file.csv",
             sep=";"
@@ -909,7 +911,7 @@ def load_csv(
     """
     try:
         # Get the CSV file from S3
-        response = s3_client.get_object(Bucket=bucket_name, Key=filepath)
+        response = client.get_object(Bucket=bucket_name, Key=filepath)
         logger.info(
             f"Loaded CSV file from S3 bucket {bucket_name}, filepath {filepath}",
         )
