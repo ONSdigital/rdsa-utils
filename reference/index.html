@@ -1,69 +1,181 @@
+<!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
 
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
+
+    <!-- Meta tags -->
     
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+      <!-- Page description -->
       
+
+      <!-- Page author -->
       
+
+      <!-- Canonical -->
       
+
+      <!-- Previous page -->
       
-        <link rel="prev" href="..">
+        <link rel="prev" href=".." />
       
+
+      <!-- Next page -->
       
-        <link rel="next" href="../contribution_guide/">
+        <link rel="next" href="../contribution_guide/" />
       
+
+      <!-- RSS feed -->
       
-      <link rel="icon" href="../assets/ons_favicon.svg">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+
+      <!-- Favicon -->
+      <link rel="icon" href="../assets/images/favicon.ico" />
+
+      <!-- Generator banner -->
+      <meta
+        name="generator"
+        content="mkdocs-1.6.0, $md-name$-$md-version$"
+      />
     
+
+    <!-- Site title -->
     
       
         <title>API Reference - rdsa-utils Documentation</title>
       
     
+
+    <!-- Theme-related style sheets -->
     
-  
-      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.css" />
+
+      <!-- Extra color palette -->
       
+
+      <!-- Custom icons -->
       
 
 
     
-  <link rel="stylesheet" href="../assets/stylesheets/extra.css">
 
+    <!-- JavaScript libraries -->
     
       
     
+
+    <!-- Webfonts -->
     
+
+      <!-- Load fonts from Google -->
       
         
         
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"
+        />
+        <style>
+          :root {
+            --md-text-font: "Roboto";
+            --md-code-font: "Roboto Mono";
+          }
+        </style>
       
     
+
+    <!-- Custom style sheets -->
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css" />
     
+
+    <!-- Helper functions for inline scripts -->
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
 
+    <!-- Meta tags from front matter or plugins -->
     
-    
+
+    <!-- Custom front matter -->
     
   </head>
+
+  <!-- Set text direction and color palette, if defined -->
   
   
     <body dir="ltr">
   
     
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+
+    <!--
+      State toggles - we need to set autocomplete="off" in order to reset the
+      drawer on back button invocation in some browsers
+    -->
+    <input
+      class="md-toggle"
+      data-md-toggle="drawer"
+      type="checkbox"
+      id="__drawer"
+      autocomplete="off"
+    />
+    <input
+      class="md-toggle"
+      data-md-toggle="search"
+      type="checkbox"
+      id="__search"
+      autocomplete="off"
+    />
+
+    <!-- Overlay for expanded drawer -->
     <label class="md-overlay" for="__drawer"></label>
+
+    <!-- Skip to content -->
     <div data-md-component="skip">
       
         
@@ -72,10 +184,16 @@
         </a>
       
     </div>
+
+    <!-- Announcement bar -->
     <div data-md-component="announce">
       
     </div>
+
+    <!-- Version warning -->
     
+
+    <!-- Header -->
     
       
 
@@ -85,7 +203,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="rdsa-utils Documentation" class="md-header__button md-logo" aria-label="rdsa-utils Documentation" data-md-component="logo">
       
-  <img src="../assets/ons_logo_white.svg" alt="logo">
+  <img src="../assets/images/logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -139,7 +257,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -156,7 +274,7 @@
         <a href="https://github.com/ONSdigital/rdsa-utils" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     rdsa-utils
@@ -249,17 +367,34 @@
   
 </header>
     
+
+    <!-- Container -->
     <div class="md-container" data-md-component="container">
+
+      <!-- Hero teaser -->
       
+
+      <!-- Navigation tabs (collapsing) -->
       
         
       
+
+      <!-- Main area -->
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
+
+          <!-- Sidebars -->
           
+
+            <!-- Navigation -->
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+              <div
+                class="md-sidebar md-sidebar--primary"
+                data-md-component="sidebar"
+                data-md-type="navigation"
+                
+              >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -268,11 +403,13 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="rdsa-utils Documentation" class="md-nav__button md-logo" aria-label="rdsa-utils Documentation" data-md-component="logo">
       
-  <img src="../assets/ons_logo_white.svg" alt="logo">
+  <img src="../assets/images/logo.svg" alt="logo">
 
     </a>
     rdsa-utils Documentation
@@ -282,7 +419,7 @@
       <a href="https://github.com/ONSdigital/rdsa-utils" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     rdsa-utils
@@ -788,6 +925,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.load_csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_csv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdp.helpers.s3_utils.move_file" class="md-nav__link">
     <span class="md-ellipsis">
       move_file
@@ -1121,6 +1267,15 @@
   <a href="#rdsa_utils.cdp.io.input.get_current_database" class="md-nav__link">
     <span class="md-ellipsis">
       get_current_database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.io.input.get_tables_in_database" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_tables_in_database
     </span>
   </a>
   
@@ -1535,6 +1690,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.helpers.pyspark.load_csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_csv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.helpers.pyspark.map_column_names" class="md-nav__link">
     <span class="md-ellipsis">
       map_column_names
@@ -1601,6 +1765,15 @@
   <a href="#rdsa_utils.helpers.pyspark.transform" class="md-nav__link">
     <span class="md-ellipsis">
       transform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.helpers.pyspark.truncate_external_hive_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      truncate_external_hive_table
     </span>
   </a>
   
@@ -1929,1547 +2102,12 @@
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#general" class="md-nav__link">
-    <span class="md-ellipsis">
-      General
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions" class="md-nav__link">
-    <span class="md-ellipsis">
-      exceptions
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="exceptions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions.ColumnNotInDataframeError" class="md-nav__link">
-    <span class="md-ellipsis">
-      ColumnNotInDataframeError
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions.ConfigError" class="md-nav__link">
-    <span class="md-ellipsis">
-      ConfigError
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions.DataframeEmptyError" class="md-nav__link">
-    <span class="md-ellipsis">
-      DataframeEmptyError
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions.InvalidBucketNameError" class="md-nav__link">
-    <span class="md-ellipsis">
-      InvalidBucketNameError
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions.PipelineError" class="md-nav__link">
-    <span class="md-ellipsis">
-      PipelineError
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.exceptions.TableNotFoundError" class="md-nav__link">
-    <span class="md-ellipsis">
-      TableNotFoundError
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      logging
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="logging">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.add_warning_message_to_function" class="md-nav__link">
-    <span class="md-ellipsis">
-      add_warning_message_to_function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.init_logger_advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      init_logger_advanced
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.init_logger_basic" class="md-nav__link">
-    <span class="md-ellipsis">
-      init_logger_basic
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.log_dev" class="md-nav__link">
-    <span class="md-ellipsis">
-      log_dev
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.log_rows_in_spark_df" class="md-nav__link">
-    <span class="md-ellipsis">
-      log_rows_in_spark_df
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.log_spark_df_schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      log_spark_df_schema
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.print_full_table_and_raise_error" class="md-nav__link">
-    <span class="md-ellipsis">
-      print_full_table_and_raise_error
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.logging.timer_args" class="md-nav__link">
-    <span class="md-ellipsis">
-      timer_args
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils" class="md-nav__link">
-    <span class="md-ellipsis">
-      test_utils
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="test_utils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case" class="md-nav__link">
-    <span class="md-ellipsis">
-      Case
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Case">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.Case.__repr__" class="md-nav__link">
-    <span class="md-ellipsis">
-      __repr__
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_dataframe" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_dataframe
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.create_spark_df" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_spark_df
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.parametrize_cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      parametrize_cases
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.spark_session" class="md-nav__link">
-    <span class="md-ellipsis">
-      spark_session
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.suppress_py4j_logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      suppress_py4j_logging
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_date" class="md-nav__link">
-    <span class="md-ellipsis">
-      to_date
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_datetime" class="md-nav__link">
-    <span class="md-ellipsis">
-      to_datetime
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.test_utils.to_spark" class="md-nav__link">
-    <span class="md-ellipsis">
-      to_spark
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.typing" class="md-nav__link">
-    <span class="md-ellipsis">
-      typing
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      validation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="validation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.validation.allowed_date_format" class="md-nav__link">
-    <span class="md-ellipsis">
-      allowed_date_format
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.validation.apply_validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      apply_validation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.validation.list_convert_validator" class="md-nav__link">
-    <span class="md-ellipsis">
-      list_convert_validator
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cdp" class="md-nav__link">
-    <span class="md-ellipsis">
-      CDP
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils" class="md-nav__link">
-    <span class="md-ellipsis">
-      s3_utils
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="s3_utils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.copy_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      copy_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.create_folder_on_s3" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_folder_on_s3
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.delete_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.delete_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_folder
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.download_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      download_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.download_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      download_folder
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.file_exists" class="md-nav__link">
-    <span class="md-ellipsis">
-      file_exists
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.is_s3_directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      is_s3_directory
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.list_files" class="md-nav__link">
-    <span class="md-ellipsis">
-      list_files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.move_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      move_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.remove_leading_slash" class="md-nav__link">
-    <span class="md-ellipsis">
-      remove_leading_slash
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.upload_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      upload_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.upload_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      upload_folder
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.s3_utils.validate_bucket_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate_bucket_name
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils" class="md-nav__link">
-    <span class="md-ellipsis">
-      hdfs_utils
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="hdfs_utils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.change_permissions" class="md-nav__link">
-    <span class="md-ellipsis">
-      change_permissions
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.copy" class="md-nav__link">
-    <span class="md-ellipsis">
-      copy
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.copy_local_to_hdfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      copy_local_to_hdfs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.create_dir" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_dir
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.create_txt_from_string" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_txt_from_string
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.delete_dir" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_dir
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.delete_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.delete_path" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_path
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.file_exists" class="md-nav__link">
-    <span class="md-ellipsis">
-      file_exists
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.get_date_modified" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_date_modified
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.is_dir" class="md-nav__link">
-    <span class="md-ellipsis">
-      is_dir
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.move_local_to_hdfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      move_local_to_hdfs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.read_dir" class="md-nav__link">
-    <span class="md-ellipsis">
-      read_dir
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.read_dir_files" class="md-nav__link">
-    <span class="md-ellipsis">
-      read_dir_files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.read_dir_files_recursive" class="md-nav__link">
-    <span class="md-ellipsis">
-      read_dir_files_recursive
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils.rename" class="md-nav__link">
-    <span class="md-ellipsis">
-      rename
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.impala" class="md-nav__link">
-    <span class="md-ellipsis">
-      impala
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="impala">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.impala.invalidate_impala_metadata" class="md-nav__link">
-    <span class="md-ellipsis">
-      invalidate_impala_metadata
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog" class="md-nav__link">
-    <span class="md-ellipsis">
-      pipeline_runlog
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="pipeline_runlog">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.add_runlog_entry" class="md-nav__link">
-    <span class="md-ellipsis">
-      add_runlog_entry
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.create_runlog_entry" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_runlog_entry
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.create_runlog_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_runlog_table
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.get_last_run_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_last_run_id
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.get_penultimate_run_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_penultimate_run_id
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.reserve_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      reserve_id
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog.write_runlog_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      write_runlog_file
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.input" class="md-nav__link">
-    <span class="md-ellipsis">
-      input
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="input">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.input.extract_database_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      extract_database_name
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.input.get_current_database" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_current_database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.input.load_and_validate_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      load_and_validate_table
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.output" class="md-nav__link">
-    <span class="md-ellipsis">
-      output
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="output">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.output.insert_df_to_hive_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      insert_df_to_hive_table
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.output.save_csv_to_hdfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      save_csv_to_hdfs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.output.save_csv_to_s3" class="md-nav__link">
-    <span class="md-ellipsis">
-      save_csv_to_s3
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.output.write_and_read_hive_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      write_and_read_hive_table
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      GCP
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils" class="md-nav__link">
-    <span class="md-ellipsis">
-      gcp_utils
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="gcp_utils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.copy_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      copy_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.create_folder_on_gcs" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_folder_on_gcs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.delete_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.delete_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      delete_folder
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.download_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      download_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.download_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      download_folder
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.file_exists" class="md-nav__link">
-    <span class="md-ellipsis">
-      file_exists
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.get_table_columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_table_columns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.is_gcs_directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      is_gcs_directory
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.list_files" class="md-nav__link">
-    <span class="md-ellipsis">
-      list_files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.load_config_gcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      load_config_gcp
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.move_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      move_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.remove_leading_slash" class="md-nav__link">
-    <span class="md-ellipsis">
-      remove_leading_slash
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.run_bq_query" class="md-nav__link">
-    <span class="md-ellipsis">
-      run_bq_query
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.table_exists" class="md-nav__link">
-    <span class="md-ellipsis">
-      table_exists
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.upload_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      upload_file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.upload_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      upload_folder
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.helpers.gcp_utils.validate_bucket_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate_bucket_name
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.io.inputs" class="md-nav__link">
-    <span class="md-ellipsis">
-      inputs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="inputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.io.inputs.build_sql_query" class="md-nav__link">
-    <span class="md-ellipsis">
-      build_sql_query
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.io.inputs.read_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      read_table
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.io.outputs" class="md-nav__link">
-    <span class="md-ellipsis">
-      outputs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="outputs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.gcp.io.outputs.write_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      write_table
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Helpers
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark" class="md-nav__link">
-    <span class="md-ellipsis">
-      pyspark
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="pyspark">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.calc_median_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      calc_median_price
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.convert_cols_to_struct_col" class="md-nav__link">
-    <span class="md-ellipsis">
-      convert_cols_to_struct_col
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.convert_struc_col_to_columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      convert_struc_col_to_columns
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.create_colname_to_value_map" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_colname_to_value_map
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.create_spark_session" class="md-nav__link">
-    <span class="md-ellipsis">
-      create_spark_session
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.cut_lineage" class="md-nav__link">
-    <span class="md-ellipsis">
-      cut_lineage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.find_spark_dataframes" class="md-nav__link">
-    <span class="md-ellipsis">
-      find_spark_dataframes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.get_window_spec" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_window_spec
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.is_df_empty" class="md-nav__link">
-    <span class="md-ellipsis">
-      is_df_empty
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.map_column_names" class="md-nav__link">
-    <span class="md-ellipsis">
-      map_column_names
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.melt" class="md-nav__link">
-    <span class="md-ellipsis">
-      melt
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.rank_numeric" class="md-nav__link">
-    <span class="md-ellipsis">
-      rank_numeric
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.select_first_obs_appearing_in_group" class="md-nav__link">
-    <span class="md-ellipsis">
-      select_first_obs_appearing_in_group
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.set_df_columns_nullable" class="md-nav__link">
-    <span class="md-ellipsis">
-      set_df_columns_nullable
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.to_list" class="md-nav__link">
-    <span class="md-ellipsis">
-      to_list
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.to_spark_col" class="md-nav__link">
-    <span class="md-ellipsis">
-      to_spark_col
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.transform" class="md-nav__link">
-    <span class="md-ellipsis">
-      transform
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark.unpack_list_col" class="md-nav__link">
-    <span class="md-ellipsis">
-      unpack_list_col
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python" class="md-nav__link">
-    <span class="md-ellipsis">
-      python
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="python">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.always_iterable_local" class="md-nav__link">
-    <span class="md-ellipsis">
-      always_iterable_local
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.calc_product_of_dict_values" class="md-nav__link">
-    <span class="md-ellipsis">
-      calc_product_of_dict_values
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.convert_date_strings_to_datetimes" class="md-nav__link">
-    <span class="md-ellipsis">
-      convert_date_strings_to_datetimes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.extend_lists" class="md-nav__link">
-    <span class="md-ellipsis">
-      extend_lists
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.list_convert" class="md-nav__link">
-    <span class="md-ellipsis">
-      list_convert
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.overwrite_dictionary" class="md-nav__link">
-    <span class="md-ellipsis">
-      overwrite_dictionary
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.python.tuple_convert" class="md-nav__link">
-    <span class="md-ellipsis">
-      tuple_convert
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#io" class="md-nav__link">
-    <span class="md-ellipsis">
-      IO
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.io.config" class="md-nav__link">
-    <span class="md-ellipsis">
-      config
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.config.LoadConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      LoadConfig
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.io.input" class="md-nav__link">
-    <span class="md-ellipsis">
-      input
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="input">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.input.parse_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      parse_json
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.input.parse_toml" class="md-nav__link">
-    <span class="md-ellipsis">
-      parse_toml
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.input.parse_yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      parse_yaml
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.input.read_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      read_file
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.io.output" class="md-nav__link">
-    <span class="md-ellipsis">
-      output
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="output">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.output.zip_folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      zip_folder
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Methods
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rdsa_utils.methods.averaging_methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      averaging_methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="averaging_methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.methods.averaging_methods.get_weight_shares" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_weight_shares
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.methods.averaging_methods.unweighted_arithmetic_average" class="md-nav__link">
-    <span class="md-ellipsis">
-      unweighted_arithmetic_average
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.methods.averaging_methods.unweighted_geometric_average" class="md-nav__link">
-    <span class="md-ellipsis">
-      unweighted_geometric_average
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.methods.averaging_methods.weighted_arithmetic_average" class="md-nav__link">
-    <span class="md-ellipsis">
-      weighted_arithmetic_average
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.methods.averaging_methods.weighted_geometric_average" class="md-nav__link">
-    <span class="md-ellipsis">
-      weighted_geometric_average
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
+            <!-- Table of contents -->
             
           
+
+          <!-- Page content -->
           
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
@@ -6086,6 +4724,239 @@ set to True to ignore non-existence on delete.</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">list_files</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;mybucket&#39;</span><span class="p">,</span> <span class="s1">&#39;folder_prefix/&#39;</span><span class="p">)</span>
 <span class="go">[&#39;folder_prefix/file1.txt&#39;, &#39;folder_prefix/file2.txt&#39;]</span>
+</code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.load_csv" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">load_csv</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rename_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">drop_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Load a CSV file from an S3 bucket into a Pandas DataFrame.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>client</code></td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>bucket_name</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the S3 bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>filepath</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The key (full path and filename) of the CSV file in the S3 bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>keep_columns</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of column names to keep in the DataFrame, dropping all others.
+Default value is None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>rename_columns</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A dictionary to rename columns where keys are existing column
+names and values are new column names.
+Default value is None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>drop_columns</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of column names to drop from the DataFrame.
+Default value is None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>kwargs</code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional keyword arguments to pass to the <code>pd.read_csv</code> method.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pandas DataFrame containing the data from the CSV file.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>Exception</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If there is an error loading the file.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code>ValueError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If a column specified in rename_columns, drop_columns, or
+keep_columns is not found in the DataFrame.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Transformation order:
+1. Columns are kept according to <code>keep_columns</code>.
+2. Columns are dropped according to <code>drop_columns</code>.
+3. Columns are renamed according to <code>rename_columns</code>.</p>
+</details>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Load a CSV file and rename columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span>
+<span class="go">        client,</span>
+<span class="go">        &quot;my-bucket&quot;,</span>
+<span class="go">        &quot;path/to/file.csv&quot;,</span>
+<span class="go">        rename_columns={&quot;old_name&quot;: &quot;new_name&quot;}</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a CSV file and keep only specific columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span>
+<span class="go">        client,</span>
+<span class="go">        &quot;my-bucket&quot;,</span>
+<span class="go">        &quot;path/to/file.csv&quot;,</span>
+<span class="go">        keep_columns=[&quot;col1&quot;, &quot;col2&quot;]</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a CSV file and drop specific columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span>
+<span class="go">        client,</span>
+<span class="go">        &quot;my-bucket&quot;,</span>
+<span class="go">        &quot;path/to/file.csv&quot;,</span>
+<span class="go">        drop_columns=[&quot;col1&quot;, &quot;col2&quot;]</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a CSV file with custom delimiter:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span>
+<span class="go">        client,</span>
+<span class="go">        &quot;my-bucket&quot;,</span>
+<span class="go">        &quot;path/to/file.csv&quot;,</span>
+<span class="go">        sep=&quot;;&quot;</span>
+<span class="go">    )</span>
 </code></pre></div>
 
     </div>
@@ -9340,15 +8211,128 @@ and/or database name.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="rdsa_utils.cdp.io.input.load_and_validate_table" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">load_and_validate_table</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_cond</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparkDF</span></code>
+<h3 id="rdsa_utils.cdp.io.input.get_tables_in_database" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_tables_in_database</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-      <p>Load a table and validate if it is not empty after applying a filter.</p>
+      <p>Get a list of tables in a given database.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>spark</code></td>
+            <td>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Active SparkSession.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>database_name</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the database from which to list tables.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[str]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of table names in the specified database.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>ValueError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If there is an error fetching tables from the specified database.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">tables</span> <span class="o">=</span> <span class="n">get_tables_in_database</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tables</span><span class="p">)</span>
+<span class="go">[&#39;table1&#39;, &#39;table2&#39;, &#39;table3&#39;]</span>
+</code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.cdp.io.input.load_and_validate_table" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">load_and_validate_table</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_cond</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">keep_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rename_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">drop_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparkDF</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Load a table, apply transformations, and validate if it is not empty.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9432,6 +8416,52 @@ and/or database name.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td><code>keep_columns</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of column names to keep in the DataFrame, dropping all others.
+Default value is None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>rename_columns</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A dictionary to rename columns where keys are existing column
+names and values are new column names.
+Default value is None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>drop_columns</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of column names to drop from the DataFrame.
+Default value is None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -9485,13 +8515,58 @@ does not exist in the specified database.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If the table is empty after loading, or if it becomes
-empty after applying a filter condition.</p>
+                <p>If the table is empty after loading, becomes empty after applying
+a filter condition, or if columns specified in keep_columns,
+drop_columns, or rename_columns do not exist in the DataFrame.</p>
               </div>
             </td>
           </tr>
       </tbody>
     </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Transformation order:
+1. Columns are kept according to <code>keep_columns</code>.
+2. Columns are dropped according to <code>drop_columns</code>.
+3. Columns are renamed according to <code>rename_columns</code>.</p>
+</details>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Load a table, apply a filter, and validate it:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_and_validate_table</span><span class="p">(</span>
+<span class="go">        spark=spark,</span>
+<span class="go">        table_name=&quot;my_table&quot;,</span>
+<span class="go">        filter_cond=&quot;age &gt; 21&quot;</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a table and keep only specific columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_and_validate_table</span><span class="p">(</span>
+<span class="go">        spark=spark,</span>
+<span class="go">        table_name=&quot;my_table&quot;,</span>
+<span class="go">        keep_columns=[&quot;name&quot;, &quot;age&quot;, &quot;city&quot;]</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a table, drop specific columns, and rename a column:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_and_validate_table</span><span class="p">(</span>
+<span class="go">        spark=spark,</span>
+<span class="go">        table_name=&quot;my_table&quot;,</span>
+<span class="go">        drop_columns=[&quot;extra_column&quot;],</span>
+<span class="go">        rename_columns={&quot;name&quot;: &quot;full_name&quot;}</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a table, skip validation, and apply all transformations:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_and_validate_table</span><span class="p">(</span>
+<span class="go">        spark=spark,</span>
+<span class="go">        table_name=&quot;my_table&quot;,</span>
+<span class="go">        skip_validation=True,</span>
+<span class="go">        keep_columns=[&quot;name&quot;, &quot;age&quot;, &quot;city&quot;],</span>
+<span class="go">        drop_columns=[&quot;extra_column&quot;],</span>
+<span class="go">        rename_columns={&quot;name&quot;: &quot;full_name&quot;},</span>
+<span class="go">        filter_cond=&quot;age &gt; 21&quot;</span>
+<span class="go">    )</span>
+</code></pre></div>
 
     </div>
 
@@ -13609,6 +12684,135 @@ sequence is order that orderBy is applied).</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="rdsa_utils.helpers.pyspark.load_csv" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">load_csv</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rename_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">drop_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparkDF</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Load a CSV file into a PySpark DataFrame.</p>
+<p>spark
+    Active SparkSession.
+filepath
+    The full path and filename of the CSV file to load.
+keep_columns
+    A list of column names to keep in the DataFrame, dropping all others.
+    Default value is None.
+rename_columns
+    A dictionary to rename columns where keys are existing column
+    names and values are new column names.
+    Default value is None.
+drop_columns
+    A list of column names to drop from the DataFrame.
+    Default value is None.
+kwargs
+    Additional keyword arguments to pass to the <code>spark.read.csv</code> method.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>PySpark DataFrame containing the data from the CSV file.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Transformation order:
+1. Columns are kept according to <code>keep_columns</code>.
+2. Columns are dropped according to <code>drop_columns</code>.
+3. Columns are renamed according to <code>rename_columns</code>.</p>
+</details>
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>Exception</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If there is an error loading the file.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code>ValueError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If a column specified in rename_columns, drop_columns, or
+keep_columns is not found in the DataFrame.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Transformation order:
+1. Columns are kept according to <code>keep_columns</code>.
+2. Columns are dropped according to <code>drop_columns</code>.
+3. Columns are renamed according to <code>rename_columns</code>.</p>
+</details>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Load a CSV file with multiline and rename columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span>
+<span class="go">        spark,</span>
+<span class="go">        &quot;/path/to/file.csv&quot;,</span>
+<span class="go">        multiLine=True,</span>
+<span class="go">        rename_columns={&quot;old_name&quot;: &quot;new_name&quot;}</span>
+<span class="go">    )</span>
+</code></pre></div>
+    <p>Load a CSV file with a specific encoding:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;/path/to/file.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+</code></pre></div>
+    <p>Load a CSV file and keep only specific columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;/path/to/file.csv&quot;</span><span class="p">,</span> <span class="n">keep_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">,</span> <span class="s2">&quot;col2&quot;</span><span class="p">])</span>
+</code></pre></div>
+    <p>Load a CSV file and drop specific columns:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;/path/to/file.csv&quot;</span><span class="p">,</span> <span class="n">drop_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">,</span> <span class="s2">&quot;col2&quot;</span><span class="p">])</span>
+</code></pre></div>
+    <p>Load a CSV file with custom delimiter and multiline:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s2">&quot;/path/to/file.csv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">multiLine</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="rdsa_utils.helpers.pyspark.map_column_names" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">map_column_names</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SparkDF</span></code>
 
@@ -14204,6 +13408,96 @@ def my_func(arg1, arg2)</p>
     <div class="doc doc-contents ">
 
       <p>Chain Pyspark function.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.helpers.pyspark.truncate_external_hive_table" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">truncate_external_hive_table</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Truncate External Hive Table stored on S3 or HDFS.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>spark</code></td>
+            <td>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Active SparkSession.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>table_name</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the external Hive table to truncate.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>This function does not return any value. It performs an action of
+truncating the table.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Truncate a Hive table named 'my_database.my_table':</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">truncate_external_hive_table</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s1">&#39;my_database.my_table&#39;</span><span class="p">)</span>
+</code></pre></div>
 
     </div>
 
@@ -15757,7 +15051,7 @@ Default is False.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 24, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2024</span>
   </span>
 
     
@@ -15774,57 +15068,72 @@ Default is False.</p>
               </article>
             </div>
           
+
+          <!-- User preference: content -->
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+
+        <!-- Back-to-top button -->
         
       </main>
+
+      <!-- Footer -->
       
-  <footer class="md-footer">
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
-
       <div class="md-copyright">
-
-        
-
-        Made with 
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-          Material for MkDocs
-        </a>
-        <br><br>
-        <img src="../assets/images/ogl.png" >
-        All content is available under the 
-        <a
-            href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-            target="_blank" rel="noopener"
-        >
-            Open Government Licence v3.0</a>
-        , except where otherwise stated
-      </div>
-
-      <div class="md-copyright">
-        <a 
-          href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
-          target="_blank" rel="noopener">
-          <img src="../assets/images/govuk-crest-2x.png" width=125px height=102px;>
-          <br>
-          © Crown copyright
-        </a>
-      </div>
-
+  
+    <div class="md-copyright__highlight">
+      <img src="https://gcs.civilservice.gov.uk/wp-content/themes/gcs/assets/govuk-frontend/govuk/assets/images/govuk-crest.png" width="60px" height="60px"> <p>&copy;  <a href="https://www.ons.gov.uk">Office for National Statistics 2024</a>
+</p>
     </div>
-  </footer>
-
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="<insert repo link>" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
     </div>
+  </div>
+</footer>
+      
+    </div>
+
+    <!-- Dialog -->
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
+
+    <!-- Progress indicator -->
     
+
+    <!-- Consent -->
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+
+    <!-- Theme-related configuration -->
+    <!-- Versioning --><!-- Tags --><!-- Translations --><!-- Configuration -->
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "toc.integrate", "content.tabs.link", "content.code.annotation", "content.code.copy"], "search": "../assets/javascripts/workers/search.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
+
+    <!-- Theme-related JavaScript -->
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.js"></script>
+
+      <!-- Custom JavaScript -->
       
     
   </body>
