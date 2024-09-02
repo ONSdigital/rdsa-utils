@@ -13,6 +13,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Added `get_tables_in_database` to `cdp/io/input.py`.
 
 ### Changed
+- Change `mkdocs` theme from `mkdocs-tech-docs-template` to `ons-mkdocs-theme`.
 - Added more parameters to `load_and_validate_table()` in `cdp/io/input.py`.
 
 ### Deprecated
