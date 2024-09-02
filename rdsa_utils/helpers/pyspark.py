@@ -844,13 +844,6 @@ def load_csv(
         If a column specified in rename_columns, drop_columns, or
         keep_columns is not found in the DataFrame.
 
-    Notes
-    -----
-    Transformation order:
-    1. Columns are kept according to `keep_columns`.
-    2. Columns are dropped according to `drop_columns`.
-    3. Columns are renamed according to `rename_columns`.
-
     Examples
     --------
     Load a CSV file with multiline and rename columns:
@@ -877,7 +870,6 @@ def load_csv(
     Load a CSV file with custom delimiter and multiline:
 
     >>> df = load_csv(spark, "/path/to/file.csv", sep=";", multiLine=True)
-
     """
     try:
         df = spark.read.csv(filepath, header=True, **kwargs)
