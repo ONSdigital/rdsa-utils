@@ -1,13 +1,18 @@
 site_name: rdsa-utils Documentation
 
 theme:
-  name: tech_docs_template
+  name: ons_mkdocs_theme
   features:
     - navigation.tabs
     - navigation.tabs.sticky
-    - navigation.indexes
-  logo: assets/ons_logo_white.svg
-  favicon: assets/ons_favicon.svg
+    - navigation.sections
+    - toc.integrate
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  language: en
+  logo: assets/images/logo.svg
+  favicon: assets/images/favicon.ico
 
 repo_name: rdsa-utils
 repo_url: https://github.com/ONSdigital/rdsa-utils
@@ -41,3 +46,12 @@ nav:
   - API Reference: reference.md
   - Contribution Guide: contribution_guide.md
   - Branching & Deployment Guide: branch_and_deploy_guide.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: <insert repo link>
+
+# Do not remove the copy right section. But you can change the copyright information.
+copyright: |
+  &copy;  <a href="https://www.ons.gov.uk">Office for National Statistics 2024</a>

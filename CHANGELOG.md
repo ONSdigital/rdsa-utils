@@ -17,6 +17,30 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.3.2] - 2024-09-02
+
+### Added
+- Added `load_csv` to `helpers/pyspark.py` with kwargs parameter.
+- Added `truncate_external_hive_table` to `helpers/pyspark.py`.
+- Added `get_tables_in_database` to `cdp/io/input.py`.
+- Added `load_csv` to `cdp/helpers/s3_utils.py`. This loads a CSV from S3 bucket
+  into a Pandas DataFrame.
+
+### Changed
+- Removed `.config("spark.shuffle.service.enabled", "true")` 
+  from `create_spark_session()` not compatible with CDP. Added
+  `.config("spark.dynamicAllocation.shuffleTracking.enabled", "true")` & 
+  `.config("spark.sql.adaptive.enabled", "true")`.
+- Change `mkdocs` theme from `mkdocs-tech-docs-template` to `ons-mkdocs-theme`.
+- Added more parameters to `load_and_validate_table()` in `cdp/io/input.py`.
+
+### Deprecated
+
+### Fixed
+- Temporarily pin `numpy==1.24.4` due to https://github.com/numpy/numpy/issues/267100
+
+### Removed
+
 ## [v0.3.1] - 2024-05-24
 
 ### Added
@@ -348,6 +372,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.2) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.2/)
 - rdsa-utils v0.3.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.1) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.1/)
 - rdsa-utils v0.3.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.0) | 
