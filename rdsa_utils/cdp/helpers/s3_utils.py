@@ -24,9 +24,10 @@ Note:
 
 import logging
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import boto3
+import pandas as pd
 
 from rdsa_utils.exceptions import InvalidBucketNameError
 
@@ -815,3 +816,149 @@ def delete_folder(
             f"in bucket {bucket_name}: {str(e)}",
         )
         return False
+
+
+def load_csv(
+    client: boto3.client,
+    bucket_name: str,
+    filepath: str,
+    keep_columns: Optional[List[str]] = None,
+    rename_columns: Optional[Dict[str, str]] = None,
+    drop_columns: Optional[List[str]] = None,
+    **kwargs,
+) -> pd.DataFrame:
+    """Load a CSV file from an S3 bucket into a Pandas DataFrame.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
+    bucket_name
+        The name of the S3 bucket.
+    filepath
+        The key (full path and filename) of the CSV file in the S3 bucket.
+    keep_columns
+        A list of column names to keep in the DataFrame, dropping all others.
+        Default value is None.
+    rename_columns
+        A dictionary to rename columns where keys are existing column
+        names and values are new column names.
+        Default value is None.
+    drop_columns
+        A list of column names to drop from the DataFrame.
+        Default value is None.
+    kwargs
+        Additional keyword arguments to pass to the `pd.read_csv` method.
+
+    Returns
+    -------
+    pd.DataFrame
+        Pandas DataFrame containing the data from the CSV file.
+
+    Raises
+    ------
+    Exception
+        If there is an error loading the file.
+    ValueError
+        If a column specified in rename_columns, drop_columns, or
+        keep_columns is not found in the DataFrame.
+
+    Notes
+    -----
+    Transformation order:
+    1. Columns are kept according to `keep_columns`.
+    2. Columns are dropped according to `drop_columns`.
+    3. Columns are renamed according to `rename_columns`.
+
+    Examples
+    --------
+    Load a CSV file and rename columns:
+
+    >>> df = load_csv(
+            client,
+            "my-bucket",
+            "path/to/file.csv",
+            rename_columns={"old_name": "new_name"}
+        )
+
+    Load a CSV file and keep only specific columns:
+
+    >>> df = load_csv(
+            client,
+            "my-bucket",
+            "path/to/file.csv",
+            keep_columns=["col1", "col2"]
+        )
+
+    Load a CSV file and drop specific columns:
+
+    >>> df = load_csv(
+            client,
+            "my-bucket",
+            "path/to/file.csv",
+            drop_columns=["col1", "col2"]
+        )
+
+    Load a CSV file with custom delimiter:
+
+    >>> df = load_csv(
+            client,
+            "my-bucket",
+            "path/to/file.csv",
+            sep=";"
+        )
+    """
+    try:
+        # Get the CSV file from S3
+        response = client.get_object(Bucket=bucket_name, Key=filepath)
+        logger.info(
+            f"Loaded CSV file from S3 bucket {bucket_name}, filepath {filepath}",
+        )
+
+        # Read the CSV file into a Pandas DataFrame
+        df = pd.read_csv(response["Body"], **kwargs)
+
+    except Exception as e:
+        error_message = (
+            f"Error loading file from bucket {bucket_name}, filepath {filepath}: {e}"
+        )
+        logger.error(error_message)
+        raise Exception(error_message) from e
+
+    columns = df.columns.tolist()
+
+    # Apply column transformations: keep, drop, rename
+    if keep_columns:
+        missing_columns = [col for col in keep_columns if col not in columns]
+        if missing_columns:
+            error_message = (
+                f"Columns {missing_columns} not found in DataFrame and cannot be kept"
+            )
+            logger.error(error_message)
+            raise ValueError(error_message)
+        df = df[keep_columns]
+
+    if drop_columns:
+        for col in drop_columns:
+            if col in columns:
+                df = df.drop(columns=[col])
+            else:
+                error_message = (
+                    f"Column '{col}' not found in DataFrame and cannot be dropped"
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+
+    if rename_columns:
+        for old_name, new_name in rename_columns.items():
+            if old_name in columns:
+                df = df.rename(columns={old_name: new_name})
+            else:
+                error_message = (
+                    f"Column '{old_name}' not found in DataFrame and "
+                    f"cannot be renamed to '{new_name}'"
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+
+    return df

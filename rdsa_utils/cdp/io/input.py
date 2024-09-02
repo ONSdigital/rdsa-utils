@@ -1,7 +1,7 @@
 """Read inputs on CDP."""
 
 import logging
-from typing import Tuple
+from typing import Dict, List, Optional, Tuple
 
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
@@ -14,6 +14,42 @@ logger = logging.getLogger(__name__)
 def get_current_database(spark: SparkSession) -> str:
     """Retrieve the current database from the active SparkSession."""
     return spark.sql("SELECT current_database()").collect()[0]["current_database()"]
+
+
+def get_tables_in_database(spark: SparkSession, database_name: str) -> List[str]:
+    """Get a list of tables in a given database.
+
+    Parameters
+    ----------
+    spark
+        Active SparkSession.
+    database_name
+        The name of the database from which to list tables.
+
+    Returns
+    -------
+    List[str]
+        A list of table names in the specified database.
+
+    Raises
+    ------
+    ValueError
+        If there is an error fetching tables from the specified database.
+
+    Examples
+    --------
+    >>> tables = get_tables_in_database(spark, "default")
+    >>> print(tables)
+    ['table1', 'table2', 'table3']
+    """
+    try:
+        tables_df = spark.sql(f"SHOW TABLES IN {database_name}")
+        tables = [row["tableName"] for row in tables_df.collect()]
+        return tables
+    except Exception as e:
+        error_msg = f"Error fetching tables from database {database_name}: {e}"
+        logger.error(error_msg)
+        raise ValueError(error_msg) from e
 
 
 def extract_database_name(
@@ -88,8 +124,11 @@ def load_and_validate_table(
     skip_validation: bool = False,
     err_msg: str = None,
     filter_cond: str = None,
+    keep_columns: Optional[List[str]] = None,
+    rename_columns: Optional[Dict[str, str]] = None,
+    drop_columns: Optional[List[str]] = None,
 ) -> SparkDF:
-    """Load a table and validate if it is not empty after applying a filter.
+    """Load a table, apply transformations, and validate if it is not empty.
 
     Parameters
     ----------
@@ -103,6 +142,16 @@ def load_and_validate_table(
         Error message to return if table is empty, by default None.
     filter_cond
         Condition to apply to SparkDF once read, by default None.
+    keep_columns
+        A list of column names to keep in the DataFrame, dropping all others.
+        Default value is None.
+    rename_columns
+        A dictionary to rename columns where keys are existing column
+        names and values are new column names.
+        Default value is None.
+    drop_columns
+        A list of column names to drop from the DataFrame.
+        Default value is None.
 
     Returns
     -------
@@ -115,8 +164,55 @@ def load_and_validate_table(
         If there's an issue accessing the table or if the table
         does not exist in the specified database.
     ValueError
-        If the table is empty after loading, or if it becomes
-        empty after applying a filter condition.
+        If the table is empty after loading, becomes empty after applying
+        a filter condition, or if columns specified in keep_columns,
+        drop_columns, or rename_columns do not exist in the DataFrame.
+
+    Notes
+    -----
+    Transformation order:
+    1. Columns are kept according to `keep_columns`.
+    2. Columns are dropped according to `drop_columns`.
+    3. Columns are renamed according to `rename_columns`.
+
+    Examples
+    --------
+    Load a table, apply a filter, and validate it:
+
+    >>> df = load_and_validate_table(
+            spark=spark,
+            table_name="my_table",
+            filter_cond="age > 21"
+        )
+
+    Load a table and keep only specific columns:
+
+    >>> df = load_and_validate_table(
+            spark=spark,
+            table_name="my_table",
+            keep_columns=["name", "age", "city"]
+        )
+
+    Load a table, drop specific columns, and rename a column:
+
+    >>> df = load_and_validate_table(
+            spark=spark,
+            table_name="my_table",
+            drop_columns=["extra_column"],
+            rename_columns={"name": "full_name"}
+        )
+
+    Load a table, skip validation, and apply all transformations:
+
+    >>> df = load_and_validate_table(
+            spark=spark,
+            table_name="my_table",
+            skip_validation=True,
+            keep_columns=["name", "age", "city"],
+            drop_columns=["extra_column"],
+            rename_columns={"name": "full_name"},
+            filter_cond="age > 21"
+        )
     """
     try:
         df = spark.read.table(table_name)
@@ -131,11 +227,49 @@ def load_and_validate_table(
         logger.error(db_err)
         raise PermissionError(db_err) from e
 
+    columns = [str(col) for col in df.columns]
+
+    # Apply column transformations: keep, drop, rename
+    if keep_columns:
+        missing_columns = [col for col in keep_columns if col not in columns]
+        if missing_columns:
+            error_message = (
+                f"Columns {missing_columns} not found in DataFrame and cannot be kept"
+            )
+            logger.error(error_message)
+            raise ValueError(error_message)
+        df = df.select(*keep_columns)
+
+    if drop_columns:
+        for col in drop_columns:
+            if col in columns:
+                df = df.drop(col)
+            else:
+                error_message = (
+                    f"Column '{col}' not found in DataFrame and cannot be dropped"
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+
+    if rename_columns:
+        for old_name, new_name in rename_columns.items():
+            if old_name in columns:
+                df = df.withColumnRenamed(old_name, new_name)
+            else:
+                error_message = (
+                    f"Column '{old_name}' not found in DataFrame and "
+                    f"cannot be renamed to '{new_name}'"
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+
+    # Validate the table if skip_validation is not True
     if not skip_validation:
         if df.rdd.isEmpty():
             err_msg = err_msg or f"Table {table_name} is empty."
             raise DataframeEmptyError(err_msg)
 
+    # Apply the filter condition if provided
     if filter_cond:
         df = df.filter(filter_cond)
         if not skip_validation and df.rdd.isEmpty():
@@ -149,7 +283,9 @@ def load_and_validate_table(
     logger.info(
         (
             f"Loaded and validated table {table_name}. "
-            f"Filter condition applied: {filter_cond}"
+            f"Filter condition applied: {filter_cond}. "
+            f"Keep columns: {keep_columns}, Drop columns: {drop_columns}, "
+            f"Rename columns: {rename_columns}."
         ),
     )
 
