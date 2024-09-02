@@ -800,10 +800,10 @@ def create_spark_session(
 def load_csv(
     spark: SparkSession,
     filepath: str,
-    multi_line: bool = False,
     keep_columns: Optional[List[str]] = None,
     rename_columns: Optional[Dict[str, str]] = None,
     drop_columns: Optional[List[str]] = None,
+    **kwargs,
 ) -> SparkDF:
     """Load a CSV file into a PySpark DataFrame.
 
@@ -811,9 +811,6 @@ def load_csv(
         Active SparkSession.
     filepath
         The full path and filename of the CSV file to load.
-    multi_line
-        Whether to use the multiLine parameter when reading the CSV.
-        Default value is False.
     keep_columns
         A list of column names to keep in the DataFrame, dropping all others.
         Default value is None.
@@ -824,11 +821,20 @@ def load_csv(
     drop_columns
         A list of column names to drop from the DataFrame.
         Default value is None.
+    kwargs
+        Additional keyword arguments to pass to the `spark.read.csv` method.
 
     Returns
     -------
     SparkDF
         PySpark DataFrame containing the data from the CSV file.
+
+    Notes
+    -----
+    Transformation order:
+    1. Columns are kept according to `keep_columns`.
+    2. Columns are dropped according to `drop_columns`.
+    3. Columns are renamed according to `rename_columns`.
 
     Raises
     ------
@@ -852,9 +858,13 @@ def load_csv(
     >>> df = load_csv(
             spark,
             "/path/to/file.csv",
-            multi_line=True,
+            multiLine=True,
             rename_columns={"old_name": "new_name"}
         )
+
+    Load a CSV file with a specific encoding:
+
+    >>> df = load_csv(spark, "/path/to/file.csv", encoding="ISO-8859-1")
 
     Load a CSV file and keep only specific columns:
 
@@ -863,10 +873,15 @@ def load_csv(
     Load a CSV file and drop specific columns:
 
     >>> df = load_csv(spark, "/path/to/file.csv", drop_columns=["col1", "col2"])
+
+    Load a CSV file with custom delimiter and multiline:
+
+    >>> df = load_csv(spark, "/path/to/file.csv", sep=";", multiLine=True)
+
     """
     try:
-        df = spark.read.csv(filepath, header=True, multiLine=multi_line)
-        logger.info(f"Loaded CSV file {filepath}")
+        df = spark.read.csv(filepath, header=True, **kwargs)
+        logger.info(f"Loaded CSV file {filepath} with parameters {kwargs}")
     except Exception as e:
         error_message = f"Error loading file {filepath}: {e}"
         logger.error(error_message)
@@ -875,10 +890,11 @@ def load_csv(
     columns = [str(col) for col in df.columns]
 
     # When multi_line is used it adds \r at the end of the final column
-    if multi_line:
+    if kwargs.get("multiLine", False):
         columns[-1] = columns[-1].replace("\r", "")
         df = df.withColumnRenamed(df.columns[-1], columns[-1])
 
+    # Apply column transformations: keep, drop, rename
     if keep_columns:
         missing_columns = [col for col in keep_columns if col not in columns]
         if missing_columns:
