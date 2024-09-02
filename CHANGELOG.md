@@ -8,13 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `load_csv` to `helpers/pyspark.py`.
+- Added `truncate_external_hive_table` to `helpers/pyspark.py`.
+- Added `get_tables_in_database` to `cdp/io/input.py`.
 
 ### Changed
 - Change `mkdocs` theme from `mkdocs-tech-docs-template` to `ons-mkdocs-theme`.
+- Added more parameters to `load_and_validate_table()` in `cdp/io/input.py`.
 
 ### Deprecated
 
 ### Fixed
+- Temporarily pin `numpy==1.24.4` due to https://github.com/numpy/numpy/issues/267100
 
 ### Removed
 

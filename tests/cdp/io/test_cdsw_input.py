@@ -240,3 +240,157 @@ class TestLoadAndValidateTable:
         result = load_and_validate_table(spark_session, table_name)
         # Check that the returned DataFrame is our mock DataFrame
         assert result == df
+
+    def test_load_and_validate_table_with_keep_columns(self) -> None:
+        """Test that load_and_validate_table keeps only the specified columns."""
+        table_name = "test_table"
+        keep_columns = ["name", "age"]
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.columns = ["name", "age", "city"]
+        df.rdd.isEmpty.return_value = False
+        df.select.return_value = df
+        spark_session.read.table.return_value = df
+        # No exception is expected to be raised here
+        result = load_and_validate_table(
+            spark_session,
+            table_name,
+            keep_columns=keep_columns,
+        )
+        df.select.assert_called_once_with(*keep_columns)
+        assert result == df
+
+    def test_load_and_validate_table_with_drop_columns(self) -> None:
+        """Test that load_and_validate_table drops the specified columns."""
+        table_name = "test_table"
+        drop_columns = ["city"]
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.columns = ["name", "age", "city"]
+        df.rdd.isEmpty.return_value = False
+        df.drop.return_value = df
+        spark_session.read.table.return_value = df
+        # No exception is expected to be raised here
+        result = load_and_validate_table(
+            spark_session,
+            table_name,
+            drop_columns=drop_columns,
+        )
+        df.drop.assert_called_once_with("city")
+        assert result == df
+
+    def test_load_and_validate_table_with_rename_columns(self) -> None:
+        """Test that load_and_validate_table renames the specified columns."""
+        table_name = "test_table"
+        rename_columns = {"name": "full_name"}
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.columns = ["name", "age", "city"]
+        df.rdd.isEmpty.return_value = False
+        df.withColumnRenamed.return_value = df
+        spark_session.read.table.return_value = df
+        # No exception is expected to be raised here
+        result = load_and_validate_table(
+            spark_session,
+            table_name,
+            rename_columns=rename_columns,
+        )
+        df.withColumnRenamed.assert_called_once_with("name", "full_name")
+        assert result == df
+
+    def test_load_and_validate_table_with_combined_transformations(self) -> None:
+        """Test that load_and_validate_table applies keep, drop, and rename
+        transformations in the correct order.
+        """
+        table_name = "test_table"
+        keep_columns = ["name", "age", "city"]
+        drop_columns = ["city"]
+        rename_columns = {"name": "full_name"}
+        # Mock SparkSession and DataFrame
+        spark_session = MagicMock(spec=SparkSession)
+        df = MagicMock(spec=SparkDF)
+        df.columns = ["name", "age", "city", "country"]
+        df.rdd.isEmpty.return_value = False
+        df.select.return_value = df
+        df.drop.return_value = df
+        df.withColumnRenamed.return_value = df
+        spark_session.read.table.return_value = df
+        # No exception is expected to be raised here
+        result = load_and_validate_table(
+            spark_session,
+            table_name,
+            keep_columns=keep_columns,
+            drop_columns=drop_columns,
+            rename_columns=rename_columns,
+        )
+        df.select.assert_called_once_with(*keep_columns)
+        df.drop.assert_called_once_with("city")
+        df.withColumnRenamed.assert_called_once_with("name", "full_name")
+        assert result == df
+
+
+class TestGetTablesInDatabase:
+    """Tests for get_tables_in_database function."""
+
+    @classmethod
+    def setup_class(cls):
+        """Set up SparkSession for tests."""
+        cls.spark = (
+            SparkSession.builder.master("local")
+            .appName("test_get_tables_in_database")
+            .getOrCreate()
+        )
+        cls.spark.sql("CREATE DATABASE IF NOT EXISTS test_db")
+        cls.spark.sql("USE test_db")
+        cls.spark.sql("CREATE TABLE IF NOT EXISTS test_table1 (id INT, name STRING)")
+        cls.spark.sql("CREATE TABLE IF NOT EXISTS test_table2 (id INT, name STRING)")
+
+    @classmethod
+    def teardown_class(cls):
+        """Tear down SparkSession after tests."""
+        cls.spark.sql("DROP TABLE IF EXISTS test_db.test_table1")
+        cls.spark.sql("DROP TABLE IF EXISTS test_db.test_table2")
+        cls.spark.sql("DROP DATABASE IF EXISTS test_db")
+        cls.spark.stop()
+
+    def test_get_tables_in_existing_database(self):
+        """Test with existing database."""
+        tables = get_tables_in_database(self.spark, "test_db")
+        assert "test_table1" in tables
+        assert "test_table2" in tables
+
+    def test_get_tables_in_non_existing_database(self):
+        """Test with non-existing database."""
+        with pytest.raises(
+            ValueError,
+            match="Error fetching tables from database non_existing_db",
+        ):
+            get_tables_in_database(self.spark, "non_existing_db")
+
+    def test_get_tables_with_no_tables(self):
+        """Test with database having no tables."""
+        self.spark.sql("CREATE DATABASE IF NOT EXISTS empty_db")
+        tables = get_tables_in_database(self.spark, "empty_db")
+        assert tables == []
+        self.spark.sql("DROP DATABASE IF EXISTS empty_db")
+
+    def test_get_tables_with_exception(self):
+        """Test exception handling."""
+        original_sql = self.spark.sql
+
+        def mock_sql(query):
+            raise RuntimeError("Test exception")  # noqa: EM101
+
+        self.spark.sql = mock_sql
+
+        try:
+            with pytest.raises(
+                ValueError,
+                match="Error fetching tables from database test_db",
+            ):
+                get_tables_in_database(self.spark, "test_db")
+        finally:
+            self.spark.sql = original_sql
