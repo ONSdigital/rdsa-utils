@@ -15,6 +15,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   into a Pandas DataFrame.
 
 ### Changed
+- Removed `.config("spark.shuffle.service.enabled", "true")` 
+  from `create_spark_session()` not compatible with CDP. Added
+  `.config("spark.dynamicAllocation.shuffleTracking.enabled", "true")` & 
+  `.config("spark.sql.adaptive.enabled", "true")`.
 - Change `mkdocs` theme from `mkdocs-tech-docs-template` to `ons-mkdocs-theme`.
 - Added more parameters to `load_and_validate_table()` in `cdp/io/input.py`.
 
