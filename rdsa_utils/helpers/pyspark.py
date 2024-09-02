@@ -775,8 +775,13 @@ def create_spark_session(
 
         # Common configurations for all sizes
         builder = (
+            # Dynamic Allocation
             builder.config("spark.dynamicAllocation.enabled", "true")
-            .config("spark.ui.showConsoleProgress", "false")
+             .config("spark.dynamicAllocation.shuffleTracking.enabled", "true")
+             # Adaptive Query Execution
+             .config("spark.sql.adaptive.enabled", "true")
+             # General
+             .config("spark.ui.showConsoleProgress", "false")
         ).enableHiveSupport()
         # fmt: on
 
