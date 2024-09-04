@@ -164,10 +164,26 @@ def process_numeric_column(column_data: pd.Series) -> dict:
         dict: A dictionary representing the properties of the numeric column.
     """
     max_min_dict = {
-        "Min_values": column_data.min(),
-        "Max_values": column_data.max()
+        "Min_value": column_data.min(),
+        "Max_value": column_data.max()
     }
     return max_min_dict
+
+
+def proportions_for_categorical(column_data: pd.Series) -> dict:
+    """Generate proportions for a categorical column.
+    
+    Args:
+        column_data (pd.Series): The column data.
+    Returns:
+        dict: A dictionary representing the random proportions for the column.
+    """
+    unique_list = column_data.dropna().unique()
+    prop_dict = {}
+    for item in unique_list:
+        prop_dict[item] = round(column_data.value_counts(normalize=True)[item], 2)
+
+    return prop_dict
 
 
 def process_categorical_column(column_data: pd.Series) -> dict:
@@ -180,9 +196,11 @@ def process_categorical_column(column_data: pd.Series) -> dict:
     """
     unique_list = column_data.dropna().unique()
     if len(unique_list) < 30:
-        return {"Deduced_Data_Type": "categorical", "categories": list(unique_list)}
+        prop_dict = proportions_for_categorical(column_data)
+        cat_dict = {"Deduced_Data_Type": "categorical", "categories": unique_list, "proportions": prop_dict}
     else:
-        return {"Deduced_Data_Type": "text", "count": column_data.count()}    
+        cat_dict = {"Deduced_Data_Type": "text", "count": column_data.count()}    
+    return cat_dict
     
 
 def deduce_data_type(column_data: pd.Series) -> dict:
@@ -216,9 +234,10 @@ def deduce_data_type(column_data: pd.Series) -> dict:
             return type_dict
         
         # check if the column is categorical and return dictionary
-        return process_categorical_column(column_data)
+        data_type_dict = process_categorical_column(column_data)
     else:
-        return {"Deduced_Data_Type": column_type}
+        data_type_dict = {"Deduced_Data_Type": column_type}
+    return data_type_dict
 
 
 def convert_csv_to_toml_schema(data: pd.DataFrame) -> dict:

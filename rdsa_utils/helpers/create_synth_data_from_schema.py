@@ -21,6 +21,32 @@ def read_toml_file(file_path: str) -> dict:
         return schema
     
 
+def random_proportion_catagorical_data(proportion_dict: dict, num_rows: int) -> pd.Series:
+    """Generate a random series of catagorical data based on a proportion dictionary."""
+    # Get the categories and proportions from the dictionary
+    categories = list(proportion_dict.keys())
+    proportions = list(proportion_dict.values())
+    proportions = [float(p) for p in proportions]
+    # Generate a random sample of categories based on the proportions
+    data = random.choices(categories, weights=proportions, k=num_rows)
+    return pd.Series(data)
+
+
+def random_uniform_data(min_value: float, max_value: float, num_rows: int) -> pd.Series:
+    """Generate a random series of data from a uniform distribution."""
+    # check that min and max values are floats
+    try:
+        min_value = float(min_value)
+        max_value = float(max_value)
+    except ValueError:
+        raise ValueError("min_value and max_value must be integers or floats")
+    if min_value > max_value:
+        raise ValueError("min_value must be less than max_value")
+    
+    data = [random.uniform(min_value, max_value) for _ in range(num_rows)]
+    return pd.Series(data)
+    
+
 def generate_synthetic_data(schema: dict, num_rows: int) -> pd.DataFrame:
     """Generate synthetic data based on the schema."""
     # Initialize an empty dictionary to store the generated data
@@ -29,10 +55,15 @@ def generate_synthetic_data(schema: dict, num_rows: int) -> pd.DataFrame:
     for field, properties in schema.items():
         # Generate data based on the field type
         if properties["Deduced_Data_Type"] == "categorical":
-            data[field] = [random.choice(properties["categories"]) for _ in range(num_rows)]
+            # check there is a proportions key in the properties
+            if "proportions" not in properties:
+                # generate categories using uniform distribution
+                data[field] = random_proportion_catagorical_data({cat: 1 for cat in properties["categories"]}, num_rows)
+            else:
+                data[field] = random_proportion_catagorical_data(properties["proportions"], num_rows)
         elif properties["Deduced_Data_Type"] in ["int", "float", "numeric", "Int64", "int64", "float64"]:
-            # data[field] = [random.uniform(properties["min"], properties["max"]) for _ in range(num_rows)]
-            data[field] = [random.uniform(100, 999) for _ in range(num_rows)]
+            data[field] = random_uniform_data(properties["Min_value"], properties["Max_value"], num_rows)
+            # data[field] = [random.uniform(100, 999) for _ in range(num_rows)]
         # elif properties["Deduced_Data_Type"] == "text":
         #     data[field] = [random.choice(properties["texts"]) for _ in range(num_rows)]
         elif properties["Deduced_Data_Type"] == "date":
