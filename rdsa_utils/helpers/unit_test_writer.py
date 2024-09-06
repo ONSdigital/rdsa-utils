@@ -5,13 +5,15 @@ operate on pandas DataFrames. It automates the conversion of CSV data into a for
 suitable for unit tests by inferring column types and applying any specified overrides.
 """
 
+import argparse
+import json
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, List
 
-import numpy as np
 import pandas as pd
-from path import Path
+import pandas.api.types as ptypes
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,7 +31,7 @@ class Config:
 
     Attributes
     ----------
-    csv_path : str
+    csv_directory : str
         Directory path where CSV files are located.
     files : List[str]
         List of CSV filenames to process.
@@ -44,7 +46,7 @@ class Config:
     --------
     ```python
     >>> config = Config(
-    >>>     csv_path="D:/projects_data/randd_test_data/",
+    >>>     csv_directory="D:/projects_data/randd_test_data/",
     >>>     files=["input.csv", "expected_output.csv"],
     >>>     function_name="dummy_function",
     >>>     column_type_override={'string': [], 'float': []}
@@ -52,7 +54,7 @@ class Config:
     ```
     ```python
     >>> config = Config(
-    >>>     csv_path="D:/projects_data/randd_test_data/",
+    >>>     csv_directory="D:/projects_data/randd_test_data/",
     >>>     files=["input1.csv", "input2.csv", "mapper.csv", "expected_output.csv"],
     >>>     function_name="dummy_function",
     >>>     column_type_override={'string': ['names', 'cars'], 'float': ['weights']}
@@ -60,7 +62,7 @@ class Config:
     ```
     """
 
-    csv_path: str
+    csv_directory: str
     files: List[str]
     function_name: str
     column_type_override: Dict[str, List[str]] = field(default_factory=dict)
@@ -78,13 +80,13 @@ class Config:
         TypeError
             If any attribute is not of the expected type.
         ValueError
-            If `csv_path` is not a valid directory or `files` contains non-CSV files.
+            If `csv_directory` is not a valid directory or contains non-CSV files.
         """
-        if not isinstance(self.csv_path, str):
-            error_msg = "csv_path must be a string"
+        if not isinstance(self.csv_directory, str):
+            error_msg = "csv_directory must be a string"
             raise TypeError(error_msg)
-        if not Path(self.csv_path).is_dir():
-            error_msg = f"Invalid CSV path: {self.csv_path}"
+        if not Path(self.csv_directory).is_dir():
+            error_msg = f"Invalid CSV path: {self.csv_directory}"
             raise ValueError(error_msg)
 
         if not isinstance(self.files, list):
@@ -101,21 +103,28 @@ class Config:
             error_msg = "function_name must be a string"
             raise TypeError(error_msg)
         if not self.function_name.isidentifier():
-            error_msg = "function_name must be a valid identifier, i.e 'create_schema' "
+            error_msg = (
+                "function_name must be formatted as a function, i.e 'create_schema' "
+            )
             raise ValueError(error_msg)
 
+        example_err = "i.e column_type_override={'string': ['names', 'cars'], 'float': ['weights']}"  # noqa: E501
         if not isinstance(self.column_type_override, dict):
-            error_msg = "column_type_override must be a dictionary"
+            error_msg = f"column_type_override must be a dictionary {example_err}"
             raise TypeError(error_msg)
         for key, value in self.column_type_override.items():
             if not isinstance(key, str):
-                error_msg = "Keys in column_type_override must be strings"
+                error_msg = (
+                    f"Keys in column_type_override must be strings {example_err}"
+                )
                 raise TypeError(error_msg)
             if not isinstance(value, list):
-                error_msg = "Values in column_type_override must be lists"
+                error_msg = (
+                    f"Values in column_type_override must be lists {example_err}"
+                )
                 raise TypeError(error_msg)
             if any(not isinstance(col, str) for col in value):
-                error_msg = "All column names in column_type_override must be strings"
+                error_msg = f"All column names in column_type_override must be strings {example_err}"  # noqa: E501
                 raise TypeError(error_msg)
 
     @property
@@ -160,46 +169,19 @@ def infer_column_types(df: pd.DataFrame) -> Dict[str, List[str]]:
     }
 
     for col in df.columns:
-        non_nan_values = df[col].dropna()
-        if non_nan_values.empty:
+        if ptypes.is_string_dtype(df[col]):
             type_dict["string"].append(col)
-            continue
-
-        type_counts = {"string": 0, "float": 0, "integer": 0, "boolean": 0, "date": 0}
-
-        for value in non_nan_values:
-            if isinstance(value, str):
-                type_counts["string"] += 1
-                try:
-                    pd.to_numeric(value)
-                    if "." in value:
-                        type_counts["float"] += 1
-                    else:
-                        type_counts["integer"] += 1
-                except ValueError:
-                    pass
-                try:
-                    pd.to_datetime(value, errors="raise")
-                    type_counts["date"] += 1
-                except ValueError:
-                    pass
-                if value.lower() in ["true", "false"]:
-                    type_counts["boolean"] += 1
-            elif isinstance(value, bool):
-                type_counts["boolean"] += 1
-            elif isinstance(value, (int, np.integer)):
-                type_counts["integer"] += 1
-            elif isinstance(value, (float, np.floating)):
-                type_counts["float"] += 1
-            elif isinstance(value, pd.Timestamp):
-                type_counts["date"] += 1
-
-        predominant_type = max(type_counts, key=type_counts.get)
-
-        if type_counts[predominant_type] > 0:
-            type_dict[predominant_type].append(col)
+        elif ptypes.is_bool_dtype(df[col]):
+            type_dict["boolean"].append(col)
+        elif ptypes.is_integer_dtype(df[col]):
+            type_dict["integer"].append(col)
+        elif ptypes.is_float_dtype(df[col]):
+            type_dict["float"].append(col)
+        elif ptypes.is_datetime64_any_dtype(df[col]):
+            type_dict["date"].append(col)
         else:
-            type_dict["mixed"].append(col)
+            # Default to 'string' if undetermined
+            type_dict["string"].append(col)
 
     return type_dict
 
@@ -353,7 +335,7 @@ def process_dataframe(config: Config) -> None:
     IOError
         If there is an error writing the test code to the output file.
     """
-    file_paths = [Path(config.csv_path) / file for file in config.files]
+    file_paths = [Path(config.csv_directory) / file for file in config.files]
 
     missing_files = [path for path in file_paths if not Path(path).is_file()]
 
@@ -365,7 +347,7 @@ def process_dataframe(config: Config) -> None:
 
     for file in config.files:
         try:
-            df = pd.read_csv(Path(config.csv_path) / file)
+            df = pd.read_csv(Path(config.csv_directory) / file)
             data_strings[file] = dataframe_to_string(df, file, config)
             logging.info(f"Successfully read and processed file: {file}")
         except pd.errors.EmptyDataError:
@@ -378,7 +360,7 @@ def process_dataframe(config: Config) -> None:
 
     test_code = generate_test_code(config, data_strings)
 
-    output_path = Path(config.csv_path) / f"test_{config.function_name}.py"
+    output_path = Path(config.csv_directory) / f"test_{config.function_name}.py"
 
     try:
         with open(output_path, "w") as text_file:
@@ -388,28 +370,98 @@ def process_dataframe(config: Config) -> None:
         logging.error(f"Error writing output file: {e}")
 
 
-def main() -> None:
-    """
-    Initialize configuration and process CSV files for unit testing.
+def main(
+    csv_directory: str,
+    files: list,
+    function_name: str,
+    column_type_override: dict,
+) -> None:
+    """Initialise configuration and process CSV files for unit testing.
 
     This function sets up the configuration with paths, filenames, and function names,
     and then calls `process_dataframe` to handle the CSV files and generate the test
     code.
 
+    Parameters
+    ----------
+    csv_directory : str
+        The path to the directory containing the CSV files.
+    files : list
+        A list of filenames to process.
+    function_name : str
+        The name of the function to generate tests for.
+    column_type_override : dict
+        A dictionary to override column types.
+
     Returns
     -------
     None
     """
-    # Populate the config with your parameters, examples are provided in class init
     config = Config(
-        csv_path="D:/projects_data/randd_test_data/",
-        files=["input1.csv", "expected_output.csv", "fail_output.csv"],
-        function_name="new_function",
-        column_type_override={"string": ["period", "reference"], "float": ["602"]},
+        csv_directory=csv_directory,
+        files=files,
+        function_name=function_name,
+        column_type_override=column_type_override,
     )
 
     process_dataframe(config)
 
 
-if __name__ == "__main__":
-    main()
+def run_from_command_line():
+    """
+    Parse command-line arguments and execute the main processing function.
+
+    This function parses command-line arguments for CSV directory, file list,
+    function name, and column type overrides, and then calls the `main` function
+    to process the CSV files.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    parser = argparse.ArgumentParser(description="Process CSV files for unit testing.")
+    parser.add_argument(
+        "--csv_directory",
+        type=str,
+        required=True,
+        help="Path to the CSV files directory.",
+    )
+    parser.add_argument(
+        "--files",
+        nargs="+",
+        required=True,
+        help="List of CSV filenames.",
+    )
+    parser.add_argument(
+        "--function_name",
+        type=str,
+        required=True,
+        help="Name of the function to generate tests for.",
+    )
+    parser.add_argument(
+        "--column_type_override",
+        type=str,
+        required=True,
+        help="Column type overrides in JSON format.",
+    )
+
+    args = parser.parse_args()
+
+    # Convert column_type_override from JSON string to dictionary
+    column_type_override = json.loads(args.column_type_override)
+
+    main(args.csv_directory, args.files, args.function_name, column_type_override)
+
+
+# Example usage:
+# if __name__ == "__main__":
+#     main(
+#         csv_directory="D:/projects_data/randd_test_data/",
+#         files=["input1.csv", "expected_output.csv", "fail_output.csv"],
+#         function_name="new_function",
+#         column_type_override={"string": ["period", "reference"], "float": ["602"]},
+#     )
