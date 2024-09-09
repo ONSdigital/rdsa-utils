@@ -15,6 +15,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+- Improved `truncate_external_hive_table` to handle both partitioned and 
+  non-partitioned Hive tables, with enhanced error handling and support 
+  for table identifiers in `<database>.<table>` or `<table>` formats.
 
 ### Removed
 
