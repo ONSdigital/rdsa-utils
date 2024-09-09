@@ -43,6 +43,6 @@ class InvalidBucketNameError(Exception):
 
 
 class InvalidS3FilePathError(Exception):
-    """Custom exception to raise when an S3 file path is invalid."""
+    """Custom exception to raise when an AWS S3 file path is invalid."""
 
     pass

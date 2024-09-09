@@ -119,9 +119,9 @@ def validate_s3_file_path(file_path: str, allow_s3_scheme: bool) -> str:
 
     Parameters
     ----------
-    file_path : str
+    file_path
         The file path to validate.
-    allow_s3_scheme : bool
+    allow_s3_scheme
         Whether or not to allow an S3 URI scheme in the file path.
 
     Returns
