@@ -972,8 +972,8 @@ def load_csv(
             sep=";"
         )
     """
-    validate_bucket_name(bucket_name)
-    validate_s3_file_path(filepath, allow_s3_scheme=False)
+    bucket_name = validate_bucket_name(bucket_name)
+    filepath = validate_s3_file_path(filepath, allow_s3_scheme=False)
 
     try:
         # Get the CSV file from S3
