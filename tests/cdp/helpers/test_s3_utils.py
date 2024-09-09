@@ -112,7 +112,7 @@ class TestValidateBucketName:
 
 
 class TestValidateS3FilePath:
-    """Unit tests for validate_s3_file_path function."""
+    """Tests for validate_s3_file_path function."""
 
     def test_valid_non_s3_path(self):
         """Test that non-S3 paths are valid when S3 schemes are not allowed."""
