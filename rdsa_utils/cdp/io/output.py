@@ -390,8 +390,8 @@ def save_csv_to_s3(
     )
     ```
     """
-    bucket_name = validate_bucket_name(bucket_name)
-    file_path = validate_s3_file_path(file_path, allow_s3_scheme=False)
+    validate_bucket_name(bucket_name)
+    validate_s3_file_path(file_path, allow_s3_scheme=False)
     file_path = remove_leading_slash(file_path)
 
     if not file_name.endswith(".csv"):
