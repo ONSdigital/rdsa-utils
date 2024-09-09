@@ -917,6 +917,10 @@ def load_csv(
 
     Raises
     ------
+    InvalidBucketNameError
+        If the bucket name does not meet AWS specifications.
+    InvalidS3FilePathError
+        If the file_path contains an S3 URI scheme like 's3://' or 's3a://'.
     Exception
         If there is an error loading the file.
     ValueError
@@ -968,6 +972,9 @@ def load_csv(
             sep=";"
         )
     """
+    validate_bucket_name(bucket_name)
+    validate_s3_file_path(filepath, allow_s3_scheme=False)
+
     try:
         # Get the CSV file from S3
         response = client.get_object(Bucket=bucket_name, Key=filepath)

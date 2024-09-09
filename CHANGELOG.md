@@ -14,6 +14,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Fixed docstring for `load_csv` in `helpers/pyspark.py`.
 - Call `validate_s3_file_path` function inside `save_csv_to_s3`.
+- Call `validate_bucket_name` and `validate_s3_file_path` function 
+  inside `cdp/helpers/s3_utils/load_csv`.
 
 ### Deprecated
 
