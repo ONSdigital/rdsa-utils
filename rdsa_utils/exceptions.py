@@ -40,3 +40,9 @@ class InvalidBucketNameError(Exception):
     """Custom exception to raise when an AWS S3 or GCS bucket name is invalid."""
 
     pass
+
+
+class InvalidS3FilePathError(Exception):
+    """Custom exception to raise when an S3 file path is invalid."""
+
+    pass

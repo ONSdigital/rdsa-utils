@@ -8,9 +8,12 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `InvalidS3FilePathError` to `exceptions.py`.
+- Added `validate_s3_file_path` to `s3_utils.py`.
 
 ### Changed
 - Fixed docstring for `load_csv` in `helpers/pyspark.py`.
+- Call `validate_s3_file_path` function inside `save_csv_to_s3`.
 
 ### Deprecated
 

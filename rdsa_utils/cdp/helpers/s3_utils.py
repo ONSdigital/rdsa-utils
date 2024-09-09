@@ -29,7 +29,7 @@ from typing import Dict, List, Optional
 import boto3
 import pandas as pd
 
-from rdsa_utils.exceptions import InvalidBucketNameError
+from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +107,66 @@ def validate_bucket_name(bucket_name: str) -> str:
         raise InvalidBucketNameError(error_msg)
 
     return bucket_name
+
+
+def validate_s3_file_path(file_path: str, allow_s3_scheme: bool) -> str:
+    """Validate the file path based on the S3 URI scheme.
+
+    If `allow_s3_scheme` is True, the file path must contain an S3 URI scheme
+    (either 's3://' or 's3a://').
+
+    If `allow_s3_scheme` is False, the file path should not contain an S3 URI scheme.
+
+    Parameters
+    ----------
+    file_path : str
+        The file path to validate.
+    allow_s3_scheme : bool
+        Whether or not to allow an S3 URI scheme in the file path.
+
+    Returns
+    -------
+    str
+        The validated file path if valid.
+
+    Raises
+    ------
+    InvalidS3FilePathError
+        If the validation fails based on the value of `allow_s3_scheme`.
+
+    Examples
+    --------
+    >>> validate_s3_file_path('data_folder/data.csv', allow_s3_scheme=False)
+    'data_folder/data.csv'
+
+    >>> validate_s3_file_path('s3a://bucket-name/data.csv', allow_s3_scheme=True)
+    's3a://bucket-name/data.csv'
+
+    >>> validate_s3_file_path('s3a://bucket-name/data.csv', allow_s3_scheme=False)
+    InvalidS3FilePathError: The file_path should not contain an S3 URI scheme
+    like 's3://' or 's3a://'.
+    """
+    # Check if the file path is empty
+    if not file_path:
+        error_msg = "The file path cannot be empty."
+        raise InvalidS3FilePathError(error_msg)
+
+    has_s3_scheme = file_path.startswith("s3://") or file_path.startswith("s3a://")
+
+    if allow_s3_scheme and not has_s3_scheme:
+        error_msg = (
+            "The file_path must contain an S3 URI scheme like 's3://' or 's3a://'."
+        )
+        raise InvalidS3FilePathError(error_msg)
+
+    if not allow_s3_scheme and has_s3_scheme:
+        error_msg = (
+            "The file_path should not contain an S3 URI scheme "
+            "like 's3://' or 's3a://'."
+        )
+        raise InvalidS3FilePathError(error_msg)
+
+    return file_path
 
 
 def is_s3_directory(
