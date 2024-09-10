@@ -974,7 +974,7 @@ def truncate_external_hive_table(spark: SparkSession, table_identifier: str) -> 
             spark.catalog.setCurrentDatabase(db_name)
 
         # Check if the table exists before proceeding
-        if not spark.catalog.tableExists(f"{db_name}.{table_name}"):
+        if not spark.catalog.tableExists(table_name, db_name):
             error_msg = f"Table '{db_name}.{table_name}' does not exist."
             logger.error(error_msg)
             raise ValueError(error_msg)
