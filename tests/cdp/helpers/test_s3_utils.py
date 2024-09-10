@@ -20,8 +20,9 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     upload_file,
     upload_folder,
     validate_bucket_name,
+    validate_s3_file_path,
 )
-from rdsa_utils.exceptions import InvalidBucketNameError
+from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
 
 class TestRemoveLeadingSlash:
@@ -108,6 +109,86 @@ class TestValidateBucketName:
             match="Bucket name must not contain forward slashes.",
         ):
             validate_bucket_name("invalid/name")
+
+
+class TestValidateS3FilePath:
+    """Tests for validate_s3_file_path function."""
+
+    def test_valid_non_s3_path(self):
+        """Test that non-S3 paths are valid when S3 schemes are not allowed."""
+        assert (
+            validate_s3_file_path("data_folder/data.csv", allow_s3_scheme=False)
+            == "data_folder/data.csv"
+        )
+
+    def test_invalid_s3_path_when_not_allowed(self):
+        """Test that S3 paths raise an error when S3 schemes are not allowed."""
+        with pytest.raises(
+            InvalidS3FilePathError,
+            match="should not contain an S3 URI scheme",
+        ):
+            validate_s3_file_path("s3a://bucket-name/data.csv", allow_s3_scheme=False)
+
+    def test_valid_s3_path_when_allowed(self):
+        """Test that S3 paths are valid when S3 schemes are allowed."""
+        assert (
+            validate_s3_file_path("s3a://bucket-name/data.csv", allow_s3_scheme=True)
+            == "s3a://bucket-name/data.csv"
+        )
+
+    def test_invalid_non_s3_path_when_s3_required(self):
+        """Test that non-S3 paths raise an error when S3 schemes are required."""
+        with pytest.raises(
+            InvalidS3FilePathError,
+            match="must contain an S3 URI scheme",
+        ):
+            validate_s3_file_path("data_folder/data.csv", allow_s3_scheme=True)
+
+    def test_valid_s3_path_with_s3_scheme(self):
+        """Test that paths with 's3://' scheme are valid when S3 schemes are allowed."""
+        assert (
+            validate_s3_file_path("s3://bucket-name/data.csv", allow_s3_scheme=True)
+            == "s3://bucket-name/data.csv"
+        )
+
+    def test_valid_path_without_bucket_name(self):
+        """Test that paths without bucket names are valid when no S3 scheme is present."""
+        assert (
+            validate_s3_file_path("my_folder/data.csv", allow_s3_scheme=False)
+            == "my_folder/data.csv"
+        )
+
+    def test_invalid_empty_path(self):
+        """Test that an empty path raises an error."""
+        with pytest.raises(
+            InvalidS3FilePathError,
+            match="The file path cannot be empty.",
+        ):
+            validate_s3_file_path("", allow_s3_scheme=False)
+
+    def test_valid_s3_path_with_longer_structure(self):
+        """Test that a longer S3 path structure is valid when S3 scheme is allowed."""
+        assert (
+            validate_s3_file_path(
+                "s3a://bucket-name/folder/subfolder/data.csv",
+                allow_s3_scheme=True,
+            )
+            == "s3a://bucket-name/folder/subfolder/data.csv"
+        )
+
+    def test_valid_path_without_s3_scheme_with_dots_in_name(self):
+        """Test that a path containing dots but without S3 scheme is valid."""
+        assert (
+            validate_s3_file_path("my.bucket/folder/data.csv", allow_s3_scheme=False)
+            == "my.bucket/folder/data.csv"
+        )
+
+    def test_invalid_non_s3_path_with_invalid_characters(self):
+        """Test that non-S3 paths with invalid characters still pass if no scheme is present."""
+        assert (
+            validate_s3_file_path("invalid!@#$%^&*/data.csv", allow_s3_scheme=False)
+            == "invalid!@#$%^&*/data.csv"
+        )
 
 
 @pytest.fixture()

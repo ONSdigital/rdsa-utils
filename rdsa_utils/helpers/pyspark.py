@@ -21,6 +21,7 @@ from pyspark.sql import SparkSession, Window, WindowSpec
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
 
+from rdsa_utils.cdp.io.input import extract_database_name
 from rdsa_utils.logging import log_spark_df_schema
 
 logger = logging.getLogger(__name__)
@@ -844,13 +845,6 @@ def load_csv(
         If a column specified in rename_columns, drop_columns, or
         keep_columns is not found in the DataFrame.
 
-    Notes
-    -----
-    Transformation order:
-    1. Columns are kept according to `keep_columns`.
-    2. Columns are dropped according to `drop_columns`.
-    3. Columns are renamed according to `rename_columns`.
-
     Examples
     --------
     Load a CSV file with multiline and rename columns:
@@ -877,7 +871,6 @@ def load_csv(
     Load a CSV file with custom delimiter and multiline:
 
     >>> df = load_csv(spark, "/path/to/file.csv", sep=";", multiLine=True)
-
     """
     try:
         df = spark.read.csv(filepath, header=True, **kwargs)
@@ -931,15 +924,17 @@ def load_csv(
     return df
 
 
-def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
-    """Truncate External Hive Table stored on S3 or HDFS.
+def truncate_external_hive_table(spark: SparkSession, table_identifier: str) -> None:
+    """Truncate an External Hive table stored on S3 or HDFS.
 
     Parameters
     ----------
     spark
         Active SparkSession.
-    table_name
-        The name of the external Hive table to truncate.
+    table_identifier
+        The name of the Hive table to truncate. This can either be in the format
+        '<database>.<table>' or simply '<table>' if the current Spark session
+        has a database set.
 
     Returns
     -------
@@ -947,29 +942,82 @@ def truncate_external_hive_table(spark: SparkSession, table_name: str) -> None:
         This function does not return any value. It performs an action of
         truncating the table.
 
+    Raises
+    ------
+    ValueError
+        If the table name is incorrectly formatted, the database is not provided
+        when required, or if the table does not exist.
+    AnalysisException
+        If there is an issue with partition operations or SQL queries.
+    Exception
+        If there is a general failure during the truncation process.
+
     Examples
     --------
     Truncate a Hive table named 'my_database.my_table':
 
     >>> truncate_external_hive_table(spark, 'my_database.my_table')
+
+    Or, if the current Spark session already has a database set:
+
+    >>> spark.catalog.setCurrentDatabase('my_database')
+    >>> truncate_external_hive_table(spark, 'my_table')
     """
     try:
-        logger.info(f"Attempting to truncate the table '{table_name}'")
+        logger.info(f"Attempting to truncate the table '{table_identifier}'")
 
-        # Read the original table to get its schema
-        original_df = spark.table(table_name)
-        schema: T.StructType = original_df.schema
+        # Extract database and table name, even if only the table name is provided
+        db_name, table_name = extract_database_name(spark, table_identifier)
 
-        # Create an empty DataFrame with the same schema
-        empty_df = spark.createDataFrame([], schema)
+        # Set the current database if a database was specified
+        if db_name:
+            spark.catalog.setCurrentDatabase(db_name)
 
-        # Overwrite the original table with the empty DataFrame
-        empty_df.write.mode("overwrite").insertInto(table_name)
+        # Check if the table exists before proceeding
+        if not spark.catalog.tableExists(table_name, db_name):
+            error_msg = f"Table '{db_name}.{table_name}' does not exist."
+            logger.error(error_msg)
+            raise ValueError(error_msg)
 
-        logger.info(f"Table '{table_name}' successfully truncated.")
+        # Get the list of partitions
+        try:
+            partitions = spark.sql(f"SHOW PARTITIONS {db_name}.{table_name}").collect()
+        except Exception as e:
+            logger.warning(
+                f"Unable to retrieve partitions for '{db_name}.{table_name}': {e}",
+            )
+            partitions = []
+
+        if partitions:
+            logger.info(
+                f"Table '{table_identifier}' is partitioned. Dropping all partitions.",
+            )
+
+            # Drop each partition
+            for partition in partitions:
+                partition_spec = partition[
+                    0
+                ]  # e.g., partition is in format 'year=2023', etc.
+                spark.sql(
+                    f"ALTER TABLE {db_name}.{table_name} "
+                    f"DROP IF EXISTS PARTITION ({partition_spec})",
+                )
+
+        else:
+            logger.info(
+                f"Table '{table_identifier}' has no partitions or is not partitioned.",
+            )
+
+            # Overwrite with an empty DataFrame
+            original_df = spark.table(f"{db_name}.{table_name}")
+            schema: T.StructType = original_df.schema
+            empty_df = spark.createDataFrame([], schema)
+            empty_df.write.mode("overwrite").insertInto(f"{db_name}.{table_name}")
+
+        logger.info(f"Table '{table_identifier}' successfully truncated.")
 
     except Exception as e:
         logger.error(
-            f"An error occurred while truncating the table '{table_name}': {e}",
+            f"An error occurred while truncating the table '{table_identifier}': {e}",
         )
         raise

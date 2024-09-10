@@ -1244,6 +1244,30 @@ class TestTruncateExternalHiveTable:
         spark.sql("DROP DATABASE test_db")
         spark.stop()
 
+    @pytest.fixture()
+    def create_partitioned_table(self, spark_session: SparkSession):
+        """Create a mock partitioned external Hive table for testing."""
+        spark = (
+            SparkSession.builder.master("local[2]")
+            .appName("test_partitioned_table")
+            .enableHiveSupport()
+            .getOrCreate()
+        )
+        table_name = "test_db.test_partitioned_table"
+        spark.sql("CREATE DATABASE IF NOT EXISTS test_db")
+        schema = T.StructType(
+            [
+                T.StructField("name", T.StringType(), True),
+                T.StructField("year", T.IntegerType(), True),
+            ],
+        )
+        df = spark.createDataFrame([("Alice", 2020), ("Bob", 2021)], schema)
+        df.write.mode("overwrite").partitionBy("year").saveAsTable(table_name)
+        yield table_name, spark
+        spark.sql(f"DROP TABLE {table_name}")
+        spark.sql("DROP DATABASE test_db")
+        spark.stop()
+
     def test_truncate_table(self, create_external_table):
         """Test truncating an external Hive table."""
         table_name, spark_session = create_external_table
@@ -1258,6 +1282,39 @@ class TestTruncateExternalHiveTable:
         truncate_external_hive_table(spark_session, table_name)
         truncated_schema = spark_session.table(table_name).schema
         assert original_schema == truncated_schema
+
+    def test_truncate_partitioned_table(self, create_partitioned_table):
+        """Test truncating a partitioned external Hive table."""
+        table_name, spark_session = create_partitioned_table
+        truncate_external_hive_table(spark_session, table_name)
+        truncated_df = spark_session.table(table_name)
+        assert truncated_df.count() == 0
+
+    def test_truncate_without_database(self, create_external_table):
+        """Test truncating a table when only table name is provided."""
+        table_name, spark_session = create_external_table
+
+        # Set the current database and pass only the table name
+        spark_session.catalog.setCurrentDatabase("test_db")
+        truncate_external_hive_table(spark_session, "test_table")
+        truncated_df = spark_session.table(table_name)
+        assert truncated_df.count() == 0
+
+    def test_partition_preservation(self, create_partitioned_table):
+        """Test partition preservation after truncation."""
+        table_name, spark_session = create_partitioned_table
+        original_partitions = spark_session.sql(
+            f"SHOW PARTITIONS {table_name}",
+        ).collect()
+
+        truncate_external_hive_table(spark_session, table_name)
+        remaining_partitions = spark_session.sql(
+            f"SHOW PARTITIONS {table_name}",
+        ).collect()
+
+        # The partition should be dropped after truncation
+        assert len(original_partitions) > 0
+        assert len(remaining_partitions) == 0
 
     def test_no_exceptions(self, create_external_table):
         """Test no exceptions are raised during truncation."""

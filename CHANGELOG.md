@@ -17,6 +17,27 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.3.3] - 2024-09-10
+
+### Added
+- Added `InvalidS3FilePathError` to `exceptions.py`.
+- Added `validate_s3_file_path` to `s3_utils.py`.
+
+### Changed
+- Fixed docstring for `load_csv` in `helpers/pyspark.py`.
+- Call `validate_s3_file_path` function inside `save_csv_to_s3`.
+- Call `validate_bucket_name` and `validate_s3_file_path` function 
+  inside `cdp/helpers/s3_utils/load_csv`.
+
+### Deprecated
+
+### Fixed
+- Improved `truncate_external_hive_table` to handle both partitioned and 
+  non-partitioned Hive tables, with enhanced error handling and support 
+  for table identifiers in `<database>.<table>` or `<table>` formats.
+
+### Removed
+
 ## [v0.3.2] - 2024-09-02
 
 ### Added
@@ -372,6 +393,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.3) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.3/)
 - rdsa-utils v0.3.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.2) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.2/)
 - rdsa-utils v0.3.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.1) | 
