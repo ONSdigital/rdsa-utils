@@ -17,6 +17,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     list_files,
     remove_leading_slash,
     validate_bucket_name,
+    validate_s3_file_path,
 )
 from rdsa_utils.cdp.io.input import load_and_validate_table
 from rdsa_utils.exceptions import (
@@ -363,6 +364,10 @@ def save_csv_to_s3(
     ------
     ValueError
         If the file_name does not end with ".csv".
+    InvalidBucketNameError
+        If the bucket name does not meet AWS specifications.
+    InvalidS3FilePathError
+        If the file_path contains an S3 URI scheme like 's3://' or 's3a://'.
     IOError
         If overwrite is False and the target file already exists.
 
@@ -386,6 +391,7 @@ def save_csv_to_s3(
     ```
     """
     bucket_name = validate_bucket_name(bucket_name)
+    file_path = validate_s3_file_path(file_path, allow_s3_scheme=False)
     file_path = remove_leading_slash(file_path)
 
     if not file_name.endswith(".csv"):
