@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.3.3] - 2024-09-10
+
+### Added
 - Added `InvalidS3FilePathError` to `exceptions.py`.
 - Added `validate_s3_file_path` to `s3_utils.py`.
 
@@ -381,6 +393,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.3) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.3/)
 - rdsa-utils v0.3.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.2) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.2/)
 - rdsa-utils v0.3.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.1) | 
