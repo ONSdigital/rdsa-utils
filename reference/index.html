@@ -553,6 +553,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.exceptions.InvalidS3FilePathError" class="md-nav__link">
+    <span class="md-ellipsis">
+      InvalidS3FilePathError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.exceptions.PipelineError" class="md-nav__link">
     <span class="md-ellipsis">
       PipelineError
@@ -973,6 +982,15 @@
   <a href="#rdsa_utils.cdp.helpers.s3_utils.validate_bucket_name" class="md-nav__link">
     <span class="md-ellipsis">
       validate_bucket_name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.validate_s3_file_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      validate_s3_file_path
     </span>
   </a>
   
@@ -2137,7 +2155,7 @@ reference for the technical implementation of the<code>rdsa-utils</code> codebas
 
     <div class="doc doc-contents first">
 
-      <p>Common custom exceptions that can be raised in pipelines.</p>
+        <p>Common custom exceptions that can be raised in pipelines.</p>
 <p>The purpose of these is to provide a clearer indication of why an error is
 being raised over the standard builtin errors (e.g. <code>ColumnNotInDataframeError</code>
 vs <code>ValueError</code>).</p>
@@ -2169,7 +2187,7 @@ vs <code>ValueError</code>).</p>
               Bases: <code>Exception</code></p>
 
 
-      <p>Custom exception to raise when a column is not present in dataframe.</p>
+        <p>Custom exception to raise when a column is not present in dataframe.</p>
 
 
     </div>
@@ -2192,7 +2210,7 @@ vs <code>ValueError</code>).</p>
               Bases: <code>Exception</code></p>
 
 
-      <p>Custom exception to raise when there is an issue in a config object.</p>
+        <p>Custom exception to raise when there is an issue in a config object.</p>
 
 
     </div>
@@ -2215,7 +2233,7 @@ vs <code>ValueError</code>).</p>
               Bases: <code>Exception</code></p>
 
 
-      <p>Custom exception to raise when a dataframe is empty.</p>
+        <p>Custom exception to raise when a dataframe is empty.</p>
 
 
     </div>
@@ -2238,7 +2256,30 @@ vs <code>ValueError</code>).</p>
               Bases: <code>Exception</code></p>
 
 
-      <p>Custom exception to raise when an AWS S3 or GCS bucket name is invalid.</p>
+        <p>Custom exception to raise when an AWS S3 or GCS bucket name is invalid.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="rdsa_utils.exceptions.InvalidS3FilePathError" class="doc doc-heading">
+            <code>InvalidS3FilePathError</code>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code>Exception</code></p>
+
+
+        <p>Custom exception to raise when an AWS S3 file path is invalid.</p>
 
 
     </div>
@@ -2261,7 +2302,7 @@ vs <code>ValueError</code>).</p>
               Bases: <code>Exception</code></p>
 
 
-      <p>Custom exception to raise when there is a generic pipeline issue.</p>
+        <p>Custom exception to raise when there is a generic pipeline issue.</p>
 
 
     </div>
@@ -2284,7 +2325,7 @@ vs <code>ValueError</code>).</p>
               Bases: <code>Exception</code></p>
 
 
-      <p>Custom exception to raise when a table to be read is not found.</p>
+        <p>Custom exception to raise when a table to be read is not found.</p>
 
 
     </div>
@@ -2312,7 +2353,7 @@ vs <code>ValueError</code>).</p>
 
     <div class="doc doc-contents first">
 
-      <p>Contains the logging configuration for files and method to initialise it.</p>
+        <p>Contains the logging configuration for files and method to initialise it.</p>
 
 
 
@@ -2337,7 +2378,7 @@ vs <code>ValueError</code>).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Apply decorator to log a warning message.</p>
+        <p>Apply decorator to log a warning message.</p>
 <p>If a message is passed, this decorator adds a warning log of the form
 function_name: message</p>
 
@@ -2404,7 +2445,7 @@ Warning my_func: here be dragons...
 
     <div class="doc doc-contents ">
 
-      <p>Instantiate a logger with provided handlers.</p>
+        <p>Instantiate a logger with provided handlers.</p>
 <p>This function allows the logger to be used across modules. Logs can be
 handled by any number of handlers, e.g., FileHandler, StreamHandler, etc.,
 provided in the <code>handlers</code> list.</p>
@@ -2564,7 +2605,7 @@ module (i.e., below imports, not in a function).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Instantiate a basic logger object to be used across modules.</p>
+        <p>Instantiate a basic logger object to be used across modules.</p>
 <p>By using this function to instantiate the logger, you also have access to
 <code>logger.dev</code> for log_level=15, as this is defined in the same module scope
 as this function.</p>
@@ -2641,7 +2682,7 @@ level in a module (i.e. below imports, not in a function).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create a custom log level between INFO and DEBUG named DEV.</p>
+        <p>Create a custom log level between INFO and DEBUG named DEV.</p>
 <p>This is lifted from: https://stackoverflow.com/a/13638084</p>
 
     </div>
@@ -2659,7 +2700,7 @@ level in a module (i.e. below imports, not in a function).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Apply decorator to log dataframe row count before and after a function.</p>
+        <p>Apply decorator to log dataframe row count before and after a function.</p>
 <p>Requires that the function being decorated has a parameter called <code>df</code> and
 that the function is called with <code>df</code> being a keyword argument (e.g.
 <code>df=df</code>). If not the decorator will report back that it could not count the
@@ -2707,7 +2748,7 @@ is also unpersisted from memory prior to the decorator completing.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Apply decorator to log dataframe schema before and after a function.</p>
+        <p>Apply decorator to log dataframe schema before and after a function.</p>
 <p>If you use the `df.printSchema() method directly in a print/log statement
 the code is processed and printed regardless of logging leve. Instead you
 need to capture the output and pass this to the logger. See explanaition
@@ -2816,7 +2857,7 @@ root
 
     <div class="doc doc-contents ">
 
-      <p>Output dataframe records to logger.</p>
+        <p>Output dataframe records to logger.</p>
 <p>The purpose of this function is to enable a user to output a message
 to the logger with the added functionality of stopping the pipeline
 and showing dataframe records in a table format. It may be used for
@@ -2956,7 +2997,7 @@ function.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Initialise timer args workaround for 'text' args in codetiming package.</p>
+        <p>Initialise timer args workaround for 'text' args in codetiming package.</p>
 <p>Works with codetiming==1.4.0</p>
 
 
@@ -3049,7 +3090,7 @@ function.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Functions and fixtures used with test suites.</p>
+        <p>Functions and fixtures used with test suites.</p>
 
 
 
@@ -3075,7 +3116,7 @@ function.</p>
     <div class="doc doc-contents ">
 
 
-      <p>Container for a test case, with optional test ID.</p>
+        <p>Container for a test case, with optional test ID.</p>
 <p>The Case class is to be used in conjunction with <code>parameterize_cases</code>.</p>
 
 
@@ -3126,7 +3167,7 @@ kwargs
   <p>Modified from https://github.com/ckp95/pytest-parametrize-cases to allow
 pytest mark usage.</p>
 </details>
-      <p>Initialise objects.</p>
+        <p>Initialise objects.</p>
 
 
 
@@ -3152,7 +3193,7 @@ pytest mark usage.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Return string.</p>
+        <p>Return string.</p>
 
     </div>
 
@@ -3178,7 +3219,7 @@ pytest mark usage.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create pandas df from tuple data with a header.</p>
+        <p>Create pandas df from tuple data with a header.</p>
 
     </div>
 
@@ -3195,7 +3236,7 @@ pytest mark usage.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create Spark DataFrame from tuple data with first row as schema.</p>
+        <p>Create Spark DataFrame from tuple data with first row as schema.</p>
 
 
 <details class="example:" open>
@@ -3225,7 +3266,7 @@ create_spark_df([
 
     <div class="doc doc-contents ">
 
-      <p>More user friendly parameterize cases testing.</p>
+        <p>More user friendly parameterize cases testing.</p>
 <p>Utilise as a decorator on top of test function.</p>
 
 
@@ -3266,7 +3307,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Set up spark session fixture.</p>
+        <p>Set up spark session fixture.</p>
 
     </div>
 
@@ -3283,7 +3324,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Suppress spark logging.</p>
+        <p>Suppress spark logging.</p>
 
     </div>
 
@@ -3300,7 +3341,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Convert date string to datetime.date type.</p>
+        <p>Convert date string to datetime.date type.</p>
 
     </div>
 
@@ -3317,7 +3358,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Convert datetime string to datetime.datetime type.</p>
+        <p>Convert datetime string to datetime.datetime type.</p>
 
     </div>
 
@@ -3334,7 +3375,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Convert pandas df to spark.</p>
+        <p>Convert pandas df to spark.</p>
 
     </div>
 
@@ -3360,7 +3401,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents first">
 
-      <p>Contains custom types for type hinting.</p>
+        <p>Contains custom types for type hinting.</p>
 
 
 
@@ -3394,7 +3435,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents first">
 
-      <p>Functions that support the use of pydantic validators.</p>
+        <p>Functions that support the use of pydantic validators.</p>
 
 
 
@@ -3419,7 +3460,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Ensure that the date string can be converted to a useable datetime.</p>
+        <p>Ensure that the date string can be converted to a useable datetime.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -3511,7 +3552,7 @@ def test(foo, bar):
 
     <div class="doc doc-contents ">
 
-      <p>Apply validation model to config.</p>
+        <p>Apply validation model to config.</p>
 <p>If no Validator is passed, then a warning will be logged and the input
 config returned without validation. This mechanism is to allow the use of
 this function to aid in tracking config sections that are unvalidated.</p>
@@ -3611,7 +3652,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Wrapper to set kwargs for list_convert validator.</p>
+        <p>Wrapper to set kwargs for list_convert validator.</p>
 
     </div>
 
@@ -3638,7 +3679,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Utility functions for interacting with AWS S3.</p>
+        <p>Utility functions for interacting with AWS S3.</p>
 <p>To initialise a boto3 client for S3 and configure it with Ranger RAZ
 and SSL certificate, you can use the following code snippet:</p>
 <pre><code class="language-python">import boto3
@@ -3681,7 +3722,7 @@ Note:
 
     <div class="doc doc-contents ">
 
-      <p>Copy a file from one aWS S3 bucket to another.</p>
+        <p>Copy a file from one aWS S3 bucket to another.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -3833,7 +3874,7 @@ Note:
 
     <div class="doc doc-contents ">
 
-      <p>Create a folder in an AWS S3 bucket if it doesn't already exist.</p>
+        <p>Create a folder in an AWS S3 bucket if it doesn't already exist.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -3938,7 +3979,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete a file from an AWS S3 bucket.</p>
+        <p>Delete a file from an AWS S3 bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4057,7 +4098,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete a folder in an AWS S3 bucket.</p>
+        <p>Delete a folder in an AWS S3 bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4161,7 +4202,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Download a file from an AWS S3 bucket to a local directory.</p>
+        <p>Download a file from an AWS S3 bucket to a local directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4298,7 +4339,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Download a folder from an AWS S3 bucket to a local directory.</p>
+        <p>Download a folder from an AWS S3 bucket to a local directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4436,7 +4477,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check if a specific file exists in an AWS S3 bucket.</p>
+        <p>Check if a specific file exists in an AWS S3 bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4540,7 +4581,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check if an AWS S3 key is a directory by listing its contents.</p>
+        <p>Check if an AWS S3 key is a directory by listing its contents.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4637,7 +4678,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>List files in an AWS S3 bucket that match a specific prefix.</p>
+        <p>List files in an AWS S3 bucket that match a specific prefix.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4741,7 +4782,7 @@ set to True to ignore non-existence on delete.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Load a CSV file from an S3 bucket into a Pandas DataFrame.</p>
+        <p>Load a CSV file from an S3 bucket into a Pandas DataFrame.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4894,6 +4935,26 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the bucket name does not meet AWS specifications.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidS3FilePathError" href="#rdsa_utils.exceptions.InvalidS3FilePathError">InvalidS3FilePathError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the file_path contains an S3 URI scheme like 's3://' or 's3a://'.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                   <code>Exception</code>
             </td>
             <td>
@@ -4974,7 +5035,7 @@ keep_columns is not found in the DataFrame.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Move a file within or between AWS S3 buckets.</p>
+        <p>Move a file within or between AWS S3 buckets.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5112,7 +5173,7 @@ keep_columns is not found in the DataFrame.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Remove the leading forward slash from a string if present.</p>
+        <p>Remove the leading forward slash from a string if present.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5187,7 +5248,7 @@ keep_columns is not found in the DataFrame.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Upload a file to an Amazon S3 bucket from local directory.</p>
+        <p>Upload a file to an Amazon S3 bucket from local directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5325,7 +5386,7 @@ the local file path.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Upload an entire folder from the local file system to an AWS S3 bucket.</p>
+        <p>Upload an entire folder from the local file system to an AWS S3 bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5463,7 +5524,7 @@ the local file path.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Validate the format of an AWS S3 bucket name according to AWS rules.</p>
+        <p>Validate the format of an AWS S3 bucket name according to AWS rules.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5553,6 +5614,128 @@ the local file path.</p>
 
 </div>
 
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.validate_s3_file_path" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">validate_s3_file_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_s3_scheme</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Validate the file path based on the S3 URI scheme.</p>
+<p>If <code>allow_s3_scheme</code> is True, the file path must contain an S3 URI scheme
+(either 's3://' or 's3a://').</p>
+<p>If <code>allow_s3_scheme</code> is False, the file path should not contain an S3 URI scheme.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>file_path</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The file path to validate.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>allow_s3_scheme</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether or not to allow an S3 URI scheme in the file path.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The validated file path if valid.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidS3FilePathError" href="#rdsa_utils.exceptions.InvalidS3FilePathError">InvalidS3FilePathError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the validation fails based on the value of <code>allow_s3_scheme</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_s3_file_path</span><span class="p">(</span><span class="s1">&#39;data_folder/data.csv&#39;</span><span class="p">,</span> <span class="n">allow_s3_scheme</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&#39;data_folder/data.csv&#39;</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_s3_file_path</span><span class="p">(</span><span class="s1">&#39;s3a://bucket-name/data.csv&#39;</span><span class="p">,</span> <span class="n">allow_s3_scheme</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;s3a://bucket-name/data.csv&#39;</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_s3_file_path</span><span class="p">(</span><span class="s1">&#39;s3a://bucket-name/data.csv&#39;</span><span class="p">,</span> <span class="n">allow_s3_scheme</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">InvalidS3FilePathError: The file_path should not contain an S3 URI scheme</span>
+<span class="go">like &#39;s3://&#39; or &#39;s3a://&#39;.</span>
+</code></pre></div>
+
+    </div>
+
+</div>
+
 
 
   </div>
@@ -5573,7 +5756,7 @@ the local file path.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Utility functions for interacting with HDFS.</p>
+        <p>Utility functions for interacting with HDFS.</p>
 
 
 
@@ -5598,7 +5781,7 @@ the local file path.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Change directory and file permissions in HDFS.</p>
+        <p>Change directory and file permissions in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5697,7 +5880,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Copy a file in HDFS.</p>
+        <p>Copy a file in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5819,7 +6002,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Copy a local file to HDFS.</p>
+        <p>Copy a local file to HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5903,7 +6086,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create a directory in HDFS.</p>
+        <p>Create a directory in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5973,7 +6156,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create and populate a text file in HDFS.</p>
+        <p>Create and populate a text file in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6096,7 +6279,7 @@ of creating a text file.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete an empty directory from HDFS.</p>
+        <p>Delete an empty directory from HDFS.</p>
 <p>This function attempts to delete an empty directory in HDFS.
 If the directory is not empty, the deletion will fail.</p>
 
@@ -6175,7 +6358,7 @@ consider using <code>delete_path</code> instead.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete a specific file in HDFS.</p>
+        <p>Delete a specific file in HDFS.</p>
 <p>This function is used to delete a single file located
 at the specified HDFS path. If the path points to a
 directory, the command will fail.</p>
@@ -6277,7 +6460,7 @@ use <code>delete_dir</code> or <code>delete_path</code>.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete a file or directory in HDFS, including non-empty directories.</p>
+        <p>Delete a file or directory in HDFS, including non-empty directories.</p>
 <p>This function is capable of deleting both files and directories.
 When applied to directories, it will recursively delete all contents
 within the directory, making it suitable for removing directories regardless
@@ -6380,7 +6563,7 @@ remove all contained files and subdirectories without confirmation.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check whether a file exists in HDFS.</p>
+        <p>Check whether a file exists in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6472,7 +6655,7 @@ remove all contained files and subdirectories without confirmation.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Return the last modified date of a file in HDFS.</p>
+        <p>Return the last modified date of a file in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6541,7 +6724,7 @@ remove all contained files and subdirectories without confirmation.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Test if a directory exists in HDFS.</p>
+        <p>Test if a directory exists in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6610,7 +6793,7 @@ remove all contained files and subdirectories without confirmation.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Move a local file to HDFS.</p>
+        <p>Move a local file to HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6694,7 +6877,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Read the contents of a directory in HDFS.</p>
+        <p>Read the contents of a directory in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6763,7 +6946,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Read the filenames in a directory in HDFS.</p>
+        <p>Read the filenames in a directory in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6832,7 +7015,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Recursively reads the contents of a directory in HDFS.</p>
+        <p>Recursively reads the contents of a directory in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6916,7 +7099,7 @@ just the filename.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Rename (i.e., move using full path) a file in HDFS.</p>
+        <p>Rename (i.e., move using full path) a file in HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -7047,7 +7230,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Utilities for working with Impala.</p>
+        <p>Utilities for working with Impala.</p>
 
 
 
@@ -7072,7 +7255,7 @@ otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Automate the invalidation of a table's metadata using impala-shell.</p>
+        <p>Automate the invalidation of a table's metadata using impala-shell.</p>
 <p>This function uses the impala-shell command with the given
 impalad_address_port and impalad_ca_cert, to invalidate a specified
 table's metadata.</p>
@@ -7218,7 +7401,7 @@ intervention, making outdated metadata issues less likely to occur.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Utilities for managing a Pipeline Runlog using Hive Tables.</p>
+        <p>Utilities for managing a Pipeline Runlog using Hive Tables.</p>
 
 
 
@@ -7243,7 +7426,7 @@ intervention, making outdated metadata issues less likely to occur.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Add an entry to a target runlog.</p>
+        <p>Add an entry to a target runlog.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -7398,7 +7581,7 @@ a new one is generated.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create an entry for the runlog.</p>
+        <p>Create an entry for the runlog.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -7537,7 +7720,7 @@ a new one is generated.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create runlog and _reserved_ids tables in the target database if needed.</p>
+        <p>Create runlog and _reserved_ids tables in the target database if needed.</p>
 <p>This function executes two SQL queries to create two tables, if they do
 not already exist in the target database. The first table's structure
 includes columns for run_id, desc, user, datetime, pipeline_name,
@@ -7646,7 +7829,7 @@ The associated _reserved_ids table will be suffixed with this name.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Retrieve the last run_id, either in general or for a specific pipeline.</p>
+        <p>Retrieve the last run_id, either in general or for a specific pipeline.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -7744,7 +7927,7 @@ include the database.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Retrieve penultimate run_id in general or a specific pipeline.</p>
+        <p>Retrieve penultimate run_id in general or a specific pipeline.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -7843,7 +8026,7 @@ or has less than two entries.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Reserve a run id in the reserved ids table linked to the runlog table.</p>
+        <p>Reserve a run id in the reserved ids table linked to the runlog table.</p>
 <p>The function reads the last run id from the reserved ids table,
 increments it to create a new id,and writes the new id with the
 current timestamp to the reserved ids table.</p>
@@ -7930,7 +8113,7 @@ this reserved id table, by default "pipeline_runlog".</p>
 
     <div class="doc doc-contents ">
 
-      <p>Write metadata from runlog entry to a text file.</p>
+        <p>Write metadata from runlog entry to a text file.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -8051,7 +8234,7 @@ side effect of creating a text file.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Read inputs on CDP.</p>
+        <p>Read inputs on CDP.</p>
 
 
 
@@ -8076,7 +8259,7 @@ side effect of creating a text file.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Extract the database component and table name from a compound table name.</p>
+        <p>Extract the database component and table name from a compound table name.</p>
 <p>This function can handle multiple scenarios:</p>
 <ol>
 <li>
@@ -8202,7 +8385,7 @@ and/or database name.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Retrieve the current database from the active SparkSession.</p>
+        <p>Retrieve the current database from the active SparkSession.</p>
 
     </div>
 
@@ -8219,7 +8402,7 @@ and/or database name.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Get a list of tables in a given database.</p>
+        <p>Get a list of tables in a given database.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -8332,7 +8515,7 @@ and/or database name.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Load a table, apply transformations, and validate if it is not empty.</p>
+        <p>Load a table, apply transformations, and validate if it is not empty.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -8592,7 +8775,7 @@ drop_columns, or rename_columns do not exist in the DataFrame.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Write outputs on CDP.</p>
+        <p>Write outputs on CDP.</p>
 
 
 
@@ -8617,7 +8800,7 @@ drop_columns, or rename_columns do not exist in the DataFrame.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Write the SparkDF contents to a Hive table.</p>
+        <p>Write the SparkDF contents to a Hive table.</p>
 <p>This function writes data from a SparkDF into a Hive table, allowing
 optional handling of missing columns. The table's column order is ensured to
 match that of the DataFrame.</p>
@@ -8768,7 +8951,7 @@ doesn't exist or if there's no access to it.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Save DataFrame as CSV on HDFS, coalescing to a single partition.</p>
+        <p>Save DataFrame as CSV on HDFS, coalescing to a single partition.</p>
 <p>This function saves a PySpark DataFrame to HDFS in CSV format. By
 coalescing the DataFrame into a single partition before saving, it
 accomplishes two main objectives:</p>
@@ -8924,7 +9107,7 @@ save_csv_to_hdfs(df, file_name, file_path, overwrite=True)
 
     <div class="doc doc-contents ">
 
-      <p>Save DataFrame as CSV on S3, coalescing to a single partition.</p>
+        <p>Save DataFrame as CSV on S3, coalescing to a single partition.</p>
 <p>This function saves a PySpark DataFrame to S3 in CSV format. By
 coalescing the DataFrame into a single partition before saving, it
 accomplishes two main objectives:</p>
@@ -9067,6 +9250,26 @@ and the file exists, the function will raise an error.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                  <code>InvalidBucketNameError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the bucket name does not meet AWS specifications.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code>InvalidS3FilePathError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the file_path contains an S3 URI scheme like 's3://' or 's3a://'.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                   <code>IOError</code>
             </td>
             <td>
@@ -9110,7 +9313,7 @@ save_csv_to_s3(
 
     <div class="doc doc-contents ">
 
-      <p>Write a SparkDF to an existing Hive table and then read it back.</p>
+        <p>Write a SparkDF to an existing Hive table and then read it back.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9325,7 +9528,7 @@ just wrote to the Hive Table using the <code>filter_id</code> parameter. If no
 
     <div class="doc doc-contents first">
 
-      <p>Utility functions for interacting with Google Cloud Storage.</p>
+        <p>Utility functions for interacting with Google Cloud Storage.</p>
 <p>To initialise a client for GCS and configure it with a service account
 JSON key file, you can use the following code snippet:</p>
 <pre><code class="language-python">from google.cloud import storage
@@ -9357,7 +9560,7 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
 
     <div class="doc doc-contents ">
 
-      <p>Copy a file from one GCS bucket to another.</p>
+        <p>Copy a file from one GCS bucket to another.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9509,7 +9712,7 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
 
     <div class="doc doc-contents ">
 
-      <p>Create a folder in a GCS bucket if it doesn't already exist.</p>
+        <p>Create a folder in a GCS bucket if it doesn't already exist.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9614,7 +9817,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete a file from a GCS bucket.</p>
+        <p>Delete a file from a GCS bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9718,7 +9921,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Delete a folder in a GCS bucket.</p>
+        <p>Delete a folder in a GCS bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9822,7 +10025,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Download a file from a GCS bucket to a local directory.</p>
+        <p>Download a file from a GCS bucket to a local directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -9959,7 +10162,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Download a folder from a GCS bucket to a local directory.</p>
+        <p>Download a folder from a GCS bucket to a local directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10097,7 +10300,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check if a specific file exists in a GCS bucket.</p>
+        <p>Check if a specific file exists in a GCS bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10201,7 +10404,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Return the column names for given bigquery table.</p>
+        <p>Return the column names for given bigquery table.</p>
 
     </div>
 
@@ -10218,7 +10421,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check if a GCS key is a directory by listing its contents.</p>
+        <p>Check if a GCS key is a directory by listing its contents.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10315,7 +10518,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>List files in a GCS bucket that match a specific prefix.</p>
+        <p>List files in a GCS bucket that match a specific prefix.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10419,7 +10622,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Load the config and dev_config files to dictionaries.</p>
+        <p>Load the config and dev_config files to dictionaries.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10488,7 +10691,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Move a file within or between GCS buckets.</p>
+        <p>Move a file within or between GCS buckets.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10626,7 +10829,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Remove the leading forward slash from a string if present.</p>
+        <p>Remove the leading forward slash from a string if present.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10701,7 +10904,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Run an SQL query in BigQuery.</p>
+        <p>Run an SQL query in BigQuery.</p>
 
     </div>
 
@@ -10718,7 +10921,7 @@ already exists, otherwise False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check the big query catalogue to see if a table exists.</p>
+        <p>Check the big query catalogue to see if a table exists.</p>
 <p>Returns True if a table exists.
 See code sample explanation here:
 https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_table_exists-python</p>
@@ -10791,7 +10994,7 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
 
     <div class="doc doc-contents ">
 
-      <p>Upload a file to a GCS bucket from local directory.</p>
+        <p>Upload a file to a GCS bucket from local directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -10929,7 +11132,7 @@ the local file path.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Upload an entire folder from the local file system to a GCS bucket.</p>
+        <p>Upload an entire folder from the local file system to a GCS bucket.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -11067,7 +11270,7 @@ the local file path.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Validate the format of a GCS bucket name according to GCS rules.</p>
+        <p>Validate the format of a GCS bucket name according to GCS rules.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -11177,7 +11380,7 @@ the local file path.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Read from BigQuery.</p>
+        <p>Read from BigQuery.</p>
 
 
 
@@ -11202,7 +11405,7 @@ the local file path.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create SQL query to load data with the specified filter conditions.</p>
+        <p>Create SQL query to load data with the specified filter conditions.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -11387,7 +11590,7 @@ terms in the column that are to be filtered by.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Read BigQuery table given table path and column selection.</p>
+        <p>Read BigQuery table given table path and column selection.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -11627,7 +11830,7 @@ with individual columns for each of the fields in the structs.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Write outputs to GCP.</p>
+        <p>Write outputs to GCP.</p>
 
 
 
@@ -11652,7 +11855,7 @@ with individual columns for each of the fields in the structs.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Write dataframe out to a Google BigQuery table.</p>
+        <p>Write dataframe out to a Google BigQuery table.</p>
 <p>In the case the table already exists, behavior of this function depends on
 the save mode, specified by the mode function (default to throwing an
 exception). When mode is Overwrite, the schema of the DataFrame does not
@@ -11854,7 +12057,7 @@ for more information on querying clustered tables.</p>
 
     <div class="doc doc-contents first">
 
-      <p>A selection of helper functions for building in pyspark.</p>
+        <p>A selection of helper functions for building in pyspark.</p>
 
 
 
@@ -11879,7 +12082,7 @@ for more information on querying clustered tables.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Calculate the median price per grouping level.</p>
+        <p>Calculate the median price per grouping level.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -11962,7 +12165,7 @@ for more information on querying clustered tables.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Convert specified selection of columns to a single struct column.</p>
+        <p>Convert specified selection of columns to a single struct column.</p>
 <p>As BigQuery tables do not take to having an empty struct column appended to
 them, this function will create a placeholder column to put into the struct
 column if no column names to combine are passed.</p>
@@ -12115,7 +12318,7 @@ the dummy column, default = None.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Flatten struct columns in pyspark dataframe to individual columns.</p>
+        <p>Flatten struct columns in pyspark dataframe to individual columns.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -12201,7 +12404,7 @@ columns.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create a column name to value MapType column.</p>
+        <p>Create a column name to value MapType column.</p>
 
     </div>
 
@@ -12218,7 +12421,7 @@ columns.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create a PySpark Session based on the specified size.</p>
+        <p>Create a PySpark Session based on the specified size.</p>
 <p>This function creates a PySpark session with different configurations
 based on the size specified.</p>
 <p>The size can be 'default', 'small', 'medium', 'large', or 'extra-large'.
@@ -12396,7 +12599,7 @@ from the following resource:
 
     <div class="doc doc-contents ">
 
-      <p>Convert the SparkDF to a Java RDD and back again.</p>
+        <p>Convert the SparkDF to a Java RDD and back again.</p>
 <p>This function is helpful in instances where Catalyst optimizer is causing
 memory errors or problems, as it only tries to optimize till the conversion
 point.</p>
@@ -12502,7 +12705,7 @@ or accessing internal members.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Extract SparkDF's objects from a given dictionary.</p>
+        <p>Extract SparkDF's objects from a given dictionary.</p>
 <p>This function scans the dictionary and returns another containing only
 entries where the value is a SparkDF. It also handles dictionaries within
 the input, including them in the output if their first item is a SparkDF.</p>
@@ -12583,7 +12786,7 @@ SparkDF or a dictionary with a SparkDF as its first item.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Return ordered and partitioned WindowSpec, defaulting to whole df.</p>
+        <p>Return ordered and partitioned WindowSpec, defaulting to whole df.</p>
 <p>Particularly useful when you don't know if the variable being used for
 partition_cols will contain values or not in advance.</p>
 
@@ -12675,7 +12878,7 @@ sequence is order that orderBy is applied).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check whether a spark dataframe contains any records.</p>
+        <p>Check whether a spark dataframe contains any records.</p>
 
     </div>
 
@@ -12692,7 +12895,7 @@ sequence is order that orderBy is applied).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Load a CSV file into a PySpark DataFrame.</p>
+        <p>Load a CSV file into a PySpark DataFrame.</p>
 <p>spark
     Active SparkSession.
 filepath
@@ -12776,14 +12979,6 @@ keep_columns is not found in the DataFrame.</p>
     </table>
 
 
-<details class="note" open>
-  <summary>Notes</summary>
-  <p>Transformation order:
-1. Columns are kept according to <code>keep_columns</code>.
-2. Columns are dropped according to <code>drop_columns</code>.
-3. Columns are renamed according to <code>rename_columns</code>.</p>
-</details>
-
 <p><span class="doc-section-title">Examples:</span></p>
     <p>Load a CSV file with multiline and rename columns:</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span>
@@ -12821,7 +13016,7 @@ keep_columns is not found in the DataFrame.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Map column names to the given values in the mapper.</p>
+        <p>Map column names to the given values in the mapper.</p>
 <p>If the column name is not in the mapper the name doesn't change.</p>
 
     </div>
@@ -12839,7 +13034,7 @@ keep_columns is not found in the DataFrame.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Melt a spark dataframe in a pandas like fashion.</p>
+        <p>Melt a spark dataframe in a pandas like fashion.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -12999,7 +13194,7 @@ data.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Rank a numeric and assign a unique value to each row.</p>
+        <p>Rank a numeric and assign a unique value to each row.</p>
 <p>The <code>F.row_number()</code> method has been selected as a method to rank as
 gives a unique number to each row. Other methods such as <code>F.rank()</code>
 and <code>F.dense_rank()</code> do not assign unique values per row.</p>
@@ -13100,7 +13295,7 @@ be ranked.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Rank and select observation in group based on earliest or latest date.</p>
+        <p>Rank and select observation in group based on earliest or latest date.</p>
 <p>Given that there can be multiple observations per group, select
 observation that appears first or last (depending on whether ascending is
 set to True or False, respectively).</p>
@@ -13220,7 +13415,7 @@ True or False, respectively) according to date_col.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Change specified columns nullable value.</p>
+        <p>Change specified columns nullable value.</p>
 <p>Sometimes find that spark creates columns that have the nullable attribute
 set to False, which can cause issues if this dataframe is saved to a table
 as it will set the schema for that column to not allow missing values.</p>
@@ -13325,7 +13520,7 @@ columns.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Convert Spark DF to a list.</p>
+        <p>Convert Spark DF to a list.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -13367,7 +13562,7 @@ then a list of row data as lists will be returned.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Convert str args to Spark Column if not already.</p>
+        <p>Convert str args to Spark Column if not already.</p>
 
 
 <details class="usage" open>
@@ -13407,7 +13602,7 @@ def my_func(arg1, arg2)</p>
 
     <div class="doc doc-contents ">
 
-      <p>Chain Pyspark function.</p>
+        <p>Chain Pyspark function.</p>
 
     </div>
 
@@ -13417,14 +13612,14 @@ def my_func(arg1, arg2)</p>
 
 
 <h3 id="rdsa_utils.helpers.pyspark.truncate_external_hive_table" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">truncate_external_hive_table</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+            <code class="highlight language-python"><span class="n">truncate_external_hive_table</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">table_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-      <p>Truncate External Hive Table stored on S3 or HDFS.</p>
+        <p>Truncate an External Hive table stored on S3 or HDFS.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -13453,13 +13648,15 @@ def my_func(arg1, arg2)</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_name</code></td>
+            <td><code>table_identifier</code></td>
             <td>
                   <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The name of the external Hive table to truncate.</p>
+                <p>The name of the Hive table to truncate. This can either be in the format
+'<database>.<table>' or simply '<table>' if the current Spark session
+has a database set.</p>
               </div>
             </td>
             <td>
@@ -13494,9 +13691,57 @@ truncating the table.</p>
     </table>
 
 
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>ValueError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the table name is incorrectly formatted, the database is not provided
+when required, or if the table does not exist.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code>AnalysisException</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If there is an issue with partition operations or SQL queries.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code>Exception</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If there is a general failure during the truncation process.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
 <p><span class="doc-section-title">Examples:</span></p>
     <p>Truncate a Hive table named 'my_database.my_table':</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">truncate_external_hive_table</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s1">&#39;my_database.my_table&#39;</span><span class="p">)</span>
+</code></pre></div>
+    <p>Or, if the current Spark session already has a database set:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">setCurrentDatabase</span><span class="p">(</span><span class="s1">&#39;my_database&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truncate_external_hive_table</span><span class="p">(</span><span class="n">spark</span><span class="p">,</span> <span class="s1">&#39;my_table&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     </div>
@@ -13514,7 +13759,7 @@ truncating the table.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Unpack a spark column containing a list into multiple rows.</p>
+        <p>Unpack a spark column containing a list into multiple rows.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -13620,7 +13865,7 @@ truncating the table.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Miscellaneous helper functions for Python.</p>
+        <p>Miscellaneous helper functions for Python.</p>
 
 
 
@@ -13645,7 +13890,7 @@ truncating the table.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Supplement more-itertools <code>always_iterable</code> to also exclude dicts.</p>
+        <p>Supplement more-itertools <code>always_iterable</code> to also exclude dicts.</p>
 <p>By default it would convert a dictionary to an iterable of just its keys,
 dropping all the values. This change makes it so dictionaries are not
 altered (similar to how strings aren't broken down).</p>
@@ -13665,7 +13910,7 @@ altered (similar to how strings aren't broken down).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Create cartesian product of values for each kwarg.</p>
+        <p>Create cartesian product of values for each kwarg.</p>
 <p>In order to create product of values, the values are converted to
 a list so that product of values can be derived.</p>
 
@@ -13728,7 +13973,7 @@ a list so that product of values can be derived.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Convert start and end dates from strings to timestamps.</p>
+        <p>Convert start and end dates from strings to timestamps.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -13818,7 +14063,7 @@ date.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Check list elements are unique then append to existing list.</p>
+        <p>Check list elements are unique then append to existing list.</p>
 <p>Note the <code>.extend</code> method in Python overwrites each section. There
 is no need to assign a variable to this function, the section will
 update automatically.</p>
@@ -13934,7 +14179,7 @@ section will update automatically.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Convert object to list using more-itertools' <code>always_iterable</code>.</p>
+        <p>Convert object to list using more-itertools' <code>always_iterable</code>.</p>
 
     </div>
 
@@ -13951,7 +14196,7 @@ section will update automatically.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Overwrite dictionary values with user defined values.</p>
+        <p>Overwrite dictionary values with user defined values.</p>
 <p>The following restrictions are in place:
 * base_dict and override_dict have the same value which is not dictionary
   then override_dict has priority.
@@ -14095,7 +14340,7 @@ base_dict object that is passed into the original function.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Convert object to tuple using more-itertools' <code>always_iterable</code>.</p>
+        <p>Convert object to tuple using more-itertools' <code>always_iterable</code>.</p>
 
     </div>
 
@@ -14122,7 +14367,7 @@ base_dict object that is passed into the original function.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Module for code relating to loading config files.</p>
+        <p>Module for code relating to loading config files.</p>
 
 
 
@@ -14148,7 +14393,7 @@ base_dict object that is passed into the original function.</p>
     <div class="doc doc-contents ">
 
 
-      <p>Class for loading and storing a configuration file.</p>
+        <p>Class for loading and storing a configuration file.</p>
 
 
 <p><span class="doc-section-title">Attributes:</span></p>
@@ -14256,7 +14501,7 @@ allow simpler access to each config section.</p>
       </tbody>
     </table>
 
-      <p>Init method.</p>
+        <p>Init method.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -14429,7 +14674,7 @@ to alert that they have not been validated.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Module containing generic input functionality code.</p>
+        <p>Module containing generic input functionality code.</p>
 
 
 
@@ -14454,7 +14699,7 @@ to alert that they have not been validated.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Parse JSON formatted string into a dictionary.</p>
+        <p>Parse JSON formatted string into a dictionary.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -14547,7 +14792,7 @@ json.loads (i.e. converted to a dictionary).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Parse TOML formatted string into a dictionary.</p>
+        <p>Parse TOML formatted string into a dictionary.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -14616,7 +14861,7 @@ json.loads (i.e. converted to a dictionary).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Parse YAML formatted string into a dictionary.</p>
+        <p>Parse YAML formatted string into a dictionary.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -14685,7 +14930,7 @@ json.loads (i.e. converted to a dictionary).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Load contents of specified file.</p>
+        <p>Load contents of specified file.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -14786,7 +15031,7 @@ json.loads (i.e. converted to a dictionary).</p>
 
     <div class="doc doc-contents first">
 
-      <p>Module containing generic output functionality code.</p>
+        <p>Module containing generic output functionality code.</p>
 
 
 
@@ -14811,7 +15056,7 @@ json.loads (i.e. converted to a dictionary).</p>
 
     <div class="doc doc-contents ">
 
-      <p>Zip the contents of the specified directory.</p>
+        <p>Zip the contents of the specified directory.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -14925,7 +15170,7 @@ Default is False.</p>
 
     <div class="doc doc-contents first">
 
-      <p>Weighted and unweighted averaging functions.</p>
+        <p>Weighted and unweighted averaging functions.</p>
 
 
 
@@ -14950,7 +15195,7 @@ Default is False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Divide weights by sum of weights for each group.</p>
+        <p>Divide weights by sum of weights for each group.</p>
 
     </div>
 
@@ -14967,7 +15212,7 @@ Default is False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Calculate the unweighted arithmetic average.</p>
+        <p>Calculate the unweighted arithmetic average.</p>
 
     </div>
 
@@ -14984,7 +15229,7 @@ Default is False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Calculate the unweighted geometric average.</p>
+        <p>Calculate the unweighted geometric average.</p>
 
     </div>
 
@@ -15001,7 +15246,7 @@ Default is False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Calculate the weighted arithmetic average.</p>
+        <p>Calculate the weighted arithmetic average.</p>
 
     </div>
 
@@ -15018,7 +15263,7 @@ Default is False.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Calculate the weighted geometric average.</p>
+        <p>Calculate the weighted geometric average.</p>
 
     </div>
 
@@ -15051,7 +15296,7 @@ Default is False.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 10, 2024</span>
   </span>
 
     
