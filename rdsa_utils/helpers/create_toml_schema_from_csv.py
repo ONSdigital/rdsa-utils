@@ -3,7 +3,7 @@
 # Import necessary libraries here
 import pandas as pd
 import os
-import toml
+import re
 
 from datetime import datetime
 from typing import Tuple
@@ -20,21 +20,6 @@ def read_csv_file(file_path: str) -> pd.DataFrame:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
     return pd.read_csv(file_path)
-
-
-def read_toml_file(file_path: str) -> dict:
-    """Read a TOML file and return the contents as a dictionary.
-    
-    Args:
-        file_path (str): The path to the TOML file.  
-    Returns:
-        dict: The contents of the TOML file as a dictionary.
-    """
-    # Check if file exists
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"File not found: {file_path}")
-    with open(file_path, "r") as file:
-        return toml.load(file)
     
 
 def create_integer_columns(col: pd.Series) -> pd.Series:
@@ -49,7 +34,9 @@ def create_integer_columns(col: pd.Series) -> pd.Series:
     Returns:
         pd.Series: The column converted to type integer if possible.     
     """
-    if (col % 1 == 0).all():
+    # first select the non-null entries
+    non_null_col = col.dropna()
+    if (non_null_col % 1 == 0).all():
         if col.isnull().any():
             col = col.astype("Int64")
         else:
@@ -80,11 +67,13 @@ def decide_numeric_or_non_numeric(column_data: pd.Series) -> Tuple[pd.Series, st
         pd.Series: The column data which may have been converted to type float or int.
         str: "numeric" or "non-numeric".
     """
-    # Check if the column contains a string starting with a zero
-    if column_data.astype(str).str.startswith("0").any():
+    # Check if the column contains a string starting with a zero but not 0. 
+    # This is a common indicator that the column is non-numeric.
+    if column_data.astype(str).str.contains(r'^0(?!\.)').any():
         # convert the column to type string
         column_data = column_data.astype(str)
         return column_data, "non-numeric"
+
     # Attempt to convert the column to type float
     #TODO: extra conditions to check whether columns with numerical values should be
     # considered as categorical.
@@ -261,6 +250,23 @@ def convert_csv_to_toml_schema(data: pd.DataFrame) -> dict:
         # Add additional properties based on the data type
     return schema
 
+
+def create_txt_output(schema: dict) -> str:
+    """Create a text output from a TOML schema.
+    
+    Args:
+        schema (dict): The TOML schema as a dictionary.
+    Returns:
+        str: The text output.
+    """
+    text_output = ""
+    for column in schema:
+        text_output += f"[{column}]\n"
+        for key, value in schema[column].items():
+            text_output += f"{key} = {value}\n"
+        text_output += "\n"
+    return text_output
+
 # Main script logic here
 def convert_csv_to_toml(csv_path: str, toml_path: str)-> None:
     """Convert a CSV file into a TOML schema and save it to a file.
@@ -274,9 +280,12 @@ def convert_csv_to_toml(csv_path: str, toml_path: str)-> None:
     input_df = read_csv_file(csv_path)
     # Convert the DataFrame to a TOML schema
     schema = convert_csv_to_toml_schema(input_df)
-    # Save the schema to a TOML file
+
+    # save the schema to a txt file
+    text_output = create_txt_output(schema)
     with open(toml_path, "w") as file:
-        toml.dump(schema, file)
+        file.write(text_output)
+
 
 # Script entry point
 if __name__ == "__main__":
