@@ -44,7 +44,7 @@ def create_integer_columns(col: pd.Series) -> pd.Series:
     return col
 
 
-def decide_numeric_or_non_numeric(column_data: pd.Series) -> Tuple[pd.Series, str]:
+def decide_numeric_or_non_numeric(column_data: pd.Series, type_dict) -> Tuple[pd.Series, str]:
     """Decide whether a column is numeric or non-numeric.
 
     Numeric columns are those which contain continuous values that can be used in 
@@ -53,7 +53,7 @@ def decide_numeric_or_non_numeric(column_data: pd.Series) -> Tuple[pd.Series, st
     identifiers that look like numbers.
 
     The process is as follows:
-    1. If the column contains a string starting with a zero, it should be treated as non-numeric.
+    1. If the column contains a string starting with a zero but not 0., it should be treated as non-numeric.
     2. Attempt to convert the column to type float. If this fails, the column is non-numeric.
     3. Attempt to convert a column of type float to type integer. If this fails, the column is still numeric.
     4. For columns that could be of type integer, apply the following rules:
@@ -81,10 +81,17 @@ def decide_numeric_or_non_numeric(column_data: pd.Series) -> Tuple[pd.Series, st
         column_data = column_data.astype(float)
         # Attempt to convert a column of type float to type integer
         column_data = create_integer_columns(column_data)
-        return column_data, "numeric"
+        if (column_data.dtype == "int64") or (column_data.dtype == "Int64"):
+            # check whether the column could be datetime and return dictionary
+            date_format = check_format_datetime_column(column_data)
+            if date_format != "Inconclusive":
+                type_dict["Deduced_Data_Type"] = "DateTime"
+                type_dict["Date_Format"] = date_format
+                return column_data, type_dict, "numeric"
+        return column_data, type_dict, "numeric"
     
     except ValueError:
-        return column_data, "non-numeric"
+        return column_data, type_dict, "non-numeric"
 
 
 def return_datetime_format(test_string: str) -> str:
@@ -202,7 +209,7 @@ def deduce_data_type(column_data: pd.Series) -> dict:
     """
     type_dict = {}
     # determine whether a column is numeric or non-numeric
-    column_data, is_numeric = decide_numeric_or_non_numeric(column_data)
+    column_data, type_dict, is_numeric = decide_numeric_or_non_numeric(column_data, type_dict)
     type_dict["Is_numeric"] = is_numeric
 
     column_type = str(column_data.dtype)
@@ -215,12 +222,12 @@ def deduce_data_type(column_data: pd.Series) -> dict:
          return type_dict
 
     elif column_type == "object":
-        # check whether the column could be datetime and return dictionary
-        date_format = check_format_datetime_column(column_data)
-        if date_format != "Inconclusive":
-            type_dict["Deduced_Data_Type"] = "DateTime"
-            type_dict["Date_Format"] = date_format
-            return type_dict
+        # # check whether the column could be datetime and return dictionary
+        # date_format = check_format_datetime_column(column_data)
+        # if date_format != "Inconclusive":
+        #     type_dict["Deduced_Data_Type"] = "DateTime"
+        #     type_dict["Date_Format"] = date_format
+        #     return type_dict
         
         # check if the column is categorical and return dictionary
         data_type_dict = process_categorical_column(column_data)
@@ -243,7 +250,10 @@ def convert_csv_to_toml_schema(data: pd.DataFrame) -> dict:
     for column in data.columns:
         column_data = data[column]
         # Deduce the data type of the column
-        schema[column] = deduce_data_type(column_data)
+        try:
+            schema[column] = deduce_data_type(column_data)
+        except:
+            schema[column] = {"Deduced_Data_Type": "error"}
         # Add column description if available
         # State whether column is nullable
         schema[column]["Nullable"] = column_data.isnull().any()
