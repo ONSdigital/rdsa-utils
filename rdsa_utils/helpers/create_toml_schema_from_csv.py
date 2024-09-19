@@ -5,6 +5,8 @@ import pandas as pd
 import os
 import re
 
+import toml
+
 from datetime import datetime
 from typing import Tuple
 
@@ -191,7 +193,7 @@ def process_categorical_column(column_data: pd.Series) -> dict:
         dict: A dictionary representing the properties of the categorical column.
     """
     unique_list = column_data.dropna().unique()
-    if len(unique_list) < 30:
+    if len(unique_list) < 11:
         prop_dict = proportions_for_categorical(column_data)
         cat_dict = {"Deduced_Data_Type": "categorical", "categories": unique_list, "proportions": prop_dict}
     else:
@@ -222,12 +224,12 @@ def deduce_data_type(column_data: pd.Series) -> dict:
          return type_dict
 
     elif column_type == "object":
-        # # check whether the column could be datetime and return dictionary
-        # date_format = check_format_datetime_column(column_data)
-        # if date_format != "Inconclusive":
-        #     type_dict["Deduced_Data_Type"] = "DateTime"
-        #     type_dict["Date_Format"] = date_format
-        #     return type_dict
+        # check whether the column could be datetime and return dictionary
+        date_format = check_format_datetime_column(column_data)
+        if date_format != "Inconclusive":
+            type_dict["Deduced_Data_Type"] = "DateTime"
+            type_dict["Date_Format"] = date_format
+            return type_dict
         
         # check if the column is categorical and return dictionary
         data_type_dict = process_categorical_column(column_data)
@@ -261,7 +263,7 @@ def convert_csv_to_toml_schema(data: pd.DataFrame) -> dict:
     return schema
 
 
-def create_txt_output(schema: dict) -> str:
+def create_yaml_output(schema: dict) -> str:
     """Create a text output from a TOML schema.
     
     Args:
@@ -271,14 +273,25 @@ def create_txt_output(schema: dict) -> str:
     """
     text_output = ""
     for column in schema:
-        text_output += f"[{column}]\n"
+        # check if the column starts with 1, 2, 3, 4, 5, 6, 7, 8, 9
+        if re.match(r"^[1-9]", column):
+            text_output += f'"{column}"\n'
+        else:
+            text_output += f"{column}\n"
         for key, value in schema[column].items():
-            text_output += f"{key} = {value}\n"
+            # if the value is a dictionary then iterate over the keys and values
+            if isinstance(value, dict):
+                text_output += f"  {key}\n"
+                for k, v in value.items():
+                    text_output += f"    {k} : {v}\n"
+            else:
+                text_output += f"  {key} : {value}\n"
         text_output += "\n"
     return text_output
 
+
 # Main script logic here
-def convert_csv_to_toml(csv_path: str, toml_path: str)-> None:
+def convert_csv_to_toml(csv_path: str, toml_path: str, yaml_path: str)-> None:
     """Convert a CSV file into a TOML schema and save it to a file.
     
     Args:
@@ -291,9 +304,13 @@ def convert_csv_to_toml(csv_path: str, toml_path: str)-> None:
     # Convert the DataFrame to a TOML schema
     schema = convert_csv_to_toml_schema(input_df)
 
-    # save the schema to a txt file
-    text_output = create_txt_output(schema)
+    # save the schema to a toml file
     with open(toml_path, "w") as file:
+        toml.dump(schema, file)
+
+    # save the schema to a yaml file
+    text_output = create_yaml_output(schema)
+    with open(yaml_path, "w") as file:
         file.write(text_output)
 
 
@@ -301,5 +318,7 @@ def convert_csv_to_toml(csv_path: str, toml_path: str)-> None:
 if __name__ == "__main__":
     staged_path = "R:/BERD Results System Development 2023/DAP_emulation/2023_surveys/BERD/01_staging/staging_qa/full_responses_qa/2023_staged_BERD_full_responses_24-08-05_v822.csv"
     toml_path_orig = "D:/coding_projects/github_repos/research-and-development/config/output_schemas/staged_BERD_full_responses_schema.toml"
+
+    yaml_path_out = "D:/coding_projects/copilot_project/data/synth_data/full_responses_schema_out.yaml"
     toml_path_out = "D:/coding_projects/copilot_project/data/synth_data/full_responses_schema_out.toml"
-    convert_csv_to_toml(staged_path, toml_path_out)
+    convert_csv_to_toml(staged_path, toml_path_out, yaml_path_out)
