@@ -1053,7 +1053,7 @@ def load_json(
 
     Returns
     -------
-    dict
+    Dict
         Dictionary containing the data from the JSON file.
 
     Raises
