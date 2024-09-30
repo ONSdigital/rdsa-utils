@@ -1037,8 +1037,18 @@ class TestLoadJSON:
     def test_load_json_with_encoding(self, s3_client):
         """Test read_json with a specific encoding."""
         data = {"name": "John", "age": 30, "city": "Manchester"}
-        self.upload_json_to_s3(s3_client, "test-bucket", "test-file-utf16.json", data)
 
+        # Convert the dictionary to JSON string and encode it in 'utf-16'
+        json_data = json.dumps(data).encode("utf-16")
+
+        # Upload the utf-16 encoded JSON file to S3
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="test-file-utf16.json",
+            Body=json_data,
+        )
+
+        # Read the file back, specifying the 'utf-16' encoding
         result = load_json(
             s3_client,
             "test-bucket",
