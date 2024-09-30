@@ -8,7 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added `load_json` to `s3_utis.py`.
+- Added `load_json` to `s3_utils.py`.
 
 ### Changed
 
