@@ -22,6 +22,7 @@ Note:
 ```
 """
 
+import json
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -1029,3 +1030,71 @@ def load_csv(
                 raise ValueError(error_message)
 
     return df
+
+
+def load_json(
+    client: boto3.client,
+    bucket_name: str,
+    filepath: str,
+    encoding: Optional[str] = "utf-8",
+) -> Dict:
+    """Load a JSON file from an S3 bucket.
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket.
+    filepath : str
+        The key (full path and filename) of the JSON file in the S3 bucket.
+    encoding : str, optional
+        The encoding of the JSON file. Default is 'utf-8'.
+
+    Returns
+    -------
+    Dict
+        Dictionary containing the data from the JSON file.
+
+    Raises
+    ------
+    InvalidBucketNameError
+        If the bucket name is invalid according to AWS rules.
+    Exception
+        If there is an error loading the file from S3 or parsing the JSON.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> data = load_json(client, 'my-bucket', 'path/to/file.json')
+    >>> print(data)
+    {
+        "name": "John",
+        "age": 30,
+        "city": "Manchester"
+    }
+    """
+    # Validate bucket name and clean the filepath
+    bucket_name = validate_bucket_name(bucket_name)
+    filepath = remove_leading_slash(filepath)
+
+    try:
+        # Get the JSON file from S3
+        response = client.get_object(Bucket=bucket_name, Key=filepath)
+        logger.info(
+            f"Loaded JSON file from S3 bucket {bucket_name}, filepath {filepath}",
+        )
+
+        # Read the JSON content
+        json_data = response["Body"].read().decode(encoding)
+        data = json.loads(json_data)
+
+    except Exception as e:
+        error_message = (
+            f"Error loading or parsing JSON file from bucket {bucket_name}, "
+            "filepath {filepath}: {e}"
+        )
+        logger.error(error_message)
+        raise Exception(error_message) from e
+
+    return data

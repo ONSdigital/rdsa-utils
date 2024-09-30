@@ -1,5 +1,7 @@
 """Tests for s3_utils.py module."""
 
+import json
+
 import boto3
 import pytest
 from moto import mock_aws
@@ -15,6 +17,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     is_s3_directory,
     list_files,
     load_csv,
+    load_json,
     move_file,
     remove_leading_slash,
     upload_file,
@@ -990,3 +993,74 @@ qux"
         assert len(df.columns) == 3
         assert df[df["col3"] == "bar"].shape[0] == 1
         assert df[df["col3"] == "baz"].shape[0] == 1
+
+
+class TestLoadJSON:
+    """Tests for load_json function."""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="test-bucket")
+            yield s3
+
+    def upload_json_to_s3(self, s3_client, bucket_name, key, data):
+        """Upload a dictionary as a JSON file to S3."""
+        s3_client.put_object(Bucket=bucket_name, Key=key, Body=json.dumps(data))
+
+    def test_load_json_success(self, s3_client):
+        """Test load_json successfully reads a JSON file."""
+        data = {"name": "John", "age": 30, "city": "Manchester"}
+        self.upload_json_to_s3(s3_client, "test-bucket", "test-file.json", data)
+
+        result = load_json(s3_client, "test-bucket", "test-file.json")
+        assert result == data
+
+    def test_load_json_nonexistent_file(self, s3_client):
+        """Test load_json raises an exception for a nonexistent file."""
+        with pytest.raises(Exception):
+            load_json(s3_client, "test-bucket", "nonexistent.json")
+
+    def test_load_json_invalid_json(self, s3_client):
+        """Test load_json raises an exception when the JSON file is invalid."""
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="invalid.json",
+            Body="not a valid json",
+        )
+
+        with pytest.raises(Exception):
+            load_json(s3_client, "test-bucket", "invalid.json")
+
+    def test_load_json_with_encoding(self, s3_client):
+        """Test read_json with a specific encoding."""
+        data = {"name": "John", "age": 30, "city": "Manchester"}
+
+        # Convert the dictionary to JSON string and encode it in 'utf-16'
+        json_data = json.dumps(data).encode("utf-16")
+
+        # Upload the utf-16 encoded JSON file to S3
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="test-file-utf16.json",
+            Body=json_data,
+        )
+
+        # Read the file back, specifying the 'utf-16' encoding
+        result = load_json(
+            s3_client,
+            "test-bucket",
+            "test-file-utf16.json",
+            encoding="utf-16",
+        )
+        assert result == data
+
+    def test_load_json_invalid_bucket_name(self, s3_client):
+        """Test load_json raises InvalidBucketNameError for invalid bucket name."""
+        data = {"name": "John", "age": 30}
+        self.upload_json_to_s3(s3_client, "test-bucket", "test-file.json", data)
+
+        with pytest.raises(InvalidBucketNameError):
+            load_json(s3_client, "INVALID_BUCKET", "test-file.json")
