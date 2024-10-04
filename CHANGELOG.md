@@ -11,6 +11,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Added "How the Project is Organised" section to `README.md`.
+- Fix docstring for `test_load_json_with_encoding` in `test_s3_utils.py`.
 
 ### Deprecated
 

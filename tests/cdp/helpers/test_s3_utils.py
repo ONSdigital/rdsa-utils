@@ -1035,7 +1035,7 @@ class TestLoadJSON:
             load_json(s3_client, "test-bucket", "invalid.json")
 
     def test_load_json_with_encoding(self, s3_client):
-        """Test read_json with a specific encoding."""
+        """Test load_json with a specific encoding."""
         data = {"name": "John", "age": 30, "city": "Manchester"}
 
         # Convert the dictionary to JSON string and encode it in 'utf-16'
