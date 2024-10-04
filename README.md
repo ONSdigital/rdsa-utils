@@ -28,6 +28,25 @@ To install via `pip`, simply run:
 pip install rdsa-utils
 ```
 
+## 🗂️ How the Project is Organised
+
+The `rdsa-utils` package is designed to make it easy to work with different platforms like Cloudera Data Platform (CDP) and Google Cloud Platform (GCP), as well as handle general Python tasks. Here's a breakdown of how everything is organised:
+
+- **General Utilities (Top-Level)**:
+  - These are tools you can use for any project, regardless of the platform you're working on. They focus on common Python, PySpark, and Pandas tasks.
+  - 📂 **Helpers**: Handy functions that simplify working with Python and PySpark.
+  - 📂 **IO**: Functions for handling input and output, like reading configurations or saving results.
+
+- **Platform-Specific Utilities**:
+  - **CDP (Cloudera Data Platform)**:
+    - 📂 **Helpers**: Functions that help you work with tools supported by CDP, such as HDFS, Impala, and AWS S3.
+    - 📂 **IO**: Input/output functions specifically for CDP, such as managing data and logs in CDP environments.
+  - **GCP (Google Cloud Platform)**:
+    - 📂 **Helpers**: Functions to help you interact with GCP tools like Google Cloud Storage and BigQuery.
+    - 📂 **IO**: Input/output functions for managing data with GCP services.
+
+This structure keeps the tools for each platform separate, so you can easily find what you need, whether you're working in a cloud environment or on general Python tasks.
+
 ## 📖 Documentation and Further Information 
 
 Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).

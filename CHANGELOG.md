@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.3.5] - 2024-10-04
+
+### Added
+
+### Changed
+- Added "How the Project is Organised" section to `README.md`.
+- Fix docstring for `test_load_json_with_encoding` in `test_s3_utils.py`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [v0.3.4] - 2024-09-30
 
 ### Added
@@ -406,6 +420,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.5: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.5) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.5/)
 - rdsa-utils v0.3.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.4) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.4/)
 - rdsa-utils v0.3.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.3) | 
