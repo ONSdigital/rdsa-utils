@@ -20,6 +20,7 @@ from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession, Window, WindowSpec
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
+from pyspark.sql import DataFrame
 
 from rdsa_utils.cdp.io.input import extract_database_name
 from rdsa_utils.logging import log_spark_df_schema
@@ -573,24 +574,18 @@ def cut_lineage(df: SparkDF) -> SparkDF:
     >>> new_df.count()
     3
     """
-    logger.info("Converting SparkDF to Java RDD.")
-
     try:
-        jrdd = df._jdf.toJavaRDD()
-        jschema = df._jdf.schema()
-        jrdd.cache()
-        sql_ctx = df.sql_ctx
-        try:
-            java_sql_ctx = sql_ctx._jsqlContext
-        except AttributeError:
-            java_sql_ctx = sql_ctx._ssql_ctx
+        logger.info("Converting SparkDF to Java RDD.")
 
-        logger.info("Creating new SparkDF from Java RDD.")
-        new_java_df = java_sql_ctx.createDataFrame(jrdd, jschema)
-        new_df = SparkDF(new_java_df, sql_ctx)
-        return new_df
-    except Exception:
-        logger.error("An error occurred during the lineage cutting process.")
+        jRDD = df._jdf.toJavaRDD()
+        jSchema = df._jdf.schema()
+        jRDD.cache()
+        spark = df.sparkSession
+        newJavaDF = spark._jsparkSession.createDataFrame(jRDD, jSchema)
+        newDF = DataFrame(newJavaDF, spark)
+        return newDF
+    except Exception as e:
+        logger.error(f"An error occurred during the lineage cutting process: {e}")
         raise
 
 
