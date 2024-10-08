@@ -576,13 +576,13 @@ def cut_lineage(df: SparkDF) -> SparkDF:
     try:
         logger.info("Converting SparkDF to Java RDD.")
 
-        jRDD = df._jdf.toJavaRDD()
-        jSchema = df._jdf.schema()
-        jRDD.cache()
+        jrdd = df._jdf.toJavaRDD()
+        jschema = df._jdf.schema()
+        jrdd.cache()
         spark = df.sparkSession
-        newJavaDF = spark._jsparkSession.createDataFrame(jRDD, jSchema)
-        newDF = SparkDF(newJavaDF, spark)
-        return newDF
+        new_java_df = spark._jsparkSession.createDataFrame(jrdd, jschema)
+        new_df = SparkDF(new_java_df, spark)
+        return new_df
     except Exception as e:
         logger.error(f"An error occurred during the lineage cutting process: {e}")
         raise
