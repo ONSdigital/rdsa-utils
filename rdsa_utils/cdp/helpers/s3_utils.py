@@ -1149,18 +1149,6 @@ def write_csv(
         If there is an error writing the file to s3.
 
     """
-    # Set the default values for some keyword arguments
-    # If "header" argument is not specified, set it to True.
-    if "header" not in kwargs:
-        kwargs["header"] = True
-
-    # If "date_format" argument is not specified, set its format.
-    if "date_format" not in kwargs:
-        kwargs["date_format"] = "%Y-%m-%d %H:%M:%S.%f+00"
-
-    # If "index" argument is not specified, set it to False.
-    if "index" not in kwargs:
-        kwargs["index"] = False
 
     try:
         # Create an Input-Output buffer
@@ -1186,3 +1174,59 @@ def write_csv(
         )
         logger.error(error_message)
         return False
+
+
+def read_excel(
+    filepath: str,
+    client: boto3.client,
+    bucket_name: str,
+    **kwargs,
+) -> pd.DataFrame:
+    """
+    Read an Excel file from s3 bucket into a Pandas dataframe.
+
+    Parameters
+    ----------
+    filepath : str
+        The filepath to save the dataframe to.
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket.
+    kwargs : dict
+        Optional dictionary of Pandas read_excel keyword arguments.
+
+    Returns
+    -------
+    pd.DataFrame
+        A dataframe with data, if reading was successful.
+
+    Raises
+    ------
+    InvalidBucketNameError
+        If the bucket name is invalid according to AWS rules.
+    Exception
+        If there is an error reading s3.
+
+    """
+
+    bucket_name = validate_bucket_name(bucket_name)
+    filepath = validate_s3_file_path(filepath, allow_s3_scheme=False)
+
+    try:
+        # Get the Excel file from S3
+        response = client.get_object(Bucket=bucket_name, Key=filepath)
+        logger.info(
+            f"Loaded Excel file from S3 bucket {bucket_name}, filepath {filepath}",
+        )
+
+        # Read the Excel file into a Pandas DataFrame
+        df = pd.read_excel(response["Body"], **kwargs)
+
+    except Exception as e:
+        error_message = (
+            f"Error loading file from bucket {bucket_name}, filepath {filepath}: {e}"
+        )
+        logger.error(error_message)
+        raise Exception(error_message) from e
+    return df
