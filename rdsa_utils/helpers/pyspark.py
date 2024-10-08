@@ -20,7 +20,6 @@ from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession, Window, WindowSpec
 from pyspark.sql import functions as F
 from pyspark.sql import types as T
-from pyspark.sql import DataFrame
 
 from rdsa_utils.cdp.io.input import extract_database_name
 from rdsa_utils.logging import log_spark_df_schema
@@ -582,7 +581,7 @@ def cut_lineage(df: SparkDF) -> SparkDF:
         jRDD.cache()
         spark = df.sparkSession
         newJavaDF = spark._jsparkSession.createDataFrame(jRDD, jSchema)
-        newDF = DataFrame(newJavaDF, spark)
+        newDF = SparkDF(newJavaDF, spark)
         return newDF
     except Exception as e:
         logger.error(f"An error occurred during the lineage cutting process: {e}")
