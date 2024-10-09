@@ -14,7 +14,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
-- Changed `cutLineage` function to make it compatible with newer PySpark version
+- Changed `cut_lineage` function to make it compatible with newer PySpark version
 
 ### Removed
 
