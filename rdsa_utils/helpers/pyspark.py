@@ -573,24 +573,18 @@ def cut_lineage(df: SparkDF) -> SparkDF:
     >>> new_df.count()
     3
     """
-    logger.info("Converting SparkDF to Java RDD.")
-
     try:
+        logger.info("Converting SparkDF to Java RDD.")
+
         jrdd = df._jdf.toJavaRDD()
         jschema = df._jdf.schema()
         jrdd.cache()
-        sql_ctx = df.sql_ctx
-        try:
-            java_sql_ctx = sql_ctx._jsqlContext
-        except AttributeError:
-            java_sql_ctx = sql_ctx._ssql_ctx
-
-        logger.info("Creating new SparkDF from Java RDD.")
-        new_java_df = java_sql_ctx.createDataFrame(jrdd, jschema)
-        new_df = SparkDF(new_java_df, sql_ctx)
+        spark = df.sparkSession
+        new_java_df = spark._jsparkSession.createDataFrame(jrdd, jschema)
+        new_df = SparkDF(new_java_df, spark)
         return new_df
-    except Exception:
-        logger.error("An error occurred during the lineage cutting process.")
+    except Exception as e:
+        logger.error(f"An error occurred during the lineage cutting process: {e}")
         raise
 
 
