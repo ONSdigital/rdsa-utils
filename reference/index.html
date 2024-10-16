@@ -2171,6 +2171,11 @@ vs <code>ValueError</code>).</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -2199,6 +2204,11 @@ vs <code>ValueError</code>).</p>
         <p>Custom exception to raise when a column is not present in dataframe.</p>
 
 
+
+
+
+
+
     </div>
 
 </div>
@@ -2220,6 +2230,11 @@ vs <code>ValueError</code>).</p>
 
 
         <p>Custom exception to raise when there is an issue in a config object.</p>
+
+
+
+
+
 
 
     </div>
@@ -2245,6 +2260,11 @@ vs <code>ValueError</code>).</p>
         <p>Custom exception to raise when a dataframe is empty.</p>
 
 
+
+
+
+
+
     </div>
 
 </div>
@@ -2266,6 +2286,11 @@ vs <code>ValueError</code>).</p>
 
 
         <p>Custom exception to raise when an AWS S3 or GCS bucket name is invalid.</p>
+
+
+
+
+
 
 
     </div>
@@ -2291,6 +2316,11 @@ vs <code>ValueError</code>).</p>
         <p>Custom exception to raise when an AWS S3 file path is invalid.</p>
 
 
+
+
+
+
+
     </div>
 
 </div>
@@ -2314,6 +2344,11 @@ vs <code>ValueError</code>).</p>
         <p>Custom exception to raise when there is a generic pipeline issue.</p>
 
 
+
+
+
+
+
     </div>
 
 </div>
@@ -2335,6 +2370,11 @@ vs <code>ValueError</code>).</p>
 
 
         <p>Custom exception to raise when a table to be read is not found.</p>
+
+
+
+
+
 
 
     </div>
@@ -2363,6 +2403,11 @@ vs <code>ValueError</code>).</p>
     <div class="doc doc-contents first">
 
         <p>Contains the logging configuration for files and method to initialise it.</p>
+
+
+
+
+
 
 
 
@@ -2404,9 +2449,11 @@ function_name: message</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>message</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>message</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2472,7 +2519,9 @@ provided in the <code>handlers</code> list.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>log_level</code></td>
+            <td>
+                <code>log_level</code>
+            </td>
             <td>
                   <code>int</code>
             </td>
@@ -2489,9 +2538,11 @@ of the logging module.
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>handlers</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[<span title="logging.Handler">Handler</span>]]</code>
+                <code>handlers</code>
+            </td>
+            <td>
+                  <code>Optional[List[Handler]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2506,7 +2557,9 @@ empty list, and in this case, basicConfig with <code>log_level</code>,
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>log_format</code></td>
+            <td>
+                <code>log_format</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -2521,7 +2574,9 @@ empty list, and in this case, basicConfig with <code>log_level</code>,
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>date_format</code></td>
+            <td>
+                <code>date_format</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -2632,7 +2687,9 @@ as this function.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>log_level</code></td>
+            <td>
+                <code>log_level</code>
+            </td>
             <td>
                   <code>int</code>
             </td>
@@ -2780,7 +2837,9 @@ number of rows of the dataframe before running the decorated function.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>log_schema_on_input</code></td>
+            <td>
+                <code>log_schema_on_input</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -2886,9 +2945,11 @@ expected to be empty.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2900,7 +2961,9 @@ expected to be empty.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>message</code></td>
+            <td>
+                <code>message</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -2914,7 +2977,9 @@ expected to be empty.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>stop_pipeline</code></td>
+            <td>
+                <code>stop_pipeline</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -2928,7 +2993,9 @@ expected to be empty.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>show_records</code></td>
+            <td>
+                <code>show_records</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -3022,7 +3089,9 @@ function.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>name</code></td>
+            <td>
+                <code>name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3036,9 +3105,11 @@ function.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>logger</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Callable">Callable</span>[[str], None]]</code>
+                <code>logger</code>
+            </td>
+            <td>
+                  <code>Optional[Callable[[str], None]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3046,7 +3117,7 @@ function.</p>
               </div>
             </td>
             <td>
-                  <code><span title="rdsa_utils.logging.logger.info">info</span></code>
+                  <code>info</code>
             </td>
           </tr>
       </tbody>
@@ -3064,7 +3135,7 @@ function.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Dict">Dict</span>[str, str]</code>
+                  <code>Dict[str, str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3100,6 +3171,11 @@ function.</p>
     <div class="doc doc-contents first">
 
         <p>Functions and fixtures used with test suites.</p>
+
+
+
+
+
 
 
 
@@ -3177,6 +3253,11 @@ kwargs
 pytest mark usage.</p>
 </details>
         <p>Initialise objects.</p>
+
+
+
+
+
 
 
 
@@ -3414,6 +3495,11 @@ def test(foo, bar):
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -3445,6 +3531,11 @@ def test(foo, bar):
     <div class="doc doc-contents first">
 
         <p>Functions that support the use of pydantic validators.</p>
+
+
+
+
+
 
 
 
@@ -3484,7 +3575,9 @@ def test(foo, bar):
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>date</code></td>
+            <td>
+                <code>date</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3579,9 +3672,11 @@ this function to aid in tracking config sections that are unvalidated.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>config</code></td>
             <td>
-                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
+                <code>config</code>
+            </td>
+            <td>
+                  <code>Mapping[str, Any]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3593,9 +3688,11 @@ this function to aid in tracking config sections that are unvalidated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>Validator</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="pydantic.BaseModel">BaseModel</span>]</code>
+                <code>Validator</code>
+            </td>
+            <td>
+                  <code>Optional[BaseModel]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3607,9 +3704,11 @@ this function to aid in tracking config sections that are unvalidated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>optional</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="pydantic.BaseModel">BaseModel</span>]</code>
+                <code>optional</code>
+            </td>
+            <td>
+                  <code>Optional[BaseModel]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3635,7 +3734,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
+                  <code>Mapping[str, Any]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3710,6 +3809,11 @@ Note:
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -3746,9 +3850,11 @@ Note:
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3760,7 +3866,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_bucket_name</code></td>
+            <td>
+                <code>source_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3774,7 +3882,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_object_name</code></td>
+            <td>
+                <code>source_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3788,7 +3898,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_bucket_name</code></td>
+            <td>
+                <code>destination_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3802,7 +3914,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_object_name</code></td>
+            <td>
+                <code>destination_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3816,7 +3930,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -3898,9 +4014,11 @@ Note:
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3912,7 +4030,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -3926,7 +4046,9 @@ Note:
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>folder_path</code></td>
+            <td>
+                <code>folder_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4003,9 +4125,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4017,7 +4141,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4031,7 +4157,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4045,7 +4173,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -4122,9 +4252,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4136,7 +4268,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4150,7 +4284,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>folder_path</code></td>
+            <td>
+                <code>folder_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4226,9 +4362,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4240,7 +4378,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4254,7 +4394,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4268,7 +4410,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4282,7 +4426,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -4363,9 +4509,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4377,7 +4525,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4391,7 +4541,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>prefix</code></td>
+            <td>
+                <code>prefix</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4405,7 +4557,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4419,7 +4573,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -4501,9 +4657,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4515,7 +4673,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4529,7 +4689,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4605,9 +4767,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4619,7 +4783,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4633,7 +4799,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4702,9 +4870,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4716,7 +4886,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4730,7 +4902,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>prefix</code></td>
+            <td>
+                <code>prefix</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4758,7 +4932,7 @@ set to True to ignore non-existence on delete.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4806,9 +4980,11 @@ set to True to ignore non-existence on delete.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4820,7 +4996,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4834,7 +5012,9 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>filepath</code></td>
+            <td>
+                <code>filepath</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -4848,9 +5028,11 @@ set to True to ignore non-existence on delete.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>keep_columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+                <code>keep_columns</code>
+            </td>
+            <td>
+                  <code>Optional[List[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4863,9 +5045,11 @@ Default value is None.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>rename_columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
+                <code>rename_columns</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4879,9 +5063,11 @@ Default value is None.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>drop_columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+                <code>drop_columns</code>
+            </td>
+            <td>
+                  <code>Optional[List[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4894,7 +5080,9 @@ Default value is None.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>kwargs</code></td>
+            <td>
+                <code>kwargs</code>
+            </td>
             <td>
             </td>
             <td>
@@ -4921,7 +5109,7 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4944,7 +5132,7 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
+                  <code>InvalidBucketNameError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4954,7 +5142,7 @@ Default value is None.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidS3FilePathError" href="#rdsa_utils.exceptions.InvalidS3FilePathError">InvalidS3FilePathError</a></code>
+                  <code>InvalidS3FilePathError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5059,9 +5247,11 @@ keep_columns is not found in the DataFrame.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5073,7 +5263,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5087,7 +5279,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>filepath</code></td>
+            <td>
+                <code>filepath</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5101,7 +5295,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>encoding</code></td>
+            <td>
+                <code>encoding</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5129,7 +5325,7 @@ keep_columns is not found in the DataFrame.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Dict">Dict</span></code>
+                  <code>Dict</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5152,7 +5348,7 @@ keep_columns is not found in the DataFrame.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
+                  <code>InvalidBucketNameError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5215,9 +5411,11 @@ keep_columns is not found in the DataFrame.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5229,7 +5427,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_bucket_name</code></td>
+            <td>
+                <code>source_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5243,7 +5443,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_object_name</code></td>
+            <td>
+                <code>source_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5257,7 +5459,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_bucket_name</code></td>
+            <td>
+                <code>destination_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5271,7 +5475,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_object_name</code></td>
+            <td>
+                <code>destination_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5353,7 +5559,9 @@ keep_columns is not found in the DataFrame.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>text</code></td>
+            <td>
+                <code>text</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5428,9 +5636,11 @@ keep_columns is not found in the DataFrame.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5442,7 +5652,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5456,7 +5668,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5470,9 +5684,11 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>object_name</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5485,7 +5701,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -5566,9 +5784,11 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5580,7 +5800,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5594,7 +5816,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5608,7 +5832,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>prefix</code></td>
+            <td>
+                <code>prefix</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5622,7 +5848,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -5704,7 +5932,9 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5755,7 +5985,7 @@ the local file path.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
+                  <code>InvalidBucketNameError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5808,7 +6038,9 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>file_path</code></td>
+            <td>
+                <code>file_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5822,7 +6054,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>allow_s3_scheme</code></td>
+            <td>
+                <code>allow_s3_scheme</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -5873,7 +6107,7 @@ the local file path.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidS3FilePathError" href="#rdsa_utils.exceptions.InvalidS3FilePathError">InvalidS3FilePathError</a></code>
+                  <code>InvalidS3FilePathError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5925,6 +6159,11 @@ the local file path.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -5961,7 +6200,9 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5975,7 +6216,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>permission</code></td>
+            <td>
+                <code>permission</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -5989,7 +6232,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>recursive</code></td>
+            <td>
+                <code>recursive</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -6060,7 +6305,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>from_path</code></td>
+            <td>
+                <code>from_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6074,7 +6321,9 @@ otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>to_path</code></td>
+            <td>
+                <code>to_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6088,7 +6337,9 @@ otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -6141,7 +6392,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
+                  <code>TimeoutExpired</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6182,7 +6433,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>from_path</code></td>
+            <td>
+                <code>from_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6196,7 +6449,9 @@ otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>to_path</code></td>
+            <td>
+                <code>to_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6266,7 +6521,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6336,7 +6593,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6351,7 +6610,9 @@ otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>string_to_write</code></td>
+            <td>
+                <code>string_to_write</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6365,9 +6626,11 @@ otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>replace</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+                <code>replace</code>
+            </td>
+            <td>
+                  <code>Optional[bool]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6461,7 +6724,9 @@ If the directory is not empty, the deletion will fail.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6541,7 +6806,9 @@ directory, the command will fail.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6593,7 +6860,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
+                  <code>TimeoutExpired</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6644,7 +6911,9 @@ of whether they are empty or contain files or other directories.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6696,7 +6965,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
+                  <code>TimeoutExpired</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6743,7 +7012,9 @@ remove all contained files and subdirectories without confirmation.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6794,7 +7065,7 @@ remove all contained files and subdirectories without confirmation.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
+                  <code>TimeoutExpired</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6835,7 +7106,9 @@ remove all contained files and subdirectories without confirmation.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>filepath</code></td>
+            <td>
+                <code>filepath</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6904,7 +7177,9 @@ remove all contained files and subdirectories without confirmation.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6973,7 +7248,9 @@ remove all contained files and subdirectories without confirmation.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>from_path</code></td>
+            <td>
+                <code>from_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -6987,7 +7264,9 @@ remove all contained files and subdirectories without confirmation.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>to_path</code></td>
+            <td>
+                <code>to_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7057,7 +7336,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7085,7 +7366,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7126,7 +7407,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7154,7 +7437,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7195,7 +7478,9 @@ otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7209,7 +7494,9 @@ otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>return_path</code></td>
+            <td>
+                <code>return_path</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -7238,7 +7525,7 @@ just the filename.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7279,7 +7566,9 @@ just the filename.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>from_path</code></td>
+            <td>
+                <code>from_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7293,7 +7582,9 @@ just the filename.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>to_path</code></td>
+            <td>
+                <code>to_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7307,7 +7598,9 @@ just the filename.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -7360,7 +7653,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
+                  <code>TimeoutExpired</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7396,6 +7689,11 @@ otherwise False.</p>
     <div class="doc doc-contents first">
 
         <p>Utilities for working with Impala.</p>
+
+
+
+
+
 
 
 
@@ -7446,7 +7744,9 @@ intervention, making outdated metadata issues less likely to occur.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>table</code></td>
+            <td>
+                <code>table</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7460,7 +7760,9 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>impalad_address_port</code></td>
+            <td>
+                <code>impalad_address_port</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7474,7 +7776,9 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>impalad_ca_cert</code></td>
+            <td>
+                <code>impalad_ca_cert</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7488,9 +7792,11 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>keep_stderr</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+                <code>keep_stderr</code>
+            </td>
+            <td>
+                  <code>Optional[bool]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7570,6 +7876,11 @@ intervention, making outdated metadata issues less likely to occur.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -7606,9 +7917,11 @@ intervention, making outdated metadata issues less likely to occur.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7620,7 +7933,9 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>desc</code></td>
+            <td>
+                <code>desc</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7634,7 +7949,9 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>version</code></td>
+            <td>
+                <code>version</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7648,9 +7965,11 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>config</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="configparser.ConfigParser">ConfigParser</span>, <span title="typing.Dict">Dict</span>[str, str]]</code>
+                <code>config</code>
+            </td>
+            <td>
+                  <code>Union[ConfigParser, Dict[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7662,9 +7981,11 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>pipeline</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>pipeline</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7676,7 +7997,9 @@ intervention, making outdated metadata issues less likely to occur.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>log_table</code></td>
+            <td>
+                <code>log_table</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7691,9 +8014,11 @@ include the database.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>run_id</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[int]</code>
+                <code>run_id</code>
+            </td>
+            <td>
+                  <code>Optional[int]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7720,7 +8045,7 @@ a new one is generated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7761,9 +8086,11 @@ a new one is generated.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7775,7 +8102,9 @@ a new one is generated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>run_id</code></td>
+            <td>
+                <code>run_id</code>
+            </td>
             <td>
                   <code>int</code>
             </td>
@@ -7789,7 +8118,9 @@ a new one is generated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>desc</code></td>
+            <td>
+                <code>desc</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7803,7 +8134,9 @@ a new one is generated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>version</code></td>
+            <td>
+                <code>version</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7817,9 +8150,11 @@ a new one is generated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>config</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="configparser.ConfigParser">ConfigParser</span>, <span title="typing.Dict">Dict</span>[str, str]]</code>
+                <code>config</code>
+            </td>
+            <td>
+                  <code>Union[ConfigParser, Dict[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7831,9 +8166,11 @@ a new one is generated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>pipeline</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>pipeline</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7859,7 +8196,7 @@ a new one is generated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7905,9 +8242,11 @@ reserved_date.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7919,7 +8258,9 @@ reserved_date.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>database</code></td>
+            <td>
+                <code>database</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -7933,9 +8274,11 @@ reserved_date.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>tablename</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>tablename</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8009,9 +8352,11 @@ The associated _reserved_ids table will be suffixed with this name.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8023,9 +8368,11 @@ The associated _reserved_ids table will be suffixed with this name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>pipeline</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>pipeline</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8037,7 +8384,9 @@ The associated _reserved_ids table will be suffixed with this name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>log_table</code></td>
+            <td>
+                <code>log_table</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8107,9 +8456,11 @@ include the database.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8121,9 +8472,11 @@ include the database.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>pipeline</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>pipeline</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8135,7 +8488,9 @@ include the database.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>log_table</code></td>
+            <td>
+                <code>log_table</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8209,9 +8564,11 @@ current timestamp to the reserved ids table.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8223,9 +8580,11 @@ current timestamp to the reserved ids table.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>log_table</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>log_table</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8293,9 +8652,11 @@ this reserved id table, by default "pipeline_runlog".</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8307,7 +8668,9 @@ this reserved id table, by default "pipeline_runlog".</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>runlog_table</code></td>
+            <td>
+                <code>runlog_table</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8321,7 +8684,9 @@ this reserved id table, by default "pipeline_runlog".</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>runlog_id</code></td>
+            <td>
+                <code>runlog_id</code>
+            </td>
             <td>
                   <code>int</code>
             </td>
@@ -8335,7 +8700,9 @@ this reserved id table, by default "pipeline_runlog".</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>path</code></td>
+            <td>
+                <code>path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8403,6 +8770,11 @@ side effect of creating a text file.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -8458,9 +8830,11 @@ side effect of creating a text file.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8472,7 +8846,9 @@ side effect of creating a text file.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>long_table_name</code></td>
+            <td>
+                <code>long_table_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8501,7 +8877,7 @@ and/or database name.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Tuple">Tuple</span>[str, str]</code>
+                  <code>Tuple[str, str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8582,9 +8958,11 @@ and/or database name.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8596,7 +8974,9 @@ and/or database name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>database_name</code></td>
+            <td>
+                <code>database_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8624,7 +9004,7 @@ and/or database name.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8695,9 +9075,11 @@ and/or database name.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8709,7 +9091,9 @@ and/or database name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_name</code></td>
+            <td>
+                <code>table_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8723,7 +9107,9 @@ and/or database name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>skip_validation</code></td>
+            <td>
+                <code>skip_validation</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -8737,7 +9123,9 @@ and/or database name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>err_msg</code></td>
+            <td>
+                <code>err_msg</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8751,7 +9139,9 @@ and/or database name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>filter_cond</code></td>
+            <td>
+                <code>filter_cond</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -8765,9 +9155,11 @@ and/or database name.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>keep_columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+                <code>keep_columns</code>
+            </td>
+            <td>
+                  <code>Optional[List[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8780,9 +9172,11 @@ Default value is None.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>rename_columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
+                <code>rename_columns</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8796,9 +9190,11 @@ Default value is None.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>drop_columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
+                <code>drop_columns</code>
+            </td>
+            <td>
+                  <code>Optional[List[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8825,7 +9221,7 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8944,6 +9340,11 @@ drop_columns, or rename_columns do not exist in the DataFrame.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -8983,9 +9384,11 @@ match that of the DataFrame.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8997,9 +9400,11 @@ match that of the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9011,7 +9416,9 @@ match that of the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_name</code></td>
+            <td>
+                <code>table_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9025,7 +9432,9 @@ match that of the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -9040,7 +9449,9 @@ by default False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>fill_missing_cols</code></td>
+            <td>
+                <code>fill_missing_cols</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -9068,7 +9479,7 @@ by default False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.utils.AnalysisException">AnalysisException</span></code>
+                  <code>AnalysisException</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9150,9 +9561,11 @@ accomplishes two main objectives:</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9164,7 +9577,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>file_name</code></td>
+            <td>
+                <code>file_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9178,7 +9593,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>file_path</code></td>
+            <td>
+                <code>file_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9192,7 +9609,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -9306,9 +9725,11 @@ accomplishes two main objectives:</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9320,7 +9741,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9334,7 +9757,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>file_name</code></td>
+            <td>
+                <code>file_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9348,7 +9773,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>file_path</code></td>
+            <td>
+                <code>file_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9362,9 +9789,11 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>s3_client</code></td>
             <td>
-                  <code><span title="boto3.client">client</span></code>
+                <code>s3_client</code>
+            </td>
+            <td>
+                  <code>client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9376,7 +9805,9 @@ accomplishes two main objectives:</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -9493,9 +9924,11 @@ save_csv_to_s3(
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9507,9 +9940,11 @@ save_csv_to_s3(
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9521,7 +9956,9 @@ save_csv_to_s3(
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_name</code></td>
+            <td>
+                <code>table_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9535,7 +9972,9 @@ save_csv_to_s3(
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>database</code></td>
+            <td>
+                <code>database</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9549,9 +9988,11 @@ save_csv_to_s3(
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>filter_id</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[int, str]</code>
+                <code>filter_id</code>
+            </td>
+            <td>
+                  <code>Union[int, str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9563,7 +10004,9 @@ save_csv_to_s3(
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>filter_col</code></td>
+            <td>
+                <code>filter_col</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9578,7 +10021,9 @@ the Hive table, by default 'run_id'.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>fill_missing_cols</code></td>
+            <td>
+                <code>fill_missing_cols</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -9607,7 +10052,7 @@ when writing to the Hive table, by default False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9704,6 +10149,11 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -9740,9 +10190,11 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9754,7 +10206,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_bucket_name</code></td>
+            <td>
+                <code>source_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9768,7 +10222,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_object_name</code></td>
+            <td>
+                <code>source_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9782,7 +10238,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_bucket_name</code></td>
+            <td>
+                <code>destination_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9796,7 +10254,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_object_name</code></td>
+            <td>
+                <code>destination_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9810,7 +10270,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -9892,9 +10354,11 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9906,7 +10370,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9920,7 +10386,9 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>folder_path</code></td>
+            <td>
+                <code>folder_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -9997,9 +10465,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10011,7 +10481,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10025,7 +10497,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10101,9 +10575,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10115,7 +10591,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10129,7 +10607,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>folder_path</code></td>
+            <td>
+                <code>folder_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10205,9 +10685,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10219,7 +10701,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10233,7 +10717,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10247,7 +10733,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10261,7 +10749,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -10342,9 +10832,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10356,7 +10848,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10370,7 +10864,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>prefix</code></td>
+            <td>
+                <code>prefix</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10384,7 +10880,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10398,7 +10896,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -10480,9 +10980,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10494,7 +10996,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10508,7 +11012,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10601,9 +11107,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10615,7 +11123,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10629,7 +11139,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
+            <td>
+                <code>object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10698,9 +11210,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10712,7 +11226,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10726,7 +11242,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>prefix</code></td>
+            <td>
+                <code>prefix</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10754,7 +11272,7 @@ already exists, otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10802,7 +11320,9 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>config_path</code></td>
+            <td>
+                <code>config_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10830,7 +11350,7 @@ already exists, otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Tuple">Tuple</span>[<span title="typing.Dict">Dict</span>, <span title="typing.Dict">Dict</span>]</code>
+                  <code>Tuple[Dict, Dict]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10871,9 +11391,11 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10885,7 +11407,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_bucket_name</code></td>
+            <td>
+                <code>source_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10899,7 +11423,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>source_object_name</code></td>
+            <td>
+                <code>source_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10913,7 +11439,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_bucket_name</code></td>
+            <td>
+                <code>destination_bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -10927,7 +11455,9 @@ already exists, otherwise False.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>destination_object_name</code></td>
+            <td>
+                <code>destination_object_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11009,7 +11539,9 @@ already exists, otherwise False.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>text</code></td>
+            <td>
+                <code>text</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11104,9 +11636,11 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>table_path</code></td>
             <td>
-                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
+                <code>table_path</code>
+            </td>
+            <td>
+                  <code>TablePath</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11174,9 +11708,11 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11188,7 +11724,9 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11202,7 +11740,9 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11216,9 +11756,11 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>object_name</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>object_name</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11231,7 +11773,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -11312,9 +11856,11 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>client</code></td>
             <td>
-                  <code><span title="google.cloud.storage.Client">Client</span></code>
+                <code>client</code>
+            </td>
+            <td>
+                  <code>Client</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11326,7 +11872,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11340,7 +11888,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>local_path</code></td>
+            <td>
+                <code>local_path</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11354,7 +11904,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>prefix</code></td>
+            <td>
+                <code>prefix</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11368,7 +11920,9 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -11450,7 +12004,9 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>bucket_name</code></td>
+            <td>
+                <code>bucket_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -11501,7 +12057,7 @@ the local file path.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
+                  <code>InvalidBucketNameError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11549,6 +12105,11 @@ the local file path.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -11585,7 +12146,9 @@ the local file path.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
+            <td>
+                <code>spark</code>
+            </td>
             <td>
             </td>
             <td>
@@ -11598,9 +12161,11 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_path</code></td>
             <td>
-                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
+                <code>table_path</code>
+            </td>
+            <td>
+                  <code>TablePath</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11612,9 +12177,11 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>columns</code>
+            </td>
+            <td>
+                  <code>Optional[Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11626,9 +12193,11 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>date_column</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>date_column</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11640,9 +12209,11 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>date_range</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>date_range</code>
+            </td>
+            <td>
+                  <code>Optional[Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11654,9 +12225,11 @@ the local file path.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>column_filter_dict</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
+                <code>column_filter_dict</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, Sequence[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11669,9 +12242,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_column</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>partition_column</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11683,9 +12258,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_type</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>partition_type</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11701,9 +12278,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_value</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="typing.Tuple">Tuple</span>[str, str], str]]</code>
+                <code>partition_value</code>
+            </td>
+            <td>
+                  <code>Optional[Union[Tuple[str, str], str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11770,9 +12349,11 @@ terms in the column that are to be filtered by.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11784,9 +12365,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_path</code></td>
             <td>
-                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
+                <code>table_path</code>
+            </td>
+            <td>
+                  <code>TablePath</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11799,9 +12382,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>columns</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>columns</code>
+            </td>
+            <td>
+                  <code>Optional[Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11813,9 +12398,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>date_column</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>date_column</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11827,9 +12414,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>date_range</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>date_range</code>
+            </td>
+            <td>
+                  <code>Optional[Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11841,9 +12430,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>column_filter_dict</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
+                <code>column_filter_dict</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, Sequence[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11856,9 +12447,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>run_id_column</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>run_id_column</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11870,9 +12463,11 @@ terms in the column that are to be filtered by.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>run_id</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>run_id</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11885,9 +12480,11 @@ filtered to.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_column</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>partition_column</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11899,9 +12496,11 @@ filtered to.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_type</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.BigQueryTimePartitions">BigQueryTimePartitions</span>]</code>
+                <code>partition_type</code>
+            </td>
+            <td>
+                  <code>Optional[BigQueryTimePartitions]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11917,9 +12516,11 @@ filtered to.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_value</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="typing.Tuple">Tuple</span>[str, str], str]]</code>
+                <code>partition_value</code>
+            </td>
+            <td>
+                  <code>Optional[Union[Tuple[str, str], str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11931,7 +12532,9 @@ filtered to.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>flatten_struct_cols</code></td>
+            <td>
+                <code>flatten_struct_cols</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -11960,7 +12563,7 @@ with individual columns for each of the fields in the structs.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11996,6 +12599,11 @@ with individual columns for each of the fields in the structs.</p>
     <div class="doc doc-contents first">
 
         <p>Write outputs to GCP.</p>
+
+
+
+
+
 
 
 
@@ -12050,9 +12658,11 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="pandas.DataFrame">DataFrame</span>, <span title="pyspark.sql.DataFrame">DataFrame</span>]</code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>Union[DataFrame, DataFrame]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12064,9 +12674,11 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_name</code></td>
             <td>
-                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
+                <code>table_name</code>
+            </td>
+            <td>
+                  <code>TablePath</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12079,9 +12691,11 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>mode</code></td>
             <td>
-                  <code><span title="typing.Literal">Literal</span>[&#39;append&#39;, &#39;error&#39;, &#39;ignore&#39;, &#39;overwrite&#39;]</code>
+                <code>mode</code>
+            </td>
+            <td>
+                  <code>Literal[&#39;append&#39;, &#39;error&#39;, &#39;ignore&#39;, &#39;overwrite&#39;]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12097,9 +12711,11 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_col</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>partition_col</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12112,9 +12728,11 @@ partitioning.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_type</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.BigQueryTimePartitions">BigQueryTimePartitions</span>]</code>
+                <code>partition_type</code>
+            </td>
+            <td>
+                  <code>Optional[BigQueryTimePartitions]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12137,9 +12755,11 @@ for more information on querying partitioned tables.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>partition_expiry_days</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[float]</code>
+                <code>partition_expiry_days</code>
+            </td>
+            <td>
+                  <code>Optional[float]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12153,9 +12773,11 @@ in each partition.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>clustered_fields</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[str, <span title="typing.List">List</span>[str]]]</code>
+                <code>clustered_fields</code>
+            </td>
+            <td>
+                  <code>Optional[Union[str, List[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12226,6 +12848,11 @@ for more information on querying clustered tables.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -12262,9 +12889,11 @@ for more information on querying clustered tables.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>groups</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>groups</code>
+            </td>
+            <td>
+                  <code>Union[str, Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12276,7 +12905,9 @@ for more information on querying clustered tables.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>price_col</code></td>
+            <td>
+                <code>price_col</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -12304,7 +12935,7 @@ for more information on querying clustered tables.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.Column">Column</span></code>
+                  <code>Column</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12348,9 +12979,11 @@ column if no column names to combine are passed.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12362,7 +12995,9 @@ column if no column names to combine are passed.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>struct_col_name</code></td>
+            <td>
+                <code>struct_col_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -12376,9 +13011,11 @@ column if no column names to combine are passed.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>struct_cols</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>struct_cols</code>
+            </td>
+            <td>
+                  <code>Optional[Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12390,9 +13027,11 @@ column if no column names to combine are passed.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>no_struct_col_type</code></td>
             <td>
-                  <code><span title="pyspark.sql.types.DataTypeSingleton">DataTypeSingleton</span></code>
+                <code>no_struct_col_type</code>
+            </td>
+            <td>
+                  <code>DataTypeSingleton</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12401,13 +13040,15 @@ to place in the struct will be, default = BooleanType.</p>
               </div>
             </td>
             <td>
-                  <code><span title="pyspark.sql.types.BooleanType">BooleanType</span>()</code>
+                  <code>BooleanType()</code>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>no_struct_col_value</code></td>
             <td>
-                  <code><span title="typing.Any">Any</span></code>
+                <code>no_struct_col_value</code>
+            </td>
+            <td>
+                  <code>Any</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12498,9 +13139,11 @@ the dummy column, default = None.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12512,7 +13155,9 @@ the dummy column, default = None.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>convert_nested_structs</code></td>
+            <td>
+                <code>convert_nested_structs</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -12606,9 +13251,11 @@ If no size is given, then a basic Spark session is spun up.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>app_name</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[str]</code>
+                <code>app_name</code>
+            </td>
+            <td>
+                  <code>Optional[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12620,9 +13267,11 @@ If no size is given, then a basic Spark session is spun up.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>size</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Literal">Literal</span>[&#39;small&#39;, &#39;medium&#39;, &#39;large&#39;, &#39;extra-large&#39;]]</code>
+                <code>size</code>
+            </td>
+            <td>
+                  <code>Optional[Literal[&#39;small&#39;, &#39;medium&#39;, &#39;large&#39;, &#39;extra-large&#39;]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12635,9 +13284,11 @@ If no size is given, then a basic Spark session is spun up.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>extra_configs</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
+                <code>extra_configs</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12664,7 +13315,7 @@ value for it. Will override any default settings.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12783,9 +13434,11 @@ point.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12811,7 +13464,7 @@ point.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12890,9 +13543,11 @@ all SparkDF variables in a function's local scope.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>locals_dict</code></td>
             <td>
-                  <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Union">Union</span>[<span title="pyspark.sql.DataFrame">DataFrame</span>, <span title="typing.Dict">Dict</span>]]</code>
+                <code>locals_dict</code>
+            </td>
+            <td>
+                  <code>Dict[str, Union[DataFrame, Dict]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12919,7 +13574,7 @@ as keys and their corresponding objects as values.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Dict">Dict</span></code>
+                  <code>Dict</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12968,9 +13623,11 @@ partition_cols will contain values or not in advance.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>partition_cols</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
+                <code>partition_cols</code>
+            </td>
+            <td>
+                  <code>Optional[Union[str, Sequence[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12982,9 +13639,11 @@ partition_cols will contain values or not in advance.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>order_cols</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
+                <code>order_cols</code>
+            </td>
+            <td>
+                  <code>Optional[Union[str, Sequence[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13011,7 +13670,7 @@ sequence is order that orderBy is applied).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.WindowSpec">WindowSpec</span></code>
+                  <code>WindowSpec</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13090,7 +13749,7 @@ kwargs
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13214,9 +13873,11 @@ keep_columns is not found in the DataFrame.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13228,9 +13889,11 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>id_vars</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>id_vars</code>
+            </td>
+            <td>
+                  <code>Union[str, Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13242,9 +13905,11 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>value_vars</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>value_vars</code>
+            </td>
+            <td>
+                  <code>Union[str, Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13256,7 +13921,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>var_name</code></td>
+            <td>
+                <code>var_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -13271,7 +13938,9 @@ keep_columns is not found in the DataFrame.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>value_name</code></td>
+            <td>
+                <code>value_name</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -13300,7 +13969,7 @@ data.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13377,9 +14046,11 @@ and <code>F.dense_rank()</code> do not assign unique values per row.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>numeric</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>numeric</code>
+            </td>
+            <td>
+                  <code>Union[str, Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13392,9 +14063,11 @@ be ranked.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>group</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
+                <code>group</code>
+            </td>
+            <td>
+                  <code>Union[str, Sequence[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13406,7 +14079,9 @@ be ranked.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>ascending</code></td>
+            <td>
+                <code>ascending</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -13434,7 +14109,7 @@ be ranked.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.Column">Column</span></code>
+                  <code>Column</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13478,9 +14153,11 @@ set to True or False, respectively).</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13492,9 +14169,11 @@ set to True or False, respectively).</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>group</code></td>
             <td>
-                  <code><span title="typing.Sequence">Sequence</span>[str]</code>
+                <code>group</code>
+            </td>
+            <td>
+                  <code>Sequence[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13508,7 +14187,9 @@ respectively)</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>date_col</code></td>
+            <td>
+                <code>date_col</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -13522,7 +14203,9 @@ respectively)</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>ascending</code></td>
+            <td>
+                <code>ascending</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -13552,7 +14235,7 @@ respectively).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13602,9 +14285,11 @@ https://stackoverflow.com/a/51821437</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13616,9 +14301,11 @@ https://stackoverflow.com/a/51821437</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>column_list</code></td>
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                <code>column_list</code>
+            </td>
+            <td>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13630,9 +14317,11 @@ https://stackoverflow.com/a/51821437</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>nullable</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+                <code>nullable</code>
+            </td>
+            <td>
+                  <code>Optional[bool]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13658,7 +14347,7 @@ https://stackoverflow.com/a/51821437</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13799,9 +14488,11 @@ def my_func(arg1, arg2)</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spark</code></td>
             <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
+                <code>spark</code>
+            </td>
+            <td>
+                  <code>SparkSession</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13813,7 +14504,9 @@ def my_func(arg1, arg2)</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>table_identifier</code></td>
+            <td>
+                <code>table_identifier</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -13939,9 +14632,11 @@ when required, or if the table does not exist.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>df</code></td>
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                <code>df</code>
+            </td>
+            <td>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13953,7 +14648,9 @@ when required, or if the table does not exist.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>list_col</code></td>
+            <td>
+                <code>list_col</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -13967,7 +14664,9 @@ when required, or if the table does not exist.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>unpacked_col</code></td>
+            <td>
+                <code>unpacked_col</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -13995,7 +14694,7 @@ when required, or if the table does not exist.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+                  <code>DataFrame</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14031,6 +14730,11 @@ when required, or if the table does not exist.</p>
     <div class="doc doc-contents first">
 
         <p>Miscellaneous helper functions for Python.</p>
+
+
+
+
+
 
 
 
@@ -14153,7 +14857,9 @@ a list so that product of values can be derived.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>start_date</code></td>
+            <td>
+                <code>start_date</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -14170,7 +14876,9 @@ the start_date is set as first day of month.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>end_date</code></td>
+            <td>
+                <code>end_date</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -14201,7 +14909,7 @@ the end_date is set as final day of month.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>tuple[<span title="pandas.Timestamp">Timestamp</span>, <span title="pandas.Timestamp">Timestamp</span>]</code>
+                  <code>tuple[Timestamp, Timestamp]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14274,9 +14982,11 @@ output_columns
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>sections</code></td>
             <td>
-                  <code><span title="typing.List">List</span>[<span title="typing.List">List</span>[str]]</code>
+                <code>sections</code>
+            </td>
+            <td>
+                  <code>List[List[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14288,9 +14998,11 @@ output_columns
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>elements_to_add</code></td>
             <td>
-                  <code><span title="typing.List">List</span>[str]</code>
+                <code>elements_to_add</code>
+            </td>
+            <td>
+                  <code>List[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14385,9 +15097,11 @@ section will update automatically.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>base_dict</code></td>
             <td>
-                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
+                <code>base_dict</code>
+            </td>
+            <td>
+                  <code>Mapping[str, Any]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14399,9 +15113,11 @@ section will update automatically.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>override_dict</code></td>
             <td>
-                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
+                <code>override_dict</code>
+            </td>
+            <td>
+                  <code>Mapping[str, Any]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14427,7 +15143,7 @@ section will update automatically.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+                  <code>Dict[str, Any]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14533,6 +15249,11 @@ base_dict object that is passed into the original function.</p>
     <div class="doc doc-contents first">
 
         <p>Module for code relating to loading config files.</p>
+
+
+
+
+
 
 
 
@@ -14681,9 +15402,11 @@ allow simpler access to each config section.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>config_path</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="cloudpathlib.CloudPath">CloudPath</span>, <span title="pathlib.Path">Path</span>]</code>
+                <code>config_path</code>
+            </td>
+            <td>
+                  <code>Union[CloudPath, Path]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14695,9 +15418,11 @@ allow simpler access to each config section.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>config_overrides</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.Config">Config</span>]</code>
+                <code>config_overrides</code>
+            </td>
+            <td>
+                  <code>Optional[Config]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14712,9 +15437,11 @@ is raised.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>optional</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.Config">Config</span>]</code>
+                <code>optional</code>
+            </td>
+            <td>
+                  <code>Optional[Config]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14729,9 +15456,11 @@ is raised.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>config_type</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Literal">Literal</span>[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
+                <code>config_type</code>
+            </td>
+            <td>
+                  <code>Optional[Literal[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14744,9 +15473,11 @@ not specified then this is inferred from the <code>config_path</code>.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>optional</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Literal">Literal</span>[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
+                <code>optional</code>
+            </td>
+            <td>
+                  <code>Optional[Literal[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14759,9 +15490,11 @@ not specified then this is inferred from the <code>config_path</code>.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>config_validators</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="pydantic.BaseModel">BaseModel</span>]]</code>
+                <code>config_validators</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, BaseModel]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14777,9 +15510,11 @@ to alert that they have not been validated.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>optional</code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="pydantic.BaseModel">BaseModel</span>]]</code>
+                <code>optional</code>
+            </td>
+            <td>
+                  <code>Optional[Dict[str, BaseModel]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14796,6 +15531,11 @@ to alert that they have not been validated.</p>
           </tr>
       </tbody>
     </table>
+
+
+
+
+
 
 
 
@@ -14843,6 +15583,11 @@ to alert that they have not been validated.</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -14879,7 +15624,9 @@ to alert that they have not been validated.</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>data</code></td>
+            <td>
+                <code>data</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -14907,7 +15654,7 @@ to alert that they have not been validated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
+                  <code>Config</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14930,7 +15677,7 @@ to alert that they have not been validated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="json.decoder.JSONDecodeError">JSONDecodeError</span></code>
+                  <code>JSONDecodeError</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14972,7 +15719,9 @@ json.loads (i.e. converted to a dictionary).</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>data</code></td>
+            <td>
+                <code>data</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -15000,7 +15749,7 @@ json.loads (i.e. converted to a dictionary).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
+                  <code>Config</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15041,7 +15790,9 @@ json.loads (i.e. converted to a dictionary).</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>data</code></td>
+            <td>
+                <code>data</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -15069,7 +15820,7 @@ json.loads (i.e. converted to a dictionary).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
+                  <code>Config</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15110,9 +15861,11 @@ json.loads (i.e. converted to a dictionary).</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>file</code></td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="cloudpathlib.CloudPath">CloudPath</span>, <span title="pathlib.Path">Path</span>]</code>
+                <code>file</code>
+            </td>
+            <td>
+                  <code>Union[CloudPath, Path]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15200,6 +15953,11 @@ json.loads (i.e. converted to a dictionary).</p>
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -15236,7 +15994,9 @@ json.loads (i.e. converted to a dictionary).</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>source_dir</code></td>
+            <td>
+                <code>source_dir</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -15250,7 +16010,9 @@ json.loads (i.e. converted to a dictionary).</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>output_filename</code></td>
+            <td>
+                <code>output_filename</code>
+            </td>
             <td>
                   <code>str</code>
             </td>
@@ -15264,7 +16026,9 @@ json.loads (i.e. converted to a dictionary).</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite</code></td>
+            <td>
+                <code>overwrite</code>
+            </td>
             <td>
                   <code>bool</code>
             </td>
@@ -15336,6 +16100,11 @@ Default is False.</p>
     <div class="doc doc-contents first">
 
         <p>Weighted and unweighted averaging functions.</p>
+
+
+
+
+
 
 
 
@@ -15461,7 +16230,7 @@ Default is False.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 4, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 16, 2024</span>
   </span>
 
     
