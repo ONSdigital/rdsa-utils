@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.3.6] - 2024-10-16
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+- Changed `cut_lineage` function inside `helpers/pyspark.py` to make it compatible 
+  with newer PySpark versions.
+
+### Removed
+
 ## [v0.3.5] - 2024-10-04
 
 ### Added
@@ -420,6 +434,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.6: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.6) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.6/)
 - rdsa-utils v0.3.5: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.5) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.5/)
 - rdsa-utils v0.3.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.4) | 
