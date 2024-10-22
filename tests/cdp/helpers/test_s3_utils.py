@@ -1080,9 +1080,39 @@ class TestWriteCSV:
             yield s3
 
     def test_write_csv_success(self, s3_client):
-        """Test load_json successfully reads a JSON file."""
-        data = {"name": "John", "age": 30, "city": "Manchester"}
+        """Test that write_csv returns True if successful."""
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
         df = pd.DataFrame(data)
 
-        result = write_csv("test_file.csv", df, s3_client, "test-bucket")
+        result = write_csv(s3_client, "test-bucket",  df, "test_file.csv")
         assert result
+
+    def test_write_csv_read_back(self, s3_client):
+        """Test that a file wrtitten by write_csv can be read back and returns 
+         the same dataframe as input. Uses kwargs."""
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+        df = pd.DataFrame(data)
+
+        _ = write_csv(
+            s3_client,
+            "test-bucket",
+            df,
+            "test_file.csv",
+            index=False
+        )
+        result = load_csv(s3_client, "test-bucket", "test_file.csv")
+        pd.testing.assert_frame_equal(df, result) 
+
+    def test_write_csv_failure(self, s3_client):
+        """Test that write_csv returns False if unable to write.
+        Dictionary data does not have to_csv method."""
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+
+        result = write_csv(
+            s3_client,
+            "test-bucket",
+            data,
+            "test_file.csv",
+            index=False
+            )
+        assert not result

@@ -1106,10 +1106,10 @@ def load_json(
 
 
 def write_csv(
-    filepath: str,
-    data: pd.DataFrame,
     client: boto3.client,
     bucket_name: str,
+    data: pd.DataFrame,
+    filepath: str,
     **kwargs,
 ) -> bool:
     """
@@ -1121,14 +1121,14 @@ def write_csv(
 
     Parameters
     ----------
-    filepath : str
-        The filepath to save the dataframe to.
-    data : pd.DataFrame
-        The dataframe to write to the spexified path.
     client : boto3.client
         The boto3 S3 client instance.
     bucket_name : str
         The name of the S3 bucket.
+    data : pd.DataFrame
+        The dataframe to write to the spexified path.
+    filepath : str
+        The filepath to save the dataframe to.
     kwargs : dict
         Optional dictionary of Pandas to_csv arguments.
 
@@ -1140,8 +1140,6 @@ def write_csv(
 
     Raises
     ------
-    InvalidBucketNameError
-        If the bucket name is invalid according to AWS rules.
     Exception
         If there is an error writing the file to s3.
 
