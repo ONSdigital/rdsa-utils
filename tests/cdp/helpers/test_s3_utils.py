@@ -1,6 +1,7 @@
 """Tests for s3_utils.py module."""
 
 import json
+import pandas as pd
 
 import boto3
 import pytest
@@ -24,6 +25,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     upload_folder,
     validate_bucket_name,
     validate_s3_file_path,
+    write_csv,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -1064,3 +1066,23 @@ class TestLoadJSON:
 
         with pytest.raises(InvalidBucketNameError):
             load_json(s3_client, "INVALID_BUCKET", "test-file.json")
+
+
+class TestWriteCSV:
+    """Tests for write_csv function."""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="test-bucket")
+            yield s3
+
+    def test_write_csv_success(self, s3_client):
+        """Test load_json successfully reads a JSON file."""
+        data = {"name": "John", "age": 30, "city": "Manchester"}
+        df = pd.DataFrame(data)
+
+        result = write_csv("test_file.csv", df, s3_client, "test-bucket")
+        assert result

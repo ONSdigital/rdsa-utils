@@ -32,7 +32,10 @@ from io import StringIO
 import boto3
 import pandas as pd
 
-from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
+from rdsa_utils.exceptions import (
+    InvalidBucketNameError,
+    InvalidS3FilePathError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -1111,12 +1114,6 @@ def write_csv(
 ) -> bool:
     """
     Write a Pandas Dataframe to csv in an s3 bucket.
-    By default, sets Pandas to_csv keyword arguments to:
-        header=True,
-        date_format="%Y-%m-%d %H:%M:%S.%f+00",
-        index=False.
-    Still, if the users specify other header, date_format or index, the user 
-    input will take priority.
     Uses StringIO library as a RAM buffer, so at first Pandas writes data to the
     buffer, then the buffer returns to the beginning, and then it is sent to
     the s3 bucket using the boto3.put_object method.
@@ -1169,64 +1166,8 @@ def write_csv(
 
     except Exception as e:
         error_message = (
-            f"Error writing to csv or saving to bucket {bucket_name}, "
-            "filepath {filepath}: {e}"
+            f"Error writing to csv or saving to bucket {bucket_name}, " +
+            f"filepath {filepath}: {e}"
         )
         logger.error(error_message)
         return False
-
-
-def read_excel(
-    filepath: str,
-    client: boto3.client,
-    bucket_name: str,
-    **kwargs,
-) -> pd.DataFrame:
-    """
-    Read an Excel file from s3 bucket into a Pandas dataframe.
-
-    Parameters
-    ----------
-    filepath : str
-        The filepath to save the dataframe to.
-    client : boto3.client
-        The boto3 S3 client instance.
-    bucket_name : str
-        The name of the S3 bucket.
-    kwargs : dict
-        Optional dictionary of Pandas read_excel keyword arguments.
-
-    Returns
-    -------
-    pd.DataFrame
-        A dataframe with data, if reading was successful.
-
-    Raises
-    ------
-    InvalidBucketNameError
-        If the bucket name is invalid according to AWS rules.
-    Exception
-        If there is an error reading s3.
-
-    """
-
-    bucket_name = validate_bucket_name(bucket_name)
-    filepath = validate_s3_file_path(filepath, allow_s3_scheme=False)
-
-    try:
-        # Get the Excel file from S3
-        response = client.get_object(Bucket=bucket_name, Key=filepath)
-        logger.info(
-            f"Loaded Excel file from S3 bucket {bucket_name}, filepath {filepath}",
-        )
-
-        # Read the Excel file into a Pandas DataFrame
-        df = pd.read_excel(response["Body"], **kwargs)
-
-    except Exception as e:
-        error_message = (
-            f"Error loading file from bucket {bucket_name}, filepath {filepath}: {e}"
-        )
-        logger.error(error_message)
-        raise Exception(error_message) from e
-    return df
