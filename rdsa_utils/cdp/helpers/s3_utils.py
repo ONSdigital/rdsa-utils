@@ -4,6 +4,7 @@ To initialise a boto3 client for S3 and configure it with Ranger RAZ
 and SSL certificate, you can use the following code snippet:
 
 ```python
+
 import boto3
 import raz_client
 
@@ -26,11 +27,15 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional
+from io import StringIO
 
 import boto3
 import pandas as pd
 
-from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
+from rdsa_utils.exceptions import (
+    InvalidBucketNameError,
+    InvalidS3FilePathError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -1098,3 +1103,69 @@ def load_json(
         raise Exception(error_message) from e
 
     return data
+
+
+def write_csv(
+    client: boto3.client,
+    bucket_name: str,
+    data: pd.DataFrame,
+    filepath: str,
+    **kwargs,
+) -> bool:
+    """
+    Write a Pandas Dataframe to csv in an s3 bucket.
+    Uses StringIO library as a RAM buffer, so at first Pandas writes data to the
+    buffer, then the buffer returns to the beginning, and then it is sent to
+    the s3 bucket using the boto3.put_object method.
+
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket.
+    data : pd.DataFrame
+        The dataframe to write to the spexified path.
+    filepath : str
+        The filepath to save the dataframe to.
+    kwargs : dict
+        Optional dictionary of Pandas to_csv arguments.
+
+    Returns
+    -------
+    bool
+        True if the dataframe is written successfully.
+        False if it was not possible to serialise or write the file.
+
+    Raises
+    ------
+    Exception
+        If there is an error writing the file to s3.
+
+    """
+
+    try:
+        # Create an Input-Output buffer
+        csv_buffer = StringIO()
+
+        # Write the dataframe to the buffer in the CSV format
+        data.to_csv(csv_buffer, **kwargs)
+
+        # "Rewind" the stream to the start of the buffer
+        csv_buffer.seek(0)
+
+        # Write the buffer into the s3 bucket. Assign the output to a mute
+        # variable, so the output is not displayed in the console or log.
+        _ = client.put_object(
+            Bucket=bucket_name, Body=csv_buffer.getvalue(), Key=filepath
+        )
+        return True
+
+    except Exception as e:
+        error_message = (
+            f"Error writing to csv or saving to bucket {bucket_name}, " +
+            f"filepath {filepath}: {e}"
+        )
+        logger.error(error_message)
+        return False

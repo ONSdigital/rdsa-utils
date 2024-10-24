@@ -470,3 +470,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - rdsa-utils v0.1.2 - Not available on GitHub Releases or PyPI
 - rdsa-utils v0.1.1 - Not available on GitHub Releases or PyPI
 - rdsa-utils v0.1.0 - Not available on GitHub Releases or PyPI
+
+### Added
+
+Added write_csv function inside cdp/helpers/s3_utils.py
