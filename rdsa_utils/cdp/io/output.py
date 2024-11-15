@@ -96,6 +96,47 @@ def insert_df_to_hive_table(
         If input DataFrame is empty.
     Exception
         For other general exceptions when writing data to the table.
+
+    Examples
+    --------
+    Write a DataFrame to a Hive table without overwriting:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table"
+    ... )
+
+    Overwrite an existing table with a DataFrame:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     overwrite=True
+    ... )
+
+    Write a DataFrame to a Hive table with missing columns filled:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     fill_missing_cols=True
+    ... )
+
+    Repartition by column before writing to Hive:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     repartition_column="partition_column"
+    ... )
+
+    Repartition into a fixed number of partitions before writing:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     repartition_column=10
+    ... )
     """
     logger.info(f"Preparing to write data to {table_name} with overwrite={overwrite}.")
 
