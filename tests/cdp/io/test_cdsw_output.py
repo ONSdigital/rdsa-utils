@@ -137,29 +137,61 @@ class TestInsertDataFrameToHiveTable:
                 fill_missing_cols=False,
             )
 
+    @patch("pyspark.sql.DataFrameWriter.insertInto")
+    @patch("pyspark.sql.DataFrameReader.table")
+    def test_insert_df_to_hive_table_insert_into_existing_table(
+        self,
+        mock_table,
+        mock_insert_into,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that insertInto is called when the table already exists in Hive."""
+        table_name = "existing_table"
+
+        # Mock the table columns to simulate the table already exists
+        mock_table.return_value.columns = ["id", "name", "age"]
+
+        # Simulate a successful call to `insertInto`
+        mock_insert_into.return_value = None
+
+        # Call the function that triggers insertInto when the table exists
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+        )
+
+        # Assert that insertInto was called with the correct table name
+        mock_insert_into.assert_called_once_with(table_name)
+
     @patch("pyspark.sql.DataFrameWriter.saveAsTable")
     @patch("pyspark.sql.DataFrameReader.table")
-    def test_insert_df_to_hive_table_creates_non_existing_table(
+    def test_insert_df_to_hive_table_save_as_table_when_table_does_not_exist(
         self,
         mock_table,
         mock_save_as_table,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
-        """Test that the function creates the table if it does not exist."""
+        """Test that saveAsTable is called when the Hive table does not exist."""
         table_name = "new_table"
-        # Simulate non-existing table by raising AnalysisException
+
+        # Simulate the table not existing by raising an AnalysisException
         mock_table.side_effect = AnalysisException(f"Table {table_name} not found.")
+
+        # Simulate a successful call to `saveAsTable`
         mock_save_as_table.return_value = None
+
+        # Call the function that triggers saveAsTable when the table does not exist
         insert_df_to_hive_table(
             spark_session,
             test_df,
             table_name,
-            overwrite=True,
-            fill_missing_cols=True,
         )
-        # Assert that saveAsTable was called
-        mock_save_as_table.assert_called_with(table_name)
+
+        # Assert that saveAsTable was called with the correct table name
+        mock_save_as_table.assert_called_once_with(table_name)
 
     @patch("pyspark.sql.DataFrame.repartition")
     @patch("pyspark.sql.DataFrameReader.table")
