@@ -52,7 +52,7 @@ def insert_df_to_hive_table(
         Active SparkSession.
     df
         SparkDF containing data to be written.
-    table_name : str
+    table_name
         Name of the Hive table to write data into.
     overwrite
         Controls how existing data is handled, default is False:
