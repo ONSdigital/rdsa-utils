@@ -48,13 +48,13 @@ def insert_df_to_hive_table(
 
     Parameters
     ----------
-    spark : SparkSession
+    spark
         Active SparkSession.
-    df : SparkDF
+    df
         SparkDF containing data to be written.
     table_name : str
         Name of the Hive table to write data into.
-    overwrite : bool, optional
+    overwrite
         Controls how existing data is handled, default is False:
 
         For non-partitioned data:
@@ -64,10 +64,10 @@ def insert_df_to_hive_table(
         For partitioned data:
         - True: Replaces data only in partitions present in DataFrame
         - False: Appends data to existing partitions or creates new ones
-    fill_missing_cols : bool, optional
+    fill_missing_cols
         If True, adds missing columns as nulls. If False, raises error
         on schema mismatch (default is False).
-    repartition_column : Union[int, str, None], optional
+    repartition_column
         Controls data repartitioning, default is None:
         - int: Sets target number of partitions
         - str: Specifies column to repartition by
