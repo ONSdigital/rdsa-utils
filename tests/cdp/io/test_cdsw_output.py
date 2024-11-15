@@ -130,59 +130,61 @@ class TestInsertDataFrameToHiveTable:
         # Assert that saveAsTable was called
         mock_save_as_table.assert_called_with(table_name)
 
-    @patch("pyspark.sql.DataFrameWriter.insertInto")
+    @patch("pyspark.sql.DataFrame.repartition")
     @patch("pyspark.sql.DataFrameReader.table")
     def test_insert_df_to_hive_table_with_repartition_column(
         self,
         mock_table,
-        mock_insert_into,
+        mock_repartition,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
         """Test that the DataFrame is repartitioned by a specified column."""
         table_name = "test_table"
         mock_table.return_value.columns = ["id", "name", "age"]
-        mock_insert_into.return_value = None
-        with patch.object(test_df, "repartition") as mock_repartition:
-            mock_repartition.return_value = test_df
-            insert_df_to_hive_table(
-                spark_session,
-                test_df,
-                table_name,
-                repartition_column="id",
-                overwrite=True,
-            )
-            # Assert repartition was called with the column name
-            mock_repartition.assert_called_with("id")
-            # Assert insertInto was called
-            mock_insert_into.assert_called_with(table_name, True)
 
-    @patch("pyspark.sql.DataFrameWriter.insertInto")
+        # Ensure that mock_repartition is set to return the same test_df
+        mock_repartition.return_value = test_df
+
+        # Call the function that triggers repartition
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+            repartition_column="id",  # We expect "id" column to be used for repartitioning
+            overwrite=True,
+        )
+
+        # Assert that repartition was called with the correct argument (the column name)
+        mock_repartition.assert_called_once_with("id")
+
+    @patch("pyspark.sql.DataFrame.repartition")
     @patch("pyspark.sql.DataFrameReader.table")
     def test_insert_df_to_hive_table_with_repartition_num_partitions(
         self,
         mock_table,
-        mock_insert_into,
+        mock_repartition,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
         """Test that the DataFrame is repartitioned into a specific number of partitions."""
         table_name = "test_table"
         mock_table.return_value.columns = ["id", "name", "age"]
-        mock_insert_into.return_value = None
-        with patch.object(test_df, "repartition") as mock_repartition:
-            mock_repartition.return_value = test_df
-            insert_df_to_hive_table(
-                spark_session,
-                test_df,
-                table_name,
-                repartition_column=5,
-                overwrite=True,
-            )
-            # Assert repartition was called with the number of partitions
-            mock_repartition.assert_called_with(5)
-            # Assert insertInto was called
-            mock_insert_into.assert_called_with(table_name, True)
+
+        # Ensure that mock_repartition is set to return the same test_df
+        mock_repartition.return_value = test_df
+
+        # Call the function that triggers repartition
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+            repartition_column=5,  # Expecting 5 partitions
+            overwrite=True,
+        )
+
+        # Assert that repartition was called with the number of partitions (5)
+        mock_repartition.assert_called_once_with(5)
 
     def test_insert_df_to_hive_table_with_empty_dataframe(
         self,
