@@ -106,22 +106,102 @@ class TestInsertDataFrameToHiveTable:
                 fill_missing_cols=False,
             )
 
+    @patch("pyspark.sql.DataFrameWriter.saveAsTable")
     @patch("pyspark.sql.DataFrameReader.table")
-    def test_insert_df_to_hive_table_with_non_existing_table(
+    def test_insert_df_to_hive_table_creates_non_existing_table(
         self,
         mock_table,
+        mock_save_as_table,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
-        """Test that insert_df_to_hive_table raises an AnalysisException when
-        the table doesn't exist.
-        """
-        table_name = "non_existing_table"
-        # Create an AnalysisException with a stack trace
-        exc = AnalysisException(f"Table {table_name} not found.")
-        mock_table.side_effect = exc
-        with pytest.raises(AnalysisException):
-            insert_df_to_hive_table(spark_session, test_df, table_name)
+        """Test that the function creates the table if it does not exist."""
+        table_name = "new_table"
+        # Simulate non-existing table by raising AnalysisException
+        mock_table.side_effect = AnalysisException(f"Table {table_name} not found.")
+        mock_save_as_table.return_value = None
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+            overwrite=True,
+            fill_missing_cols=True,
+        )
+        # Assert that saveAsTable was called
+        mock_save_as_table.assert_called_with(table_name)
+
+    @patch("pyspark.sql.DataFrameWriter.insertInto")
+    @patch("pyspark.sql.DataFrameReader.table")
+    def test_insert_df_to_hive_table_with_repartition_column(
+        self,
+        mock_table,
+        mock_insert_into,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that the DataFrame is repartitioned by a specified column."""
+        table_name = "test_table"
+        mock_table.return_value.columns = ["id", "name", "age"]
+        mock_insert_into.return_value = None
+        with patch.object(test_df, "repartition") as mock_repartition:
+            mock_repartition.return_value = test_df
+            insert_df_to_hive_table(
+                spark_session,
+                test_df,
+                table_name,
+                repartition_column="id",
+                overwrite=True,
+            )
+            # Assert repartition was called with the column name
+            mock_repartition.assert_called_with("id")
+            # Assert insertInto was called
+            mock_insert_into.assert_called_with(table_name, True)
+
+    @patch("pyspark.sql.DataFrameWriter.insertInto")
+    @patch("pyspark.sql.DataFrameReader.table")
+    def test_insert_df_to_hive_table_with_repartition_num_partitions(
+        self,
+        mock_table,
+        mock_insert_into,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that the DataFrame is repartitioned into a specific number of partitions."""
+        table_name = "test_table"
+        mock_table.return_value.columns = ["id", "name", "age"]
+        mock_insert_into.return_value = None
+        with patch.object(test_df, "repartition") as mock_repartition:
+            mock_repartition.return_value = test_df
+            insert_df_to_hive_table(
+                spark_session,
+                test_df,
+                table_name,
+                repartition_column=5,
+                overwrite=True,
+            )
+            # Assert repartition was called with the number of partitions
+            mock_repartition.assert_called_with(5)
+            # Assert insertInto was called
+            mock_insert_into.assert_called_with(table_name, True)
+
+    def test_insert_df_to_hive_table_with_empty_dataframe(
+        self,
+        spark_session: SparkSession,
+    ) -> None:
+        """Test that an empty DataFrame raises DataframeEmptyError."""
+        from rdsa_utils.exceptions import DataframeEmptyError
+
+        table_name = "test_table"
+        empty_df = spark_session.createDataFrame(
+            [],
+            schema="id INT, name STRING, age INT",
+        )
+        with pytest.raises(DataframeEmptyError):
+            insert_df_to_hive_table(
+                spark_session,
+                empty_df,
+                table_name,
+            )
 
 
 class TestWriteAndReadHiveTable:

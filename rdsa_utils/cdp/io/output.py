@@ -5,6 +5,7 @@ import uuid
 from typing import Union
 
 import boto3
+import pyspark.sql.types as T
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
@@ -36,26 +37,52 @@ def insert_df_to_hive_table(
     table_name: str,
     overwrite: bool = False,
     fill_missing_cols: bool = False,
+    repartition_column: Union[int, str, None] = None,
 ) -> None:
-    """Write the SparkDF contents to a Hive table.
+    """Write SparkDF to Hive table with optional configuration.
 
-    This function writes data from a SparkDF into a Hive table, allowing
-    optional handling of missing columns. The table's column order is ensured to
-    match that of the DataFrame.
+    This function writes data from a SparkDF into a Hive table, handling missing
+    columns and optional repartitioning. It ensures the table's column order matches
+    the DataFrame and manages different overwrite behaviors for partitioned and
+    non-partitioned data.
 
     Parameters
     ----------
-    spark
+    spark : SparkSession
         Active SparkSession.
-    df
+    df : SparkDF
         SparkDF containing data to be written.
-    table_name
+    table_name : str
         Name of the Hive table to write data into.
-    overwrite
-        If True, existing data in the table will be overwritten,
-        by default False.
-    fill_missing_cols
-        If True, missing columns will be filled with nulls, by default False.
+    overwrite : bool, optional
+        Controls how existing data is handled, default is False:
+
+        For non-partitioned data:
+        - True: Replaces entire table with DataFrame data
+        - False: Appends DataFrame data to existing table
+
+        For partitioned data:
+        - True: Replaces data only in partitions present in DataFrame
+        - False: Appends data to existing partitions or creates new ones
+    fill_missing_cols : bool, optional
+        If True, adds missing columns as nulls. If False, raises error
+        on schema mismatch (default is False).
+    repartition_column : Union[int, str, None], optional
+        Controls data repartitioning, default is None:
+        - int: Sets target number of partitions
+        - str: Specifies column to repartition by
+        - None: No repartitioning performed
+
+    Notes
+    -----
+    When using repartition with a number:
+    - Affects physical file structure but preserves Hive partitioning scheme.
+    - Controls number of output files per write operation per Hive partition.
+    - Maintains partition-based query optimization.
+
+    When repartitioning by column:
+    - Helps balance file sizes across Hive partitions.
+    - Reduces creation of small files.
 
     Raises
     ------
@@ -65,36 +92,36 @@ def insert_df_to_hive_table(
     ValueError
         If the SparkDF schema does not match the Hive table schema and
         'fill_missing_cols' is set to False.
+    DataframeEmptyError
+        If input DataFrame is empty.
     Exception
         For other general exceptions when writing data to the table.
     """
-    logger.info(f"Preparing to write data to {table_name}.")
+    logger.info(f"Preparing to write data to {table_name} with overwrite={overwrite}.")
+
+    # Check if the table exists; if not, set flag for later creation
+    table_exists = True
+    try:
+        table_columns = spark.read.table(table_name).columns
+    except AnalysisException:
+        logger.info(
+            f"Table {table_name} does not exist and will be "
+            "created after transformations.",
+        )
+        table_exists = False
+        table_columns = df.columns  # Use DataFrame columns as initial schema
 
     # Validate SparkDF before writing
     if is_df_empty(df):
         msg = f"Cannot write an empty SparkDF to {table_name}"
-        raise DataframeEmptyError(
-            msg,
-        )
+        raise DataframeEmptyError(msg)
 
-    try:
-        table_columns = spark.read.table(table_name).columns
-    except AnalysisException:
-        logger.error(
-            (
-                f"Error reading table {table_name}. "
-                f"Make sure the table exists and you have access to it."
-            ),
-        )
-
-        raise
-
-    if fill_missing_cols:
+    # Handle missing columns if specified
+    if fill_missing_cols and table_exists:
         missing_columns = list(set(table_columns) - set(df.columns))
-
         for col in missing_columns:
-            df = df.withColumn(col, F.lit(None))
-    else:
+            df = df.withColumn(col, F.lit(None).cast(T.StringType()))
+    elif not fill_missing_cols and table_exists:
         # Validate schema before writing
         if set(table_columns) != set(df.columns):
             msg = (
@@ -103,10 +130,32 @@ def insert_df_to_hive_table(
             )
             raise ValueError(msg)
 
-    df = df.select(table_columns)
+    # Ensure column order
+    df = df.select(table_columns) if table_exists else df
 
+    # Apply repartitioning if specified
+    if repartition_column is not None:
+        if isinstance(repartition_column, int):
+            logger.info(f"Repartitioning data into {repartition_column} partitions.")
+            df = df.repartition(repartition_column)
+        elif isinstance(repartition_column, str):
+            logger.info(f"Repartitioning data by column {repartition_column}.")
+            df = df.repartition(repartition_column)
+
+    # Write DataFrame to Hive table based on existence and overwrite parameter
     try:
-        df.write.insertInto(table_name, overwrite)
+        if table_exists:
+            if overwrite:
+                logger.info(f"Overwriting existing table {table_name}.")
+                df.write.mode("overwrite").saveAsTable(table_name)
+            else:
+                logger.info(
+                    f"Inserting into existing table {table_name} without overwrite.",
+                )
+                df.write.insertInto(table_name)
+        else:
+            df.write.saveAsTable(table_name)
+            logger.info(f"Table {table_name} created successfully.")
         logger.info(f"Successfully wrote data to {table_name}.")
     except Exception:
         logger.error(f"Error writing data to {table_name}.")
