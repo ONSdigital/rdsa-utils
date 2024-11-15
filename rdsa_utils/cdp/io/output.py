@@ -58,20 +58,20 @@ def insert_df_to_hive_table(
         Controls how existing data is handled, default is False:
 
         For non-partitioned data:
-        - True: Replaces entire table with DataFrame data
-        - False: Appends DataFrame data to existing table
+        - True: Replaces entire table with DataFrame data.
+        - False: Appends DataFrame data to existing table.
 
         For partitioned data:
-        - True: Replaces data only in partitions present in DataFrame
-        - False: Appends data to existing partitions or creates new ones
+        - True: Replaces data only in partitions present in DataFrame.
+        - False: Appends data to existing partitions or creates new ones.
     fill_missing_cols
         If True, adds missing columns as nulls. If False, raises error
         on schema mismatch (default is False).
     repartition_column
         Controls data repartitioning, default is None:
-        - int: Sets target number of partitions
-        - str: Specifies column to repartition by
-        - None: No repartitioning performed
+        - int: Sets target number of partitions.
+        - str: Specifies column to repartition by.
+        - None: No repartitioning performed.
 
     Notes
     -----
