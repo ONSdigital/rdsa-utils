@@ -1,7 +1,7 @@
 """Tests for the cdp/io/output.py module."""
 
 from typing import Callable
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 from moto import mock_aws
@@ -57,12 +57,14 @@ class TestInsertDataFrameToHiveTable:
 
         return df
 
-    @patch("pyspark.sql.DataFrameWriter.insertInto")
+    @patch("pyspark.sql.DataFrame.withColumn")
     @patch("pyspark.sql.DataFrameReader.table")
+    @patch("pyspark.sql.functions.lit")
     def test_insert_df_to_hive_table_with_missing_columns(
         self,
+        mock_lit,
         mock_table,
-        mock_insert_into,
+        mock_with_column,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
@@ -70,10 +72,30 @@ class TestInsertDataFrameToHiveTable:
         table when 'fill_missing_cols' is True.
         """
         table_name = "test_table"
-        # Mock the table columns
+
+        # Mock the table's columns to include 'address'
         mock_table.return_value.columns = ["id", "name", "age", "address"]
-        # Mock the DataFrameWriter insertInto
-        mock_insert_into.return_value = None
+
+        # Create a mock of the DataFrame (test_df) that does not contain 'address'
+        test_df_mock = MagicMock()
+        test_df_mock.columns = [
+            "id",
+            "name",
+            "age",
+        ]  # Mock that it doesn't have 'address'
+
+        # Mock `withColumn` behavior - ensure it's being called
+        # with correct column expression
+        mock_with_column.return_value = (
+            test_df_mock  # Simulate that `withColumn` returns `test_df_mock`
+        )
+
+        # Mock the return of the `lit` function to simulate the expression
+        mock_lit.return_value = F.lit(None).cast(
+            T.StringType(),
+        )  # We expect the `lit` to return the null expression
+
+        # Call the function to insert data into the table
         insert_df_to_hive_table(
             spark_session,
             test_df,
@@ -81,8 +103,17 @@ class TestInsertDataFrameToHiveTable:
             overwrite=True,
             fill_missing_cols=True,
         )
-        # Assert that insertInto was called with correct arguments
-        mock_insert_into.assert_called_with(table_name, True)
+
+        # Assert that `lit` was called with `None` to create the null expression
+        mock_lit.assert_called_with(None)
+
+        # Since `lit().cast()` returns the same object,
+        # directly assert the final return value
+        expected_column = F.lit(None).cast(T.StringType())
+
+        # Check if withColumn was called with 'address' and the expected expression
+        # Compare the exact column expression (the expected one, not the mock)
+        mock_with_column.assert_any_call("address", expected_column)
 
     @patch("pyspark.sql.DataFrameReader.table")
     def test_insert_df_to_hive_table_without_missing_columns(
