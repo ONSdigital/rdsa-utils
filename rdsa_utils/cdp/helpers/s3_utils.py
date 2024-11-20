@@ -1164,8 +1164,8 @@ def write_csv(
 
     except Exception as e:
         error_message = (
-            f"Error writing to csv or saving to bucket {bucket_name}, " +
-            f"filepath {filepath}: {e}"
+            f"Error writing to csv or saving to bucket {bucket_name}, "
+            + f"filepath {filepath}: {e}"
         )
         logger.error(error_message)
         return False
