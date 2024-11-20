@@ -1044,13 +1044,13 @@ def load_json(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    filepath : str
+    filepath
         The key (full path and filename) of the JSON file in the S3 bucket.
-    encoding : str, optional
+    encoding
         The encoding of the JSON file. Default is 'utf-8'.
 
     Returns
@@ -1118,15 +1118,15 @@ def write_csv(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    data : pd.DataFrame
+    data
         The dataframe to write to the spexified path.
-    filepath : str
+    filepath
         The filepath to save the dataframe to.
-    kwargs : dict
+    kwargs
         Optional dictionary of Pandas to_csv arguments.
 
     Returns

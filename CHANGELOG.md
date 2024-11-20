@@ -9,6 +9,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added functionality `write_csv` inside `cdp\helpers\s3_utils` to write a pandas dataframe to an CSV file in S3 bucket
+
 ### Changed
 
 ### Deprecated
@@ -26,7 +28,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
-- Changed `cut_lineage` function inside `helpers/pyspark.py` to make it compatible 
+
+- Changed `cut_lineage` function inside `helpers/pyspark.py` to make it compatible
   with newer PySpark versions.
 
 ### Removed
@@ -36,6 +39,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+
 - Added "How the Project is Organised" section to `README.md`.
 - Fix docstring for `test_load_json_with_encoding` in `test_s3_utils.py`.
 
@@ -48,6 +52,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.3.4] - 2024-09-30
 
 ### Added
+
 - Added `load_json` to `s3_utils.py`.
 
 ### Changed
@@ -61,20 +66,23 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.3.3] - 2024-09-10
 
 ### Added
+
 - Added `InvalidS3FilePathError` to `exceptions.py`.
 - Added `validate_s3_file_path` to `s3_utils.py`.
 
 ### Changed
+
 - Fixed docstring for `load_csv` in `helpers/pyspark.py`.
 - Call `validate_s3_file_path` function inside `save_csv_to_s3`.
-- Call `validate_bucket_name` and `validate_s3_file_path` function 
+- Call `validate_bucket_name` and `validate_s3_file_path` function
   inside `cdp/helpers/s3_utils/load_csv`.
 
 ### Deprecated
 
 ### Fixed
-- Improved `truncate_external_hive_table` to handle both partitioned and 
-  non-partitioned Hive tables, with enhanced error handling and support 
+
+- Improved `truncate_external_hive_table` to handle both partitioned and
+  non-partitioned Hive tables, with enhanced error handling and support
   for table identifiers in `<database>.<table>` or `<table>` formats.
 
 ### Removed
@@ -82,6 +90,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.3.2] - 2024-09-02
 
 ### Added
+
 - Added `load_csv` to `helpers/pyspark.py` with kwargs parameter.
 - Added `truncate_external_hive_table` to `helpers/pyspark.py`.
 - Added `get_tables_in_database` to `cdp/io/input.py`.
@@ -89,9 +98,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   into a Pandas DataFrame.
 
 ### Changed
-- Removed `.config("spark.shuffle.service.enabled", "true")` 
+
+- Removed `.config("spark.shuffle.service.enabled", "true")`
   from `create_spark_session()` not compatible with CDP. Added
-  `.config("spark.dynamicAllocation.shuffleTracking.enabled", "true")` & 
+  `.config("spark.dynamicAllocation.shuffleTracking.enabled", "true")` &
   `.config("spark.sql.adaptive.enabled", "true")`.
 - Change `mkdocs` theme from `mkdocs-tech-docs-template` to `ons-mkdocs-theme`.
 - Added more parameters to `load_and_validate_table()` in `cdp/io/input.py`.
@@ -99,6 +109,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+
 - Temporarily pin `numpy==1.24.4` due to https://github.com/numpy/numpy/issues/267100
 
 ### Removed
@@ -106,9 +117,11 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.3.1] - 2024-05-24
 
 ### Added
+
 - Added `zip_folder` function to `io/output.py`.
 
 ### Changed
+
 - Modified `gcp_utils.py`, added more helper functions for GCS.
 - Modified docstring for `InvalidBucketNameError` in `exceptions.py`.
 
@@ -121,12 +134,14 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.3.0] - 2024-05-20
 
 ### Added
-- Added `.isort.cfg` to configure `isort` with the `black` profile 
+
+- Added `.isort.cfg` to configure `isort` with the `black` profile
   and recognize `rdsa-utils` as a local repository.
 - Reformatted the entire codebase using `black` and `isort`.
 
 ### Changed
-- Updated `.pre-commit-config.yaml` to include `black` and `isort` 
+
+- Updated `.pre-commit-config.yaml` to include `black` and `isort`
   as pre-commit hooks for code formatting.
 - Updated `setup.cfg` to include `black` and `isort` in the `dev` requirements.
 - Updated `README.md` to include `black` formatting badge.
@@ -141,16 +156,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.2.3] - 2024-05-20
 
 ### Added
+
 - Added `save_csv_to_s3` function in `cdp/io/output.py`.
 
 ### Changed
+
 - Modified docstrings in `cdp/helpers/s3_utils.py`; remove type-hints
   from docstrings, type-hints already in function signatures.
 - Add Examples section in `delete_folder` function in `s3_utils.py`.
-- Modified docstrings in `cdp/io/input.py` & `cdp/io/output.py`; remove 
+- Modified docstrings in `cdp/io/input.py` & `cdp/io/output.py`; remove
   type-hints from docstrings, type-hints already in function signatures.
 - Updated `.gitignore` to exclude `metastore_db/` directory.
-- Standardised parameter names for consistency across 
+- Standardised parameter names for consistency across
   S3 utility functions `s3_utils.py`
 
 ### Deprecated
@@ -162,9 +179,11 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.2.2] - 2024-05-14
 
 ### Added
+
 - Added `s3_utils.py` module located in `cdp/helpers/`.
 
 ### Changed
+
 - Updated `reference.md`; included `s3_utils.py`.
 - Updated `README.md`; added Ruff and Python versions badges.
 
@@ -179,7 +198,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- Revised the "Further Reading on Reproducible Analytical Pipelines" section 
+
+- Revised the "Further Reading on Reproducible Analytical Pipelines" section
   in the `README.md` for clarity.
 
 ### Deprecated
@@ -193,16 +213,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+
 - **Breaking Change**: Renamed module `cdsw` to `cdp` (Cloudera Data Platform).
 - Added a "Further Reading on Reproducible Analytical Pipelines" section to `README.md`
   to enhance resources on RAP best practices.
-- Added section on synchronising the `development` branch with `main` to 
-  the `branch_and_deploy_guide.md` file.  
+- Added section on synchronising the `development` branch with `main` to
+  the `branch_and_deploy_guide.md` file.
 
 ### Deprecated
 
 ### Fixed
-- Updated `contribution_guide.md`; fix code block rendering issue in `mkdocs` by 
+
+- Updated `contribution_guide.md`; fix code block rendering issue in `mkdocs` by
   removing extra whitespaces.
 
 ### Removed
@@ -210,12 +232,14 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.1.10] - 2024-05-08
 
 ### Added
-- Updated `branch_and_deploy_guide.md`, added section titled: 
+
+- Updated `branch_and_deploy_guide.md`, added section titled:
   "Merging Development to Main: A Guide for Maintainers"
 
 ### Changed
+
 - Updated `README.md` to include new badges for Deployment Status and PyPI version.
-  
+
 ### Deprecated
 
 ### Fixed
@@ -225,30 +249,32 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.1.9] - 2024-04-03
 
 ### Added
-- Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`, 
+
+- Added `mkdocs-mermaid2-plugin` to the `doc` extras_require in `setup.cfg`,
   enhancing documentation with MermaidJS diagram support.
 - Added `gitleaks` and local `restrict-filenames` hooks to `.pre-commit-config.yaml`.
 - Enhanced `README.md` headers with relevant emojis for improved readability and engagement.
 
 ### Changed
-- Modified `README.md`: Added Installation section and Git Workflow Diagram section 
+
+- Modified `README.md`: Added Installation section and Git Workflow Diagram section
   with a MermaidJS diagram.
 - Improved the `branch_and_deploy_guide.md` and `contribution_guide.md`
   documentation on branching strategy.
-- Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`, 
+- Updated `python_requires` in `setup.cfg` to support Python versions `>=3.8` and `<3.12`,
   including all `3.11.x` versions.
 - Modified `pull_request_workflow.yaml` to add Python `3.11` to the testing matrix.
-- Moved `pyspark` from primary dependencies to `dev` section in `extras_require` to 
-  streamline installation for users with pre-installed environments, 
+- Moved `pyspark` from primary dependencies to `dev` section in `extras_require` to
+  streamline installation for users with pre-installed environments,
   requiring manual installation where necessary.
-- Renamed `isdir` function in `cdsw/helpers/hdfs_utils` to `is_dir` for 
+- Renamed `isdir` function in `cdsw/helpers/hdfs_utils` to `is_dir` for
   improved compliance with PEP 8 naming conventions.
 - Removed line stopping existing SparkSession in `create_spark_session`
   to prevent Py4JError and enable seamless SparkContext management on GCP.
 - Refactor `save_csv_to_hdfs` to use functions in `/cdsw/helpers/hdfs_utils.py`
 - Add function `delete_path` in `/cdsw/helpers/hdfs_utils.py`, and refactor docstring for `delete_file` and `delete_dir`.
 - Modified `CHANGELOG.md` added note on missing `pre-v0.1.8` releases due to `deploy_pypi.yaml` issues
-  
+
 ### Deprecated
 
 ### Fixed
@@ -258,6 +284,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [v0.1.8] - 2024-02-28
 
 ### Added
+
 - Added `pyproject.toml` and `setup.cfg`.
 
 ### Changed
@@ -267,6 +294,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
+
 - Removed `requirements.txt` now in `setup.cfg`.
 
 ## [v0.1.7] - 2024-02-28
@@ -278,16 +306,17 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+
 - Added `build` dependency in `.github/workflows/deploy_pypi.yaml`
 
 ### Removed
-
 
 ## [v0.1.6] - 2024-02-28
 
 ### Added
 
 ### Changed
+
 - Modified Workflow Trigger in `.github/workflows/deploy_pypi.yaml`
 
 ### Deprecated
@@ -295,8 +324,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
-- Removed `.github/workflows/version_check.yaml`
 
+- Removed `.github/workflows/version_check.yaml`
 
 ## [v0.1.5] - 2024-02-28
 
@@ -310,7 +339,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 - Fix GitHub Branch Reference for deployment.
 
-
 ## [v0.1.4] - 2024-02-28
 
 ### Added
@@ -322,7 +350,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Remove check of branch for deployment.
-
 
 ## [v0.1.3] - 2024-02-28
 
@@ -336,8 +363,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-
-
 ## [v0.1.2] - 2024-02-28
 
 ### Added
@@ -349,7 +374,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
-
 
 ## [v0.1.1] - 2024-02-28
 
@@ -364,7 +388,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Typo in the documentation to install Python.
 
 ### Removed
-
 
 ## [v0.1.0] - 2024-02-28
 
@@ -429,38 +452,37 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Release Links
 
-> Note: Releases prior to v0.1.8 are not available on GitHub Releases and PyPI 
+> Note: Releases prior to v0.1.8 are not available on GitHub Releases and PyPI
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
-
-- rdsa-utils v0.3.6: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.6) | 
+- rdsa-utils v0.3.6: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.6) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.6/)
-- rdsa-utils v0.3.5: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.5) | 
+- rdsa-utils v0.3.5: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.5) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.5/)
-- rdsa-utils v0.3.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.4) | 
+- rdsa-utils v0.3.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.4) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.4/)
-- rdsa-utils v0.3.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.3) | 
+- rdsa-utils v0.3.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.3) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.3/)
-- rdsa-utils v0.3.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.2) | 
+- rdsa-utils v0.3.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.2) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.2/)
-- rdsa-utils v0.3.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.1) | 
+- rdsa-utils v0.3.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.1) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.1/)
-- rdsa-utils v0.3.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.0) | 
+- rdsa-utils v0.3.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.0/)
-- rdsa-utils v0.2.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.3) | 
+- rdsa-utils v0.2.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.3) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.3/)
-- rdsa-utils v0.2.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.2) | 
+- rdsa-utils v0.2.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.2) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.2/)
-- rdsa-utils v0.2.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.1) | 
+- rdsa-utils v0.2.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.1) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.1/)
-- rdsa-utils v0.2.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.0) | 
+- rdsa-utils v0.2.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.2.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.2.0/)
-- rdsa-utils v0.1.10: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.10) | 
+- rdsa-utils v0.1.10: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.10) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.1.10/)
-- rdsa-utils v0.1.9: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.9) | 
+- rdsa-utils v0.1.9: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.9) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.1.9/)
-- rdsa-utils v0.1.8: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8) | 
+- rdsa-utils v0.1.8: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.1.8) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.1.8/)
 - rdsa-utils v0.1.7 - Not available on GitHub Releases or PyPI
 - rdsa-utils v0.1.6 - Not available on GitHub Releases or PyPI
