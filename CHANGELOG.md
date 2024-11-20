@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.3.7] - 2024-11-20
+
+### Added
 - Added `write_csv` function inside `cdp/helpers/s3_utils.py`.
 
 ### Changed
@@ -435,6 +447,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.3.7: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.7) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.7/)
 - rdsa-utils v0.3.6: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.6) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.6/)
 - rdsa-utils v0.3.5: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.5) | 
