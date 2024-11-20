@@ -1137,7 +1137,7 @@ def write_csv(
     Raises
     ------
     Exception
-        If there is an error writing the file to s3.
+        If there is an error writing the file to S3.
 
     Examples
     --------
