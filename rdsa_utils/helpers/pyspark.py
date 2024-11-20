@@ -181,12 +181,18 @@ def to_spark_col(_func=None, *, exclude: Sequence[str] = None) -> Callable:
             varnames = func.__code__.co_varnames
             if args:
                 args = [
-                    (_convert_to_spark_col(arg) if varnames[i] not in exclude else arg)  # noqa: E501
+                    (
+                        _convert_to_spark_col(arg)
+                        if varnames[i] not in exclude
+                        else arg
+                    )  # noqa: E501
                     for i, arg in enumerate(args)
                 ]
             if kwargs:
                 kwargs = {
-                    k: (_convert_to_spark_col(kwarg) if k not in exclude else kwarg)  # noqa: E501
+                    k: (
+                        _convert_to_spark_col(kwarg) if k not in exclude else kwarg
+                    )  # noqa: E501
                     for k, kwarg in kwargs.items()
                 }
             return func(*args, **kwargs)

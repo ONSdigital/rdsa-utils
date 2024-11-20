@@ -172,7 +172,7 @@ def to_datetime(dt: str) -> datetime.datetime:
     return pd.to_datetime(dt).to_pydatetime()
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_spark_df(spark_session):
     """Create Spark DataFrame from tuple data with first row as schema.
 
@@ -196,7 +196,7 @@ def create_spark_df(spark_session):
     return _
 
 
-@pytest.fixture()
+@pytest.fixture
 def to_spark(spark_session):
     """Convert pandas df to spark."""
 

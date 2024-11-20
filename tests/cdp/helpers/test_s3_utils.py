@@ -196,7 +196,7 @@ class TestValidateS3FilePath:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def _aws_credentials():
     """Mock AWS Credentials for moto."""
     boto3.setup_default_session(
@@ -206,7 +206,7 @@ def _aws_credentials():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client(_aws_credentials):
     """Provide a mocked AWS S3 client for testing
     using moto with temporary credentials.
@@ -234,7 +234,7 @@ class TestFileExists:
         assert file_exists(s3_client, "test-bucket", "nonexistent.txt") is False
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup_files(tmp_path):
     """
     Set up local files for upload and download tests.
@@ -351,7 +351,7 @@ class TestDownloadFile:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup_folder(tmp_path):
     """
     Set up local folder and files for upload tests.
@@ -435,7 +435,7 @@ class TestUploadFolder:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client_for_list_files(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
@@ -496,7 +496,7 @@ class TestListFiles:
         assert len(files) == 0
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client_for_delete_and_copy(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
@@ -1089,7 +1089,8 @@ class TestWriteCSV:
 
     def test_write_csv_read_back(self, s3_client):
         """Test that a file wrtitten by write_csv can be read back and returns
-        the same dataframe as input. Uses kwargs."""
+        the same dataframe as input. Uses kwargs.
+        """
         data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
         df = pd.DataFrame(data)
 
@@ -1099,7 +1100,8 @@ class TestWriteCSV:
 
     def test_write_csv_failure(self, s3_client):
         """Test that write_csv returns False if unable to write.
-        Dictionary data does not have to_csv method."""
+        Dictionary data does not have to_csv method.
+        """
         data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
 
         result = write_csv(s3_client, "test-bucket", data, "test_file.csv", index=False)

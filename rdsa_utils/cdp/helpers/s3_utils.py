@@ -1114,10 +1114,10 @@ def write_csv(
 ) -> bool:
     """
     Write a Pandas Dataframe to csv in an s3 bucket.
+
     Uses StringIO library as a RAM buffer, so at first Pandas writes data to the
     buffer, then the buffer returns to the beginning, and then it is sent to
     the s3 bucket using the boto3.put_object method.
-
 
     Parameters
     ----------
@@ -1144,7 +1144,6 @@ def write_csv(
         If there is an error writing the file to s3.
 
     """
-
     try:
         # Create an Input-Output buffer
         csv_buffer = StringIO()
@@ -1158,14 +1157,14 @@ def write_csv(
         # Write the buffer into the s3 bucket. Assign the output to a mute
         # variable, so the output is not displayed in the console or log.
         _ = client.put_object(
-            Bucket=bucket_name, Body=csv_buffer.getvalue(), Key=filepath
+            Bucket=bucket_name, Body=csv_buffer.getvalue(), Key=filepath,
         )
         return True
 
     except Exception as e:
         error_message = (
             f"Error writing to csv or saving to bucket {bucket_name}, "
-            + f"filepath {filepath}: {e}"
+            f"filepath {filepath}: {e}"
         )
         logger.error(error_message)
         return False
