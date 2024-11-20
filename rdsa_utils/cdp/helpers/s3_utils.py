@@ -1113,7 +1113,7 @@ def write_csv(
 
     Uses StringIO library as a RAM buffer, so at first Pandas writes data to the
     buffer, then the buffer returns to the beginning, and then it is sent to
-    the s3 bucket using the boto3.put_object method.
+    the S3 bucket using the boto3.put_object method.
 
     Parameters
     ----------
