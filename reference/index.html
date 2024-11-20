@@ -1005,6 +1005,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.write_csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      write_csv
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2453,7 +2462,7 @@ function_name: message</p>
                 <code>message</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2542,7 +2551,7 @@ of the logging module.
                 <code>handlers</code>
             </td>
             <td>
-                  <code>Optional[List[Handler]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[<span title="logging.Handler">Handler</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2949,7 +2958,7 @@ expected to be empty.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3109,7 +3118,7 @@ function.</p>
                 <code>logger</code>
             </td>
             <td>
-                  <code>Optional[Callable[[str], None]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Callable">Callable</span>[[str], None]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3117,7 +3126,7 @@ function.</p>
               </div>
             </td>
             <td>
-                  <code>info</code>
+                  <code><span title="rdsa_utils.logging.logger.info">info</span></code>
             </td>
           </tr>
       </tbody>
@@ -3135,7 +3144,7 @@ function.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Dict[str, str]</code>
+                  <code><span title="typing.Dict">Dict</span>[str, str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3676,7 +3685,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
                 <code>config</code>
             </td>
             <td>
-                  <code>Mapping[str, Any]</code>
+                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3692,7 +3701,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
                 <code>Validator</code>
             </td>
             <td>
-                  <code>Optional[BaseModel]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="pydantic.BaseModel">BaseModel</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3708,7 +3717,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
                 <code>optional</code>
             </td>
             <td>
-                  <code>Optional[BaseModel]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="pydantic.BaseModel">BaseModel</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3734,7 +3743,7 @@ this function to aid in tracking config sections that are unvalidated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Mapping[str, Any]</code>
+                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3790,7 +3799,8 @@ this function to aid in tracking config sections that are unvalidated.</p>
         <p>Utility functions for interacting with AWS S3.</p>
 <p>To initialise a boto3 client for S3 and configure it with Ranger RAZ
 and SSL certificate, you can use the following code snippet:</p>
-<pre><code class="language-python">import boto3
+<pre><code class="language-python">
+import boto3
 import raz_client
 
 ssl_file_path = &quot;/path/to/your/ssl_certificate.crt&quot;
@@ -3854,7 +3864,7 @@ Note:
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4018,7 +4028,7 @@ Note:
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4129,7 +4139,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4256,7 +4266,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4366,7 +4376,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4513,7 +4523,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4661,7 +4671,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4771,7 +4781,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4874,7 +4884,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4932,7 +4942,7 @@ set to True to ignore non-existence on delete.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4984,7 +4994,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5032,7 +5042,7 @@ set to True to ignore non-existence on delete.</p>
                 <code>keep_columns</code>
             </td>
             <td>
-                  <code>Optional[List[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5049,7 +5059,7 @@ Default value is None.</p>
                 <code>rename_columns</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5067,7 +5077,7 @@ Default value is None.</p>
                 <code>drop_columns</code>
             </td>
             <td>
-                  <code>Optional[List[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5109,7 +5119,7 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5132,7 +5142,7 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>InvalidBucketNameError</code>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5142,7 +5152,7 @@ Default value is None.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                  <code>InvalidS3FilePathError</code>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidS3FilePathError" href="#rdsa_utils.exceptions.InvalidS3FilePathError">InvalidS3FilePathError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5251,7 +5261,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5299,7 +5309,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>encoding</code>
             </td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5325,7 +5335,7 @@ keep_columns is not found in the DataFrame.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Dict</code>
+                  <code><span title="typing.Dict">Dict</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5348,7 +5358,7 @@ keep_columns is not found in the DataFrame.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>InvalidBucketNameError</code>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5415,7 +5425,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5640,7 +5650,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5688,7 +5698,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>object_name</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5788,7 +5798,7 @@ the local file path.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5985,7 +5995,7 @@ the local file path.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>InvalidBucketNameError</code>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6107,7 +6117,7 @@ the local file path.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>InvalidS3FilePathError</code>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidS3FilePathError" href="#rdsa_utils.exceptions.InvalidS3FilePathError">InvalidS3FilePathError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6129,6 +6139,178 @@ the local file path.</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_s3_file_path</span><span class="p">(</span><span class="s1">&#39;s3a://bucket-name/data.csv&#39;</span><span class="p">,</span> <span class="n">allow_s3_scheme</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">InvalidS3FilePathError: The file_path should not contain an S3 URI scheme</span>
 <span class="go">like &#39;s3://&#39; or &#39;s3a://&#39;.</span>
+</code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.write_csv" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">write_csv</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Write a Pandas Dataframe to csv in an S3 bucket.</p>
+<p>Uses StringIO library as a RAM buffer, so at first Pandas writes data to the
+buffer, then the buffer returns to the beginning, and then it is sent to
+the S3 bucket using the boto3.put_object method.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>client</code>
+            </td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bucket_name</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the S3 bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>data</code>
+            </td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The dataframe to write to the spexified path.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>filepath</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The filepath to save the dataframe to.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>kwargs</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optional dictionary of Pandas to_csv arguments.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>True if the dataframe is written successfully.
+False if it was not possible to serialise or write the file.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>Exception</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If there is an error writing the file to S3.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;column1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;column2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_csv</span><span class="p">(</span><span class="n">s3_client</span><span class="p">,</span> <span class="s1">&#39;my_bucket&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;path/to/file.csv&#39;</span><span class="p">)</span>
+<span class="go">True</span>
 </code></pre></div>
 
     </div>
@@ -6392,7 +6574,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>TimeoutExpired</code>
+                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6630,7 +6812,7 @@ otherwise False.</p>
                 <code>replace</code>
             </td>
             <td>
-                  <code>Optional[bool]</code>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6860,7 +7042,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>TimeoutExpired</code>
+                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6965,7 +7147,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>TimeoutExpired</code>
+                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7065,7 +7247,7 @@ remove all contained files and subdirectories without confirmation.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>TimeoutExpired</code>
+                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7366,7 +7548,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7437,7 +7619,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7525,7 +7707,7 @@ just the filename.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7653,7 +7835,7 @@ otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>TimeoutExpired</code>
+                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7796,7 +7978,7 @@ intervention, making outdated metadata issues less likely to occur.</p>
                 <code>keep_stderr</code>
             </td>
             <td>
-                  <code>Optional[bool]</code>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7921,7 +8103,7 @@ intervention, making outdated metadata issues less likely to occur.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7969,7 +8151,7 @@ intervention, making outdated metadata issues less likely to occur.</p>
                 <code>config</code>
             </td>
             <td>
-                  <code>Union[ConfigParser, Dict[str, str]]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="configparser.ConfigParser">ConfigParser</span>, <span title="typing.Dict">Dict</span>[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7985,7 +8167,7 @@ intervention, making outdated metadata issues less likely to occur.</p>
                 <code>pipeline</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8018,7 +8200,7 @@ include the database.</p>
                 <code>run_id</code>
             </td>
             <td>
-                  <code>Optional[int]</code>
+                  <code><span title="typing.Optional">Optional</span>[int]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8045,7 +8227,7 @@ a new one is generated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8090,7 +8272,7 @@ a new one is generated.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8154,7 +8336,7 @@ a new one is generated.</p>
                 <code>config</code>
             </td>
             <td>
-                  <code>Union[ConfigParser, Dict[str, str]]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="configparser.ConfigParser">ConfigParser</span>, <span title="typing.Dict">Dict</span>[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8170,7 +8352,7 @@ a new one is generated.</p>
                 <code>pipeline</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8196,7 +8378,7 @@ a new one is generated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8246,7 +8428,7 @@ reserved_date.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8278,7 +8460,7 @@ reserved_date.</p>
                 <code>tablename</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8356,7 +8538,7 @@ The associated _reserved_ids table will be suffixed with this name.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8372,7 +8554,7 @@ The associated _reserved_ids table will be suffixed with this name.</p>
                 <code>pipeline</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8460,7 +8642,7 @@ include the database.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8476,7 +8658,7 @@ include the database.</p>
                 <code>pipeline</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8568,7 +8750,7 @@ current timestamp to the reserved ids table.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8584,7 +8766,7 @@ current timestamp to the reserved ids table.</p>
                 <code>log_table</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8656,7 +8838,7 @@ this reserved id table, by default "pipeline_runlog".</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8834,7 +9016,7 @@ side effect of creating a text file.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8877,7 +9059,7 @@ and/or database name.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Tuple[str, str]</code>
+                  <code><span title="typing.Tuple">Tuple</span>[str, str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8962,7 +9144,7 @@ and/or database name.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9004,7 +9186,7 @@ and/or database name.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9079,7 +9261,7 @@ and/or database name.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9159,7 +9341,7 @@ and/or database name.</p>
                 <code>keep_columns</code>
             </td>
             <td>
-                  <code>Optional[List[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9176,7 +9358,7 @@ Default value is None.</p>
                 <code>rename_columns</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9194,7 +9376,7 @@ Default value is None.</p>
                 <code>drop_columns</code>
             </td>
             <td>
-                  <code>Optional[List[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.List">List</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9221,7 +9403,7 @@ Default value is None.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9388,7 +9570,7 @@ match that of the DataFrame.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9404,7 +9586,7 @@ match that of the DataFrame.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9479,7 +9661,7 @@ by default False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>AnalysisException</code>
+                  <code><span title="pyspark.sql.utils.AnalysisException">AnalysisException</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9565,7 +9747,7 @@ accomplishes two main objectives:</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9729,7 +9911,7 @@ accomplishes two main objectives:</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9793,7 +9975,7 @@ accomplishes two main objectives:</p>
                 <code>s3_client</code>
             </td>
             <td>
-                  <code>client</code>
+                  <code><span title="boto3.client">client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9928,7 +10110,7 @@ save_csv_to_s3(
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9944,7 +10126,7 @@ save_csv_to_s3(
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9992,7 +10174,7 @@ save_csv_to_s3(
                 <code>filter_id</code>
             </td>
             <td>
-                  <code>Union[int, str]</code>
+                  <code><span title="typing.Union">Union</span>[int, str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10052,7 +10234,7 @@ when writing to the Hive table, by default False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10194,7 +10376,7 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10358,7 +10540,7 @@ client = storage.Client.from_service_account_json('path/to/keyfile.json')
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10469,7 +10651,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10579,7 +10761,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10689,7 +10871,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10836,7 +11018,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10984,7 +11166,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11111,7 +11293,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11214,7 +11396,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11272,7 +11454,7 @@ already exists, otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11350,7 +11532,7 @@ already exists, otherwise False.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Tuple[Dict, Dict]</code>
+                  <code><span title="typing.Tuple">Tuple</span>[<span title="typing.Dict">Dict</span>, <span title="typing.Dict">Dict</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11395,7 +11577,7 @@ already exists, otherwise False.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11640,7 +11822,7 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
                 <code>table_path</code>
             </td>
             <td>
-                  <code>TablePath</code>
+                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11712,7 +11894,7 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11760,7 +11942,7 @@ https://cloud.google.com/bigquery/docs/samples/bigquery-table-exists#bigquery_ta
                 <code>object_name</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -11860,7 +12042,7 @@ the local file path.</p>
                 <code>client</code>
             </td>
             <td>
-                  <code>Client</code>
+                  <code><span title="google.cloud.storage.Client">Client</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12057,7 +12239,7 @@ the local file path.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>InvalidBucketNameError</code>
+                  <code><a class="autorefs autorefs-internal" title="rdsa_utils.exceptions.InvalidBucketNameError" href="#rdsa_utils.exceptions.InvalidBucketNameError">InvalidBucketNameError</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12165,7 +12347,7 @@ the local file path.</p>
                 <code>table_path</code>
             </td>
             <td>
-                  <code>TablePath</code>
+                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12181,7 +12363,7 @@ the local file path.</p>
                 <code>columns</code>
             </td>
             <td>
-                  <code>Optional[Sequence[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12197,7 +12379,7 @@ the local file path.</p>
                 <code>date_column</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12213,7 +12395,7 @@ the local file path.</p>
                 <code>date_range</code>
             </td>
             <td>
-                  <code>Optional[Sequence[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12229,7 +12411,7 @@ the local file path.</p>
                 <code>column_filter_dict</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, Sequence[str]]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12246,7 +12428,7 @@ terms in the column that are to be filtered by.</p>
                 <code>partition_column</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12262,7 +12444,7 @@ terms in the column that are to be filtered by.</p>
                 <code>partition_type</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12282,7 +12464,7 @@ terms in the column that are to be filtered by.</p>
                 <code>partition_value</code>
             </td>
             <td>
-                  <code>Optional[Union[Tuple[str, str], str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="typing.Tuple">Tuple</span>[str, str], str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12353,7 +12535,7 @@ terms in the column that are to be filtered by.</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12369,7 +12551,7 @@ terms in the column that are to be filtered by.</p>
                 <code>table_path</code>
             </td>
             <td>
-                  <code>TablePath</code>
+                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12386,7 +12568,7 @@ terms in the column that are to be filtered by.</p>
                 <code>columns</code>
             </td>
             <td>
-                  <code>Optional[Sequence[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12402,7 +12584,7 @@ terms in the column that are to be filtered by.</p>
                 <code>date_column</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12418,7 +12600,7 @@ terms in the column that are to be filtered by.</p>
                 <code>date_range</code>
             </td>
             <td>
-                  <code>Optional[Sequence[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12434,7 +12616,7 @@ terms in the column that are to be filtered by.</p>
                 <code>column_filter_dict</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, Sequence[str]]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12451,7 +12633,7 @@ terms in the column that are to be filtered by.</p>
                 <code>run_id_column</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12467,7 +12649,7 @@ terms in the column that are to be filtered by.</p>
                 <code>run_id</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12484,7 +12666,7 @@ filtered to.</p>
                 <code>partition_column</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12500,7 +12682,7 @@ filtered to.</p>
                 <code>partition_type</code>
             </td>
             <td>
-                  <code>Optional[BigQueryTimePartitions]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.BigQueryTimePartitions">BigQueryTimePartitions</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12520,7 +12702,7 @@ filtered to.</p>
                 <code>partition_value</code>
             </td>
             <td>
-                  <code>Optional[Union[Tuple[str, str], str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="typing.Tuple">Tuple</span>[str, str], str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12563,7 +12745,7 @@ with individual columns for each of the fields in the structs.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12662,7 +12844,7 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
                 <code>df</code>
             </td>
             <td>
-                  <code>Union[DataFrame, DataFrame]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="pandas.DataFrame">DataFrame</span>, <span title="pyspark.sql.DataFrame">DataFrame</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12678,7 +12860,7 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
                 <code>table_name</code>
             </td>
             <td>
-                  <code>TablePath</code>
+                  <code><span title="rdsa_utils.typing.TablePath">TablePath</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12695,7 +12877,7 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
                 <code>mode</code>
             </td>
             <td>
-                  <code>Literal[&#39;append&#39;, &#39;error&#39;, &#39;ignore&#39;, &#39;overwrite&#39;]</code>
+                  <code><span title="typing.Literal">Literal</span>[&#39;append&#39;, &#39;error&#39;, &#39;ignore&#39;, &#39;overwrite&#39;]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12715,7 +12897,7 @@ https://github.com/GoogleCloudDataproc/spark-bigquery-connector/blob/master/READ
                 <code>partition_col</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12732,7 +12914,7 @@ partitioning.</p>
                 <code>partition_type</code>
             </td>
             <td>
-                  <code>Optional[BigQueryTimePartitions]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.BigQueryTimePartitions">BigQueryTimePartitions</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12759,7 +12941,7 @@ for more information on querying partitioned tables.</p>
                 <code>partition_expiry_days</code>
             </td>
             <td>
-                  <code>Optional[float]</code>
+                  <code><span title="typing.Optional">Optional</span>[float]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12777,7 +12959,7 @@ in each partition.</p>
                 <code>clustered_fields</code>
             </td>
             <td>
-                  <code>Optional[Union[str, List[str]]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[str, <span title="typing.List">List</span>[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12893,7 +13075,7 @@ for more information on querying clustered tables.</p>
                 <code>groups</code>
             </td>
             <td>
-                  <code>Union[str, Sequence[str]]</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12935,7 +13117,7 @@ for more information on querying clustered tables.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Column</code>
+                  <code><span title="pyspark.sql.Column">Column</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12983,7 +13165,7 @@ column if no column names to combine are passed.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13015,7 +13197,7 @@ column if no column names to combine are passed.</p>
                 <code>struct_cols</code>
             </td>
             <td>
-                  <code>Optional[Sequence[str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13031,7 +13213,7 @@ column if no column names to combine are passed.</p>
                 <code>no_struct_col_type</code>
             </td>
             <td>
-                  <code>DataTypeSingleton</code>
+                  <code><span title="pyspark.sql.types.DataTypeSingleton">DataTypeSingleton</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13040,7 +13222,7 @@ to place in the struct will be, default = BooleanType.</p>
               </div>
             </td>
             <td>
-                  <code>BooleanType()</code>
+                  <code><span title="pyspark.sql.types.BooleanType">BooleanType</span>()</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -13048,7 +13230,7 @@ to place in the struct will be, default = BooleanType.</p>
                 <code>no_struct_col_value</code>
             </td>
             <td>
-                  <code>Any</code>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13143,7 +13325,7 @@ the dummy column, default = None.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13255,7 +13437,7 @@ If no size is given, then a basic Spark session is spun up.</p>
                 <code>app_name</code>
             </td>
             <td>
-                  <code>Optional[str]</code>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13271,7 +13453,7 @@ If no size is given, then a basic Spark session is spun up.</p>
                 <code>size</code>
             </td>
             <td>
-                  <code>Optional[Literal[&#39;small&#39;, &#39;medium&#39;, &#39;large&#39;, &#39;extra-large&#39;]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Literal">Literal</span>[&#39;small&#39;, &#39;medium&#39;, &#39;large&#39;, &#39;extra-large&#39;]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13288,7 +13470,7 @@ If no size is given, then a basic Spark session is spun up.</p>
                 <code>extra_configs</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, str]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13315,7 +13497,7 @@ value for it. Will override any default settings.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13438,7 +13620,7 @@ point.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13464,7 +13646,7 @@ point.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13547,7 +13729,7 @@ all SparkDF variables in a function's local scope.</p>
                 <code>locals_dict</code>
             </td>
             <td>
-                  <code>Dict[str, Union[DataFrame, Dict]]</code>
+                  <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Union">Union</span>[<span title="pyspark.sql.DataFrame">DataFrame</span>, <span title="typing.Dict">Dict</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13574,7 +13756,7 @@ as keys and their corresponding objects as values.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Dict</code>
+                  <code><span title="typing.Dict">Dict</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13627,7 +13809,7 @@ partition_cols will contain values or not in advance.</p>
                 <code>partition_cols</code>
             </td>
             <td>
-                  <code>Optional[Union[str, Sequence[str]]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13643,7 +13825,7 @@ partition_cols will contain values or not in advance.</p>
                 <code>order_cols</code>
             </td>
             <td>
-                  <code>Optional[Union[str, Sequence[str]]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13670,7 +13852,7 @@ sequence is order that orderBy is applied).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>WindowSpec</code>
+                  <code><span title="pyspark.sql.WindowSpec">WindowSpec</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13749,7 +13931,7 @@ kwargs
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13877,7 +14059,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13893,7 +14075,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>id_vars</code>
             </td>
             <td>
-                  <code>Union[str, Sequence[str]]</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13909,7 +14091,7 @@ keep_columns is not found in the DataFrame.</p>
                 <code>value_vars</code>
             </td>
             <td>
-                  <code>Union[str, Sequence[str]]</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -13969,7 +14151,7 @@ data.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14050,7 +14232,7 @@ and <code>F.dense_rank()</code> do not assign unique values per row.</p>
                 <code>numeric</code>
             </td>
             <td>
-                  <code>Union[str, Sequence[str]]</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14067,7 +14249,7 @@ be ranked.</p>
                 <code>group</code>
             </td>
             <td>
-                  <code>Union[str, Sequence[str]]</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="typing.Sequence">Sequence</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14109,7 +14291,7 @@ be ranked.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Column</code>
+                  <code><span title="pyspark.sql.Column">Column</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14157,7 +14339,7 @@ set to True or False, respectively).</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14173,7 +14355,7 @@ set to True or False, respectively).</p>
                 <code>group</code>
             </td>
             <td>
-                  <code>Sequence[str]</code>
+                  <code><span title="typing.Sequence">Sequence</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14235,7 +14417,7 @@ respectively).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14289,7 +14471,7 @@ https://stackoverflow.com/a/51821437</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14305,7 +14487,7 @@ https://stackoverflow.com/a/51821437</p>
                 <code>column_list</code>
             </td>
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14321,7 +14503,7 @@ https://stackoverflow.com/a/51821437</p>
                 <code>nullable</code>
             </td>
             <td>
-                  <code>Optional[bool]</code>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14347,7 +14529,7 @@ https://stackoverflow.com/a/51821437</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14492,7 +14674,7 @@ def my_func(arg1, arg2)</p>
                 <code>spark</code>
             </td>
             <td>
-                  <code>SparkSession</code>
+                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14636,7 +14818,7 @@ when required, or if the table does not exist.</p>
                 <code>df</code>
             </td>
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14694,7 +14876,7 @@ when required, or if the table does not exist.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>DataFrame</code>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14909,7 +15091,7 @@ the end_date is set as final day of month.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>tuple[Timestamp, Timestamp]</code>
+                  <code>tuple[<span title="pandas.Timestamp">Timestamp</span>, <span title="pandas.Timestamp">Timestamp</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -14986,7 +15168,7 @@ output_columns
                 <code>sections</code>
             </td>
             <td>
-                  <code>List[List[str]]</code>
+                  <code><span title="typing.List">List</span>[<span title="typing.List">List</span>[str]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15002,7 +15184,7 @@ output_columns
                 <code>elements_to_add</code>
             </td>
             <td>
-                  <code>List[str]</code>
+                  <code><span title="typing.List">List</span>[str]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15101,7 +15283,7 @@ section will update automatically.</p>
                 <code>base_dict</code>
             </td>
             <td>
-                  <code>Mapping[str, Any]</code>
+                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15117,7 +15299,7 @@ section will update automatically.</p>
                 <code>override_dict</code>
             </td>
             <td>
-                  <code>Mapping[str, Any]</code>
+                  <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15143,7 +15325,7 @@ section will update automatically.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Dict[str, Any]</code>
+                  <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15406,7 +15588,7 @@ allow simpler access to each config section.</p>
                 <code>config_path</code>
             </td>
             <td>
-                  <code>Union[CloudPath, Path]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="cloudpathlib.CloudPath">CloudPath</span>, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15422,7 +15604,7 @@ allow simpler access to each config section.</p>
                 <code>config_overrides</code>
             </td>
             <td>
-                  <code>Optional[Config]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.Config">Config</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15441,7 +15623,7 @@ is raised.</p>
                 <code>optional</code>
             </td>
             <td>
-                  <code>Optional[Config]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="rdsa_utils.typing.Config">Config</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15460,7 +15642,7 @@ is raised.</p>
                 <code>config_type</code>
             </td>
             <td>
-                  <code>Optional[Literal[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Literal">Literal</span>[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15477,7 +15659,7 @@ not specified then this is inferred from the <code>config_path</code>.</p>
                 <code>optional</code>
             </td>
             <td>
-                  <code>Optional[Literal[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Literal">Literal</span>[&#39;json&#39;, &#39;toml&#39;, &#39;yaml&#39;]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15494,7 +15676,7 @@ not specified then this is inferred from the <code>config_path</code>.</p>
                 <code>config_validators</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, BaseModel]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="pydantic.BaseModel">BaseModel</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15514,7 +15696,7 @@ to alert that they have not been validated.</p>
                 <code>optional</code>
             </td>
             <td>
-                  <code>Optional[Dict[str, BaseModel]]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, <span title="pydantic.BaseModel">BaseModel</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15654,7 +15836,7 @@ to alert that they have not been validated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Config</code>
+                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15677,7 +15859,7 @@ to alert that they have not been validated.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>JSONDecodeError</code>
+                  <code><span title="json.decoder.JSONDecodeError">JSONDecodeError</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15749,7 +15931,7 @@ json.loads (i.e. converted to a dictionary).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Config</code>
+                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15820,7 +16002,7 @@ json.loads (i.e. converted to a dictionary).</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code>Config</code>
+                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15865,7 +16047,7 @@ json.loads (i.e. converted to a dictionary).</p>
                 <code>file</code>
             </td>
             <td>
-                  <code>Union[CloudPath, Path]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="cloudpathlib.CloudPath">CloudPath</span>, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -16230,7 +16412,7 @@ Default is False.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 16, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 20, 2024</span>
   </span>
 
     
