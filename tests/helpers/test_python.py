@@ -89,7 +89,7 @@ class TestExtendLists:
 class TestOverwriteDictionary:
     """Tests for the overwrite_dictionary function."""
 
-    @pytest.fixture
+    @pytest.fixture()
     def base_dict(self):
         """Create base dictionary used across all tests."""
         return {

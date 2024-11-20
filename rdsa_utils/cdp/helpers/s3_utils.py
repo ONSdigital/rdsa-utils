@@ -25,17 +25,14 @@ Note:
 
 import json
 import logging
+from io import StringIO
 from pathlib import Path
 from typing import Dict, List, Optional
-from io import StringIO
 
 import boto3
 import pandas as pd
 
-from rdsa_utils.exceptions import (
-    InvalidBucketNameError,
-    InvalidS3FilePathError,
-)
+from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
 logger = logging.getLogger(__name__)
 
@@ -1157,7 +1154,9 @@ def write_csv(
         # Write the buffer into the s3 bucket. Assign the output to a mute
         # variable, so the output is not displayed in the console or log.
         _ = client.put_object(
-            Bucket=bucket_name, Body=csv_buffer.getvalue(), Key=filepath,
+            Bucket=bucket_name,
+            Body=csv_buffer.getvalue(),
+            Key=filepath,
         )
         return True
 

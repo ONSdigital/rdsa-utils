@@ -67,7 +67,7 @@ def yaml_config_string() -> str:
     """
 
 
-@pytest.fixture
+@pytest.fixture()
 def expected_standard_config() -> Dict[str, Any]:
     """Fixture providing the loaded config from loading the temp file."""
     return {

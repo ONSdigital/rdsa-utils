@@ -74,7 +74,7 @@ class TestTimerArgs:
 class TestPrintFullTables:
     """Tests for the print_full_table_and_raise_error."""
 
-    @pytest.fixture
+    @pytest.fixture()
     def input_df(self):
         """Input pandas dataframe."""
         return create_dataframe(

@@ -41,7 +41,7 @@ class BaseTest:
     subprocess.Popen calls.
     """
 
-    @pytest.fixture
+    @pytest.fixture()
     def mock_subprocess_popen(self, monkeypatch):  # noqa: PT004
         """Fixture to mock the subprocess.Popen function.
 
@@ -71,7 +71,7 @@ class BaseTest:
 
         monkeypatch.setattr(subprocess, "Popen", mock_popen)
 
-    @pytest.fixture
+    @pytest.fixture()
     def mock_subprocess_popen_date_modifed(self):
         """Fixture to mock subprocess.Popen for testing get_date_modified.
 

@@ -633,7 +633,7 @@ class TestConvertColsToStructCol:
     unusual definition of the expected dataframe in these tests.
     """
 
-    @pytest.fixture
+    @pytest.fixture()
     def input_df_fixture(self, create_spark_df) -> SparkDF:
         """Provide a basic spark dataframe."""
         return create_spark_df(
@@ -1225,7 +1225,7 @@ qux"
 class TestTruncateExternalHiveTable:
     """Tests for truncate_external_hive_table function."""
 
-    @pytest.fixture
+    @pytest.fixture()
     def create_external_table(self, spark_session: SparkSession):
         """Create a mock external Hive table for testing."""
         spark = (
@@ -1244,7 +1244,7 @@ class TestTruncateExternalHiveTable:
         spark.sql("DROP DATABASE test_db")
         spark.stop()
 
-    @pytest.fixture
+    @pytest.fixture()
     def create_partitioned_table(self, spark_session: SparkSession):
         """Create a mock partitioned external Hive table for testing."""
         spark = (
