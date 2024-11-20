@@ -8,8 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Changed `cut_lineage` function inside `helpers/pyspark.py` to make it compatible
-  with newer PySpark versions.
+- Added `write_csv` function inside `cdp/helpers/s3_utils.py`.
 
 ### Changed
 
