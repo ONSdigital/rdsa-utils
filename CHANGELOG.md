@@ -10,6 +10,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Unpinned `pandas` version in `setup.cfg` to allow for more flexibility 
+  in dependency management.
+- Removed `numpy` from `setup.cfg` as it will be installed automatically by `pandas`.
 
 ### Deprecated
 
