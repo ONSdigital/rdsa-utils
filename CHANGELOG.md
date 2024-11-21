@@ -17,6 +17,21 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.4.0] - 2024-11-21
+
+### Added
+
+### Changed
+- Unpinned `pandas` version in `setup.cfg` to allow for more flexibility 
+  in dependency management.
+- Removed `numpy` from `setup.cfg` as it will be installed automatically by `pandas`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [v0.3.7] - 2024-11-20
 
 ### Added
@@ -447,6 +462,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > and GitHub Releases.
 
 
+- rdsa-utils v0.4.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.0) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.4.0/)
 - rdsa-utils v0.3.7: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.7) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.7/)
 - rdsa-utils v0.3.6: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.6) | 
