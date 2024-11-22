@@ -10,6 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Updated the `ons-mkdocs-theme` version number in docs requirements.
 
 ### Deprecated
 
