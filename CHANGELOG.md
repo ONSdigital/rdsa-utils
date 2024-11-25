@@ -17,6 +17,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.4.1] - 2024-11-25
+
+### Added
+
+### Changed
+- Updated the `ons-mkdocs-theme` version number in `doc` requirements in `setup.cfg`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.4.0] - 2024-11-21
 
 ### Added
@@ -461,7 +474,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
-
+- rdsa-utils v0.4.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.1) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.4.1/)
 - rdsa-utils v0.4.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.0) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.4.0/)
 - rdsa-utils v0.3.7: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.7) | 
