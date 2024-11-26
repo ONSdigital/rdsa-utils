@@ -3,6 +3,7 @@
 import json
 
 import boto3
+import pandas as pd
 import pytest
 from moto import mock_aws
 
@@ -24,6 +25,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     upload_folder,
     validate_bucket_name,
     validate_s3_file_path,
+    write_csv,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -1064,3 +1066,43 @@ class TestLoadJSON:
 
         with pytest.raises(InvalidBucketNameError):
             load_json(s3_client, "INVALID_BUCKET", "test-file.json")
+
+
+class TestWriteCSV:
+    """Tests for write_csv function."""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="test-bucket")
+            yield s3
+
+    def test_write_csv_success(self, s3_client):
+        """Test that write_csv returns True if successful."""
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+        df = pd.DataFrame(data)
+
+        result = write_csv(s3_client, "test-bucket", df, "test_file.csv")
+        assert result
+
+    def test_write_csv_read_back(self, s3_client):
+        """Test that a file wrtitten by write_csv can be read back and returns
+        the same dataframe as input. Uses kwargs.
+        """
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+        df = pd.DataFrame(data)
+
+        _ = write_csv(s3_client, "test-bucket", df, "test_file.csv", index=False)
+        result = load_csv(s3_client, "test-bucket", "test_file.csv")
+        pd.testing.assert_frame_equal(df, result)
+
+    def test_write_csv_failure(self, s3_client):
+        """Test that write_csv returns False if unable to write.
+        Dictionary data does not have to_csv method.
+        """
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+
+        result = write_csv(s3_client, "test-bucket", data, "test_file.csv", index=False)
+        assert not result

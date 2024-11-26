@@ -18,6 +18,47 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.4.1] - 2024-11-25
+
+### Added
+
+### Changed
+- Updated the `ons-mkdocs-theme` version number in `doc` requirements in `setup.cfg`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.4.0] - 2024-11-21
+
+### Added
+
+### Changed
+- Unpinned `pandas` version in `setup.cfg` to allow for more flexibility 
+  in dependency management.
+- Removed `numpy` from `setup.cfg` as it will be installed automatically by `pandas`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [v0.3.7] - 2024-11-20
+
+### Added
+- Added `write_csv` function inside `cdp/helpers/s3_utils.py`.
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [v0.3.6] - 2024-10-16
 
 ### Added
@@ -434,7 +475,12 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
-
+- rdsa-utils v0.4.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.1) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.4.1/)
+- rdsa-utils v0.4.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.0) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.4.0/)
+- rdsa-utils v0.3.7: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.7) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.3.7/)
 - rdsa-utils v0.3.6: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.6) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.3.6/)
 - rdsa-utils v0.3.5: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.3.5) | 
