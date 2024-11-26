@@ -195,7 +195,7 @@ class TestInsertDataFrameToHiveTable:
 
     @patch("pyspark.sql.DataFrame.repartition")
     @patch("pyspark.sql.DataFrameReader.table")
-    def test_insert_df_to_hive_table_with_repartition_column(
+    def test_insert_df_to_hive_table_with_repartition_data_by(
         self,
         mock_table,
         mock_repartition,
@@ -214,7 +214,7 @@ class TestInsertDataFrameToHiveTable:
             spark_session,
             test_df,
             table_name,
-            repartition_column="id",  # We expect "id" column to be used for repartitioning
+            repartition_data_by="id",  # We expect "id" column to be used for repartitioning
             overwrite=True,
         )
 
@@ -242,7 +242,7 @@ class TestInsertDataFrameToHiveTable:
             spark_session,
             test_df,
             table_name,
-            repartition_column=5,  # Expecting 5 partitions
+            repartition_data_by=5,  # Expecting 5 partitions
             overwrite=True,
         )
 

@@ -37,7 +37,7 @@ def insert_df_to_hive_table(
     table_name: str,
     overwrite: bool = False,
     fill_missing_cols: bool = False,
-    repartition_column: Union[int, str, None] = None,
+    repartition_data_by: Union[int, str, None] = None,
 ) -> None:
     """Write SparkDF to Hive table with optional configuration.
 
@@ -67,7 +67,7 @@ def insert_df_to_hive_table(
     fill_missing_cols
         If True, adds missing columns as nulls. If False, raises error
         on schema mismatch (default is False).
-    repartition_column
+    repartition_data_by
         Controls data repartitioning, default is None:
         - int: Sets target number of partitions.
         - str: Specifies column to repartition by.
@@ -127,7 +127,7 @@ def insert_df_to_hive_table(
     ...     spark=spark,
     ...     df=df,
     ...     table_name="my_database.my_table",
-    ...     repartition_column="partition_column"
+    ...     repartition_data_by="partition_column"
     ... )
 
     Repartition into a fixed number of partitions before writing:
@@ -135,7 +135,7 @@ def insert_df_to_hive_table(
     ...     spark=spark,
     ...     df=df,
     ...     table_name="my_database.my_table",
-    ...     repartition_column=10
+    ...     repartition_data_by=10
     ... )
     """
     logger.info(f"Preparing to write data to {table_name} with overwrite={overwrite}.")
@@ -175,13 +175,13 @@ def insert_df_to_hive_table(
     df = df.select(table_columns) if table_exists else df
 
     # Apply repartitioning if specified
-    if repartition_column is not None:
-        if isinstance(repartition_column, int):
-            logger.info(f"Repartitioning data into {repartition_column} partitions.")
-            df = df.repartition(repartition_column)
-        elif isinstance(repartition_column, str):
-            logger.info(f"Repartitioning data by column {repartition_column}.")
-            df = df.repartition(repartition_column)
+    if repartition_data_by is not None:
+        if isinstance(repartition_data_by, int):
+            logger.info(f"Repartitioning data into {repartition_data_by} partitions.")
+            df = df.repartition(repartition_data_by)
+        elif isinstance(repartition_data_by, str):
+            logger.info(f"Repartitioning data by column {repartition_data_by}.")
+            df = df.repartition(repartition_data_by)
 
     # Write DataFrame to Hive table based on existence and overwrite parameter
     try:
