@@ -88,9 +88,10 @@ class TestInsertDataFrameToHiveTable:
                 ),  # Include 'address' with StringType
             ],
         )
+        mock_table.return_value.schema = mock_table_schema
+
         # Create a mock of the DataFrame (test_df) that does not contain 'address'
         test_df_mock = MagicMock()
-        mock_table.return_value.schema = mock_table_schema
         test_df_mock.columns = [
             "id",
             "name",
