@@ -10,7 +10,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- Updated ons-mkdocs-theme version from `1.1.2` to `1.1.3` to fix issues with the crest not showing in the footer of documentation site.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.4.2] - 2024-11-26
+
+### Added
+
+### Changed
+- Updated ons-mkdocs-theme version from `1.1.2` to `1.1.3` to fix issues with the crest 
+  not showing in the footer of documentation site.
 
 ### Deprecated
 
@@ -475,6 +488,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.4.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.2) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.4.2/)
 - rdsa-utils v0.4.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.1) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.4.1/)
 - rdsa-utils v0.4.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.0) | 
