@@ -76,8 +76,21 @@ class TestInsertDataFrameToHiveTable:
         # Mock the table's columns to include 'address'
         mock_table.return_value.columns = ["id", "name", "age", "address"]
 
+        # Mock the Hive table schema
+        mock_table_schema = T.StructType(
+            [
+                T.StructField("id", T.IntegerType()),
+                T.StructField("name", T.StringType()),
+                T.StructField("age", T.IntegerType()),
+                T.StructField(
+                    "address",
+                    T.StringType(),
+                ),  # Include 'address' with StringType
+            ],
+        )
         # Create a mock of the DataFrame (test_df) that does not contain 'address'
         test_df_mock = MagicMock()
+        mock_table.return_value.schema = mock_table_schema
         test_df_mock.columns = [
             "id",
             "name",
