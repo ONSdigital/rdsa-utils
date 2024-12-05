@@ -10,6 +10,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.4.3] - 2024-12-05
+
+### Added
+
+### Changed
 - Update `CODEOWNERS` file, changed email to GitHub username.
 
 ### Deprecated
@@ -489,6 +501,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.4.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.3) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.4.3/)
 - rdsa-utils v0.4.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.2) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.4.2/)
 - rdsa-utils v0.4.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.1) | 
