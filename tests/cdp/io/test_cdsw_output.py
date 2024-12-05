@@ -1,7 +1,7 @@
 """Tests for the cdp/io/output.py module."""
 
 from typing import Callable
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 from moto import mock_aws
@@ -57,12 +57,14 @@ class TestInsertDataFrameToHiveTable:
 
         return df
 
-    @patch("pyspark.sql.DataFrameWriter.insertInto")
+    @patch("pyspark.sql.DataFrame.withColumn")
     @patch("pyspark.sql.DataFrameReader.table")
+    @patch("pyspark.sql.functions.lit")
     def test_insert_df_to_hive_table_with_missing_columns(
         self,
+        mock_lit,
         mock_table,
-        mock_insert_into,
+        mock_with_column,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
@@ -70,10 +72,44 @@ class TestInsertDataFrameToHiveTable:
         table when 'fill_missing_cols' is True.
         """
         table_name = "test_table"
-        # Mock the table columns
+
+        # Mock the table's columns to include 'address'
         mock_table.return_value.columns = ["id", "name", "age", "address"]
-        # Mock the DataFrameWriter insertInto
-        mock_insert_into.return_value = None
+
+        # Mock the Hive table schema
+        mock_table_schema = T.StructType(
+            [
+                T.StructField("id", T.IntegerType()),
+                T.StructField("name", T.StringType()),
+                T.StructField("age", T.IntegerType()),
+                T.StructField(
+                    "address",
+                    T.StringType(),
+                ),  # Include 'address' with StringType
+            ],
+        )
+        mock_table.return_value.schema = mock_table_schema
+
+        # Create a mock of the DataFrame (test_df) that does not contain 'address'
+        test_df_mock = MagicMock()
+        test_df_mock.columns = [
+            "id",
+            "name",
+            "age",
+        ]  # Mock that it doesn't have 'address'
+
+        # Mock `withColumn` behavior - ensure it's being called
+        # with correct column expression
+        mock_with_column.return_value = (
+            test_df_mock  # Simulate that `withColumn` returns `test_df_mock`
+        )
+
+        # Mock the return of the `lit` function to simulate the expression
+        mock_lit.return_value = F.lit(None).cast(
+            T.StringType(),
+        )  # We expect the `lit` to return the null expression
+
+        # Call the function to insert data into the table
         insert_df_to_hive_table(
             spark_session,
             test_df,
@@ -81,8 +117,17 @@ class TestInsertDataFrameToHiveTable:
             overwrite=True,
             fill_missing_cols=True,
         )
-        # Assert that insertInto was called with correct arguments
-        mock_insert_into.assert_called_with(table_name, True)
+
+        # Assert that `lit` was called with `None` to create the null expression
+        mock_lit.assert_called_with(None)
+
+        # Since `lit().cast()` returns the same object,
+        # directly assert the final return value
+        expected_column = F.lit(None).cast(T.StringType())
+
+        # Check if withColumn was called with 'address' and the expected expression
+        # Compare the exact column expression (the expected one, not the mock)
+        mock_with_column.assert_any_call("address", expected_column)
 
     @patch("pyspark.sql.DataFrameReader.table")
     def test_insert_df_to_hive_table_without_missing_columns(
@@ -106,22 +151,136 @@ class TestInsertDataFrameToHiveTable:
                 fill_missing_cols=False,
             )
 
+    @patch("pyspark.sql.DataFrameWriter.insertInto")
     @patch("pyspark.sql.DataFrameReader.table")
-    def test_insert_df_to_hive_table_with_non_existing_table(
+    def test_insert_df_to_hive_table_insert_into_existing_table(
         self,
         mock_table,
+        mock_insert_into,
         spark_session: SparkSession,
         test_df: SparkDF,
     ) -> None:
-        """Test that insert_df_to_hive_table raises an AnalysisException when
-        the table doesn't exist.
-        """
-        table_name = "non_existing_table"
-        # Create an AnalysisException with a stack trace
-        exc = AnalysisException(f"Table {table_name} not found.")
-        mock_table.side_effect = exc
-        with pytest.raises(AnalysisException):
-            insert_df_to_hive_table(spark_session, test_df, table_name)
+        """Test that insertInto is called when the table already exists in Hive."""
+        table_name = "existing_table"
+
+        # Mock the table columns to simulate the table already exists
+        mock_table.return_value.columns = ["id", "name", "age"]
+
+        # Simulate a successful call to `insertInto`
+        mock_insert_into.return_value = None
+
+        # Call the function that triggers insertInto when the table exists
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+        )
+
+        # Assert that insertInto was called with the correct table name
+        mock_insert_into.assert_called_once_with(table_name)
+
+    @patch("pyspark.sql.DataFrameWriter.saveAsTable")
+    @patch("pyspark.sql.DataFrameReader.table")
+    def test_insert_df_to_hive_table_save_as_table_when_table_does_not_exist(
+        self,
+        mock_table,
+        mock_save_as_table,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that saveAsTable is called when the Hive table does not exist."""
+        table_name = "new_table"
+
+        # Simulate the table not existing by raising an AnalysisException
+        mock_table.side_effect = AnalysisException(f"Table {table_name} not found.")
+
+        # Simulate a successful call to `saveAsTable`
+        mock_save_as_table.return_value = None
+
+        # Call the function that triggers saveAsTable when the table does not exist
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+        )
+
+        # Assert that saveAsTable was called with the correct table name
+        mock_save_as_table.assert_called_once_with(table_name)
+
+    @patch("pyspark.sql.DataFrame.repartition")
+    @patch("pyspark.sql.DataFrameReader.table")
+    def test_insert_df_to_hive_table_with_repartition_data_by(
+        self,
+        mock_table,
+        mock_repartition,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that the DataFrame is repartitioned by a specified column."""
+        table_name = "test_table"
+        mock_table.return_value.columns = ["id", "name", "age"]
+
+        # Ensure that mock_repartition is set to return the same test_df
+        mock_repartition.return_value = test_df
+
+        # Call the function that triggers repartition
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+            repartition_data_by="id",  # We expect "id" column to be used for repartitioning
+            overwrite=True,
+        )
+
+        # Assert that repartition was called with the correct argument (the column name)
+        mock_repartition.assert_called_once_with("id")
+
+    @patch("pyspark.sql.DataFrame.repartition")
+    @patch("pyspark.sql.DataFrameReader.table")
+    def test_insert_df_to_hive_table_with_repartition_num_partitions(
+        self,
+        mock_table,
+        mock_repartition,
+        spark_session: SparkSession,
+        test_df: SparkDF,
+    ) -> None:
+        """Test that the DataFrame is repartitioned into a specific number of partitions."""
+        table_name = "test_table"
+        mock_table.return_value.columns = ["id", "name", "age"]
+
+        # Ensure that mock_repartition is set to return the same test_df
+        mock_repartition.return_value = test_df
+
+        # Call the function that triggers repartition
+        insert_df_to_hive_table(
+            spark_session,
+            test_df,
+            table_name,
+            repartition_data_by=5,  # Expecting 5 partitions
+            overwrite=True,
+        )
+
+        # Assert that repartition was called with the number of partitions (5)
+        mock_repartition.assert_called_once_with(5)
+
+    def test_insert_df_to_hive_table_with_empty_dataframe(
+        self,
+        spark_session: SparkSession,
+    ) -> None:
+        """Test that an empty DataFrame raises DataframeEmptyError."""
+        from rdsa_utils.exceptions import DataframeEmptyError
+
+        table_name = "test_table"
+        empty_df = spark_session.createDataFrame(
+            [],
+            schema="id INT, name STRING, age INT",
+        )
+        with pytest.raises(DataframeEmptyError):
+            insert_df_to_hive_table(
+                spark_session,
+                empty_df,
+                table_name,
+            )
 
 
 class TestWriteAndReadHiveTable:

@@ -10,6 +10,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Modified `insert_df_to_hive_table` function in `cdp/io/output.py`. Added support 
+  for creating non-existent Hive tables, repartitioning by column or partition count, 
+  and handling missing columns with explicit type casting.
 
 ### Deprecated
 
