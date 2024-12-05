@@ -10,6 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Update `CODEOWNERS` file, changed email to GitHub username.
 
 ### Deprecated
 
