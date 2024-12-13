@@ -1141,12 +1141,12 @@ def write_csv(
 
     Examples
     --------
-    >>> s3_client = boto3.client('s3')
+    >>> client = boto3.client('s3')
     >>> data = pd.DataFrame({
     >>>     'column1': [1, 2, 3],
     >>>     'column2': ['a', 'b', 'c']
     >>> })
-    >>> write_csv(s3_client, 'my_bucket', data, 'path/to/file.csv')
+    >>> write_csv(client, 'my_bucket', data, 'path/to/file.csv')
     True
     """
     try:
