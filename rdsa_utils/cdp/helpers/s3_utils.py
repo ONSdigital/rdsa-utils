@@ -677,12 +677,12 @@ def list_files(
     prefix = remove_leading_slash(prefix)
 
     try:
-        response = client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         files = []
-        if "Contents" in response:
-            for obj in response["Contents"]:
-                files.append(obj["Key"])
-        return files
+        paginator = client.get_paginator("list_objects_v2")
+        for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
+            if "Contents" in page:
+                for obj in page["Contents"]:
+                    files.append(obj["Key"])
     except client.exceptions.ClientError as e:
         logger.error(f"Failed to list files in bucket: {str(e)}")
         return []
