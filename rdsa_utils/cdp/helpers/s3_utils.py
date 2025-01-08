@@ -683,6 +683,7 @@ def list_files(
             if "Contents" in page:
                 for obj in page["Contents"]:
                     files.append(obj["Key"])
+        return files
     except client.exceptions.ClientError as e:
         logger.error(f"Failed to list files in bucket: {str(e)}")
         return []
