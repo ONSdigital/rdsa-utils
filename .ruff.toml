@@ -35,3 +35,5 @@ inline-quotes = "double"
 "*/__init__.py" = ["D104"]
 "*/" = ["B006", "PTH123", "B008"]
 "tests/*" = ["ANN", "D100", "E501", "F403", "F405", "PT011", "B017", "D205"]
+"rdsa_utils/rdsa_data_validator/data_validation.py" = ["D409", "D406", "D205"]
+
