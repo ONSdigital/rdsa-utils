@@ -13,7 +13,7 @@ from rdsa_utils.exceptions import DataframeEmptyError
 class TestGetCurrentDatabase:
     """Tests for get_current_database function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def setup_and_teardown_database(  # noqa: PT004
         self,
         spark_session: SparkSession,
@@ -68,7 +68,7 @@ class TestGetCurrentDatabase:
 class TestExtractDatabaseName:
     """Tests for extract_database_name function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def dummy_database_and_table(
         self,
         spark_session: SparkSession,

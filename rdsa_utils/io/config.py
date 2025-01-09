@@ -12,8 +12,8 @@ from pydantic import BaseModel
 from rdsa_utils.exceptions import ConfigError
 from rdsa_utils.helpers.python import overwrite_dictionary
 from rdsa_utils.io.input import parse_json, parse_toml, parse_yaml, read_file
+from rdsa_utils.rdsa_data_validator.data_validation import apply_validation
 from rdsa_utils.typing import Config
-from rdsa_utils.validation import apply_validation
 
 logger = logging.getLogger(__name__)
 

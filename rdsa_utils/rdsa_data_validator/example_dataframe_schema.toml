@@ -1,0 +1,69 @@
+# example_dataframe_schema.toml
+# This TOML file defines a schema for validating Pandas and PySpark DataFrames.  It serves as an example
+# for users to define their own validation schemas.
+
+# example_dataframe_schema.toml
+# This TOML file defines a schema for validating Pandas and PySpark DataFrames.  It serves as an example
+# for users to define their own validation schemas.
+
+# example_dataframe_schema.toml
+# This TOML file defines a schema for validating Pandas and PySpark DataFrames.
+# It serves as an example for users to define their own validation schemas.
+
+[data_asset]
+name = "example_survey_results"
+
+[reference]
+description = "Unique identifier for the record."
+nullable = true
+data_type = "str"
+length = ">=1"
+min_value_str = 11001603625
+max_value_srt = 19891309165
+possible_values = ["a", "b"]  # Placeholder - replace with actual values or remove
+regex_pattern = "^\d+$"  # Example: only digits allowed
+unique = true
+
+
+[period]
+description = "Period of the data."
+nullable = false
+data_type = "str"
+length = 6
+min_value = "nan"  # No minimum value specified
+max_value = "nan" # No maximum value specified
+possible_values = [202012]  # Only this value is allowed
+regex_pattern = "^\d{6}$" # Example: exactly 6 digits
+
+
+[survey]
+description = "Survey identifier."
+nullable = false
+data_type = "str"
+length = ">=1" 
+min_value = "nan"  # No minimum value check needed
+max_value = "nan"  # No maximum value check needed
+possible_values = ["002"]
+regex_pattern = "^002$" # Example: Must be exactly "002"
+
+
+[date_col_example_1]
+description = "Date in YYYY-MM-DD format."
+data_type = "datetime64[ns]"
+date_format = "%Y-%m-%d"
+
+
+[date_col_example_2]
+description = "Date and time in ISO 8601 format."
+data_type = "datetime64[ns]"
+date_format = "%Y-%m-%dT%H:%M:%S%z"
+
+
+[integer_col_example]
+description = "Example integer column with number format."
+data_type = "int"
+number_str_format = "{:d}"
+
+
+
+# Add more column definitions as needed, following the same structure.

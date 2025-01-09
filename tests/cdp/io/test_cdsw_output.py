@@ -14,7 +14,7 @@ from rdsa_utils.cdp.io.output import *
 class TestInsertDataFrameToHiveTable:
     """Tests for insert_df_to_hive_table function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def test_df(self, spark_session: SparkSession, create_spark_df: Callable):
         """Fixture to create a test DataFrame with the help of `create_spark_df`
         callable.
@@ -286,12 +286,12 @@ class TestInsertDataFrameToHiveTable:
 class TestWriteAndReadHiveTable:
     """Tests for write_and_read_hive_table function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def mock_spark(self):
         """Fixture for mocked SparkSession."""
         return Mock(spec=SparkSession)
 
-    @pytest.fixture()
+    @pytest.fixture
     def mock_df(self):
         """Fixture for mocked DataFrame with 'run_id' and 'data' columns."""
         mock_df = Mock(spec=SparkDF)
@@ -381,7 +381,7 @@ class TestWriteAndReadHiveTable:
 class TestSaveCSVToHDFS:
     """Tests for save_csv_to_hdfs function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def mock_df(self) -> Mock:
         """Fixture for mocked Spark DataFrame."""
         return Mock(spec=SparkDF)

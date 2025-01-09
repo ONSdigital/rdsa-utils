@@ -1,0 +1,20 @@
+# This is the config for the config_validator
+
+[paths]
+example_schema_path = "rdsa_utils/rdsa_data_validator/config_validator_config.toml"
+
+log_file_path = "rdsa_utils/rdsa_data_validator/logs/toml_validation.log"
+
+[datatypes]
+
+[datatypes.python_types]
+types = ["int", "float", "str", "bool", "list", "tuple", "dict", "set", "datetime.datetime"]
+
+[datatypes.pandas_numpy_types]
+types = ["int64", "int32", "int16", "int8", "float64", "float32", "object", "bool_", "datetime64[ns]", "timedelta64[ns]", "category"]
+
+[datatypes.pyspark_types]
+types = ["StringType", "IntegerType", "FloatType", "DoubleType", "BooleanType", "TimestampType", "DateType", "ArrayType", "MapType", "StructType"]
+
+[required_fields]
+fields = ["description", "data_type", "nullable"]

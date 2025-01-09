@@ -171,7 +171,7 @@ def timer_args(
     name: str,
     logger: Optional[Callable[[str], None]] = logger.info,
 ) -> Dict[str, str]:
-    """Initialise timer args workaround for 'text' args in codetiming package.
+    """Initialise timer args workaround for 'text' args in package.
 
     Works with codetiming==1.4.0
 
