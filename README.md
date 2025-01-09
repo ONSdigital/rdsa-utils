@@ -63,6 +63,8 @@ We highly recommend checking out the following resources to learn more about cre
 
 - [PySpark Introduction and Training Book](https://best-practice-and-impact.github.io/ons-spark/intro.html) - An introduction to using PySpark for large-scale data processing.
 
+Additionally, if you are facing the challenge of repeatedly setting up new developers and new users in local Python, then you may want to consider making a batch file to carry out the setup process for you. The [easypipelinerun](https://github.com/ONSdigital/easy_pipeline_run/) repo has a batch file that can be modified to set your users up for your project, taking care of things like conda and pip set up as well as environment management.  
+
 ## 🛡️ Licence
 
 Unless stated otherwise, the codebase is released under the [MIT License][mit].
