@@ -495,6 +495,20 @@ class TestListFiles:
         )
         assert len(files) == 0
 
+    def test_list_files_pagination(self, s3_client_for_list_files):
+        """Test listing >1000 files to verify pagination works correctly."""
+        for i in range(1001):
+            s3_client_for_list_files.put_object(
+                Bucket="test-bucket",
+                Key=f"paginated/file_{i:04d}.txt",
+                Body=b"Test content",
+            )
+
+        files = list_files(s3_client_for_list_files, "test-bucket")
+        assert len(files) == 1006
+        assert "paginated/file_0000.txt" in files
+        assert "paginated/file_1000.txt" in files
+
 
 @pytest.fixture()
 def s3_client_for_delete_and_copy(_aws_credentials):
