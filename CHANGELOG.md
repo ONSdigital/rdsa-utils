@@ -10,6 +10,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Modified `list_files` function in `cdp/helpers/s3_utils.py` to use pagination 
+when listing objects from S3 buckets, improving handling of large buckets.
+- Added test cases for new pagination functionality in `list_files` function in `tests/cdp/helpers/test_s3_utils.py`.
 
 ### Deprecated
 
