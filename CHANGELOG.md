@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added link and description of `easy_pipeline_run` repo to `README.md`.
 
 ### Changed
 
