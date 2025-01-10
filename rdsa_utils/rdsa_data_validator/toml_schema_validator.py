@@ -11,12 +11,17 @@ Author: James Westwood
 
 import datetime
 import logging
-import os
 import re
+import sys
+from pathlib import Path
 from typing import Any, Dict, List
 
 import pandas as pd
-import tomli
+
+if sys.version_info >= (3, 11):
+    import tomllib as tomli
+else:
+    import tomli
 
 
 class MissingDataTypesError(Exception):  # Define a custom exception
@@ -75,13 +80,13 @@ class TOMLSchemaValidator:
 
     def __init__(self, config_file_path="config_validator_config.toml"):
         self.toml_val_logger = logging.getLogger(__name__)
-        self.config = self._load_config(config_file_path)
+        self._load_config(config_file_path)  # should create self.config
         self.selected_functions = {}
 
-        if self.config:  # Get datatypes if config loaded successfully
+        if self.config:
             self.all_data_types = self._get_data_type_names()
         else:
-            self.all_data_types = []  # Or handle the error as needed
+            self.all_data_types = []
 
         self.validation_functions = {
             "description": self._validate_description,
@@ -125,23 +130,20 @@ class TOMLSchemaValidator:
         """Loads the TOML config file, handling errors gracefully.
 
         Args:
-            config_file_name (str): Name of config file (allows for easier testing)
+            config_file_name (str): Name of config file (allows for easier
+            testing)
         """
         try:
             config_path = os.path.join(os.path.dirname(__file__), config_file_name)
-            with open(config_path, "r", encoding="cp1252") as f:
+            with open(config_path, "r", encoding="utf-8") as f:
                 toml_string = f.read()  # Read entire file into a string
             self.config = tomli.loads(toml_string)  # Use loads() for strings
         except FileNotFoundError:
+            self.toml_val_logger.error(f"Config file '{config_file_name}' not found.")
+        except tomli.TOMLDecodeError as e:
             self.toml_val_logger.error(
-                f"Config file '{config_file_name}' not found.",
-            )  # Log the error
-            return None  # or raise an exception, depending on how you want to handle it
-        except (
-            tomli.TOMLDecodeError
-        ) as e:  # Or toml.TomlDecodeError if you're using the 'toml' library
-            self.toml_val_logger.error(f"Error decoding TOML file: {e}")
-            return None  # Or raise exception.
+                f"Error decoding TOML file '{config_file_name}': {e}"
+            )
 
     def _load_validation_schema(self, toml_path: str) -> Dict[str, Any]:
         """Loads a data validation schema from a TOML file.
@@ -151,37 +153,26 @@ class TOMLSchemaValidator:
 
         Returns
         -------
-            A dictionary representing the validation schema, or None if an error occurs.
+            A dictionary representing the validation schema, or None if an
+            error occurs.
 
         """
         try:
-            with open(toml_path, "r") as f:
+            with open(toml_path, "rb") as f:
                 schema = tomli.load(f)
 
             if not isinstance(schema, dict):
-                self.toml_val_logger.error(
-                    "Invalid schema: TOML must be parsed as a dictionary.",
-                )
+                self.toml_val_logger.error("Invalid schema: TOML must be a dictionary.")
                 return None
 
             return schema
 
         except FileNotFoundError:
-            self.toml_val_logger.error(
-                f"TOML file not found at: {toml_path}",
-            )  # Log error
+            self.toml_val_logger.error(f"TOML file not found at: {toml_path}")
             return None
         except tomli.TOMLDecodeError as e:
-            self.toml_val_logger.error(f"Invalid TOML in {toml_path}: {e}")  # Log error
+            self.toml_val_logger.error(f"Invalid TOML in {toml_path}: {e}")
             return None
-
-        except FileNotFoundError:
-            print(
-                f"Warning: TOML file not found at {toml_path}. Returning empty schema.",
-            )
-            return {}  # Return empty dictionary to handle missing config gracefully
-        except tomli.TomlDecodeError as e:  # Catch TOML decoding errors
-            raise tomli.TomlDecodeError(f"Invalid TOML in {toml_path}: {e}")
 
     def _check_required_fields(
         self,
@@ -198,11 +189,11 @@ class TOMLSchemaValidator:
             for field in required_fields:
                 if field not in col_config or col_config[field] is None:
                     col_errors.append(
-                        f"Column '{col_name}' is missing required field '{field}'.",
+                        f"Column '{col_name}' is missing required field '{field}'."
                     )
                     if field == "data_type" and "possible_values" in col_config:
                         col_errors.append(
-                            f"Column '{col_name}' cannot have possible values without a data_type",
+                            f"Column '{col_name}' cannot have possible values without a data_type"
                         )
         return col_errors
 
@@ -238,26 +229,32 @@ class TOMLSchemaValidator:
             col_errors.append(f"Column '{col_name}' has an invalid description.")
         elif len(col_config["description"].split()) == 0:  # Check for at least one word
             col_errors.append(
-                f"Column '{col_name}' description must contain at least one word.",
+                f"Column '{col_name}' description must contain at least one word."
             )
         return col_errors
 
-    def _validate_nullable(
-        self,
-        col_config: Dict[str, Any],
-        col_errors: List[str],
-        col_name: str,
-    ) -> List[str]:
+    def _validate_nullable(self, col_config, col_errors, col_name):
         """Validates the 'nullable' field against the schema."""
         if not isinstance(col_config["nullable"], bool):
             col_errors.append(f"Column '{col_name}': 'nullable' must be a boolean.")
+            return col_errors  # Return early if nullable is invalid
 
-        elif not col_config["nullable"] and "possible_values" in col_config:
-            invalid_values = [None, "nan", "None", "NULL", float("nan"), pd.NA]
-            if any(val in invalid_values for val in col_config["possible_values"]):
-                col_errors.append(
-                    f"Column '{col_name}' is non-nullable but 'possible_values' contains null-like values.",
-                )
+        if not col_config["nullable"] and "possible_values" in col_config:
+            invalid_values = [
+                None,
+                "nan",
+                "None",
+                "NULL",
+                float("nan"),
+            ]  # Removed pd.NA from this list
+            for val in col_config["possible_values"]:  # Iterating to handle pd.NA
+                if pd.isna(val) or val in invalid_values:
+                    col_errors.append(
+                        f"Column '{col_name}' is non-nullable but 'possible_values' contains null-like values."
+                    )
+
+                    return col_errors  # Return early once an error is found
+
         return col_errors
 
     def _get_data_type_names(self) -> List[str]:
@@ -283,30 +280,31 @@ class TOMLSchemaValidator:
         Checks for valid data types and appropriate use of min/max value and length constraints.
         """
         data_type = col_config.get("data_type")
-        if not data_type or data_type == "":  # Check for presence of data type.
+        if not data_type or data_type == "":
             col_errors.append(f"Column '{col_name}' is missing a data_type.")
 
         if data_type not in self.all_data_types:
             col_errors.append(
-                f"{data_type} in column '{col_name}' is not a valid data type",
+                f"{data_type} in column '{col_name}' is not a valid data type"
             )
 
         elif data_type == "category":  # possible_values must be present
             if (
                 "possible_values" not in col_config
                 or col_config["possible_values"] == "nan"
-            ):  # Expecting list of possible values for categories
+            ):
                 col_errors.append(
-                    f"Column '{col_name}' must have 'possible_values' if data_type is 'category'.",
+                    f"Column '{col_name}' must have 'possible_values' if data_type is 'category'."
                 )
         else:
             col_errors.append(
-                f"Invalid data_type '{data_type}' specified for column '{col_name}'.",
+                f"Invalid data_type '{data_type}' specified for column '{col_name}'."
             )
 
         return col_errors
 
     def _validate_length(
+        self,
         col_config: Dict[str, Any],
         col_errors: List[str],
         col_name: str,
@@ -325,7 +323,7 @@ class TOMLSchemaValidator:
                         int(length_val[2:])
                         if length_val.startswith(">=")
                         else int(length_val[1:])
-                    )  # Check if the part after '>' or '>=' is an integer
+                    )
                 except ValueError:
                     col_errors.append(f"{col_name}: Invalid length value: {length_val}")
             else:  # Check if the entire string is an integer
@@ -333,17 +331,12 @@ class TOMLSchemaValidator:
                     int(length_val)
                     col_config["length"] = int(
                         length_val,
-                    )  # Convert string integer to integer in col_config
+                    )
 
                 except ValueError:
-                    col_errors.append(
-                        f"{col_name}: Invalid length value: {length_val}",
-                    )  # Catches strings that are not a number
+                    col_errors.append(f"{col_name}: Invalid length value: {length_val}")
 
-        elif not isinstance(
-            length_val,
-            int,
-        ):  # Check if it's an integer if not a string
+        elif not isinstance(length_val, int):
             col_errors.append(
                 f"{col_name}: Invalid length value (not int or str): {length_val}",
             )
@@ -358,9 +351,8 @@ class TOMLSchemaValidator:
             and col_config["length"]
         ):
             col_errors.append(
-                f"Column '{col_name}' is not a string type, it is a {data_type}. 'length' is not applicable.",
+                f"Column '{col_name}' is not a string type, it is a {data_type}. 'length' is not applicable."
             )
-
         return col_errors
 
     def _validate_min_max(
@@ -379,21 +371,19 @@ class TOMLSchemaValidator:
         if "min_value" in col_config:
             min_val = col_config["min_value"]
             if data_type in self.numeric_types and not isinstance(
-                min_val,
-                (int, float),
+                min_val, (int, float)
             ):
                 col_errors.append(
-                    f"Column '{col_name}' min_value must be a number for data_type '{data_type}'.",
+                    f"Column '{col_name}' min_value must be a number for data_type '{data_type}'."
                 )
 
         if "max_value" in col_config:
             max_val = col_config["max_value"]
             if data_type in self.numeric_types and not isinstance(
-                max_val,
-                (int, float),
+                max_val, (int, float)
             ):
                 col_errors.append(
-                    f"Column '{col_name}' max_value must be a number for data_type '{data_type}'.",
+                    f"Column '{col_name}' max_value must be a number for data_type '{data_type}'."
                 )
 
         if "min_value" in col_config and "max_value" in col_config:
@@ -404,7 +394,7 @@ class TOMLSchemaValidator:
                 and col_config["min_value"] > col_config["max_value"]
             ):
                 col_errors.append(
-                    f"Column '{col_name}' min_value cannot be greater than max_value for data_type: {data_type}",
+                    f"Column '{col_name}' min_value cannot be greater than max_value for data_type: {data_type}"
                 )
         elif data_type in self.datetime_types:  # Handle datetime comparisons
             # if a min or max time is specified, this validates that it can be parsed
@@ -414,11 +404,11 @@ class TOMLSchemaValidator:
 
                 if min_val > max_val:
                     col_errors.append(
-                        f"Column '{col_name}' min_value cannot be greater than max_value for data_type: {data_type}",
+                        f"Column '{col_name}' min_value cannot be greater than max_value for data_type: {data_type}"
                     )
             except (ValueError, TypeError) as e:  # Catch time parsing errors
                 col_errors.append(
-                    f"Error comparing datetime values for column '{col_name}': {e}",
+                    f"Error comparing datetime values for column '{col_name}': {e}"
                 )
 
         return col_errors
@@ -442,7 +432,6 @@ class TOMLSchemaValidator:
                 col_errors.append(
                     f"Column '{col_name}': 'possible_values' must be a list.",
                 )
-                return col_errors  # Stop further checks if not a list
 
             data_type = col_config.get("data_type")
             if data_type != "category":
@@ -486,9 +475,8 @@ class TOMLSchemaValidator:
                                 f"Column '{col_name}': Value '{value}' in 'possible_values' is not of type '{data_type}'.",
                             )
 
-        return col_errors
-
     def _validate_regex_pattern(
+        self,
         col_config: Dict[str, Any],
         errors: List[str],
         col_name: str,
@@ -504,16 +492,15 @@ class TOMLSchemaValidator:
                 re.compile(pattern)  # Check if the pattern is valid regex
             except re.error:
                 errors.append(
-                    f"Column '{col_name}': Invalid regex pattern '{pattern}'.",
+                    f"Column '{col_name}': Invalid regex pattern '{pattern}'."
                 )
 
             data_type = col_config.get("data_type")
 
             if data_type not in self.string_types:
                 errors.append(
-                    f"Column '{col_name}': 'regex_pattern' can only be applied to string type columns.",
+                    f"Column '{col_name}': 'regex_pattern' can only be applied to string type columns."
                 )
-
         return errors
 
     def _validate_unique(
@@ -534,11 +521,7 @@ class TOMLSchemaValidator:
         return col_errors
 
     def _validate_date_format(
-        self,
-        col_config: Dict[str, Any],
-        col_errors: List[str],
-        col_name: str,
-        config: Dict[str, Any],
+        self, col_config: Dict[str, Any], col_errors: List[str], col_name: str
     ) -> List[str]:  #
         """Validates the 'date_format' field.
 
@@ -558,18 +541,17 @@ class TOMLSchemaValidator:
         # Check that data_type matched the existence of date_format
         if data_type not in datetime_types:
             col_errors.append(
-                f"Column '{col_name}': 'date_format' can only be used with datetime types, not '{data_type}'.",
+                f"Column '{col_name}': 'date_format' can only be used with datetime types, not '{data_type}'."
             )
             return col_errors  # Stop further checks if the type is incorrect.
 
         # Check for date format useage errors
         try:
-            datetime.strptime("2024-05-03", date_format)  # Use a test string.
+            datetime.datetime.strptime("2024-05-03", date_format)  # Use a test string.
         except ValueError:
             col_errors.append(
-                f"Column '{col_name}': Invalid date format '{date_format}'.",
+                f"Column '{col_name}': Invalid date format '{date_format}'."
             )
-
         return col_errors
 
     def _validate_number_str_format(
@@ -589,15 +571,22 @@ class TOMLSchemaValidator:
 
             if data_type not in self.numeric_types:
                 col_errors.append(
-                    f"Column '{col_name}': 'number_str_format' can only be used with numeric types, not '{data_type}'.",
+                    f"""Column '{col_name}': 'number_str_format' can only be
+                    used with numeric types, not '{data_type}'."""
                 )
-                return col_errors  # Stop further checks if the type is incorrect
+                return col_errors  # Stop further checks if type is incorrect
 
             try:
                 if data_type in [float, "float64", "float32", "DoubleType"]:
                     test_number = 1234.56
+                elif (
+                    data_type == str
+                    or data_type == "StringType"
+                    and "." in number_str_format
+                ):
+                    test_number = "1234.56"
                 elif data_type in [
-                    int,
+                    "int",
                     "int64",
                     "int32",
                     "int16",
@@ -605,15 +594,9 @@ class TOMLSchemaValidator:
                     "IntegerType",
                 ]:
                     test_number = 1234
-                elif (
-                    data_type == str or data_type == "StringType"
-                ):  # Handle number AS string:
-                    if (
-                        "." in col_config["number_str_format"]
-                    ):  # Check if the format expects a float
-                        test_number = "1234.56"
-                    else:
-                        test_number = "1234"  # Integer as a string
+                else:
+                    test_number = "1234"
+
                 # Use the actual number_str_format from the config:
                 format_string = col_config["number_str_format"]
                 format_string.format(str(test_number))
@@ -623,7 +606,7 @@ class TOMLSchemaValidator:
                 KeyError,
             ) as e:  # Catch all possible format errors
                 col_errors.append(
-                    f"Column '{col_name}': Invalid number format '{number_str_format}' - {e}",
+                    f"Column '{col_name}': Invalid number format '{number_str_format}' - {e}"
                 )
 
         return col_errors
@@ -636,8 +619,8 @@ class TOMLSchemaValidator:
     ) -> List[str]:
         """Validates the 'custom_check' field.
 
-        Checks if the value is valid Python code, a callable, or a function name
-        defined in data_validation.py.
+        Checks if the value is valid Python code, a callable, or a function
+        name defined in data_validation.py.
         """
         if "custom_check" in col_config:
             custom_check_val = col_config["custom_check"]
@@ -650,7 +633,7 @@ class TOMLSchemaValidator:
                     check_function = getattr(data_validation, custom_check_val)
                     if not callable(check_function):
                         col_errors.append(
-                            f"Column '{col_name}': '{custom_check_val}' is not a callable in data_validation.py.",
+                            f"Column '{col_name}': '{custom_check_val}' is not a callable in data_validation.py."
                         )
                 except AttributeError:
                     # 2. Attempt to parse as Python code:
@@ -658,11 +641,11 @@ class TOMLSchemaValidator:
                         compile(custom_check_val, "<string>", "exec")
                     except (SyntaxError, TypeError, ValueError) as e:
                         col_errors.append(
-                            f"Column '{col_name}': Invalid Python code or function name in 'custom_check': {e}",
+                            f"Column '{col_name}': Invalid Python code or function name in 'custom_check': {e}"
                         )
             elif not callable(custom_check_val):  # Handle non-string values
                 col_errors.append(
-                    f"Column '{col_name}': 'custom_check' must be a string or callable.",
+                    f"Column '{col_name}': 'custom_check' must be a string or callable."
                 )
 
         return col_errors
@@ -670,48 +653,57 @@ class TOMLSchemaValidator:
     def _log_errors(self, errors_dict):
         """Uses the logger to log errors from the errors dict."""
         for col_name, errors in errors_dict.items():
-            for error in errors:
-                self.toml_val_logger.error(f"Column '{col_name}': {error}")
+            if errors:
+                for error in errors:
+                    self.toml_val_logger.error(f"Column '{col_name}': {error}")
 
     def _go_no_go(self, errors_dict, stop_on_errors=True, threshold=0):
         """Takes the errors dict and stops the pipeline if the number of errors exceeds a threshold.
 
         Args:
-            errors_dict (dict): A dictionary where keys are column names (or other identifiers)
-                                and values are lists of error messages for that column.
-            stop_on_errors (bool, optional): Whether to raise an exception if errors are found.
-                                            Defaults to True.
-            threshold (int, optional): The maximum number of errors allowed before stopping the pipeline.
-                                    Defaults to 0.
+            errors_dict (dict): A dictionary where keys are column names (or
+            other identifiers)
+                                and values are lists of error messages for
+                                that column.
+            stop_on_errors (bool, optional): Whether to raise an exception if
+            errors are found.
+            Defaults to True.
+            threshold (int, optional): The maximum number of errors allowed
+            before stopping the pipeline.
+            Defaults to 0.
 
         Raises
-        ------
-            ValueError: If the number of errors exceeds the threshold and stop_on_errors is True.
+            ValueError: If the number of errors exceeds the threshold and
+            stop_on_errors is True.
         """
-        total_errors = sum(len(errors) for errors in errors_dict.values())
+
+        total_errors = sum(
+            len(errors) for errors in errors_dict.values() if errors
+        )  # only if errors != None
 
         if total_errors > threshold and stop_on_errors:
             error_messages = []
             for col, errors in errors_dict.items():
+                if not errors:
+                    continue
                 for error in errors:
                     error_messages.append(f"Column '{col}': {error}")
             raise ValueError(
                 f"Validation failed with {total_errors} errors:\n"
-                + "\n".join(error_messages),
+                + "\n".join(error_messages)
             )
         elif total_errors > 0:
             for col, errors in errors_dict.items():
                 for error in errors:
-                    self.toml_val_logger.warning(
-                        f"Column '{col}': {error}",
-                    )  # Log warnings if not stopping
+                    self.toml_val_logger.warning(f"Column '{col}': {error}")
         else:
             self.toml_val_logger.info("Validation successful. No errors found.")
 
     def validate_schema(self, schema: Dict[str, Any]) -> Dict[str, List[str]]:
         """Validates the entire schema."""
         errors = {}
-        self._select_validation_functions(schema)  # Populate self.selected_functions
+        # Populate self.selected_functions
+        self._select_validation_functions(schema)
 
         for col_name, val_func_names in self.selected_functions.items():
             errors[col_name] = []
@@ -719,14 +711,11 @@ class TOMLSchemaValidator:
                 val_func = self.validation_functions.get(func_name)
                 if val_func:
                     errors[col_name] = val_func(
-                        schema.get(col_name, {}),
-                        errors[col_name],
-                        col_name,
-                        self.config,
+                        schema.get(col_name, {}), errors[col_name], col_name
                     )
                 else:
                     self.toml_val_logger.warning(
-                        f"Validation function '{func_name}' not found. Skipping.",
+                        f"Validation function '{func_name}' not found. Skipping."
                     )
 
         return errors
@@ -737,22 +726,20 @@ class TOMLSchemaValidator:
 
         if not schema:  # Handle empty schema gracefully
             self.toml_val_logger.error(
-                "Schema is empty. Cannot proceed with validation.",
+                "Schema is empty. Cannot proceed with validation."
             )
             return
 
-        errors = self.validate_schema(schema)  # Call the validate_schema method
+        errors = self.validate_schema(schema)  # Call validate_schema method
 
         self._log_errors(errors)  # Log the errors
         self._go_no_go(errors)  # Make the go/no-go decision
 
 
-# Example usage (if this is your main script)
 if __name__ == "__main__":
     validator = TOMLSchemaValidator()  # Create an instance of the validator
-    toml_file_path = os.path.join(
-        "rdsa_utils",
-        "rdsa_data_validator",
-        "example_dataframe_schema.toml",
-    )  # Path to your schema
-    validator.run_validation(toml_file_path)
+    toml_file_path = (
+        Path("rdsa_utils") / "rdsa_data_validator" / "example_dataframe_schema.toml"
+    )
+
+    validator.run_validation(str(toml_file_path))

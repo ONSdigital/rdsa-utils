@@ -21,7 +21,7 @@ length = ">=1"
 min_value_str = 11001603625
 max_value_srt = 19891309165
 possible_values = ["a", "b"]  # Placeholder - replace with actual values or remove
-regex_pattern = "^\d+$"  # Example: only digits allowed
+regex_pattern = "^\\d{6}$" # Example: only digits allowed
 unique = true
 
 
@@ -33,7 +33,7 @@ length = 6
 min_value = "nan"  # No minimum value specified
 max_value = "nan" # No maximum value specified
 possible_values = [202012]  # Only this value is allowed
-regex_pattern = "^\d{6}$" # Example: exactly 6 digits
+regex_pattern = "^\\d{6}$" # Example: exactly 6 digits
 
 
 [survey]
