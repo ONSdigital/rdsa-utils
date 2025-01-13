@@ -11,7 +11,7 @@ The validation scripts do two main things:
 2) creates a batch of "expectations" from the toml to validate the data against
 3) validates the data against the schema
 
-![Image](Data Validator Diagram.png)
+![Image](./Data Validator Diagram.png)
 
 ## Structure
 
