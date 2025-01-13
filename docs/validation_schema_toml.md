@@ -11,7 +11,7 @@ The validation scripts do two main things:
 2) creates a batch of "expectations" from the toml to validate the data against
 3) validates the data against the schema
 
-![Image](./Data Validator Diagram.png)
+![Image](https://github.com/ONSdigital/rdsa-utils/blob/8f56a02a60fb0432aaee66924f118041e3ee705a/Data%20Validator%20Diagram.png)
 
 ## Structure
 
