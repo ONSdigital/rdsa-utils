@@ -551,6 +551,7 @@ def interleave_iterables(iterable1, iterable2):
     return result
 
 
+
 def pairwise(iterable):
     """
     Return pairs of adjacent values from the input iterable.
