@@ -3,7 +3,7 @@
 import itertools
 import json
 import logging
-import time
+import time as time_
 from datetime import datetime, time
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
@@ -331,9 +331,9 @@ def time_it(func):
     """
     @wraps(func)
     def wrap(*args, **kw):
-        time_start = time.time()
+        time_start = time_.time()
         result = func(*args, **kw)
-        time_end = time.time()
+        time_end = time_.time()
         print(f'  <Executed {func.__name__} in {round(time_end-time_start, 2)} seconds>')
         return result
 
@@ -549,7 +549,6 @@ def interleave_iterables(iterable1, iterable2):
     result[1::2] = iterable2
     
     return result
-
 
 
 def pairwise(iterable):
