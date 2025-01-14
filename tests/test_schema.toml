@@ -1,0 +1,11 @@
+# test_schema.toml
+[data_asset]
+name = "test_dataframe"
+
+[column1]
+description = "Test column 1"
+data_type = "int"
+
+[column2]
+description = "Test column 2"
+data_type = "StringType"
