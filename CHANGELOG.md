@@ -8,6 +8,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Created tests for `_load_validation_schema` in `toml_schema_validator` module.
+
 
 ### Changed
 
