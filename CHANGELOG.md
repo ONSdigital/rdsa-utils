@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+Added a new data validator diagram that replaces a previous version
 
 ### Changed
 
