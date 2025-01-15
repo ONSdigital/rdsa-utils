@@ -466,6 +466,35 @@ def s3_client_for_list_files(_aws_credentials):
             )
         yield client
 
+class TestFileSize:
+    """Tests for file_size function."""
+
+    def test_file_size_success(self, s3_client_for_list_files):
+        """Test file_size returns correct size for an existing file."""
+        s3_client_for_list_files.put_object(
+            """Add a new file to the test bucket with word 'content' in it."""
+            Bucket="test-bucket",
+            Key="test-size-file.txt",
+            Body=b"content",
+        )
+        size = file_size(s3_client_for_list_files, "test-bucket", "test-size-file.txt")
+        assert size == 7  # 'content' is 7 bytes long
+
+    def test_file_size_nonexistent(self, s3_client_for_list_files):
+        """Test file_size raises an error for a nonexistent file."""
+        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+            file_size(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
+
+    def test_file_size_empty_file(self, s3_client_for_list_files):
+        """Test file_size returns 0 for an empty file."""
+        s3_client_for_list_files.put_object(
+            """Add an empty file to the test bucket."""
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body=b"",
+        )
+        size = file_size(s3_client_for_list_files, "test-bucket", "empty-file.txt")
+        assert size == 0
 
 class TestListFiles:
     """Tests for list_files function."""
