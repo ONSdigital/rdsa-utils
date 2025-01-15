@@ -251,6 +251,39 @@ def file_exists(
             logger.error(f"Failed to check file existence: {str(e)}")
             return False
 
+def file_size(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str
+) -> int:
+    """Check the size of a file in an AWS S3 bucket.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to check for size.
+    
+    Returns
+    -------
+    int
+        an integer value indicating the size
+        of the file in bytes
+    
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> file_exists(client, 'mybucket', 'folder/file.txt')
+    8
+
+    """
+    response = client.head_object(Bucket=bucket_name, Key=object_name)
+    file_size = response['ContentLength']
+
+    return file_size
 
 def upload_file(
     client: boto3.client,
