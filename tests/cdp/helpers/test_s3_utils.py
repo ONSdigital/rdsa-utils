@@ -15,6 +15,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     download_file,
     download_folder,
     file_exists,
+    file_size,
     is_s3_directory,
     list_files,
     load_csv,
