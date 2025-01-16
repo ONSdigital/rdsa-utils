@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added a function in `cdp/helpers/s3_utils.py` called `file_size` to check a file size in an s3 bucket.
 
 ### Changed
 
