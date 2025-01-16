@@ -36,4 +36,5 @@ inline-quotes = "double"
 "*/" = ["B006", "PTH123", "B008"]
 "tests/*" = ["ANN", "D100", "E501", "F403", "F405", "PT011", "B017", "D205"]
 "rdsa_utils/rdsa_data_validator/data_validation.py" = ["E501","D409", "D406", "D205", "COM812", "D401"]
-
+"rdsa_utils/logging.py" = ["A005"]
+"rdsa_utils/typing.py" = ["A005"]
