@@ -273,7 +273,7 @@ def file_size(client: boto3.client, bucket_name: str, object_name: str) -> int:
     Examples
     --------
     >>> client = boto3.client('s3')
-    >>> file_exists(client, 'mybucket', 'folder/file.txt')
+    >>> file_size(client, 'mybucket', 'folder/file.txt')
     8
 
     """
