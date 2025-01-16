@@ -17,6 +17,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.5.1] - 2025-01-16
+
+### Added
+- Added several python and pyspark helper functions and associated unit tests.
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
 ## [0.5.0] - 2025-01-09
 
 ### Added
