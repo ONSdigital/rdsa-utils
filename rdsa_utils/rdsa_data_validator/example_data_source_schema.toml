@@ -12,6 +12,7 @@
 
 [data_asset]
 name = "example_survey_results"
+dataframe_library = "pandas" # Currently allows "pandas" "pyspark"
 
 [reference]
 description = "Unique identifier for the record."

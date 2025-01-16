@@ -1,0 +1,4 @@
+# invalid_test_schema.toml
+[column1]
+
+description = "Test column 1  # Missing closing quote"

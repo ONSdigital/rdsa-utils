@@ -8,8 +8,32 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Created tests for `_load_validation_schema` in `toml_schema_validator` module.
+
 
 ### Changed
+- Ran `ruff check . fix` on the codebase to comply with new PEP rules.
+- Added rules to `ruff.toml` to ignore A005 warnings for `rdsa_utils/logging.py` 
+  and `rdsa_utils/typing.py`.
+- Upgraded `black`, `ruff`, `gitleaks` to the latest version 
+  in `.pre-commit-config.yaml`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.5.0] - 2025-01-09
+
+### Added
+- Added link and description of `easy_pipeline_run` repo to `README.md`.
+
+### Changed
+- Modified `list_files` function in `cdp/helpers/s3_utils.py` to use pagination 
+  when listing objects from S3 buckets, improving handling of large buckets.
+- Added test cases for new pagination functionality in `list_files` function 
+  in `tests/cdp/helpers/test_s3_utils.py`.
 
 ### Deprecated
 
@@ -516,6 +540,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.5.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.5.0) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.5.0/)
 - rdsa-utils v0.4.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.4) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.4.4/)
 - rdsa-utils v0.4.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.3) | 

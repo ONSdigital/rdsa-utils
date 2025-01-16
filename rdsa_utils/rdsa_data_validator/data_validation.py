@@ -46,9 +46,7 @@ class GreatExpectationDataFrameValidator:
         """
         pass
 
-    def validate_dataframe_with_expectation_suite(self,
-                                                  dataframe,
-                                                  expectation_suite):
+    def validate_dataframe_with_expectation_suite(self, dataframe, expectation_suite):
         """Validate a DataFrame against a Great Expectations Expectation Suite.
 
         Args:
