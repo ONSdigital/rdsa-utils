@@ -10,6 +10,11 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Ran `ruff check . fix` on the codebase to comply with new PEP rules.
+- Added rules to `ruff.toml` to ignore A005 warnings for `rdsa_utils/logging.py` 
+  and `rdsa_utils/typing.py`.
+- Upgraded `black`, `ruff`, `gitleaks` to the latest version 
+  in `.pre-commit-config.yaml`.
 
 ### Deprecated
 
