@@ -196,7 +196,7 @@ class TestValidateS3FilePath:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def _aws_credentials():
     """Mock AWS Credentials for moto."""
     boto3.setup_default_session(
@@ -206,7 +206,7 @@ def _aws_credentials():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client(_aws_credentials):
     """Provide a mocked AWS S3 client for testing
     using moto with temporary credentials.
@@ -234,7 +234,7 @@ class TestFileExists:
         assert file_exists(s3_client, "test-bucket", "nonexistent.txt") is False
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup_files(tmp_path):
     """
     Set up local files for upload and download tests.
@@ -351,7 +351,7 @@ class TestDownloadFile:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup_folder(tmp_path):
     """
     Set up local folder and files for upload tests.
@@ -435,7 +435,7 @@ class TestUploadFolder:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client_for_list_files(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
@@ -510,7 +510,7 @@ class TestListFiles:
         assert "paginated/file_1000.txt" in files
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client_for_delete_and_copy(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
