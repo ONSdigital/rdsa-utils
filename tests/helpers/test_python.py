@@ -1,12 +1,10 @@
 """Tests for the helpers module."""
 
 import pytest
-from io import StringIO
-import sys
 from time import sleep
 from rdsa_utils.helpers.python import *
 from tests.conftest import Case, parametrize_cases
-
+from unittest import mock
 
 @pytest.mark.skip(reason="wrapper of third party function")
 class TestAlwaysIterableLocal:
@@ -283,59 +281,39 @@ class TestConvertDateStringsToDatetimes:
 class TestTimeIt:
     """Test class for the time_it decorator."""
 
-    def test_time_it_execution(self, monkeypatch):
-        """
-        Test the `time_it` decorator with a function that takes
-        arguments.
-        """
-        # Redirect stdout to capture print statements
-        captured_output = StringIO()
-        monkeypatch.setattr(sys, "stdout", captured_output)
-
-        # Define a sample function to test the decorator
+    @mock.patch("rdsa_utils.helpers.python.logger.info")
+    def test_time_it_execution(self, mock_logger):
+        """Test with a function that takes arguments."""
         @time_it
         def sample_function(delay):
             sleep(delay)
             return "Done"
 
-        # Call the decorated function
         result = sample_function(1)
 
-        # Check the result
         assert result == "Done"
 
-        # Verify timing message in captured output
-        captured_output.seek(0)
-        output = captured_output.read()
-        assert "Executed sample_function in" in output
-        assert "seconds" in output
+        mock_logger.assert_called_once()
+        log_message = mock_logger.call_args[0][0]
+        assert "Executed sample_function in" in log_message
+        assert "seconds" in log_message
 
-    def test_time_it_no_arguments(self, monkeypatch):
-        """
-        Test the `time_it` decorator with a function that takes no
-        arguments.
-        """
-        # Redirect stdout to capture print statements
-        captured_output = StringIO()
-        monkeypatch.setattr(sys, "stdout", captured_output)
+    @mock.patch("rdsa_utils.helpers.python.logger.info")  # Mock the logger
+    def test_time_it_no_arguments(self, mock_logger):
+        """Test with a function that takes no arguments."""
 
-        # Define a sample function to test the decorator
         @time_it
         def sample_function():
             return "No arguments"
 
-        # Call the decorated function
         result = sample_function()
 
-        # Check the result
         assert result == "No arguments"
 
-        # Verify timing message in captured output
-        captured_output.seek(0)
-        output = captured_output.read()
-        assert "Executed sample_function in" in output
-        assert "seconds" in output
-
+        mock_logger.assert_called_once()
+        log_message = mock_logger.call_args[0][0]
+        assert "Executed sample_function in" in log_message
+        assert "seconds" in log_message
 
 class TestSetdiff:
     """Test class for the `setdiff` function."""
