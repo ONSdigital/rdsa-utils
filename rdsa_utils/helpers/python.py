@@ -8,14 +8,12 @@ from datetime import datetime, time
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
 import pandas as pd
-import numpy as np
 from functools import reduce, wraps
 from itertools import tee
 from more_itertools import always_iterable
 from pandas.tseries.offsets import MonthEnd
 
 logger = logging.getLogger(__name__)
-
 
 
 def always_iterable_local(obj: Any) -> Callable:
@@ -312,16 +310,17 @@ def convert_date_strings_to_datetimes(
 
 def time_it(func):
     """
-    A decorator that measures the execution time of a function.
+    Measure the execution time of a function.
 
-    This decorator wraps a function to measure and print the time it takes 
-    to execute. The execution time is printed in seconds, rounded to two 
+    This decorator wraps a function to measure and print the time it takes
+    to execute. The execution time is printed in seconds, rounded to two
     decimal places.
 
     Args:
         func (callable): The function whose execution time is to be measured.
 
-    Returns:
+    Returns
+    -------
         callable: A wrapped function that includes timing measurement.
 
     Example:
@@ -329,12 +328,15 @@ def time_it(func):
         def some_function():
             # Function implementation
     """
+
     @wraps(func)
     def wrap(*args, **kw):
         time_start = time_.time()
         result = func(*args, **kw)
         time_end = time_.time()
-        print(f'  <Executed {func.__name__} in {round(time_end-time_start, 2)} seconds>')
+        print(
+            f"  <Executed {func.__name__} in {round(time_end-time_start, 2)} seconds>",
+        )
         return result
 
     return wrap
@@ -344,21 +346,23 @@ def setdiff(a, b):
     """
     Return a list of elements that are present in `a` but not in `b`.
 
-    This function computes the set difference between two iterables and 
-    returns the resulting elements as a list. Elements that are in `b` 
+    This function computes the set difference between two iterables and
+    returns the resulting elements as a list. Elements that are in `b`
     but not in `a` are excluded from the result.
 
-    The input arguments must be iterable types that support set operations, 
+    The input arguments must be iterable types that support set operations,
     such as lists, tuples, strings, sets, dictionaries (keys only), and ranges.
 
     Args:
         a (iterable): The first iterable from which elements are to be selected.
         b (iterable): The second iterable containing elements to be excluded.
 
-    Returns:
+    Returns
+    -------
         list: A list of elements that are in `a` but not in `b`.
 
-    Examples:
+    Examples
+    --------
         >>> setdiff([1, 2, 3, 4], [3, 4, 5, 6])
         [1, 2]
 
@@ -371,39 +375,42 @@ def setdiff(a, b):
         >>> setdiff(range(5), range(2, 7))
         [0, 1]
     """
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Run input checks
-    
-    if not isinstance(a, Iterable) or not isinstance(b, Iterable):
-        raise TypeError("Both inputs must be iterable.")
 
-    #--------------------------------------------------------------------------
+    if not isinstance(a, Iterable) or not isinstance(b, Iterable):
+        error_message = "Both inputs must be iterable."
+        raise TypeError(error_message)
+
+    # --------------------------------------------------------------------------
     # Apply function
-    
+
     return list(set(a) - set(b))
 
 
 def flatten(iterable, types_to_flatten=(list, tuple)):
     """
-    Flatten an iterable containing both specified types of nested objects 
-    and non-object elements.
+    Flatten an iterable.
 
-    This function iterates through the input iterable, unpacking elements 
-    that are of the types specified in `types_to_flatten` and adding non-specified 
-    elements directly to the result. The resulting list contains all individual 
-    elements from the input, preserving their original order.
+    This function iterates through the input iterable, unpacking elements
+    that are of the types specified in `types_to_flatten` and adding
+    non-specified elements directly to the result. The resulting list contains
+    all individual elements from the input, preserving their original order.
 
     Args:
-        iterable (iterable): An iterable that may contain elements of various types.
-        types_to_flatten (type or tuple of types, optional): Data type(s) that should 
-        be flattened. Elements of these types are unpacked into the result list. 
-        Defaults to (list, tuple).
+        iterable (iterable): An iterable that may contain elements of various
+            types.
+        types_to_flatten (type or tuple of types, optional): Data type(s)
+            that should be flattened. Elements of these types are unpacked into
+            the result list. Defaults to (list, tuple).
 
-    Returns:
-        list: A flattened list with all elements from the input iterable, with 
+    Returns
+    -------
+        list: A flattened list with all elements from the input iterable, with
         specified types unpacked.
 
-    Examples:
+    Examples
+    --------
         >>> flatten([1, [2, 3], (4, 5), 'abc'])
         [1, 2, 3, 4, 5, 'abc']
 
@@ -416,24 +423,27 @@ def flatten(iterable, types_to_flatten=(list, tuple)):
         >>> flatten((1, [2, 3], (4, 5), 'abc'), types_to_flatten=(list, tuple))
         (1, 2, 3, 4, 5, 'abc')
     """
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Run input checks
-    if not hasattr(iterable, '__iter__'):
-        raise TypeError("`iterable` must be an iterable.")
-    
+    if not hasattr(iterable, "__iter__"):
+        error_message = "`iterable` must be an iterable."
+        raise TypeError(error_message)
+
     if not isinstance(types_to_flatten, (type, tuple)):
-        raise TypeError("`types_to_flatten` must be a type or a tuple of types.")
-    
+        error_message = "`types_to_flatten` must be a type or a tuple of types."
+        raise TypeError(error_message)
+
     if isinstance(types_to_flatten, tuple):
         if not all(isinstance(t, type) for t in types_to_flatten):
-            raise ValueError("All elements in `types_to_flatten` must be types.")
+            error_message = "All elements in `types_to_flatten` must be types."
+            raise ValueError(error_message)
     else:
         if not isinstance(types_to_flatten, type):
-            raise TypeError("`types_to_flatten` must be a type or a tuple of types.")
+            error_message = "`types_to_flatten` must be a type or a tuple of types."
+            raise TypeError(error_message)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Apply function
-    
 
     flattened = []
     for item in iterable:
@@ -448,46 +458,50 @@ def convert_types(lst, dtype=float):
     """
     Convert the data type of elements in an iterable.
 
-    This function takes an iterable and a target data type, converting each 
-    element in the iterable to the specified data type. By default, elements 
-    are converted to floats. The function is compatible with various iterable 
+    This function takes an iterable and a target data type, converting each
+    element in the iterable to the specified data type. By default, elements
+    are converted to floats. The function is compatible with various iterable
     types, such as lists, tuples, sets, and more.
 
     Args:
         lst (iterable): The iterable whose elements are to be converted.
-        dtype (type, optional): The target data type to which elements in the 
+        dtype (type, optional): The target data type to which elements in the
         iterable should be converted. Defaults to `float`.
 
-    Returns:
+    Returns
+    -------
         list: A new list with elements converted to the specified data type.
 
-    Examples:
+    Examples
+    --------
         >>> convert_list_elements([1, 2, 3])
         [1.0, 2.0, 3.0]
-        
+
         >>> convert_list_elements((10, 20, 30), dtype=str)
         ['10', '20', '30']
-        
+
         >>> convert_list_elements({'a', 'b', 'c'}, dtype=ord)
         [97, 98, 99]
-        
+
         >>> convert_list_elements(['10', '20', '30'], dtype=int)
         [10, 20, 30]
     """
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Run input checks
     if not isinstance(lst, (list, tuple, set, frozenset, range)):
-        raise TypeError(
-                "Input must be an iterable type such as list, tuple, set, "
-                "frozenset, or range."
+        error_message = (
+            "Input must be an iterable type such as list, tuple, set, "
+            "frozenset, or range."
         )
-    
-    if not isinstance(dtype, type):
-        raise TypeError("`dtype` must be a valid type.")
+        raise TypeError(error_message)
 
-    #--------------------------------------------------------------------------
+    if not isinstance(dtype, type):
+        error_message = "`dtype` must be a valid type."
+        raise TypeError(error_message)
+
+    # --------------------------------------------------------------------------
     # Apply function
-        
+
     return list(map(dtype, lst))
 
 
@@ -495,23 +509,25 @@ def interleave_iterables(iterable1, iterable2):
     """
     Interleave two iterables element by element.
 
-    This function takes two iterables of equal length and interleaves their 
-    elements. The first element of the result is from the first iterable, 
+    This function takes two iterables of equal length and interleaves their
+    elements. The first element of the result is from the first iterable,
     the second is from the second iterable, and so on.
 
-    The function works with various types of iterables, such as lists, 
-    tuples, strings, and ranges. The resulting interleaved elements are 
+    The function works with various types of iterables, such as lists,
+    tuples, strings, and ranges. The resulting interleaved elements are
     returned as a list.
 
     Args:
         iterable1 (iterable): The first iterable to interleave.
         iterable2 (iterable): The second iterable to interleave.
 
-    Returns:
-        list: A new list with elements from `iterable1` and `iterable2` 
+    Returns
+    -------
+        list: A new list with elements from `iterable1` and `iterable2`
         interleaved.
 
-    Examples:
+    Examples
+    --------
         Interleave two lists:
         >>> interleave_iterables([1, 2, 3], [4, 5, 6])
         [1, 4, 2, 5, 3, 6]
@@ -528,26 +544,30 @@ def interleave_iterables(iterable1, iterable2):
         >>> interleave_iterables(range(3), range(10, 13))
         [0, 10, 1, 11, 2, 12]
     """
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Run input checks
-    
-    if not isinstance(iterable1, (list, tuple, str, range)) or \
-       not isinstance(iterable2, (list, tuple, str, range)):
-        raise TypeError(
-            "Both inputs must be iterable types such as list, tuple, "
+
+    if not isinstance(iterable1, (list, tuple, str, range)) or not isinstance(
+        iterable2,
+        (list, tuple, str, range),
+    ):
+        error_message = (
+            "Both inputs must be iterable types such as list, tuple,"
             "string, or range."
         )
-    
-    if len(iterable1) != len(iterable2):
-        raise ValueError("Both iterables must have the same length.")
+        raise TypeError(error_message)
 
-    #--------------------------------------------------------------------------
+    if len(iterable1) != len(iterable2):
+        error_message = "Both iterables must have the same length."
+        raise ValueError(error_message)
+
+    # --------------------------------------------------------------------------
     # Apply function
-    
+
     result = [None] * (len(iterable1) + len(iterable2))
     result[::2] = iterable1
     result[1::2] = iterable2
-    
+
     return result
 
 
@@ -555,21 +575,24 @@ def pairwise(iterable):
     """
     Return pairs of adjacent values from the input iterable.
 
-    This function takes an iterable and returns an iterator of tuples, 
+    This function takes an iterable and returns an iterator of tuples,
     where each tuple contains two adjacent values from the input iterable.
 
     Args:
-        iterable (iterable): An iterable object (e.g., list, tuple, string) 
+        iterable (iterable): An iterable object (e.g., list, tuple, string)
         from which pairs of adjacent values will be generated.
 
-    Returns:
-        zip: An iterator of tuples, each containing a pair of adjacent values 
+    Returns
+    -------
+        zip: An iterator of tuples, each containing a pair of adjacent values
         from the input iterable.
 
-    Raises:
+    Raises
+    ------
         TypeError: If the input is not an iterable.
 
-    Examples:
+    Examples
+    --------
         >>> list(pairwise([1, 2, 3, 4]))
         [(1, 2), (2, 3), (3, 4)]
 
@@ -579,15 +602,16 @@ def pairwise(iterable):
         >>> list(pairwise((10, 20, 30)))
         [(10, 20), (20, 30)]
     """
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Run input checks
-    
-    if not hasattr(iterable, '__iter__'):
-        raise TypeError("Input must be an iterable.")
 
-    #--------------------------------------------------------------------------
+    if not hasattr(iterable, "__iter__"):
+        error_message = "Input must be an iterable."
+        raise TypeError(error_message)
+
+    # --------------------------------------------------------------------------
     # Apply function
-    
+
     a, b = tee(iterable)
     next(b, None)
     return zip(a, b)
@@ -606,15 +630,17 @@ def merge_multi(df_list, on, how, fillna_val=None):
         -df_list (list of pandas.DataFrame): A list of DataFrames to be merged.
         -on (str or list of str): Column name(s) to merge on. If a list is
          provided, it should contain column names common to all DataFrames.
-        -how (str): Type of merge to be performed. Must be one of 'left', 
+        -how (str): Type of merge to be performed. Must be one of 'left',
          'right', 'outer', 'inner'.
-        -fillna_val (optional): Value to replace missing values with 
+        -fillna_val (optional): Value to replace missing values with
 
-    Returns:
+    Returns
+    -------
         pandas.DataFrame: The resulting DataFrame after merging and optional
         filling of missing values.
 
-    Examples:
+    Examples
+    --------
         >>> import pandas as pd
         >>> df1 = pd.DataFrame({'key': ['A', 'B', 'C'], 'value1': [1, 2, 3]})
         >>> df2 = pd.DataFrame({'key': ['A', 'B'], 'value2': [4, 5]})
@@ -622,7 +648,7 @@ def merge_multi(df_list, on, how, fillna_val=None):
         >>> merge_multi([df1, df2, df3], on='key', how='inner')
           key  value1  value2  value3
         0   A       1       4       6
-        
+
         >>> df1 = pd.DataFrame({'key': ['A', 'B', 'C'], 'value1': [1, 2, 3]})
         >>> df2 = pd.DataFrame({'key': ['A', 'B'], 'value2': [4, 5]})
         >>> merge_multi([df1, df2], on='key', how='outer',  fillna_val=0)
@@ -631,31 +657,40 @@ def merge_multi(df_list, on, how, fillna_val=None):
         1   B        2        5
         2   C        3        0
     """
-    
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Run input checks
-    
-    if not isinstance(df_list, list) or not all(isinstance(df, pd.DataFrame) for df in df_list):
-        raise TypeError("`df_list` must be a list of pandas DataFrames.")
-    
+
+    if not isinstance(df_list, list) or not all(
+        isinstance(df, pd.DataFrame) for df in df_list
+    ):
+        error_message = "`df_list` must be a list of pandas DataFrames."
+        raise TypeError(error_message)
+
     if not isinstance(on, (str, list)):
-        raise TypeError("`on` must be a string or a list of strings.")
-    
+        error_message = "`on` must be a string or a list of strings."
+        raise TypeError(error_message)
+
     if not isinstance(how, str):
-        raise TypeError("`how` must be a string.")
-    
-    valid_how_options = ['left', 'right', 'outer', 'inner']
+        error_message = "`how` must be a string."
+        raise TypeError(error_message)
+
+    valid_how_options = ["left", "right", "outer", "inner"]
     if how not in valid_how_options:
-        raise ValueError(f"Invalid merge method: {how}. Must be one of {valid_how_options}.")
-    
-    #--------------------------------------------------------------------------
+        error_message = (
+            f"Invalid merge method: {how}. Must be one of "
+            f"{valid_how_options}."
+        )
+        raise ValueError(error_message)
+
+    # --------------------------------------------------------------------------
     # Apply function
-        
-    merged_df = reduce(lambda left, right: pd.merge(left, right, on=on, how=how), df_list)
-    
+
+    merged_df = reduce(
+        lambda left, right: left.merge(right, on=on, how=how),
+        df_list,
+    )
+
     if fillna_val is not None:
         merged_df = merged_df.fillna(fillna_val)
-    
+
     return merged_df
-
-
