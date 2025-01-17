@@ -1044,7 +1044,8 @@ def cache_time(df: SparkDF) -> None:
 
 
 def count_nulls(
-    df: SparkDF, subset_cols: Optional[Union[List[str], str]] = None,
+    df: SparkDF,
+    subset_cols: Optional[Union[List[str], str]] = None,
 ) -> pd.DataFrame:
     """
     Count the number of null values in the specified columns of a SparkDF.
@@ -1073,7 +1074,7 @@ def count_nulls(
             msg = "subset_cols must be a list, a string, or None."
             raise TypeError(msg)
         if not all(isinstance(col, str) for col in subset_cols):
-            msg ="All elements of subset_cols must be strings."
+            msg = "All elements of subset_cols must be strings."
             raise TypeError(msg)
 
     cols = subset_cols if subset_cols else df.columns
@@ -1110,10 +1111,7 @@ def aggregate_col(df: SparkDF, col: str, operation: str) -> float:
         raise TypeError(msg)
     valid_operations = ["sum", "max", "min", "mean"]
     if operation not in valid_operations:
-        msg = (
-            f"Invalid operation: {operation}. Must be one of "
-               "{valid_operations}."
-        )
+        msg = f"`operation` must be one of {valid_operations}."
         raise ValueError(msg)
 
     result = df.agg({col: operation}).collect()[0][0]
@@ -1122,7 +1120,10 @@ def aggregate_col(df: SparkDF, col: str, operation: str) -> float:
 
 
 def get_unique(
-    df: SparkDF, col: str, remove_null: bool = False, verbose: bool = True,
+    df: SparkDF,
+    col: str,
+    remove_null: bool = False,
+    verbose: bool = True,
 ) -> List[Optional[Union[str, int, float]]]:
     """
     Return a list of unique values in a PySpark DataFrame column.
@@ -1166,7 +1167,9 @@ def get_unique(
 
 
 def drop_duplicates_reproducible(
-    df: SparkDF, col: str, id_col: Optional[str] = None,
+    df: SparkDF,
+    col: str,
+    id_col: Optional[str] = None,
 ) -> SparkDF:
     """
     Remove duplicates from a PySpark DataFrame in a repeatable manner.
@@ -1215,7 +1218,9 @@ def drop_duplicates_reproducible(
 
 
 def apply_col_func(
-    df: SparkDF, cols: List[str], func: Callable[[SparkDF, str], SparkDF],
+    df: SparkDF,
+    cols: List[str],
+    func: Callable[[SparkDF, str], SparkDF],
 ) -> SparkDF:
     """
     Apply a function to a list of columns in a PySpark DataFrame.
@@ -1307,7 +1312,9 @@ def pyspark_random_uniform(
 
 
 def cumulative_array(
-    df: SparkDF, array_col: str, output_colname: str,
+    df: SparkDF,
+    array_col: str,
+    output_colname: str,
 ) -> SparkDF:
     """
     Convert a PySpark array column to a cumulative array column.
@@ -1383,7 +1390,9 @@ def union_mismatched(df1: SparkDF, df2: SparkDF) -> SparkDF:
 
 
 def sum_columns(
-    df: SparkDF, cols_to_sum: List[str], output_col: str,
+    df: SparkDF,
+    cols_to_sum: List[str],
+    output_col: str,
 ) -> SparkDF:
     """
     Calculate row-wise sum of specified PySpark columns.
@@ -1424,7 +1433,9 @@ def sum_columns(
 
 
 def set_nulls(
-    df: SparkDF, column: str, values: Union[str, List[str]],
+    df: SparkDF,
+    column: str,
+    values: Union[str, List[str]],
 ) -> SparkDF:
     """
     Replace specified values with nulls in given column of PySpark df.
@@ -1501,7 +1512,9 @@ def union_multi(df_list: List[SparkDF]) -> SparkDF:
 
 
 def join_multi(
-    df_list: List[SparkDF], on: Union[str, List[str]], how: str,
+    df_list: List[SparkDF],
+    on: Union[str, List[str]],
+    how: str,
 ) -> SparkDF:
     """
     Join multiple Spark SparkDFs together.

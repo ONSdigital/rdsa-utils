@@ -6,6 +6,7 @@ from rdsa_utils.helpers.python import *
 from tests.conftest import Case, parametrize_cases
 from unittest import mock
 
+
 @pytest.mark.skip(reason="wrapper of third party function")
 class TestAlwaysIterableLocal:
     """Tests for the always_iterable_local function."""
@@ -284,6 +285,7 @@ class TestTimeIt:
     @mock.patch("rdsa_utils.helpers.python.logger.info")
     def test_time_it_execution(self, mock_logger):
         """Test with a function that takes arguments."""
+
         @time_it
         def sample_function(delay):
             sleep(delay)
@@ -314,6 +316,7 @@ class TestTimeIt:
         log_message = mock_logger.call_args[0][0]
         assert "Executed sample_function in" in log_message
         assert "seconds" in log_message
+
 
 class TestSetdiff:
     """Test class for the `setdiff` function."""
@@ -724,7 +727,7 @@ class TestMergeMulti:
         df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
         df2 = pd.DataFrame({"key": ["A", "B"], "value2": [4, 5]})
 
-        with pytest.raises(ValueError, match="Invalid merge method: invalid_method"):
+        with pytest.raises(ValueError, match="`how` Must be one of"):
             merge_multi([df1, df2], on="key", how="invalid_method")
 
     def test_merge_multi_non_iterable_df_list(self):

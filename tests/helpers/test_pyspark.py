@@ -1401,7 +1401,7 @@ class TestAggregateCol:
     def test_invalid_operation(self, create_spark_df):
         """Test invalid operation raises ValueError."""
         input_df = create_spark_df([("col1 INT"), (1,), (2,), (3,)])
-        with pytest.raises(ValueError, match="Invalid operation"):
+        with pytest.raises(ValueError, match="`operation` must be one of"):
             aggregate_col(input_df, "col1", "invalid")
 
 
@@ -1771,5 +1771,3 @@ class TestDictReplace:
 
         with pytest.raises(TypeError, match="dict_ must be a dictionary"):
             dict_replace(input_df, "not_a_dict", "col1")
-
-

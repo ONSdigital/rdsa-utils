@@ -378,7 +378,8 @@ def setdiff(a: Iterable, b: Iterable) -> List[Any]:
 
 
 def flatten(
-    iterable: Iterable, types_to_flatten: Union[type, Tuple] = (list, tuple),
+    iterable: Iterable,
+    types_to_flatten: Union[type, Tuple] = (list, tuple),
 ) -> List:
     """
     Flatten an iterable.
@@ -517,7 +518,8 @@ def interleave_iterables(iterable1: Iterable, iterable2: Iterable) -> List:
     [0, 10, 1, 11, 2, 12]
     """
     if not isinstance(iterable1, (list, tuple, str, range)) or not isinstance(
-        iterable2, (list, tuple, str, range),
+        iterable2,
+        (list, tuple, str, range),
     ):
         msg = (
             "Both inputs must be iterable types such as list, tuple,"
@@ -646,10 +648,7 @@ def merge_multi(
 
     valid_how_options = ["left", "right", "outer", "inner"]
     if how not in valid_how_options:
-        msg = (
-            f"Invalid merge method: {how}. Must be one of"
-                         "{valid_how_options}."
-        )
+        msg = f"`how` Must be one of {valid_how_options}."
         raise ValueError(msg)
 
     merged_df = reduce(
