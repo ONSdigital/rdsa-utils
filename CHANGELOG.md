@@ -16,6 +16,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   and `rdsa_utils/typing.py`.
 - Upgraded `black`, `ruff`, `gitleaks` to the latest version 
   in `.pre-commit-config.yaml`.
+- Removed module-level scope for `spark_session` fixture in `test_utils.py` 
+  to ensure test isolation.
 
 ### Deprecated
 
