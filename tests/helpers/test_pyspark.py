@@ -1,6 +1,7 @@
 """Tests for spark_helpers module."""
 
 from unittest.mock import patch
+
 import pandas as pd
 import pytest
 from chispa import assert_df_equality
