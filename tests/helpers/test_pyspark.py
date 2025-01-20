@@ -1,12 +1,14 @@
-"""Tests for spark_helpers module."""
+"""Tests for helpers/pyspark.py module."""
 
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
-import pandas as pd
 import pytest
 from chispa import assert_df_equality
+from pyspark.sql import DataFrame as SparkDF
+from pyspark.sql import types as T
 
 from rdsa_utils.helpers.pyspark import *
+from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 from rdsa_utils.test_utils import *
 
 
@@ -129,7 +131,7 @@ class TestToSparkCol:
         string_input = "i_am_string_therefore_i_am_?1234!"
         assert isinstance(_convert_to_spark_col(string_input), SparkCol)
 
-    def test_funct_positive_case(self):
+    def test_funct_positive_case(self, spark_session):
         """Test function input converts as expected."""
         funct_input = input_funct("cheese")
         assert isinstance(_convert_to_spark_col(funct_input), SparkCol)
