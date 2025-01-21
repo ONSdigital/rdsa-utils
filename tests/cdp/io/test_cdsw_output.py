@@ -520,7 +520,7 @@ class TestSaveCSVToS3:
             client.create_bucket(Bucket="test-bucket")
             yield client
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture
     def dummy_dataframe(self, spark_session):
         """Create a dummy PySpark DataFrame for testing."""
         data = [("John", 1), ("Jane", 2), ("Bob", 3)]

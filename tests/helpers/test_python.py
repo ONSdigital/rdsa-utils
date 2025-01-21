@@ -1,4 +1,4 @@
-"""Tests for the helpers module."""
+"""Tests for the helpers/python.py module."""
 
 from time import sleep
 from unittest import mock
@@ -6,7 +6,7 @@ from unittest import mock
 import pytest
 
 from rdsa_utils.helpers.python import *
-from tests.conftest import Case, parametrize_cases
+from rdsa_utils.test_utils import *
 
 
 @pytest.mark.skip(reason="wrapper of third party function")

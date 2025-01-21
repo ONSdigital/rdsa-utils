@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added several python and pyspark helper functions and associated unit tests.
 
 ### Changed
 - Ran `ruff check . fix` on the codebase to comply with new PEP rules.
@@ -15,6 +16,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   and `rdsa_utils/typing.py`.
 - Upgraded `black`, `ruff`, `gitleaks` to the latest version 
   in `.pre-commit-config.yaml`.
+- Removed module-level scope for `spark_session` fixture in `test_utils.py` 
+  to ensure test isolation.
 
 ### Deprecated
 
@@ -22,18 +25,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [0.5.1] - 2025-01-16
-
-### Added
-- Added several python and pyspark helper functions and associated unit tests.
-
-### Changed
-
-### Deprecated
-
-### Fixed
-
-### Removed
 ## [0.5.0] - 2025-01-09
 
 ### Added
