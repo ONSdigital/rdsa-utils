@@ -314,7 +314,7 @@ def time_it(func: Callable) -> Callable:
 
     Parameters
     ----------
-    func : callable
+    func
         The function whose execution time is to be measured.
 
     Returns
@@ -349,9 +349,9 @@ def setdiff(a: Iterable, b: Iterable) -> List[Any]:
 
     Parameters
     ----------
-    a : iterable
+    a
         The first iterable from which elements are to be selected.
-    b : iterable
+    b
         The second iterable containing elements to be excluded.
 
     Returns
@@ -377,7 +377,7 @@ def setdiff(a: Iterable, b: Iterable) -> List[Any]:
     return list(set(a) - set(b))
 
 
-def flatten(
+def flatten_iterable(
     iterable: Iterable,
     types_to_flatten: Union[type, Tuple] = (list, tuple),
 ) -> List:
@@ -386,9 +386,9 @@ def flatten(
 
     Parameters
     ----------
-    iterable : iterable
+    iterable
         An iterable that may contain elements of various types.
-    types_to_flatten : type or tuple of types, optional
+    types_to_flatten
         Data type(s) that should be flattened. Defaults to (list, tuple).
 
     Returns
@@ -434,15 +434,15 @@ def flatten(
     return flattened
 
 
-def convert_types(lst: Iterable, dtype: type = float) -> List:
+def convert_types_iterable(lst: Iterable, dtype: type = float) -> List:
     """
     Convert the data type of elements in an iterable.
 
     Parameters
     ----------
-    lst : iterable
+    lst
         The iterable whose elements are to be converted.
-    dtype : type, optional
+    dtype
         The target data type to which elements in the iterable should be
         converted. Defaults to `float`.
 
@@ -485,9 +485,9 @@ def interleave_iterables(iterable1: Iterable, iterable2: Iterable) -> List:
 
     Parameters
     ----------
-    iterable1 : iterable
+    iterable1
         The first iterable to interleave.
-    iterable2 : iterable
+    iterable2
         The second iterable to interleave.
 
     Returns
@@ -538,13 +538,13 @@ def interleave_iterables(iterable1: Iterable, iterable2: Iterable) -> List:
     return result
 
 
-def pairwise(iterable: Iterable) -> zip:
+def pairwise_iterable(iterable: Iterable) -> zip:
     """
     Return pairs of adjacent values from the input iterable.
 
     Parameters
     ----------
-    iterable : iterable
+    iterable
         An iterable object (e.g., list, tuple, string) from which pairs of
         adjacent values will be generated.
 
@@ -590,14 +590,14 @@ def merge_multi(
 
     Parameters
     ----------
-    df_list : list of pandas.DataFrame
+    df_list
         A list of DataFrames to be merged.
-    on : str or list of str
+    on
         Column name(s) to merge on.
-    how : str
+    how
         Type of merge to be performed. Must be one of 'left', 'right', 'outer',
         'inner'.
-    fillna_val : object, optional
+    fillna_val
         Value to replace missing values with. Default is None.
 
     Returns

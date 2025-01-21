@@ -1025,7 +1025,7 @@ def cache_time(df: SparkDF) -> None:
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame to cache.
 
     Returns
@@ -1052,9 +1052,9 @@ def count_nulls(
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame to analyze.
-    subset_cols : list or str, optional
+    subset_cols
         List of column names or a single column name as a string to count
         null values for. If not provided, counts are calculated for all
         columns.
@@ -1090,11 +1090,11 @@ def aggregate_col(df: SparkDF, col: str, operation: str) -> float:
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame containing the column.
-    col : str
+    col
         The name of the numeric column to aggregate.
-    operation : str
+    operation
         The type of aggregation to perform. Must be one of 'sum', 'max',
         'min', or 'mean'.
 
@@ -1130,13 +1130,13 @@ def get_unique(
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame containing the column.
-    col : str
+    col
         The name of the column to analyze.
-    remove_null : bool, optional
+    remove_null
         Whether to remove null values from output. Default is False.
-    verbose : bool, optional
+    verbose
         Whether to log the number of unique values. Default is True.
 
     Returns
@@ -1176,11 +1176,11 @@ def drop_duplicates_reproducible(
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame.
-    col : str
+    col
         The column to partition by for removing duplicates.
-    id_col : str, optional
+    id_col
         The column to use for ordering within each partition. If None, a
         unique ID column is generated.
 
@@ -1227,11 +1227,11 @@ def apply_col_func(
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame.
-    cols : list of str
+    cols
         List of column names to apply the function to.
-    func : callable
+    func
         The function to apply, which should accept two arguments: (df, col).
 
     Returns
@@ -1272,15 +1272,15 @@ def pyspark_random_uniform(
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame to which the column will be added.
-    output_colname : str
+    output_colname
         The name of the new column to be created.
-    lower_bound : float, optional
+    lower_bound
         The lower bound of the uniform distribution. Defaults to 0.
-    upper_bound : float, optional
+    upper_bound
         The upper bound of the uniform distribution. Defaults to 1.
-    seed : int, optional
+    seed
         Seed for random number generation. Defaults to None for
         non-deterministic results.
 
@@ -1321,11 +1321,11 @@ def cumulative_array(
 
     Parameters
     ----------
-    df : pyspark.sql.DataFrame
+    df
         The PySpark DataFrame containing the array column.
-    array_col : str
+    array_col
         The name of the array column to convert.
-    output_colname : str
+    output_colname
         The name of the new column to store the cumulative array.
 
     Returns
@@ -1362,9 +1362,9 @@ def union_mismatched(df1: SparkDF, df2: SparkDF) -> SparkDF:
 
     Parameters
     ----------
-    df1 : pyspark.sql.DataFrame
+    df1
         The first PySpark DataFrame.
-    df2 : pyspark.sql.DataFrame
+    df2
         The second PySpark DataFrame.
 
     Returns
@@ -1399,11 +1399,11 @@ def sum_columns(
 
     Parameters
     ----------
-    df : SparkDF
+    df
         The PySpark DataFrame to modify.
-    cols_to_sum : list of str
+    cols_to_sum
         List of column names to sum together.
-    output_col : str
+    output_col
         The name of the new column to create with the sum.
 
     Returns
@@ -1442,11 +1442,11 @@ def set_nulls(
 
     Parameters
     ----------
-    df : SparkDF
+    df
         The PySpark DataFrame to modify.
-    column : str
+    column
         The name of the column in which to replace values.
-    values : str or list of str
+    values
         The value(s) to replace with nulls.
 
     Returns
@@ -1489,7 +1489,7 @@ def union_multi(df_list: List[SparkDF]) -> SparkDF:
 
     Parameters
     ----------
-    df_list : list of SparkDF
+    df_list
         List of PySpark DataFrames to union.
 
     Returns
@@ -1521,11 +1521,11 @@ def join_multi(
 
     Parameters
     ----------
-    df_list : list of SparkDF
+    df_list
         List of Spark SparkDFs to join.
-    on : str or list of str
+    on
         Column(s) on which to join the SparkDFs.
-    how : str
+    how
         Type of join to perform (e.g., 'inner', 'outer', 'left', 'right').
 
     Returns
@@ -1565,13 +1565,13 @@ def dict_replace(
 
     Parameters
     ----------
-    df : SparkDF
+    df
         The PySpark DataFrame to modify.
-    dict_ : dict
+    dict_
         Dictionary for mapping values in input_col to new values.
-    input_col : str
+    input_col
         The name of the column to replace values in.
-    output_col : str, optional
+    output_col
         The name of the new column with replaced values. Defaults to
         input_col if not provided.
 
