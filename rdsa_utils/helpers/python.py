@@ -579,7 +579,7 @@ def pairwise_iterable(iterable: Iterable) -> zip:
     return zip(a, b)
 
 
-def merge_multi(
+def merge_multi_dfs(
     df_list: list,
     on: Union[str, list],
     how: str,

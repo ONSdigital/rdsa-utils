@@ -1318,8 +1318,8 @@ class TestTruncateExternalHiveTable:
             pytest.fail(f"Truncation raised an exception: {e}")
 
 
-class TestCacheTime:
-    """Tests for the `cache_time` function."""
+class TestCacheTimeDf:
+    """Tests for the `cache_time_df` function."""
 
     @patch("rdsa_utils.helpers.pyspark.logger.info")  # Mock the logger
     def test_expected(self, mock_logger, create_spark_df):
@@ -1327,7 +1327,7 @@ class TestCacheTime:
         input_df = create_spark_df([("A", "B", "C"), (1, 2, 3)])
 
         start_time = time.time()
-        cache_time(input_df)
+        cache_time_df(input_df)
         end_time = time.time()
 
         elapsed_time = round(end_time - start_time, 2)
@@ -1338,7 +1338,7 @@ class TestCacheTime:
     def test_invalid_input(self):
         """Test invalid input type raises an error."""
         with pytest.raises(TypeError, match="Input must be a PySpark DataFrame"):
-            cache_time(["not", "a", "DataFrame"])
+            cache_time_df(["not", "a", "DataFrame"])
 
 
 class TestCountNulls:
@@ -1558,14 +1558,14 @@ class TestCumulativeArray:
         assert_df_equality(result_df, expected_df, ignore_nullable=True)
 
 
-class TestUnionMismatched:
-    """Tests for the `union_mismatched` function."""
+class TestUnionMismatchedDfs:
+    """Tests for the `union_mismatched_dfs` function."""
 
     def test_union_mismatched_basic(self, create_spark_df):
         """Test union of DataFrames with mismatched columns."""
         df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
         df2 = create_spark_df(["id INT, age INT", (3, 30), (4, 40)])
-        result_df = union_mismatched(df1, df2)
+        result_df = union_mismatched_dfs(df1, df2)
         expected_df = create_spark_df(
             [
                 "id INT, name STRING, age INT",
@@ -1581,7 +1581,7 @@ class TestUnionMismatched:
         """Test union of DataFrames with no overlapping columns."""
         df1 = create_spark_df(["id INT", (1,), (2,)])
         df2 = create_spark_df(["name STRING", ("Alice",), ("Bob",)])
-        result_df = union_mismatched(df1, df2)
+        result_df = union_mismatched_dfs(df1, df2)
         expected_df = create_spark_df(
             [
                 "id INT, name STRING",
@@ -1597,9 +1597,10 @@ class TestUnionMismatched:
         """Test union where one DataFrame is empty."""
         df1 = create_spark_df(["id INT, name STRING", (1, "Alice")])
         df2 = create_spark_df(["id INT, name STRING"])
-        result_df = union_mismatched(df1, df2)
+        result_df = union_mismatched_dfs(df1, df2)
         expected_df = create_spark_df(["id INT, name STRING", (1, "Alice")])
         assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
 
 
 class TestSumColumns:
@@ -1653,14 +1654,14 @@ class TestSetNulls:
             set_nulls(input_df, 123, ["A"])
 
 
-class TestUnionMulti:
-    """Tests for the `union_multi` function."""
+class TestUnionMultiDfs:
+    """Tests for the `union_multi_dfs` function."""
 
     def test_union_multi_basic(self, create_spark_df):
         """Test union of multiple DataFrames."""
         df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
         df2 = create_spark_df(["id INT, name STRING", (3, "Charlie"), (4, "Diana")])
-        result_df = union_multi([df1, df2])
+        result_df = union_multi_dfs([df1, df2])
         expected_df = create_spark_df(
             [
                 "id INT, name STRING",
@@ -1675,7 +1676,7 @@ class TestUnionMulti:
     def test_union_multi_empty_list(self):
         """Test union with an empty list raises an error."""
         with pytest.raises(ValueError, match="df_list must not be empty"):
-            union_multi([])
+            union_multi_dfs([])
 
     def test_union_multi_invalid_list(self, create_spark_df):
         """Test union with a non-DataFrame list raises an error."""
@@ -1684,11 +1685,12 @@ class TestUnionMulti:
             TypeError,
             match="All elements in df_list must be PySpark DataFrames.",
         ):
-            union_multi([df1, "not_a_dataframe"])
+            union_multi_dfs([df1, "not_a_dataframe"])
 
 
-class TestJoinMulti:
-    """Tests for the `join_multi` function."""
+
+class TestJoinMultiDfs:
+    """Tests for the `join_multi_dfs` function."""
 
     def test_join_multi_inner(self, create_spark_df):
         """Test inner join of multiple DataFrames."""
@@ -1698,7 +1700,7 @@ class TestJoinMulti:
             ["id INT, city STRING", (1, "New York"), (2, "Los Angeles")],
         )
 
-        result_df = join_multi([df1, df2, df3], on="id", how="inner")
+        result_df = join_multi_dfs([df1, df2, df3], on="id", how="inner")
         expected_df = create_spark_df(
             [
                 "id INT, name STRING, age INT, city STRING",
@@ -1714,7 +1716,7 @@ class TestJoinMulti:
         df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
         df2 = create_spark_df(["id INT, age INT", (1, 25), (3, 40)])
 
-        result_df = join_multi([df1, df2], on="id", how="outer")
+        result_df = join_multi_dfs([df1, df2], on="id", how="outer")
         expected_df = create_spark_df(
             [
                 "id INT, name STRING, age INT",
@@ -1732,7 +1734,7 @@ class TestJoinMulti:
         df2 = create_spark_df(["id INT, age INT", (1, 25)])
 
         with pytest.raises(ValueError, match="'how' must be one of"):
-            join_multi([df1, df2], on="id", how="invalid")
+            join_multi_dfs([df1, df2], on="id", how="invalid")
 
 
 class TestDictReplace:

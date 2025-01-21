@@ -1019,7 +1019,7 @@ def truncate_external_hive_table(spark: SparkSession, table_identifier: str) -> 
         raise
 
 
-def cache_time(df: SparkDF) -> None:
+def cache_time_df(df: SparkDF) -> None:
     """
     Cache a PySpark DataFrame and print the time taken to cache and count it.
 
@@ -1356,7 +1356,7 @@ def cumulative_array(
     )
 
 
-def union_mismatched(df1: SparkDF, df2: SparkDF) -> SparkDF:
+def union_mismatched_dfs(df1: SparkDF, df2: SparkDF) -> SparkDF:
     """
     Perform a union between PySpark DataFrames with mismatched column names.
 
@@ -1479,7 +1479,7 @@ def set_nulls(
     return df
 
 
-def union_multi(df_list: List[SparkDF]) -> SparkDF:
+def union_multi_dfs(df_list: List[SparkDF]) -> SparkDF:
     """
     Perform a union on all SparkDFs in the provided list.
 
@@ -1511,7 +1511,7 @@ def union_multi(df_list: List[SparkDF]) -> SparkDF:
     return combined_df
 
 
-def join_multi(
+def join_multi_dfs(
     df_list: List[SparkDF],
     on: Union[str, List[str]],
     how: str,
