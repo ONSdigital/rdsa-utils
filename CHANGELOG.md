@@ -16,6 +16,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Upgraded `black`, `ruff`, `gitleaks` to the latest version 
   in `.pre-commit-config.yaml`.
 
+- Updated Project Description for Python 3.12 and 3.13.
+- Updated Copyright for 2025.
+
 ### Deprecated
 
 ### Fixed
