@@ -344,7 +344,7 @@ def read_header(
     bucket_name
         The name of the bucket.
     object_name
-        The S3 object name to check for size.
+        The S3 object name to read header from.
 
     Returns
     -------
