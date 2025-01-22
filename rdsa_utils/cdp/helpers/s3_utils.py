@@ -283,6 +283,41 @@ def file_size(client: boto3.client, bucket_name: str, object_name: str) -> int:
     return file_size
 
 
+def md5sum(client: boto3.client, bucket_name: str, object_name: str) -> str:
+    """Get md5 hash of a specific object on s3.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to check for size.
+
+    Returns
+    -------
+    str
+        a string value with the MD5 hash of
+        the object data.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> md5sum(client, 'mybucket', 'folder/file.txt')
+    "d41d8cd98f00b204e9800998ecf8427e"
+    """
+    try:
+        md5result = client.head_object(Bucket=bucket_name, Key=object_name)["ETag"][
+            1:-1
+        ]
+    except client.exceptions.ClientError as e:
+        logger.error(f"Failed to compute the md5 checksum: {str(e)}")
+        md5result = None
+
+    return md5result
+
+
 def upload_file(
     client: boto3.client,
     bucket_name: str,
