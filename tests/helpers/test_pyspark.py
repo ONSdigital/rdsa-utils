@@ -1602,7 +1602,6 @@ class TestUnionMismatchedDfs:
         assert_df_equality(result_df, expected_df, ignore_nullable=True)
 
 
-
 class TestSumColumns:
     """Tests for the `sum_columns` function."""
 
@@ -1686,7 +1685,6 @@ class TestUnionMultiDfs:
             match="All elements in df_list must be PySpark DataFrames.",
         ):
             union_multi_dfs([df1, "not_a_dataframe"])
-
 
 
 class TestJoinMultiDfs:
@@ -1776,4 +1774,3 @@ class TestMapColumnValues:
 
         with pytest.raises(TypeError, match="dict_ must be a dictionary"):
             map_column_values(input_df, "not_a_dict", "col1")
-

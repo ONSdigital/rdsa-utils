@@ -762,4 +762,3 @@ class TestMergeMultiDfs:
             match="`on` must be a string or a list of strings.",
         ):
             merge_multi_dfs([df1, df2], on=123, how="inner")
-
