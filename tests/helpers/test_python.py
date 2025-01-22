@@ -288,7 +288,7 @@ class TestTimeIt:
     def test_time_it_execution(self, mock_logger):
         """Test with a function that takes arguments."""
 
-        @time_it
+        @time_it()
         def sample_function(delay):
             sleep(delay)
             return "Done"
@@ -306,7 +306,7 @@ class TestTimeIt:
     def test_time_it_no_arguments(self, mock_logger):
         """Test with a function that takes no arguments."""
 
-        @time_it
+        @time_it()
         def sample_function():
             return "No arguments"
 

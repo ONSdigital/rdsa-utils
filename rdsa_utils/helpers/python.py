@@ -3,7 +3,7 @@
 import itertools
 import json
 import logging
-import time as time_
+from codetiming import Timer
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
@@ -308,39 +308,40 @@ def convert_date_strings_to_datetimes(
     return (pd.Timestamp(start_date), pd.Timestamp(end_date))
 
 
-def time_it(func: Callable) -> Callable:
+def time_it(*timer_args, **timer_kwargs) -> Callable:
     """
-    Measure the execution time of a function.
+    Measure the execution time of a function, with options to configure Timer.
 
     Parameters
     ----------
-    func
-        The function whose execution time is to be measured.
+    timer_args
+        Positional arguments to pass to the Timer object.
+    timer_kwargs
+        Keyword arguments to pass to the Timer object.
 
     Returns
     -------
-    callable
+    Callable
         A wrapped function that includes timing measurement.
 
     Example
     -------
-    @time_it
-    def some_function():
+    @time_it()
+    def example_function():
         # Function implementation
     """
 
-    @wraps(func)
-    def wrap(*args, **kw):
-        time_start = time_.time()
-        result = func(*args, **kw)
-        time_end = time_.time()
-        logger.info(
-            f"  <Executed {func.__name__} in {round(time_end-time_start, 2)} "
-            "seconds>",
-        )
-        return result
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrap(*args, **kwargs) -> Any:
+            with Timer(*timer_args, **timer_kwargs) as t:
+                result = func(*args, **kwargs)
+            logger.info(f"<Executed {func.__name__} in {t.last:.2f} seconds>")
+            return result
 
-    return wrap
+        return wrap
+
+    return decorator
 
 
 def setdiff(a: Iterable, b: Iterable) -> List[Any]:
