@@ -3,13 +3,13 @@
 import itertools
 import json
 import logging
-from codetiming import Timer
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
 import pandas as pd
+from codetiming import Timer
 from more_itertools import always_iterable
 from pandas.tseries.offsets import MonthEnd
 
