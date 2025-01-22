@@ -22,6 +22,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     load_json,
     md5sum,
     move_file,
+    read_header,
     remove_leading_slash,
     upload_file,
     upload_folder,
@@ -524,6 +525,49 @@ class TestMd5sum:
         )
         md5 = md5sum(s3_client_for_list_files, "test-bucket", "empty-file.txt")
         assert md5 == "d41d8cd98f00b204e9800998ecf8427e"  # MD5 hash of an empty string
+
+
+class TestReadHeader:
+    """Tests for read_header function."""
+
+    def test_read_header_success(self, s3_client_for_list_files):
+        """Test read_header successfully reads the first line of a file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="test-file.txt",
+            Body="Header line\nSecond line\nThird line",
+        )
+        header = read_header(s3_client_for_list_files, "test-bucket", "test-file.txt")
+        assert header == "Header line"
+
+    def test_read_header_empty_file(self, s3_client_for_list_files):
+        """Test read_header returns an empty string for an empty file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body="",
+        )
+        header = read_header(s3_client_for_list_files, "test-bucket", "empty-file.txt")
+        assert header == ""
+
+    def test_read_header_single_line_file(self, s3_client_for_list_files):
+        """Test read_header returns the only line in a single-line file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="single-line-file.txt",
+            Body="Only line",
+        )
+        header = read_header(
+            s3_client_for_list_files,
+            "test-bucket",
+            "single-line-file.txt",
+        )
+        assert header == "Only line"
+
+    def test_read_header_nonexistent_file(self, s3_client_for_list_files):
+        """Test read_header raises an error for a nonexistent file."""
+        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+            read_header(s3_client, "test-bucket", "nonexistent.txt")
 
 
 class TestListFiles:

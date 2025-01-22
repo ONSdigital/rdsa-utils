@@ -25,7 +25,7 @@ Note:
 
 import json
 import logging
-from io import StringIO
+from io import StringIO, TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -316,6 +316,50 @@ def md5sum(client: boto3.client, bucket_name: str, object_name: str) -> str:
         md5result = None
 
     return md5result
+
+
+def read_header(client: boto3.client, bucket_name: str, object_name: str) -> str:
+    """Read the first line of a file on s3.
+
+    Gets the entire file using boto3 get_objects, converts its body into
+    an input stream, reads the first line and remove the carriage return
+    character (backslash-n) from the end.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to check for size.
+
+    Returns
+    -------
+    str
+        Returns the first line of the file.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> read_header(client, 'mybucket', 'folder/file.txt')
+    "First line"
+    """
+    # Create an input/output stream pointer, same as open
+    stream = TextIOWrapper(
+        client.get_object(
+            Bucket=bucket_name,
+            Key=object_name,
+        )["Body"],
+    )
+
+    # Read the first line from the stream
+    response = stream.readline()
+
+    # Remove the last character (carriage return, or new line)
+    response = response[:-1]
+
+    return response
 
 
 def upload_file(
