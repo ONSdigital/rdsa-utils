@@ -20,6 +20,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     list_files,
     load_csv,
     load_json,
+    md5sum,
     move_file,
     remove_leading_slash,
     upload_file,
@@ -494,6 +495,35 @@ class TestFileSize:
         )
         size = file_size(s3_client_for_list_files, "test-bucket", "empty-file.txt")
         assert size == 0
+
+
+class TestMd5sum:
+    """Tests for md5sum function."""
+
+    def test_md5sum_success(self, s3_client_for_list_files):
+        """Test md5sum returns correct hash for an existing file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="test-md5-file.txt",
+            Body=b"content",
+        )
+        md5 = md5sum(s3_client_for_list_files, "test-bucket", "test-md5-file.txt")
+        assert md5 == "9a0364b9e99bb480dd25e1f0284c8555"  # MD5 hash of 'content'
+
+    def test_md5sum_nonexistent(self, s3_client_for_list_files):
+        """Test md5sum raises an error for a nonexistent file."""
+        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+            md5sum(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
+
+    def test_md5sum_empty_file(self, s3_client_for_list_files):
+        """Test md5sum returns correct hash for an empty file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body=b"",
+        )
+        md5 = md5sum(s3_client_for_list_files, "test-bucket", "empty-file.txt")
+        assert md5 == "d41d8cd98f00b204e9800998ecf8427e"  # MD5 hash of an empty string
 
 
 class TestListFiles:
