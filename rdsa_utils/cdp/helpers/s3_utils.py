@@ -252,7 +252,11 @@ def file_exists(
             return False
 
 
-def file_size(client: boto3.client, bucket_name: str, object_name: str) -> int:
+def file_size(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> int:
     """Check the size of a file in an AWS S3 bucket.
 
     Parameters
@@ -283,7 +287,11 @@ def file_size(client: boto3.client, bucket_name: str, object_name: str) -> int:
     return file_size
 
 
-def md5sum(client: boto3.client, bucket_name: str, object_name: str) -> str:
+def md5sum(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> str:
     """Get md5 hash of a specific object on s3.
 
     Parameters
@@ -318,7 +326,11 @@ def md5sum(client: boto3.client, bucket_name: str, object_name: str) -> str:
     return md5result
 
 
-def read_header(client: boto3.client, bucket_name: str, object_name: str) -> str:
+def read_header(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> str:
     """Read the first line of a file on s3.
 
     Gets the entire file using boto3 get_objects, converts its body into
