@@ -1737,23 +1737,23 @@ class TestJoinMultiDfs:
             join_multi_dfs([df1, df2], on="id", how="invalid")
 
 
-class TestDictReplace:
-    """Tests for the `dict_replace` function."""
+class TestMapColumnValues:
+    """Tests for the `map_column_values` function."""
 
-    def test_dict_replace_basic(self, create_spark_df):
+    def test_map_column_values_basic(self, create_spark_df):
         """Test basic dictionary replacement."""
         input_df = create_spark_df(["col1 STRING", ("A",), ("B",), ("C",)])
 
-        result_df = dict_replace(input_df, {"A": "Apple", "B": "Banana"}, "col1")
+        result_df = map_column_values(input_df, {"A": "Apple", "B": "Banana"}, "col1")
         expected_df = create_spark_df(["col1 STRING", ("Apple",), ("Banana",), ("C",)])
 
         assert_df_equality(result_df, expected_df, ignore_nullable=True)
 
-    def test_dict_replace_with_output_col(self, create_spark_df):
+    def test_map_column_values_with_output_col(self, create_spark_df):
         """Test dictionary replacement with a specified output column."""
         input_df = create_spark_df(["col1 STRING", ("A",), ("B",), ("C",)])
 
-        result_df = dict_replace(
+        result_df = map_column_values(
             input_df,
             {"A": "Apple", "B": "Banana"},
             "col1",
@@ -1770,9 +1770,10 @@ class TestDictReplace:
 
         assert_df_equality(result_df, expected_df, ignore_nullable=True)
 
-    def test_dict_replace_invalid_dict(self, create_spark_df):
+    def test_map_column_values_invalid_dict(self, create_spark_df):
         """Test invalid dictionary raises an error."""
         input_df = create_spark_df(["col1 STRING", ("A",), ("B",)])
 
         with pytest.raises(TypeError, match="dict_ must be a dictionary"):
-            dict_replace(input_df, "not_a_dict", "col1")
+            map_column_values(input_df, "not_a_dict", "col1")
+

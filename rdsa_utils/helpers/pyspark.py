@@ -1554,7 +1554,7 @@ def join_multi_dfs(
     return joined_df
 
 
-def dict_replace(
+def map_column_values(
     df: SparkDF,
     dict_: Dict[str, str],
     input_col: str,
