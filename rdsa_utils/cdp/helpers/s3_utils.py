@@ -374,6 +374,53 @@ def read_header(
     return response
 
 
+def write_string_to_file(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+    object_content: bytes,
+):
+    """Write a string into the specified object in the s3 bucket.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to write into.
+    object_content
+        The content (str) to be written to "object_name".
+
+    Returns
+    -------
+    None
+        The outcome of this operation is the string written
+        into the object in the s3 bucket. It will overwrite
+        anything in the object.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> write_string_to_file(client, 'mybucket', 'folder/file.txt', b'example content')
+    """
+    # Put context to a new Input-Output buffer
+    str_buffer = StringIO(object_content.decode("utf-8"))
+
+    # "Rewind" the stream to the start of the buffer
+    str_buffer.seek(0)
+
+    # Write the buffer into the s3 bucket
+    client.put_object(
+        Bucket=bucket_name,
+        Body=str_buffer.getvalue(),
+        Key=object_name,
+    )
+
+    return None
+
+
 def upload_file(
     client: boto3.client,
     bucket_name: str,

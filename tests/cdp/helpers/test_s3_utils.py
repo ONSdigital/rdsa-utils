@@ -29,6 +29,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     validate_bucket_name,
     validate_s3_file_path,
     write_csv,
+    write_string_to_file,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -525,6 +526,76 @@ class TestMd5sum:
         )
         md5 = md5sum(s3_client_for_list_files, "test-bucket", "empty-file.txt")
         assert md5 == "d41d8cd98f00b204e9800998ecf8427e"  # MD5 hash of an empty string
+
+
+class TestWriteStringToFile:
+    """Tests for write_string_to_file function."""
+
+    def test_write_string_to_file_success(self, s3_client):
+        """Test that write_string_to_file writes content successfully."""
+        content = b"example content"
+        result = write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            content,
+        )
+        assert result is None
+
+        # Verify the content was written correctly
+        response = s3_client.get_object(Bucket="test-bucket", Key="test-file.txt")
+        assert response["Body"].read() == content
+
+    def test_write_string_to_file_overwrite(self, s3_client):
+        """Test that write_string_to_file overwrites existing content."""
+        initial_content = b"initial content"
+        new_content = b"new content"
+
+        # Write initial content
+        write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            initial_content,
+        )
+
+        # Overwrite with new content
+        write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            new_content,
+        )
+
+        # Verify the content was overwritten correctly
+        response = s3_client.get_object(Bucket="test-bucket", Key="test-file.txt")
+        assert response["Body"].read() == new_content
+
+    def test_write_string_to_file_empty_content(self, s3_client):
+        """Test that write_string_to_file handles empty content."""
+        content = b""
+        result = write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            content,
+        )
+        assert result is None
+
+        # Verify the content was written correctly
+        response = s3_client.get_object(Bucket="test-bucket", Key="test-file.txt")
+        assert response["Body"].read() == content
+
+    def test_write_string_to_file_nonexistent_bucket(self, s3_client):
+        """Test that write_string_to_file raises an error for a nonexistent bucket."""
+        content = b"example content"
+        with pytest.raises(s3_client.exceptions.NoSuchBucket):
+            write_string_to_file(
+                s3_client,
+                "nonexistent-bucket",
+                "test-file.txt",
+                content,
+            )
 
 
 class TestReadHeader:
