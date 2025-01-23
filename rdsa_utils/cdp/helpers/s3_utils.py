@@ -330,6 +330,7 @@ def md5sum(
         logger.error(
             f"Failed to get MD5 checksum from file: {str(e)}",
         )
+        md5result = None
 
     return md5result
 
