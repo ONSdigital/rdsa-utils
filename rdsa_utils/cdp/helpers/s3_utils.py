@@ -327,18 +327,9 @@ def md5sum(
             1:-1
         ]
     except client.exceptions.ClientError as e:
-        if FileNotFoundError:
-            file_not_found_msg = (
-                f"The file {object_name} does not exist in bucket {bucket_name}."
-            )
-            raise logger.error(
-                file_not_found_msg,
-            ) from e
-        else:
-            failed_function_msg = f"Failed to get MD5 checksum from file: {str(e)}"
-            raise logger.error(
-                failed_function_msg,
-            ) from e
+        logger.error(
+            f"Failed to get MD5 checksum from file: {str(e)}",
+        )
 
     return md5result
 
