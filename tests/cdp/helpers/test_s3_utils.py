@@ -638,7 +638,7 @@ class TestReadHeader:
     def test_read_header_nonexistent_file(self, s3_client_for_list_files):
         """Test read_header raises an error for a nonexistent file."""
         with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
-            read_header(s3_client, "test-bucket", "nonexistent.txt")
+            read_header(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
 
 
 class TestListFiles:
