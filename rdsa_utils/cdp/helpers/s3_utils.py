@@ -309,6 +309,13 @@ def md5sum(
         a string value with the MD5 hash of
         the object data.
 
+    Raises
+    ------
+    FileNotFoundError
+        If the specified file does not exist in the bucket.
+    Error
+        If unable to get the MD5 checksum from an existing file.
+
     Examples
     --------
     >>> client = boto3.client('s3')
@@ -320,8 +327,18 @@ def md5sum(
             1:-1
         ]
     except client.exceptions.ClientError as e:
-        logger.error(f"Failed to compute the md5 checksum: {str(e)}")
-        md5result = None
+        if FileNotFoundError:
+            file_not_found_msg = (
+                f"The file {object_name} does not exist in bucket {bucket_name}."
+            )
+            raise logger.error(
+                file_not_found_msg,
+            ) from e
+        else:
+            failed_function_msg = f"Failed to get MD5 checksum from file: {str(e)}"
+            raise logger.error(
+                failed_function_msg,
+            ) from e
 
     return md5result
 
