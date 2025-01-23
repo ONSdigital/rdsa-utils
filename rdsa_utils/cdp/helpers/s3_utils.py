@@ -369,7 +369,7 @@ def read_header(
     response = stream.readline()
 
     # Remove the last character (carriage return, or new line)
-    response = response[:-1]
+    response = response.rstrip("\n\r")
 
     return response
 
