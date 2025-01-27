@@ -15,17 +15,21 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     download_file,
     download_folder,
     file_exists,
+    file_size,
     is_s3_directory,
     list_files,
     load_csv,
     load_json,
+    md5sum,
     move_file,
+    read_header,
     remove_leading_slash,
     upload_file,
     upload_folder,
     validate_bucket_name,
     validate_s3_file_path,
     write_csv,
+    write_string_to_file,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -464,6 +468,177 @@ def s3_client_for_list_files(_aws_credentials):
                 Body=b"Test content",
             )
         yield client
+
+
+class TestFileSize:
+    """Tests for file_size function."""
+
+    def test_file_size_success(self, s3_client_for_list_files):
+        """Test file_size returns correct size for an existing file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="test-size-file.txt",
+            Body=b"content",
+        )
+        size = file_size(s3_client_for_list_files, "test-bucket", "test-size-file.txt")
+        assert size == 7  # 'content' is 7 bytes long
+
+    def test_file_size_nonexistent(self, s3_client_for_list_files):
+        """Test file_size raises an error for a nonexistent file."""
+        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+            file_size(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
+
+    def test_file_size_empty_file(self, s3_client_for_list_files):
+        """Test file_size returns 0 for an empty file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body=b"",
+        )
+        size = file_size(s3_client_for_list_files, "test-bucket", "empty-file.txt")
+        assert size == 0
+
+
+class TestMd5sum:
+    """Tests for md5sum function."""
+
+    def test_md5sum_success(self, s3_client_for_list_files):
+        """Test md5sum returns correct hash for an existing file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="test-md5-file.txt",
+            Body=b"content",
+        )
+        md5 = md5sum(s3_client_for_list_files, "test-bucket", "test-md5-file.txt")
+        assert md5 == "9a0364b9e99bb480dd25e1f0284c8555"  # MD5 hash of 'content'
+
+    def test_md5sum_nonexistent(self, s3_client_for_list_files):
+        """Test md5sum raises an error for a nonexistent file."""
+        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+            md5sum(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
+
+    def test_md5sum_empty_file(self, s3_client_for_list_files):
+        """Test md5sum returns correct hash for an empty file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body=b"",
+        )
+        md5 = md5sum(s3_client_for_list_files, "test-bucket", "empty-file.txt")
+        assert md5 == "d41d8cd98f00b204e9800998ecf8427e"  # MD5 hash of an empty string
+
+
+class TestWriteStringToFile:
+    """Tests for write_string_to_file function."""
+
+    def test_write_string_to_file_success(self, s3_client):
+        """Test that write_string_to_file writes content successfully."""
+        content = b"example content"
+        result = write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            content,
+        )
+        assert result is None
+
+        # Verify the content was written correctly
+        response = s3_client.get_object(Bucket="test-bucket", Key="test-file.txt")
+        assert response["Body"].read() == content
+
+    def test_write_string_to_file_overwrite(self, s3_client):
+        """Test that write_string_to_file overwrites existing content."""
+        initial_content = b"initial content"
+        new_content = b"new content"
+
+        # Write initial content
+        write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            initial_content,
+        )
+
+        # Overwrite with new content
+        write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            new_content,
+        )
+
+        # Verify the content was overwritten correctly
+        response = s3_client.get_object(Bucket="test-bucket", Key="test-file.txt")
+        assert response["Body"].read() == new_content
+
+    def test_write_string_to_file_empty_content(self, s3_client):
+        """Test that write_string_to_file handles empty content."""
+        content = b""
+        result = write_string_to_file(
+            s3_client,
+            "test-bucket",
+            "test-file.txt",
+            content,
+        )
+        assert result is None
+
+        # Verify the content was written correctly
+        response = s3_client.get_object(Bucket="test-bucket", Key="test-file.txt")
+        assert response["Body"].read() == content
+
+    def test_write_string_to_file_nonexistent_bucket(self, s3_client):
+        """Test that write_string_to_file raises an error for a nonexistent bucket."""
+        content = b"example content"
+        with pytest.raises(s3_client.exceptions.NoSuchBucket):
+            write_string_to_file(
+                s3_client,
+                "nonexistent-bucket",
+                "test-file.txt",
+                content,
+            )
+
+
+class TestReadHeader:
+    """Tests for read_header function."""
+
+    def test_read_header_success(self, s3_client_for_list_files):
+        """Test read_header successfully reads the first line of a file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="test-file.txt",
+            Body="Header line\nSecond line\nThird line",
+        )
+        header = read_header(s3_client_for_list_files, "test-bucket", "test-file.txt")
+        assert header == "Header line"
+
+    def test_read_header_empty_file(self, s3_client_for_list_files):
+        """Test read_header returns an empty string for an empty file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body="",
+        )
+        header = read_header(s3_client_for_list_files, "test-bucket", "empty-file.txt")
+        assert header == ""
+
+    def test_read_header_single_line_file(self, s3_client_for_list_files):
+        """Test read_header returns the only line in a single-line file."""
+        s3_client_for_list_files.put_object(
+            Bucket="test-bucket",
+            Key="single-line-file.txt",
+            Body="Only line",
+        )
+        header = read_header(
+            s3_client_for_list_files,
+            "test-bucket",
+            "single-line-file.txt",
+        )
+        assert header == "Only line"
+
+    def test_read_header_nonexistent_file(self, s3_client_for_list_files):
+        """Test read_header raises an error for a nonexistent file."""
+        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+            read_header(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
 
 
 class TestListFiles:
