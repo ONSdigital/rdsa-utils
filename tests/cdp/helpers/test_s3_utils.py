@@ -514,7 +514,7 @@ class TestMd5sum:
 
     def test_md5sum_nonexistent(self, s3_client_for_list_files):
         """Test md5sum raises an error for a nonexistent file."""
-        with pytest.raises(s3_client_for_list_files.exceptions.ClientError):
+        with pytest.raises(s3_client_for_list_files.exceptions.FileNotFoundError):
             md5sum(s3_client_for_list_files, "test-bucket", "nonexistent.txt")
 
     def test_md5sum_empty_file(self, s3_client_for_list_files):
