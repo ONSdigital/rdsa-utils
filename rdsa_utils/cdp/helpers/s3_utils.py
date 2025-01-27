@@ -328,9 +328,15 @@ def md5sum(
         ]
     except client.exceptions.ClientError as e:
         if e.response["Error"]["Code"] == "404":
-            logger.error(
-                f"The file {object_name} does not exist in bucket {bucket_name}.",
-            )
+            raise client.exceptions.ClientError(
+                {
+                    "Error": {
+                        "Code": "404",
+                        "Message": f"The file {object_name} doesn't exist.",
+                    },
+                },
+                operation_name="HeadObject",
+            ) from e
         else:
             logger.error(
                 f"Failed to get md5 from file: {str(e)}",
