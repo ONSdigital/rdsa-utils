@@ -309,13 +309,6 @@ def md5sum(
         a string value with the MD5 hash of
         the object data.
 
-    Raises
-    ------
-    FileNotFoundError
-        If the specified file does not exist in the bucket.
-    Error
-        If unable to get the MD5 checksum from an existing file.
-
     Examples
     --------
     >>> client = boto3.client('s3')
