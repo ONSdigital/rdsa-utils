@@ -8,6 +8,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added several python and pyspark helper functions and associated unit tests.
+- Added `codetiming` package as a dependency.
 
 ### Changed
 - Ran `ruff check . fix` on the codebase to comply with new PEP rules.
@@ -15,6 +17,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   and `rdsa_utils/typing.py`.
 - Upgraded `black`, `ruff`, `gitleaks` to the latest version 
   in `.pre-commit-config.yaml`.
+- Removed module-level scope for `spark_session` fixture in `test_utils.py` 
+  to ensure test isolation.
 
 - Updated Project Description for Python 3.12 and 3.13.
 - Updated Copyright for 2025.

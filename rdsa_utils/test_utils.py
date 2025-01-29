@@ -16,7 +16,7 @@ def suppress_py4j_logging():
     logger.setLevel(logging.WARN)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def spark_session():
     """Set up spark session fixture."""
     suppress_py4j_logging()
