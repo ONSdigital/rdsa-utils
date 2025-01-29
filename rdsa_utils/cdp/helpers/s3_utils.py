@@ -1123,7 +1123,7 @@ def write_csv(
     bucket_name
         The name of the S3 bucket.
     data
-        The dataframe to write to the spexified path.
+        The dataframe to write to the specified path.
     filepath
         The filepath to save the dataframe to.
     kwargs
