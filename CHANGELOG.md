@@ -22,6 +22,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Updated Project Description for Python 3.12 and 3.13.
 - Updated Copyright for 2025.
 - Added acknowledgements to colleagues from DSC and MQD in `README.md`.
+- Added `write_excel` function to `cdp/helpers/io/s3_utils.py`.
+- Added `xlsxwriter` and `openpyxl` dependency due to `write_excel` function 
+  in `cdp/helpers/io/s3_utils.py`
 
 ### Deprecated
 
