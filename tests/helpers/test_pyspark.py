@@ -1321,16 +1321,18 @@ class TestTruncateExternalHiveTable:
 class TestCacheTimeDf:
     """Tests for the `cache_time_df` function."""
 
-    @patch("rdsa_utils.helpers.pyspark.logger.info")  # Mock the logger
-    def test_expected(self, mock_logger, create_spark_df):
+    @patch("rdsa_utils.helpers.pyspark.time.time")
+    @patch("rdsa_utils.helpers.pyspark.logger.info")
+    def test_expected(self, mock_logger, mock_time, create_spark_df):
         """Test caching a DataFrame and timing the process."""
         input_df = create_spark_df([("A", "B", "C"), (1, 2, 3)])
 
-        start_time = time.time()
-        cache_time_df(input_df)
-        end_time = time.time()
+        # Mock time.time() return values
+        mock_time.side_effect = [100.0, 100.25]  # start_time, end_time
 
-        elapsed_time = round(end_time - start_time, 2)
+        cache_time_df(input_df)
+
+        elapsed_time = round(100.25 - 100.0, 2)  # Should be 0.25
         mock_logger.assert_called_once()
         log_message = mock_logger.call_args[0][0]
         assert f"Cached in {elapsed_time} seconds" in log_message
