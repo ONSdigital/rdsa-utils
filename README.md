@@ -65,6 +65,10 @@ We highly recommend checking out the following resources to learn more about cre
 
 Additionally, if you are facing the challenge of repeatedly setting up new developers and new users in local Python, then you may want to consider making a batch file to carry out the setup process for you. The [easypipelinerun](https://github.com/ONSdigital/easy_pipeline_run/) repo has a batch file that can be modified to set your users up for your project, taking care of things like conda and pip set up as well as environment management.  
 
+## 🙌 Acknowledgements
+
+Thanks to colleagues from the ONS **Data Science Campus (DSC)** and the ONS **Methods and Quality Directorate (MQD)** for their contributions to `rdsa-utils`.
+
 ## 🛡️ Licence
 
 Unless stated otherwise, the codebase is released under the [MIT License][mit].

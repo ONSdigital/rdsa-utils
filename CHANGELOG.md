@@ -19,9 +19,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   in `.pre-commit-config.yaml`.
 - Removed module-level scope for `spark_session` fixture in `test_utils.py` 
   to ensure test isolation.
-
 - Updated Project Description for Python 3.12 and 3.13.
 - Updated Copyright for 2025.
+- Added acknowledgements to colleagues from DSC and MQD in `README.md`.
 
 ### Deprecated
 
