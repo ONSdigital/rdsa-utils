@@ -596,7 +596,7 @@ def merge_multi_dfs(
 
     Returns
     -------
-    pandas.DataFrame
+    pd.DataFrame
         The resulting DataFrame after merging and optional filling of missing
         values.
 
