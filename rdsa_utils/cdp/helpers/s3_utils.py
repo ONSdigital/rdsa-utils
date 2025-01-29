@@ -1178,6 +1178,7 @@ def write_csv(
         logger.error(error_message)
         return False
 
+
 def write_excel(
     client: boto3.client,
     bucket_name: str,
@@ -1187,8 +1188,8 @@ def write_excel(
 ) -> bool:
     """Write a Pandas DataFrame to an Excel file in an S3 bucket.
 
-    Uses BytesIO as a RAM buffer. Pandas writes data to the buffer, 
-    the buffer rewinds to the beginning, and then it is sent to S3 
+    Uses BytesIO as a RAM buffer. Pandas writes data to the buffer,
+    the buffer rewinds to the beginning, and then it is sent to S3
     using the boto3.put_object method.
 
     Parameters
@@ -1248,7 +1249,6 @@ def write_excel(
     except Exception as e:
         logger.error(
             f"Error writing to Excel or saving to bucket {bucket_name}, "
-            f"filepath {filepath}: {e}"
+            f"filepath {filepath}: {e}",
         )
         return False
-

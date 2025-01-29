@@ -1123,6 +1123,7 @@ class TestWriteCSV:
         result = write_csv(s3_client, "test-bucket", data, "test_file.csv", index=False)
         assert not result
 
+
 class TestWriteExcel:
     """Tests for write_excel function."""
 
@@ -1166,5 +1167,11 @@ class TestWriteExcel:
         """
         data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
 
-        result = write_excel(s3_client, "test-bucket", data, "test_file.xlsx", index=False)
+        result = write_excel(
+            s3_client,
+            "test-bucket",
+            data,
+            "test_file.xlsx",
+            index=False,
+        )
         assert not result
