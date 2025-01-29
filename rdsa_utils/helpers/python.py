@@ -309,8 +309,7 @@ def convert_date_strings_to_datetimes(
 
 
 def time_it(*timer_args, **timer_kwargs) -> Callable:
-    """
-    Measure the execution time of a function, with options to configure Timer.
+    """Measure the execution time of a function, with options to configure Timer.
 
     Parameters
     ----------
@@ -345,8 +344,7 @@ def time_it(*timer_args, **timer_kwargs) -> Callable:
 
 
 def setdiff(a: Iterable, b: Iterable) -> List[Any]:
-    """
-    Return a list of elements that are present in `a` but not in `b`.
+    """Return a list of elements that are present in `a` but not in `b`.
 
     Parameters
     ----------
@@ -382,8 +380,7 @@ def flatten_iterable(
     iterable: Iterable,
     types_to_flatten: Union[type, Tuple] = (list, tuple),
 ) -> List:
-    """
-    Flatten an iterable.
+    """Flatten an iterable.
 
     Parameters
     ----------
@@ -400,13 +397,13 @@ def flatten_iterable(
 
     Examples
     --------
-    >>> flatten([1, [2, 3], (4, 5), 'abc'])
+    >>> flatten_iterable([1, [2, 3], (4, 5), 'abc'])
     [1, 2, 3, 4, 5, 'abc']
-    >>> flatten([1, [2, 3], (4, 5), 'abc'], types_to_flatten=list)
+    >>> flatten_iterable([1, [2, 3], (4, 5), 'abc'], types_to_flatten=list)
     [1, 2, 3, (4, 5), 'abc']
-    >>> flatten(['a', 'bc', ['d', 'e']], types_to_flatten=str)
+    >>> flatten_iterable(['a', 'bc', ['d', 'e']], types_to_flatten=str)
     ['a', 'b', 'c', 'd', 'e']
-    >>> flatten((1, [2, 3], (4, 5), 'abc'), types_to_flatten=(list, tuple))
+    >>> flatten_iterable((1, [2, 3], (4, 5), 'abc'), types_to_flatten=(list, tuple))
     (1, 2, 3, 4, 5, 'abc')
     """
     if not hasattr(iterable, "__iter__"):
@@ -436,8 +433,7 @@ def flatten_iterable(
 
 
 def convert_types_iterable(lst: Iterable, dtype: type = float) -> List:
-    """
-    Convert the data type of elements in an iterable.
+    """Convert the data type of elements in an iterable.
 
     Parameters
     ----------
@@ -454,16 +450,16 @@ def convert_types_iterable(lst: Iterable, dtype: type = float) -> List:
 
     Examples
     --------
-    >>> convert_types([1, 2, 3])
+    >>> convert_types_iterable([1, 2, 3])
     [1.0, 2.0, 3.0]
 
-    >>> convert_types((10, 20, 30), dtype=str)
+    >>> convert_types_iterable((10, 20, 30), dtype=str)
     ['10', '20', '30']
 
-    >>> convert_types({'a', 'b', 'c'}, dtype=ord)
+    >>> convert_types_iterable({'a', 'b', 'c'}, dtype=ord)
     [97, 98, 99]
 
-    >>> convert_types(['10', '20', '30'], dtype=int)
+    >>> convert_types_iterable(['10', '20', '30'], dtype=int)
     [10, 20, 30]
     """
     if not isinstance(lst, (list, tuple, set, frozenset, range)):
@@ -481,8 +477,7 @@ def convert_types_iterable(lst: Iterable, dtype: type = float) -> List:
 
 
 def interleave_iterables(iterable1: Iterable, iterable2: Iterable) -> List:
-    """
-    Interleave two iterables element by element.
+    """Interleave two iterables element by element.
 
     Parameters
     ----------
@@ -540,8 +535,7 @@ def interleave_iterables(iterable1: Iterable, iterable2: Iterable) -> List:
 
 
 def pairwise_iterable(iterable: Iterable) -> zip:
-    """
-    Return pairs of adjacent values from the input iterable.
+    """Return pairs of adjacent values from the input iterable.
 
     Parameters
     ----------
@@ -562,13 +556,13 @@ def pairwise_iterable(iterable: Iterable) -> zip:
 
     Examples
     --------
-    >>> list(pairwise([1, 2, 3, 4]))
+    >>> list(pairwise_iterable([1, 2, 3, 4]))
     [(1, 2), (2, 3), (3, 4)]
 
-    >>> list(pairwise('abcde'))
+    >>> list(pairwise_iterable('abcde'))
     [('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'e')]
 
-    >>> list(pairwise((10, 20, 30)))
+    >>> list(pairwise_iterable((10, 20, 30)))
     [(10, 20), (20, 30)]
     """
     if not hasattr(iterable, "__iter__"):
@@ -586,8 +580,7 @@ def merge_multi_dfs(
     how: str,
     fillna_val: Union[None, object] = None,
 ) -> pd.DataFrame:
-    """
-    Perform consecutive merges on a list of pandas DataFrames.
+    """Perform consecutive merges on a list of pandas DataFrames.
 
     Parameters
     ----------
@@ -621,13 +614,13 @@ def merge_multi_dfs(
     >>> df1 = pd.DataFrame({'key': ['A', 'B', 'C'], 'value1': [1, 2, 3]})
     >>> df2 = pd.DataFrame({'key': ['A', 'B'], 'value2': [4, 5]})
     >>> df3 = pd.DataFrame({'key': ['A'], 'value3': [6]})
-    >>> merge_multi([df1, df2, df3], on='key', how='inner')
+    >>> merge_multi_dfs([df1, df2, df3], on='key', how='inner')
       key  value1  value2  value3
     0   A       1       4       6
 
     >>> df1 = pd.DataFrame({'key': ['A', 'B', 'C'], 'value1': [1, 2, 3]})
     >>> df2 = pd.DataFrame({'key': ['A', 'B'], 'value2': [4, 5]})
-    >>> merge_multi([df1, df2], on='key', how='outer',  fillna_val=0)
+    >>> merge_multi_dfs([df1, df2], on='key', how='outer',  fillna_val=0)
       key  value1  value2
     0   A        1        4
     1   B        2        5

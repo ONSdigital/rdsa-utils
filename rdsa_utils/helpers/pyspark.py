@@ -1020,8 +1020,7 @@ def truncate_external_hive_table(spark: SparkSession, table_identifier: str) -> 
 
 
 def cache_time_df(df: SparkDF) -> None:
-    """
-    Cache a PySpark DataFrame and print the time taken to cache and count it.
+    """Cache a PySpark DataFrame and print the time taken to cache and count it.
 
     Parameters
     ----------
@@ -1047,8 +1046,7 @@ def count_nulls(
     df: SparkDF,
     subset_cols: Optional[Union[List[str], str]] = None,
 ) -> pd.DataFrame:
-    """
-    Count the number of null values in the specified columns of a SparkDF.
+    """Count the number of null values in the specified columns of a SparkDF.
 
     Parameters
     ----------
@@ -1061,7 +1059,7 @@ def count_nulls(
 
     Returns
     -------
-    pandas.DataFrame
+    pd.DataFrame
         A Pandas DataFrame with the count of null values per column.
     """
     if not isinstance(df, SparkDF):
@@ -1085,8 +1083,7 @@ def count_nulls(
 
 
 def aggregate_col(df: SparkDF, col: str, operation: str) -> float:
-    """
-    Aggregate (sum, max, min, or mean) a numeric PySpark column.
+    """Aggregate (sum, max, min, or mean) a numeric PySpark column.
 
     Parameters
     ----------
@@ -1125,8 +1122,7 @@ def get_unique(
     remove_null: bool = False,
     verbose: bool = True,
 ) -> List[Optional[Union[str, int, float]]]:
-    """
-    Return a list of unique values in a PySpark DataFrame column.
+    """Return a list of unique values in a PySpark DataFrame column.
 
     Parameters
     ----------
@@ -1141,7 +1137,7 @@ def get_unique(
 
     Returns
     -------
-    list
+    List
         A list of unique values from the specified column.
     """
     if not isinstance(df, SparkDF):
@@ -1171,8 +1167,7 @@ def drop_duplicates_reproducible(
     col: str,
     id_col: Optional[str] = None,
 ) -> SparkDF:
-    """
-    Remove duplicates from a PySpark DataFrame in a repeatable manner.
+    """Remove duplicates from a PySpark DataFrame in a repeatable manner.
 
     Parameters
     ----------
@@ -1186,7 +1181,7 @@ def drop_duplicates_reproducible(
 
     Returns
     -------
-    pyspark.sql.DataFrame
+    SparkDF
         The SparkDF with duplicates removed.
     """
     if not isinstance(df, SparkDF):
@@ -1222,8 +1217,7 @@ def apply_col_func(
     cols: List[str],
     func: Callable[[SparkDF, str], SparkDF],
 ) -> SparkDF:
-    """
-    Apply a function to a list of columns in a PySpark DataFrame.
+    """Apply a function to a list of columns in a PySpark DataFrame.
 
     Parameters
     ----------
@@ -1236,8 +1230,8 @@ def apply_col_func(
 
     Returns
     -------
-    pyspark.sql.DataFrame
-        The PySpark DataFrame after applying the function to each column.
+    SparkDF
+        The SparkDF after applying the function to each column.
     """
     if not isinstance(df, SparkDF):
         msg = "df must be a PySpark DataFrame."
@@ -1267,8 +1261,7 @@ def pyspark_random_uniform(
     upper_bound: float = 1,
     seed: Optional[int] = None,
 ) -> SparkDF:
-    """
-    Mimic numpy.random.uniform for PySpark.
+    """Mimic numpy.random.uniform for PySpark.
 
     Parameters
     ----------
@@ -1286,7 +1279,7 @@ def pyspark_random_uniform(
 
     Returns
     -------
-    pyspark.sql.DataFrame
+    SparkDF
         The SparkDF with the new column added.
     """
     if not isinstance(df, SparkDF):
@@ -1316,8 +1309,7 @@ def cumulative_array(
     array_col: str,
     output_colname: str,
 ) -> SparkDF:
-    """
-    Convert a PySpark array column to a cumulative array column.
+    """Convert a PySpark array column to a cumulative array column.
 
     Parameters
     ----------
@@ -1330,7 +1322,7 @@ def cumulative_array(
 
     Returns
     -------
-    pyspark.sql.DataFrame
+    SparkDF
         The SparkDF with the cumulative array column added.
     """
     if not isinstance(df, SparkDF):
@@ -1357,8 +1349,7 @@ def cumulative_array(
 
 
 def union_mismatched_dfs(df1: SparkDF, df2: SparkDF) -> SparkDF:
-    """
-    Perform a union between PySpark DataFrames with mismatched column names.
+    """Perform a union between PySpark DataFrames with mismatched column names.
 
     Parameters
     ----------
@@ -1369,7 +1360,7 @@ def union_mismatched_dfs(df1: SparkDF, df2: SparkDF) -> SparkDF:
 
     Returns
     -------
-    pyspark.sql.DataFrame
+    SparkDF
         A SparkDF resulting from the union of df1 and df2, with missing
         columns filled with null values.
     """
@@ -1394,8 +1385,7 @@ def sum_columns(
     cols_to_sum: List[str],
     output_col: str,
 ) -> SparkDF:
-    """
-    Calculate row-wise sum of specified PySpark columns.
+    """Calculate row-wise sum of specified PySpark columns.
 
     Parameters
     ----------
@@ -1437,8 +1427,7 @@ def set_nulls(
     column: str,
     values: Union[str, List[str]],
 ) -> SparkDF:
-    """
-    Replace specified values with nulls in given column of PySpark df.
+    """Replace specified values with nulls in given column of PySpark df.
 
     Parameters
     ----------
@@ -1480,8 +1469,7 @@ def set_nulls(
 
 
 def union_multi_dfs(df_list: List[SparkDF]) -> SparkDF:
-    """
-    Perform a union on all SparkDFs in the provided list.
+    """Perform a union on all SparkDFs in the provided list.
 
     Note
     ----
@@ -1516,8 +1504,7 @@ def join_multi_dfs(
     on: Union[str, List[str]],
     how: str,
 ) -> SparkDF:
-    """
-    Join multiple Spark SparkDFs together.
+    """Join multiple Spark SparkDFs together.
 
     Parameters
     ----------
@@ -1560,8 +1547,7 @@ def map_column_values(
     input_col: str,
     output_col: Union[str, None] = None,
 ) -> SparkDF:
-    """
-    Map PySpark column to dictionary keys.
+    """Map PySpark column to dictionary keys.
 
     Parameters
     ----------
