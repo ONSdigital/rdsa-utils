@@ -74,7 +74,7 @@ cd rdsa-utils
 
 ### Set Up the Development Environment
 
-We use a traditional `setup.py` approach for managing dependencies. To set up your development environment, first, ensure you have Python 3.8 to 3.10 installed.
+We use a traditional `setup.py` approach for managing dependencies. To set up your development environment, first, ensure you have Python 3.8 to 3.13 installed.
 
 Then, to install the package in editable mode along with all development dependencies, run the following command:
 

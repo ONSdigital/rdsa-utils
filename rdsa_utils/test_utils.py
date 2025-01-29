@@ -16,7 +16,7 @@ def suppress_py4j_logging():
     logger.setLevel(logging.WARN)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def spark_session():
     """Set up spark session fixture."""
     suppress_py4j_logging()
@@ -172,7 +172,7 @@ def to_datetime(dt: str) -> datetime.datetime:
     return pd.to_datetime(dt).to_pydatetime()
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_spark_df(spark_session):
     """Create Spark DataFrame from tuple data with first row as schema.
 
@@ -196,7 +196,7 @@ def create_spark_df(spark_session):
     return _
 
 
-@pytest.fixture()
+@pytest.fixture
 def to_spark(spark_session):
     """Convert pandas df to spark."""
 

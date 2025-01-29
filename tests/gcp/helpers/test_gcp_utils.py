@@ -57,13 +57,13 @@ class TestLoadConfigGcp:
         pass
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_client():
     """Mock GCS client."""
     return mock.Mock(spec=storage.Client)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_bucket(mock_client):
     """Mock GCS bucket."""
     bucket = mock.Mock(spec=storage.Bucket)
@@ -71,7 +71,7 @@ def mock_bucket(mock_client):
     return bucket
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_blob(mock_bucket):
     """Mock GCS blob."""
     blob = mock.Mock(spec=storage.Blob)
@@ -79,14 +79,14 @@ def mock_blob(mock_bucket):
     return blob
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_list_blobs(mock_client):
     """Mock list_blobs method."""
     mock_client.list_blobs.return_value = iter([mock.Mock()])
     return mock_client.list_blobs
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_path():
     """Mock Path object."""
     with mock.patch("rdsa_utils.gcp.helpers.gcp_utils.Path") as mock_path:
