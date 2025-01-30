@@ -321,6 +321,8 @@ def md5sum(
         ]
     except client.exceptions.ClientError as e:
         if e.response["Error"]["Code"] == "404":
+            # This is specifically for it to raise a ClientError exception
+            # when a file is not found.
             raise client.exceptions.ClientError(
                 {
                     "Error": {
