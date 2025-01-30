@@ -393,7 +393,7 @@ def write_string_to_file(
     bucket_name: str,
     object_name: str,
     object_content: bytes,
-):
+) -> None:
     """Write a string into the specified object in the s3 bucket.
 
     Parameters
