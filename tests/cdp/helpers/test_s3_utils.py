@@ -31,8 +31,8 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     validate_bucket_name,
     validate_s3_file_path,
     write_csv,
-    write_string_to_file,
     write_excel,
+    write_string_to_file,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -440,7 +440,6 @@ class TestUploadFolder:
             )
             is False
         )
-
 
 
 class TestS3Walk:
