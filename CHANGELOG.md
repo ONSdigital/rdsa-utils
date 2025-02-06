@@ -27,6 +27,38 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.6.0] - 2025-01-29
+
+### Added
+- Added `time_it`, `setdiff`, `flatten_iterable`, `convert_types_iterable`, 
+  `interleave_iterables`, `pairwise_iterable`, `merge_multi_dfs` to `helpers/python.py`.
+- Added `cache_time_df`, `count_nulls`, `aggregate_col`, `get_unique`, 
+  `drop_duplicates_reproducible`, `apply_col_func`, `pyspark_random_uniform`, 
+  `cumulative_array`, `union_mismatched_dfs`, `sum_columns`, `set_nulls`, 
+  `union_multi_dfs`, `join_multi_dfs`, `map_column_values` to `helpers/pyspark.py`.
+- Added `codetiming` package as a dependency.
+- Added `write_excel` function to `cdp/helpers/io/s3_utils.py`.
+- Added `xlsxwriter` and `openpyxl` dependency due to `write_excel` function 
+  in `cdp/helpers/io/s3_utils.py`.
+
+### Changed
+- Ran `ruff check . fix` on the codebase to comply with new PEP rules.
+- Added rules to `ruff.toml` to ignore A005 warnings for `rdsa_utils/logging.py` 
+  and `rdsa_utils/typing.py`.
+- Upgraded `black`, `ruff`, `gitleaks` to the latest version 
+  in `.pre-commit-config.yaml`.
+- Removed module-level scope for `spark_session` fixture in `test_utils.py` 
+  to ensure test isolation.
+- Updated Project Description for Python 3.12 and 3.13.
+- Updated Copyright for 2025.
+- Added acknowledgements to colleagues from DSC and MQD in `README.md`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.5.0] - 2025-01-09
 
 ### Added
@@ -543,6 +575,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.6.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.6.0) | 
+  [PyPI](https://pypi.org/project/rdsa-utils/0.6.0/)
 - rdsa-utils v0.5.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.5.0) | 
   [PyPI](https://pypi.org/project/rdsa-utils/0.5.0/)
 - rdsa-utils v0.4.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.4.4) | 

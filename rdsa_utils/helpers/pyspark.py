@@ -3,6 +3,7 @@
 import functools
 import itertools
 import logging
+import time
 from typing import (
     Any,
     Callable,
@@ -15,6 +16,7 @@ from typing import (
     Union,
 )
 
+import pandas as pd
 from pyspark.sql import Column as SparkCol
 from pyspark.sql import DataFrame as SparkDF
 from pyspark.sql import SparkSession, Window, WindowSpec
@@ -1015,3 +1017,576 @@ def truncate_external_hive_table(spark: SparkSession, table_identifier: str) -> 
             f"An error occurred while truncating the table '{table_identifier}': {e}",
         )
         raise
+
+
+def cache_time_df(df: SparkDF) -> None:
+    """Cache a PySpark DataFrame and print the time taken to cache and count it.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame to cache.
+
+    Returns
+    -------
+    None
+    """
+    if not isinstance(df, SparkDF):
+        msg = "Input must be a PySpark DataFrame."
+        raise TypeError(msg)
+
+    start_time = time.time()
+    df.cache().count()
+    end_time = time.time()
+    elapsed_time = round(end_time - start_time, 2)
+    logger.info(f"Cached in {elapsed_time} seconds")
+
+
+def count_nulls(
+    df: SparkDF,
+    subset_cols: Optional[Union[List[str], str]] = None,
+) -> pd.DataFrame:
+    """Count the number of null values in the specified columns of a SparkDF.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame to analyze.
+    subset_cols
+        List of column names or a single column name as a string to count
+        null values for. If not provided, counts are calculated for all
+        columns.
+
+    Returns
+    -------
+    pd.DataFrame
+        A Pandas DataFrame with the count of null values per column.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "Input must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if isinstance(subset_cols, str):
+        subset_cols = [subset_cols]
+    if subset_cols is not None:
+        if not isinstance(subset_cols, list):
+            msg = "subset_cols must be a list, a string, or None."
+            raise TypeError(msg)
+        if not all(isinstance(col, str) for col in subset_cols):
+            msg = "All elements of subset_cols must be strings."
+            raise TypeError(msg)
+
+    cols = subset_cols if subset_cols else df.columns
+    null_counts = df.select(
+        [F.count(F.when(F.col(c).isNull(), c)).alias(c) for c in cols],
+    ).toPandas()
+    return null_counts
+
+
+def aggregate_col(df: SparkDF, col: str, operation: str) -> float:
+    """Aggregate (sum, max, min, or mean) a numeric PySpark column.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame containing the column.
+    col
+        The name of the numeric column to aggregate.
+    operation
+        The type of aggregation to perform. Must be one of 'sum', 'max',
+        'min', or 'mean'.
+
+    Returns
+    -------
+    float
+        The result of the specified aggregation on the column.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "Input df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(col, str):
+        msg = "Column name must be a string."
+        raise TypeError(msg)
+    valid_operations = ["sum", "max", "min", "mean"]
+    if operation not in valid_operations:
+        msg = f"`operation` must be one of {valid_operations}."
+        raise ValueError(msg)
+
+    result = df.agg({col: operation}).collect()[0][0]
+    logger.info(f"{operation.capitalize()} of values in {col}: {result}")
+    return result
+
+
+def get_unique(
+    df: SparkDF,
+    col: str,
+    remove_null: bool = False,
+    verbose: bool = True,
+) -> List[Optional[Union[str, int, float]]]:
+    """Return a list of unique values in a PySpark DataFrame column.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame containing the column.
+    col
+        The name of the column to analyze.
+    remove_null
+        Whether to remove null values from output. Default is False.
+    verbose
+        Whether to log the number of unique values. Default is True.
+
+    Returns
+    -------
+    List
+        A list of unique values from the specified column.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "Input df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(col, str):
+        msg = "Column name must be a string."
+        raise TypeError(msg)
+    if not isinstance(remove_null, bool):
+        msg = "remove_null must be a boolean."
+        raise TypeError(msg)
+    if not isinstance(verbose, bool):
+        msg = "verbose must be a boolean."
+        raise TypeError(msg)
+
+    unique_vals = df.select(col).distinct().rdd.map(lambda r: r[0]).collect()
+    if remove_null:
+        unique_vals = [c for c in unique_vals if c is not None]
+    unique_vals = sorted(unique_vals, key=lambda x: (x is None, x))
+    if verbose:
+        logger.info(f"{len(unique_vals)} unique values in {col}")
+    return unique_vals
+
+
+def drop_duplicates_reproducible(
+    df: SparkDF,
+    col: str,
+    id_col: Optional[str] = None,
+) -> SparkDF:
+    """Remove duplicates from a PySpark DataFrame in a repeatable manner.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame.
+    col
+        The column to partition by for removing duplicates.
+    id_col
+        The column to use for ordering within each partition. If None, a
+        unique ID column is generated.
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF with duplicates removed.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(col, str):
+        msg = "col must be a string."
+        raise TypeError(msg)
+    if col not in df.columns:
+        msg = f"{col} does not exist in the SparkDF."
+        raise ValueError(msg)
+    if id_col is not None:
+        if not isinstance(id_col, str):
+            msg = "id_col must be a string or None."
+            raise TypeError(msg)
+        if id_col not in df.columns:
+            msg = f"{id_col} not in the SparkDF."
+            raise ValueError(msg)
+
+    if id_col is None:
+        df = df.withColumn("dup_id", F.monotonically_increasing_id())
+        id_col = "dup_id"
+
+    window_spec = Window.partitionBy(col).orderBy(id_col)
+    df = df.withColumn("rank", F.rank().over(window_spec))
+    df = df.filter(F.col("rank") == 1)
+    df = df.drop("dup_id", "rank")
+    return df
+
+
+def apply_col_func(
+    df: SparkDF,
+    cols: List[str],
+    func: Callable[[SparkDF, str], SparkDF],
+) -> SparkDF:
+    """Apply a function to a list of columns in a PySpark DataFrame.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame.
+    cols
+        List of column names to apply the function to.
+    func
+        The function to apply, which should accept two arguments: (df, col).
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF after applying the function to each column.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(cols, list):
+        msg = "cols must be a list of strings."
+        raise TypeError(msg)
+    if not all(isinstance(col, str) for col in cols):
+        msg = "All elements in cols must be strings."
+        raise TypeError(msg)
+    if not all(col in df.columns for col in cols):
+        msg = "All column names in cols must exist in the SparkDF."
+        raise ValueError(msg)
+    if not callable(func):
+        msg = "func must be a callable function."
+        raise TypeError(msg)
+
+    for col in cols:
+        df = func(df, col)
+    return df
+
+
+def pyspark_random_uniform(
+    df: SparkDF,
+    output_colname: str,
+    lower_bound: float = 0,
+    upper_bound: float = 1,
+    seed: Optional[int] = None,
+) -> SparkDF:
+    """Mimic numpy.random.uniform for PySpark.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame to which the column will be added.
+    output_colname
+        The name of the new column to be created.
+    lower_bound
+        The lower bound of the uniform distribution. Defaults to 0.
+    upper_bound
+        The upper bound of the uniform distribution. Defaults to 1.
+    seed
+        Seed for random number generation. Defaults to None for
+        non-deterministic results.
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF with the new column added.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(output_colname, str):
+        msg = "output_colname must be a string."
+        raise TypeError(msg)
+    if not isinstance(lower_bound, (int, float)):
+        msg = "lower_bound must be a number."
+        raise TypeError(msg)
+    if not isinstance(upper_bound, (int, float)):
+        msg = "upper_bound must be a number."
+        raise TypeError(msg)
+    if not lower_bound < upper_bound:
+        msg = "lower_bound must be less than upper_bound."
+        raise ValueError(msg)
+
+    return df.withColumn(
+        output_colname,
+        F.rand(seed) * (upper_bound - lower_bound) + lower_bound,
+    )
+
+
+def cumulative_array(
+    df: SparkDF,
+    array_col: str,
+    output_colname: str,
+) -> SparkDF:
+    """Convert a PySpark array column to a cumulative array column.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame containing the array column.
+    array_col
+        The name of the array column to convert.
+    output_colname
+        The name of the new column to store the cumulative array.
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF with the cumulative array column added.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(array_col, str):
+        msg = "array_col must be a string."
+        raise TypeError(msg)
+    if not isinstance(output_colname, str):
+        msg = "output_colname must be a string."
+        raise TypeError(msg)
+    if array_col not in df.columns:
+        msg = f"{array_col} not in SparkDF columns."
+        raise ValueError(msg)
+
+    return df.withColumn(
+        output_colname,
+        F.expr(
+            f"""transform({array_col}, (x, i) ->
+            aggregate(slice({array_col}, 1, i), 0D,
+            (acc, y) -> acc + y) + x)""",
+        ),
+    )
+
+
+def union_mismatched_dfs(df1: SparkDF, df2: SparkDF) -> SparkDF:
+    """Perform a union between PySpark DataFrames with mismatched column names.
+
+    Parameters
+    ----------
+    df1
+        The first PySpark DataFrame.
+    df2
+        The second PySpark DataFrame.
+
+    Returns
+    -------
+    SparkDF
+        A SparkDF resulting from the union of df1 and df2, with missing
+        columns filled with null values.
+    """
+    if not isinstance(df1, SparkDF):
+        msg = "df1 must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(df2, SparkDF):
+        msg = "df2 must be a PySpark DataFrame."
+        raise TypeError(msg)
+
+    diff1 = [c for c in df2.columns if c not in df1.columns]
+    diff2 = [c for c in df1.columns if c not in df2.columns]
+
+    df1_expanded = df1.select("*", *[F.lit(None).alias(c) for c in diff1])
+    df2_expanded = df2.select("*", *[F.lit(None).alias(c) for c in diff2])
+
+    return df1_expanded.unionByName(df2_expanded)
+
+
+def sum_columns(
+    df: SparkDF,
+    cols_to_sum: List[str],
+    output_col: str,
+) -> SparkDF:
+    """Calculate row-wise sum of specified PySpark columns.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame to modify.
+    cols_to_sum
+        List of column names to sum together.
+    output_col
+        The name of the new column to create with the sum.
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF with the new column added.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(cols_to_sum, list):
+        msg = "cols_to_sum must be a list."
+        raise TypeError(msg)
+    if not all(isinstance(col, str) for col in cols_to_sum):
+        msg = "All elements in cols_to_sum must be strings."
+        raise TypeError(msg)
+    if not isinstance(output_col, str):
+        msg = "output_col must be a string."
+        raise TypeError(msg)
+
+    cols_to_sum = [F.col(col) for col in cols_to_sum]
+    df = df.withColumn(
+        output_col,
+        functools.reduce(lambda col1, col2: col1 + col2, cols_to_sum),
+    )
+    return df
+
+
+def set_nulls(
+    df: SparkDF,
+    column: str,
+    values: Union[str, List[str]],
+) -> SparkDF:
+    """Replace specified values with nulls in given column of PySpark df.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame to modify.
+    column
+        The name of the column in which to replace values.
+    values
+        The value(s) to replace with nulls.
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF with specified values replaced by nulls.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(column, str):
+        msg = "column must be a string."
+        raise TypeError(msg)
+    if isinstance(values, str):
+        values = [values]
+    if not isinstance(values, list):
+        msg = "values must be a list of strings or a string."
+        raise TypeError(msg)
+    if not all(isinstance(value, str) for value in values):
+        msg = "All elements in values must be strings."
+        raise TypeError(msg)
+
+    if isinstance(values, str):
+        values = [values]
+    for value in values:
+        df = df.withColumn(
+            column,
+            F.when(F.col(column) != value, F.col(column)).otherwise(F.lit(None)),
+        )
+    return df
+
+
+def union_multi_dfs(df_list: List[SparkDF]) -> SparkDF:
+    """Perform a union on all SparkDFs in the provided list.
+
+    Note
+    ----
+    All SparkDFs must have the same columns.
+
+    Parameters
+    ----------
+    df_list
+        List of PySpark DataFrames to union.
+
+    Returns
+    -------
+    SparkDF
+        A SparkDF that is the result of the union of all SparkDFs in the list.
+    """
+    if not isinstance(df_list, list):
+        msg = "df_list must be a list."
+        raise TypeError(msg)
+    if not len(df_list) > 0:
+        msg = "df_list must not be empty"
+        raise ValueError(msg)
+    if not all(isinstance(df, SparkDF) for df in df_list):
+        msg = "All elements in df_list must be PySpark DataFrames."
+        raise TypeError(msg)
+
+    combined_df = functools.reduce(lambda df1, df2: df1.union(df2), df_list)
+    return combined_df
+
+
+def join_multi_dfs(
+    df_list: List[SparkDF],
+    on: Union[str, List[str]],
+    how: str,
+) -> SparkDF:
+    """Join multiple Spark SparkDFs together.
+
+    Parameters
+    ----------
+    df_list
+        List of Spark SparkDFs to join.
+    on
+        Column(s) on which to join the SparkDFs.
+    how
+        Type of join to perform (e.g., 'inner', 'outer', 'left', 'right').
+
+    Returns
+    -------
+    SparkDF
+        A SparkDF that is the result of joining all SparkDFs in the list.
+    """
+    if not isinstance(df_list, list):
+        msg = "df_list must be a list of SparkDFs"
+        raise TypeError(msg)
+    if not all(isinstance(df, SparkDF) for df in df_list):
+        msg = "All elements in df_list must be SparkDFs"
+        raise TypeError(msg)
+    if not isinstance(on, (str, list)):
+        msg = "'on' must be a string or a list of strings"
+        raise TypeError(msg)
+    if isinstance(on, list) and not all(isinstance(col, str) for col in on):
+        msg = "All elements in 'on' must be strings"
+        raise ValueError(msg)
+    valid_join_types = ["inner", "outer", "left", "right"]
+    if how not in valid_join_types:
+        msg = f"'how' must be one of {valid_join_types}"
+        raise ValueError(msg)
+
+    joined_df = functools.reduce(lambda df1, df2: df1.join(df2, on, how), df_list)
+    return joined_df
+
+
+def map_column_values(
+    df: SparkDF,
+    dict_: Dict[str, str],
+    input_col: str,
+    output_col: Union[str, None] = None,
+) -> SparkDF:
+    """Map PySpark column to dictionary keys.
+
+    Parameters
+    ----------
+    df
+        The PySpark DataFrame to modify.
+    dict_
+        Dictionary for mapping values in input_col to new values.
+    input_col
+        The name of the column to replace values in.
+    output_col
+        The name of the new column with replaced values. Defaults to
+        input_col if not provided.
+
+    Returns
+    -------
+    SparkDF
+        The SparkDF with the new column added.
+    """
+    if not isinstance(df, SparkDF):
+        msg = "df must be a PySpark DataFrame."
+        raise TypeError(msg)
+    if not isinstance(dict_, dict):
+        msg = "dict_ must be a dictionary."
+        raise TypeError(msg)
+    if not isinstance(input_col, str):
+        msg = "input_col must be a string."
+        raise TypeError(msg)
+    if output_col is not None:
+        if not isinstance(output_col, str):
+            msg = "output_col must be a string."
+            raise TypeError(msg)
+
+    if output_col is None:
+        output_col = input_col
+
+    mapping_expr = F.create_map([F.lit(x) for x in itertools.chain(*dict_.items())])
+
+    df = df.withColumn(
+        output_col,
+        F.coalesce(mapping_expr.getItem(F.col(input_col)), F.col(input_col)),
+    )
+    return df

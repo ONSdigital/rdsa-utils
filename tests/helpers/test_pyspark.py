@@ -1,6 +1,6 @@
-"""Tests for spark_helpers module."""
+"""Tests for helpers/pyspark.py module."""
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from chispa import assert_df_equality
@@ -10,13 +10,6 @@ from pyspark.sql import types as T
 from rdsa_utils.helpers.pyspark import *
 from rdsa_utils.helpers.pyspark import _convert_to_spark_col
 from rdsa_utils.test_utils import *
-from tests.conftest import (
-    Case,
-    create_dataframe,
-    parametrize_cases,
-    to_date,
-    to_datetime,
-)
 
 
 @to_spark_col
@@ -138,7 +131,7 @@ class TestToSparkCol:
         string_input = "i_am_string_therefore_i_am_?1234!"
         assert isinstance(_convert_to_spark_col(string_input), SparkCol)
 
-    def test_funct_positive_case(self):
+    def test_funct_positive_case(self, spark_session):
         """Test function input converts as expected."""
         funct_input = input_funct("cheese")
         assert isinstance(_convert_to_spark_col(funct_input), SparkCol)
@@ -633,7 +626,7 @@ class TestConvertColsToStructCol:
     unusual definition of the expected dataframe in these tests.
     """
 
-    @pytest.fixture()
+    @pytest.fixture
     def input_df_fixture(self, create_spark_df) -> SparkDF:
         """Provide a basic spark dataframe."""
         return create_spark_df(
@@ -1225,7 +1218,7 @@ qux"
 class TestTruncateExternalHiveTable:
     """Tests for truncate_external_hive_table function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def create_external_table(self, spark_session: SparkSession):
         """Create a mock external Hive table for testing."""
         spark = (
@@ -1244,7 +1237,7 @@ class TestTruncateExternalHiveTable:
         spark.sql("DROP DATABASE test_db")
         spark.stop()
 
-    @pytest.fixture()
+    @pytest.fixture
     def create_partitioned_table(self, spark_session: SparkSession):
         """Create a mock partitioned external Hive table for testing."""
         spark = (
@@ -1323,3 +1316,463 @@ class TestTruncateExternalHiveTable:
             truncate_external_hive_table(spark_session, table_name)
         except Exception as e:
             pytest.fail(f"Truncation raised an exception: {e}")
+
+
+class TestCacheTimeDf:
+    """Tests for the `cache_time_df` function."""
+
+    @patch("rdsa_utils.helpers.pyspark.time.time")
+    @patch("rdsa_utils.helpers.pyspark.logger.info")
+    def test_expected(self, mock_logger, mock_time, create_spark_df):
+        """Test caching a DataFrame and timing the process."""
+        input_df = create_spark_df([("A", "B", "C"), (1, 2, 3)])
+
+        # Mock time.time() return values
+        mock_time.side_effect = [100.0, 100.25]  # start_time, end_time
+
+        cache_time_df(input_df)
+
+        elapsed_time = round(100.25 - 100.0, 2)  # Should be 0.25
+        mock_logger.assert_called_once()
+        log_message = mock_logger.call_args[0][0]
+        assert f"Cached in {elapsed_time} seconds" in log_message
+
+    def test_invalid_input(self):
+        """Test invalid input type raises an error."""
+        with pytest.raises(TypeError, match="Input must be a PySpark DataFrame"):
+            cache_time_df(["not", "a", "DataFrame"])
+
+
+class TestCountNulls:
+    """Tests for the `count_nulls` function."""
+
+    def test_expected(self, create_spark_df):
+        """Test counting nulls in a DataFrame."""
+        input_df = create_spark_df(
+            [("col1", "col2", "col3"), (1, 2, None), (None, 4, None), (3, None, "C")],
+        )
+
+        expected = pd.DataFrame({"col1": [1], "col2": [1], "col3": [2]})
+
+        actual = count_nulls(input_df)
+
+        assert actual.equals(expected)
+
+    def test_with_subset_columns(self, create_spark_df):
+        """Test counting nulls with a subset of columns."""
+        input_df = create_spark_df(
+            [("col1", "col2", "col3"), (1, 2, None), (None, 4, None), (3, None, "C")],
+        )
+
+        expected = pd.DataFrame({"col1": [1], "col2": [1]})
+
+        actual = count_nulls(input_df, subset_cols=["col1", "col2"])
+
+        assert actual.equals(expected)
+
+    def test_invalid_input(self):
+        """Test invalid DataFrame input raises an error."""
+        with pytest.raises(TypeError, match="Input must be a PySpark DataFrame"):
+            count_nulls(["not", "a", "DataFrame"])
+
+    def test_invalid_subset_cols(self, create_spark_df):
+        """Test invalid subset_cols input raises an error."""
+        input_df = create_spark_df(
+            [("col1", "col2", "col3"), (1, 2, None), (None, 4, None), (3, None, "C")],
+        )
+
+        with pytest.raises(
+            TypeError,
+            match="subset_cols must be a list, a string, or None",
+        ):
+            count_nulls(input_df, subset_cols=12345)
+
+        with pytest.raises(
+            TypeError,
+            match="All elements of subset_cols must be strings",
+        ):
+            count_nulls(input_df, subset_cols=["col1", 12345])
+
+
+class TestAggregateCol:
+    """Tests for the `aggregate_col` function."""
+
+    def test_sum(self, create_spark_df):
+        """Test summing values in a column."""
+        input_df = create_spark_df([("col1 INT"), (1,), (2,), (3,)])
+        result = aggregate_col(input_df, "col1", "sum")
+        assert result == 6
+
+    def test_invalid_operation(self, create_spark_df):
+        """Test invalid operation raises ValueError."""
+        input_df = create_spark_df([("col1 INT"), (1,), (2,), (3,)])
+        with pytest.raises(ValueError, match="`operation` must be one of"):
+            aggregate_col(input_df, "col1", "invalid")
+
+
+class TestGetUnique:
+    """Tests for the `get_unique` function."""
+
+    def test_remove_null(self, create_spark_df):
+        """Test removing null values from the unique list."""
+        input_df = create_spark_df(["col1 INT", (1,), (2,), (None,)])
+        result = get_unique(input_df, "col1", remove_null=True)
+        assert result == [1, 2]
+
+    def test_keep_null(self, create_spark_df):
+        """Test keeping null values in the unique list."""
+        input_df = create_spark_df(["col1 INT", (1,), (2,), (None,)])
+        result = get_unique(input_df, "col1", remove_null=False)
+        assert result == [1, 2, None]
+
+    def test_invalid_column(self, create_spark_df):
+        """Test invalid column raises an error."""
+        input_df = create_spark_df(["col1 INT", (1,), (2,), (3,)])
+        with pytest.raises(TypeError, match="Column name must be a string"):
+            get_unique(input_df, 123)
+
+
+class TestDropDuplicatesReproducible:
+    """Tests for the `dropDuplicates_reproducible` function."""
+
+    def test_with_id_col(self, create_spark_df):
+        """Test dropping duplicates with a specified ID column."""
+        input_df = create_spark_df(
+            ["group_col STRING, id_col INT", ("A", 1), ("A", 2), ("B", 3), ("B", 4)],
+        )
+        result_df = drop_duplicates_reproducible(input_df, "group_col", id_col="id_col")
+        expected_df = create_spark_df(
+            ["group_col STRING, id_col INT", ("A", 1), ("B", 3)],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_without_id_col(self, create_spark_df):
+        """Test dropping duplicates without a specified ID column."""
+        input_df = create_spark_df(
+            ["group_col STRING, value_col INT", ("A", 1), ("A", 2), ("B", 3), ("B", 4)],
+        )
+        result_df = drop_duplicates_reproducible(input_df, "group_col")
+        assert result_df.select("group_col").distinct().count() == 2
+
+    def test_invalid_column(self, create_spark_df):
+        """Test invalid column raises an error."""
+        input_df = create_spark_df(["group_col STRING, id_col INT", ("A", 1), ("B", 3)])
+        with pytest.raises(TypeError, match="col must be a string"):
+            drop_duplicates_reproducible(input_df, 123)
+
+
+class TestApplyColFunc:
+    """Tests for the `apply_col_func` function."""
+
+    def test_apply_function(self, create_spark_df):
+        """Test applying a function to multiple columns."""
+        input_df = create_spark_df(["col1 INT, col2 INT", (1, 2), (3, 4)])
+
+        def increment_column(df, col):
+            """Test method."""
+            return df.withColumn(col, F.col(col) + 1)
+
+        result_df = apply_col_func(input_df, ["col1", "col2"], increment_column)
+        expected_df = create_spark_df(["col1 INT, col2 INT", (2, 3), (4, 5)])
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_invalid_column(self, create_spark_df):
+        """Test invalid column list raises an error."""
+        input_df = create_spark_df(["col1 INT, col2 INT", (1, 2), (3, 4)])
+        with pytest.raises(TypeError, match="cols must be a list of strings."):
+            apply_col_func(input_df, "not_a_list", lambda df, col: df)
+
+    def test_invalid_function(self, create_spark_df):
+        """Test invalid function raises an error."""
+        input_df = create_spark_df(["col1 INT, col2 INT", (1, 2), (3, 4)])
+        with pytest.raises(TypeError, match="func must be a callable function"):
+            apply_col_func(input_df, ["col1", "col2"], "not_a_function")
+
+
+class TestPysparkRandomUniform:
+    """Tests for the `pyspark_random_uniform` function."""
+
+    def test_random_uniform_default_bounds(self, create_spark_df):
+        """Test random uniform column with default bounds (0 to 1)."""
+        input_df = create_spark_df(["id INT", (1,), (2,), (3,)])
+        result_df = pyspark_random_uniform(input_df, "random_col")
+        assert "random_col" in result_df.columns
+        assert (
+            result_df.filter(
+                (F.col("random_col") < 0) | (F.col("random_col") > 1),
+            ).count()
+            == 0
+        )
+
+    def test_random_uniform_custom_bounds(self, create_spark_df):
+        """Test random uniform column with custom bounds."""
+        input_df = create_spark_df(["id INT", (1,), (2,), (3,)])
+        result_df = pyspark_random_uniform(
+            input_df,
+            "random_col",
+            lower_bound=5,
+            upper_bound=10,
+        )
+        assert "random_col" in result_df.columns
+        assert (
+            result_df.filter(
+                (F.col("random_col") < 5) | (F.col("random_col") > 10),
+            ).count()
+            == 0
+        )
+
+    def test_random_uniform_with_seed(self, create_spark_df):
+        """Test random uniform column with a fixed seed."""
+        input_df = create_spark_df(["id INT", (1,), (2,), (3,)])
+        result_df_1 = pyspark_random_uniform(input_df, "random_col", seed=42)
+        result_df_2 = pyspark_random_uniform(input_df, "random_col", seed=42)
+        assert_df_equality(result_df_1, result_df_2, ignore_nullable=True)
+
+
+class TestCumulativeArray:
+    """Tests for the `cumulative_array` function."""
+
+    def test_cumulative_array_basic(self, create_spark_df):
+        """Test creating a cumulative array column."""
+        input_df = create_spark_df(
+            ["id INT, values ARRAY<DOUBLE>", (1, [1.0, 2.0, 3.0]), (2, [4.0, 5.0])],
+        )
+        result_df = cumulative_array(input_df, "values", "cumulative_values")
+        expected_df = create_spark_df(
+            [
+                "id INT, values ARRAY<DOUBLE>, cumulative_values ARRAY<DOUBLE>",
+                (1, [1.0, 2.0, 3.0], [1.0, 3.0, 6.0]),
+                (2, [4.0, 5.0], [4.0, 9.0]),
+            ],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_cumulative_array_empty(self, create_spark_df):
+        """Test cumulative array column with an empty array."""
+        input_df = create_spark_df(["id INT, values ARRAY<DOUBLE>", (1, [])])
+        result_df = cumulative_array(input_df, "values", "cumulative_values")
+        expected_df = create_spark_df(
+            [
+                "id INT, values ARRAY<DOUBLE>, cumulative_values ARRAY<DOUBLE>",
+                (1, [], []),
+            ],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+
+class TestUnionMismatchedDfs:
+    """Tests for the `union_mismatched_dfs` function."""
+
+    def test_union_mismatched_basic(self, create_spark_df):
+        """Test union of DataFrames with mismatched columns."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
+        df2 = create_spark_df(["id INT, age INT", (3, 30), (4, 40)])
+        result_df = union_mismatched_dfs(df1, df2)
+        expected_df = create_spark_df(
+            [
+                "id INT, name STRING, age INT",
+                (1, "Alice", None),
+                (2, "Bob", None),
+                (3, None, 30),
+                (4, None, 40),
+            ],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_union_mismatched_no_overlap(self, create_spark_df):
+        """Test union of DataFrames with no overlapping columns."""
+        df1 = create_spark_df(["id INT", (1,), (2,)])
+        df2 = create_spark_df(["name STRING", ("Alice",), ("Bob",)])
+        result_df = union_mismatched_dfs(df1, df2)
+        expected_df = create_spark_df(
+            [
+                "id INT, name STRING",
+                (1, None),
+                (2, None),
+                (None, "Alice"),
+                (None, "Bob"),
+            ],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_union_mismatched_empty_df(self, create_spark_df):
+        """Test union where one DataFrame is empty."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice")])
+        df2 = create_spark_df(["id INT, name STRING"])
+        result_df = union_mismatched_dfs(df1, df2)
+        expected_df = create_spark_df(["id INT, name STRING", (1, "Alice")])
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+
+class TestSumColumns:
+    """Tests for the `sum_columns` function."""
+
+    def test_sum_columns_basic(self, create_spark_df):
+        """Test summing multiple columns into a new column."""
+        input_df = create_spark_df(
+            ["col1 INT, col2 INT, col3 INT", (1, 2, 3), (4, 5, 6)],
+        )
+        result_df = sum_columns(input_df, ["col1", "col2"], "sum_col")
+        expected_df = create_spark_df(
+            ["col1 INT, col2 INT, col3 INT, sum_col INT", (1, 2, 3, 3), (4, 5, 6, 9)],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_sum_columns_invalid_cols(self, create_spark_df):
+        """Test invalid column names raise an error."""
+        input_df = create_spark_df(["col1 INT, col2 INT", (1, 2)])
+        with pytest.raises(TypeError, match="cols_to_sum must be a list"):
+            sum_columns(input_df, "not_a_list", "sum_col")
+
+    def test_sum_columns_invalid_output_col(self, create_spark_df):
+        """Test invalid output column raises an error."""
+        input_df = create_spark_df(["col1 INT, col2 INT", (1, 2)])
+        with pytest.raises(TypeError, match="output_col must be a string"):
+            sum_columns(input_df, ["col1", "col2"], 123)
+
+
+class TestSetNulls:
+    """Tests for the `set_nulls` function."""
+
+    def test_set_nulls_basic(self, create_spark_df):
+        """Test replacing specified values with nulls."""
+        input_df = create_spark_df(["col1 STRING", ("A",), ("B",), ("C",)])
+        result_df = set_nulls(input_df, "col1", ["B", "C"])
+        expected_df = create_spark_df(["col1 STRING", ("A",), (None,), (None,)])
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_set_nulls_single_value(self, create_spark_df):
+        """Test replacing a single value with nulls."""
+        input_df = create_spark_df(["col1 STRING", ("A",), ("B",), ("C",)])
+        result_df = set_nulls(input_df, "col1", "B")
+        expected_df = create_spark_df(["col1 STRING", ("A",), (None,), ("C",)])
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_set_nulls_invalid_column(self, create_spark_df):
+        """Test invalid column raises an error."""
+        input_df = create_spark_df(["col1 STRING", ("A",), ("B",)])
+        with pytest.raises(TypeError, match="column must be a string"):
+            set_nulls(input_df, 123, ["A"])
+
+
+class TestUnionMultiDfs:
+    """Tests for the `union_multi_dfs` function."""
+
+    def test_union_multi_basic(self, create_spark_df):
+        """Test union of multiple DataFrames."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
+        df2 = create_spark_df(["id INT, name STRING", (3, "Charlie"), (4, "Diana")])
+        result_df = union_multi_dfs([df1, df2])
+        expected_df = create_spark_df(
+            [
+                "id INT, name STRING",
+                (1, "Alice"),
+                (2, "Bob"),
+                (3, "Charlie"),
+                (4, "Diana"),
+            ],
+        )
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_union_multi_empty_list(self):
+        """Test union with an empty list raises an error."""
+        with pytest.raises(ValueError, match="df_list must not be empty"):
+            union_multi_dfs([])
+
+    def test_union_multi_invalid_list(self, create_spark_df):
+        """Test union with a non-DataFrame list raises an error."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice")])
+        with pytest.raises(
+            TypeError,
+            match="All elements in df_list must be PySpark DataFrames.",
+        ):
+            union_multi_dfs([df1, "not_a_dataframe"])
+
+
+class TestJoinMultiDfs:
+    """Tests for the `join_multi_dfs` function."""
+
+    def test_join_multi_inner(self, create_spark_df):
+        """Test inner join of multiple DataFrames."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
+        df2 = create_spark_df(["id INT, age INT", (1, 25), (2, 30)])
+        df3 = create_spark_df(
+            ["id INT, city STRING", (1, "New York"), (2, "Los Angeles")],
+        )
+
+        result_df = join_multi_dfs([df1, df2, df3], on="id", how="inner")
+        expected_df = create_spark_df(
+            [
+                "id INT, name STRING, age INT, city STRING",
+                (1, "Alice", 25, "New York"),
+                (2, "Bob", 30, "Los Angeles"),
+            ],
+        )
+
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_join_multi_outer(self, create_spark_df):
+        """Test outer join of multiple DataFrames."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice"), (2, "Bob")])
+        df2 = create_spark_df(["id INT, age INT", (1, 25), (3, 40)])
+
+        result_df = join_multi_dfs([df1, df2], on="id", how="outer")
+        expected_df = create_spark_df(
+            [
+                "id INT, name STRING, age INT",
+                (1, "Alice", 25),
+                (2, "Bob", None),
+                (3, None, 40),
+            ],
+        )
+
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_join_multi_invalid_how(self, create_spark_df):
+        """Test invalid join type raises an error."""
+        df1 = create_spark_df(["id INT, name STRING", (1, "Alice")])
+        df2 = create_spark_df(["id INT, age INT", (1, 25)])
+
+        with pytest.raises(ValueError, match="'how' must be one of"):
+            join_multi_dfs([df1, df2], on="id", how="invalid")
+
+
+class TestMapColumnValues:
+    """Tests for the `map_column_values` function."""
+
+    def test_map_column_values_basic(self, create_spark_df):
+        """Test basic dictionary replacement."""
+        input_df = create_spark_df(["col1 STRING", ("A",), ("B",), ("C",)])
+
+        result_df = map_column_values(input_df, {"A": "Apple", "B": "Banana"}, "col1")
+        expected_df = create_spark_df(["col1 STRING", ("Apple",), ("Banana",), ("C",)])
+
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_map_column_values_with_output_col(self, create_spark_df):
+        """Test dictionary replacement with a specified output column."""
+        input_df = create_spark_df(["col1 STRING", ("A",), ("B",), ("C",)])
+
+        result_df = map_column_values(
+            input_df,
+            {"A": "Apple", "B": "Banana"},
+            "col1",
+            "new_col",
+        )
+        expected_df = create_spark_df(
+            [
+                "col1 STRING, new_col STRING",
+                ("A", "Apple"),
+                ("B", "Banana"),
+                ("C", "C"),
+            ],
+        )
+
+        assert_df_equality(result_df, expected_df, ignore_nullable=True)
+
+    def test_map_column_values_invalid_dict(self, create_spark_df):
+        """Test invalid dictionary raises an error."""
+        input_df = create_spark_df(["col1 STRING", ("A",), ("B",)])
+
+        with pytest.raises(TypeError, match="dict_ must be a dictionary"):
+            map_column_values(input_df, "not_a_dict", "col1")

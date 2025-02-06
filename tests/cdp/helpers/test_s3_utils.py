@@ -1,6 +1,7 @@
 """Tests for s3_utils.py module."""
 
 import json
+from io import BytesIO
 
 import boto3
 import pandas as pd
@@ -31,6 +32,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     validate_s3_file_path,
     write_csv,
     write_string_to_file,
+    write_excel,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -201,7 +203,7 @@ class TestValidateS3FilePath:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def _aws_credentials():
     """Mock AWS Credentials for moto."""
     boto3.setup_default_session(
@@ -211,7 +213,7 @@ def _aws_credentials():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client(_aws_credentials):
     """Provide a mocked AWS S3 client for testing
     using moto with temporary credentials.
@@ -239,7 +241,7 @@ class TestFileExists:
         assert file_exists(s3_client, "test-bucket", "nonexistent.txt") is False
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup_files(tmp_path):
     """
     Set up local files for upload and download tests.
@@ -356,7 +358,7 @@ class TestDownloadFile:
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup_folder(tmp_path):
     """
     Set up local folder and files for upload tests.
@@ -438,6 +440,7 @@ class TestUploadFolder:
             )
             is False
         )
+
 
 
 class TestS3Walk:
@@ -534,7 +537,7 @@ class TestS3Walk:
             s3_walk(s3_client, "test-bucket", "nonexistent_dir")
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client_for_list_files(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
@@ -780,7 +783,7 @@ class TestListFiles:
         assert "paginated/file_1000.txt" in files
 
 
-@pytest.fixture()
+@pytest.fixture
 def s3_client_for_delete_and_copy(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
@@ -1389,4 +1392,57 @@ class TestWriteCSV:
         data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
 
         result = write_csv(s3_client, "test-bucket", data, "test_file.csv", index=False)
+        assert not result
+
+
+class TestWriteExcel:
+    """Tests for write_excel function."""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="test-bucket")
+            yield s3
+
+    def test_write_excel_success(self, s3_client):
+        """Test that write_excel returns True if successful."""
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+        df = pd.DataFrame(data)
+
+        result = write_excel(s3_client, "test-bucket", df, "test_file.xlsx")
+        assert result
+
+    def test_write_excel_read_back(self, s3_client):
+        """Test that a file written by write_excel can be read back and returns
+        the same dataframe as input. Uses kwargs.
+        """
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+        df = pd.DataFrame(data)
+
+        _ = write_excel(s3_client, "test-bucket", df, "test_file.xlsx", index=False)
+
+        # Read back the file from S3
+        obj = s3_client.get_object(Bucket="test-bucket", Key="test_file.xlsx")
+        excel_buffer = BytesIO(obj["Body"].read())
+
+        # Load the Excel file into a DataFrame
+        result_df = pd.read_excel(excel_buffer, engine="openpyxl")
+
+        pd.testing.assert_frame_equal(df, result_df)
+
+    def test_write_excel_failure(self, s3_client):
+        """Test that write_excel returns False if unable to write.
+        Dictionary data does not have a to_excel method.
+        """
+        data = {"name": ["John"], "age": [30], "city": ["Manchester"]}
+
+        result = write_excel(
+            s3_client,
+            "test-bucket",
+            data,
+            "test_file.xlsx",
+            index=False,
+        )
         assert not result

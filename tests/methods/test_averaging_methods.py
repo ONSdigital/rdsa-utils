@@ -4,7 +4,7 @@ from chispa import assert_approx_df_equality
 from rdsa_utils.methods.averaging_methods import *
 
 
-@pytest.fixture()
+@pytest.fixture
 def input_df(create_spark_df):
     """Fixture containing input data for tests."""
     return create_spark_df(

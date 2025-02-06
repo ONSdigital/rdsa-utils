@@ -25,7 +25,8 @@ Note:
 
 import json
 import logging
-from io import StringIO, TextIOWrapper
+from io import BytesIO, StringIO
+
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -1386,7 +1387,7 @@ def write_csv(
     bucket_name
         The name of the S3 bucket.
     data
-        The dataframe to write to the spexified path.
+        The dataframe to write to the specified path.
     filepath
         The filepath to save the dataframe to.
     kwargs
@@ -1439,4 +1440,79 @@ def write_csv(
             f"filepath {filepath}: {e}"
         )
         logger.error(error_message)
+        return False
+
+
+def write_excel(
+    client: boto3.client,
+    bucket_name: str,
+    data: pd.DataFrame,
+    filepath: str,
+    **kwargs,
+) -> bool:
+    """Write a Pandas DataFrame to an Excel file in an S3 bucket.
+
+    Uses BytesIO as a RAM buffer. Pandas writes data to the buffer,
+    the buffer rewinds to the beginning, and then it is sent to S3
+    using the boto3.put_object method.
+
+    Parameters
+    ----------
+    client : boto3.client
+        The boto3 S3 client instance.
+    bucket_name : str
+        The name of the S3 bucket.
+    data : pd.DataFrame
+        The dataframe to write to the specified path.
+    filepath : str
+        The filepath to save the dataframe to in the S3 bucket.
+    kwargs : dict
+        Optional dictionary of Pandas `to_excel` arguments.
+
+    Returns
+    -------
+    bool
+        True if the dataframe is written successfully, False otherwise.
+
+    Raises
+    ------
+    Exception
+        If there is an error writing the file to S3.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> data = pd.DataFrame({
+    >>>     'column1': [1, 2, 3],
+    >>>     'column2': ['a', 'b', 'c']
+    >>> })
+    >>> write_excel(client, 'my_bucket', data, 'path/to/file.xlsx')
+    True
+    """
+    try:
+        # Create an in-memory bytes buffer
+        excel_buffer = BytesIO()
+
+        # Write DataFrame to the buffer in Excel format
+        with pd.ExcelWriter(excel_buffer, engine="xlsxwriter") as writer:
+            data.to_excel(writer, index=False, **kwargs)
+
+        # Ensure the buffer is at the beginning
+        excel_buffer.seek(0)
+
+        # Upload the buffer to S3
+        client.put_object(
+            Bucket=bucket_name,
+            Body=excel_buffer.getvalue(),
+            Key=filepath,
+        )
+
+        logger.info(f"Successfully wrote dataframe to {bucket_name}/{filepath}")
+        return True
+
+    except Exception as e:
+        logger.error(
+            f"Error writing to Excel or saving to bucket {bucket_name}, "
+            f"filepath {filepath}: {e}",
+        )
         return False

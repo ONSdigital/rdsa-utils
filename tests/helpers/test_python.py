@@ -1,9 +1,12 @@
-"""Tests for the helpers module."""
+"""Tests for the helpers/python.py module."""
+
+from time import sleep
+from unittest import mock
 
 import pytest
 
 from rdsa_utils.helpers.python import *
-from tests.conftest import Case, parametrize_cases
+from rdsa_utils.test_utils import *
 
 
 @pytest.mark.skip(reason="wrapper of third party function")
@@ -89,7 +92,7 @@ class TestExtendLists:
 class TestOverwriteDictionary:
     """Tests for the overwrite_dictionary function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def base_dict(self):
         """Create base dictionary used across all tests."""
         return {
@@ -216,7 +219,7 @@ class TestCalcProductOfDictValues:
 
 
 class TestConvertDateStringsToDatetimes:
-    """Test for convert_date_strings_to_datetimes."""
+    """Test class for convert_date_strings_to_datetimes."""
 
     @parametrize_cases(
         Case(
@@ -276,3 +279,486 @@ class TestConvertDateStringsToDatetimes:
             pd.Timestamp("2021-03-01 23:59:59.999999"),
         )
         assert actual == expected
+
+
+class TestTimeIt:
+    """Test class for the time_it decorator."""
+
+    @mock.patch("rdsa_utils.helpers.python.logger.info")
+    def test_time_it_execution(self, mock_logger):
+        """Test with a function that takes arguments."""
+
+        @time_it()
+        def sample_function(delay):
+            sleep(delay)
+            return "Done"
+
+        result = sample_function(1)
+
+        assert result == "Done"
+
+        mock_logger.assert_called_once()
+        log_message = mock_logger.call_args[0][0]
+        assert "Executed sample_function in" in log_message
+        assert "seconds" in log_message
+
+    @mock.patch("rdsa_utils.helpers.python.logger.info")  # Mock the logger
+    def test_time_it_no_arguments(self, mock_logger):
+        """Test with a function that takes no arguments."""
+
+        @time_it()
+        def sample_function():
+            return "No arguments"
+
+        result = sample_function()
+
+        assert result == "No arguments"
+
+        mock_logger.assert_called_once()
+        log_message = mock_logger.call_args[0][0]
+        assert "Executed sample_function in" in log_message
+        assert "seconds" in log_message
+
+
+class TestSetdiff:
+    """Test class for the `setdiff` function."""
+
+    def test_list_difference(self):
+        """Test method."""
+        a = [1, 2, 3, 4]
+        b = [3, 4, 5, 6]
+        result = setdiff(a, b)
+        assert set(result) == {1, 2}
+
+    def test_string_difference(self):
+        """Test method."""
+        a = "abcdef"
+        b = "bdf"
+        result = setdiff(a, b)
+        assert set(result) == {"a", "c", "e"}
+
+    def test_set_difference(self):
+        """Test method."""
+        a = {1, 2, 3}
+        b = {2, 3, 4}
+        result = setdiff(a, b)
+        assert set(result) == {1}
+
+    def test_range_difference(self):
+        """Test method."""
+        a = range(5)
+        b = range(2, 7)
+        result = setdiff(a, b)
+        assert set(result) == {0, 1}
+
+    def test_dict_keys_difference(self):
+        """Test method."""
+        a = {"a": 1, "b": 2, "c": 3}
+        b = {"b": 4, "d": 5}
+        result = setdiff(a.keys(), b.keys())
+        assert set(result) == {"a", "c"}
+
+    def test_empty_a(self):
+        """Test method."""
+        a = []
+        b = [1, 2, 3]
+        result = setdiff(a, b)
+        assert result == []
+
+    def test_empty_b(self):
+        """Test method."""
+        a = [1, 2, 3]
+        b = []
+        result = setdiff(a, b)
+        assert set(result) == {1, 2, 3}
+
+    def test_both_empty(self):
+        """Test method."""
+        a = []
+        b = []
+        result = setdiff(a, b)
+        assert result == []
+
+    def test_duplicates_in_a(self):
+        """Test method."""
+        a = [1, 2, 2, 3, 4]
+        b = [3, 4]
+        result = setdiff(a, b)
+        assert set(result) == {1, 2}
+
+    def test_non_iterable_a(self):
+        """Test method."""
+        b = [1, 2, 3]
+        with pytest.raises(TypeError):
+            setdiff(123, b)
+
+    def test_non_iterable_b(self):
+        """Test method."""
+        a = [1, 2, 3]
+        with pytest.raises(TypeError):
+            setdiff(a, 123)
+
+    def test_non_iterable_both(self):
+        """Test method."""
+        with pytest.raises(TypeError):
+            setdiff(123, 456)
+
+    def test_mixed_types(self):
+        """Test method."""
+        a = [1, "a", 3.5, (2, 3)]
+        b = ["a", 3.5]
+        result = setdiff(a, b)
+        assert set(result) == {1, (2, 3)}
+
+
+class TestFlattenIterable:
+    """Test class for the `flatten_iterable` function."""
+
+    def test_flatten_nested_list(self):
+        """Test method."""
+        iterable = [1, [2, 3], [4, [5, 6]]]
+        result = flatten_iterable(iterable)
+        assert result == [1, 2, 3, 4, [5, 6]]
+
+    def test_flatten_nested_tuple(self):
+        """Test method."""
+        iterable = (1, (2, 3), (4, (5, 6)))
+        result = flatten_iterable(iterable, types_to_flatten=(tuple,))
+        assert result == [1, 2, 3, 4, (5, 6)]
+
+    def test_flatten_mixed_types(self):
+        """Test method."""
+        iterable = [1, (2, 3), [4, 5]]
+        result = flatten_iterable(iterable, types_to_flatten=(list, tuple))
+        assert result == [1, 2, 3, 4, 5]
+
+    def test_flatten_no_types_to_flatten(self):
+        """Test method."""
+        iterable = [1, [2, 3], (4, 5)]
+        result = flatten_iterable(iterable, types_to_flatten=())
+        assert result == [1, [2, 3], (4, 5)]
+
+    def test_flatten_empty_iterable(self):
+        """Test method."""
+        iterable = []
+        result = flatten_iterable(iterable)
+        assert result == []
+
+    def test_flatten_flat_iterable(self):
+        """Test method."""
+        iterable = [1, 2, 3]
+        result = flatten_iterable(iterable)
+        assert result == [1, 2, 3]
+
+    def test_flatten_with_strings(self):
+        """Test method."""
+        iterable = ["abc", [1, 2], (3, 4)]
+        result = flatten_iterable(iterable, types_to_flatten=str)
+        assert result == ["a", "b", "c", [1, 2], (3, 4)]
+
+    def test_flatten_invalid_iterable(self):
+        """Test method."""
+        with pytest.raises(TypeError):
+            flatten_iterable(123)
+
+    def test_flatten_invalid_types_to_flatten(self):
+        """Test method."""
+        with pytest.raises(TypeError):
+            flatten_iterable([1, [2, 3]], types_to_flatten=123)
+
+    def test_flatten_non_type_in_tuple(self):
+        """Test method."""
+        with pytest.raises(ValueError):
+            flatten_iterable([1, [2, 3]], types_to_flatten=(list, 123))
+
+    def test_flatten_generator_input(self):
+        """Test method."""
+        iterable = (i for i in [[1, 2], [3, 4]])
+        result = flatten_iterable(iterable)
+        assert result == [1, 2, 3, 4]
+
+
+class TestConvertTypesIterable:
+    """Test class for the `convert_types_iterable` function."""
+
+    def test_convert_to_float(self):
+        """Test method."""
+        input_data = [1, 2, 3]
+        result = convert_types_iterable(input_data)
+        assert result == [1.0, 2.0, 3.0]
+
+    def test_convert_to_string(self):
+        """Test method."""
+        input_data = (10, 20, 30)
+        result = convert_types_iterable(input_data, dtype=str)
+        assert result == ["10", "20", "30"]
+
+    def test_convert_to_int(self):
+        """Test method."""
+        input_data = ["10", "20", "30"]
+        result = convert_types_iterable(input_data, dtype=int)
+        assert result == [10, 20, 30]
+
+    def test_with_range(self):
+        """Test method."""
+        input_data = range(5)
+        result = convert_types_iterable(input_data, dtype=str)
+        assert result == ["0", "1", "2", "3", "4"]
+
+    def test_empty_input(self):
+        """Test method."""
+        input_data = []
+        result = convert_types_iterable(input_data)
+        assert result == []
+
+    def test_invalid_iterable(self):
+        """Test method."""
+        with pytest.raises(TypeError):
+            convert_types_iterable(123)
+
+    def test_invalid_dtype(self):
+        """Test method."""
+        with pytest.raises(TypeError):
+            convert_types_iterable([1, 2, 3], dtype=123)
+
+    def test_non_type_in_tuple(self):
+        """Test method."""
+        with pytest.raises(TypeError):
+            convert_types_iterable([1, 2, 3], dtype=(int, 123))
+
+    def test_mixed_types(self):
+        """Test method."""
+        input_data = [1.1, "2", 3]
+        result = convert_types_iterable(input_data, dtype=int)
+        assert result == [1, 2, 3]
+
+    def test_nested_iterables(self):
+        """Test method."""
+        input_data = [[1, 2], [3, 4]]
+        with pytest.raises(TypeError):
+            convert_types_iterable(input_data)
+
+
+class TestInterleaveIterables:
+    """Test class for the `interleave_iterables` function."""
+
+    def test_interleave_lists(self):
+        """Test method."""
+        iterable1 = [1, 2, 3]
+        iterable2 = [4, 5, 6]
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == [1, 4, 2, 5, 3, 6]
+
+    def test_interleave_tuples(self):
+        """Test method."""
+        iterable1 = (1, 2, 3)
+        iterable2 = ("a", "b", "c")
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == [1, "a", 2, "b", 3, "c"]
+
+    def test_interleave_strings(self):
+        """Test method."""
+        iterable1 = "ABC"
+        iterable2 = "123"
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == ["A", "1", "B", "2", "C", "3"]
+
+    def test_interleave_ranges(self):
+        """Test method."""
+        iterable1 = range(3)
+        iterable2 = range(10, 13)
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == [0, 10, 1, 11, 2, 12]
+
+    def test_empty_iterables(self):
+        """Test method."""
+        iterable1 = []
+        iterable2 = []
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == []
+
+    def test_different_lengths(self):
+        """Test method."""
+        iterable1 = [1, 2]
+        iterable2 = [3]
+        with pytest.raises(ValueError):
+            interleave_iterables(iterable1, iterable2)
+
+    def test_invalid_iterable1(self):
+        """Test method."""
+        iterable1 = 123
+        iterable2 = [1, 2, 3]
+        with pytest.raises(TypeError):
+            interleave_iterables(iterable1, iterable2)
+
+    def test_invalid_iterable2(self):
+        """Test method."""
+        iterable1 = [1, 2, 3]
+        iterable2 = 456
+        with pytest.raises(TypeError):
+            interleave_iterables(iterable1, iterable2)
+
+    def test_mixed_iterable_types(self):
+        """Test method."""
+        iterable1 = [1, 2, 3]
+        iterable2 = ("a", "b", "c")
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == [1, "a", 2, "b", 3, "c"]
+
+    def test_interleave_nested_iterables(self):
+        """Test method."""
+        iterable1 = [[1], [2], [3]]
+        iterable2 = [[4], [5], [6]]
+        result = interleave_iterables(iterable1, iterable2)
+        assert result == [[1], [4], [2], [5], [3], [6]]
+
+
+class TestPairwiseIterable:
+    """Test class for the pairwise_iterable function."""
+
+    def test_pairwise_list(self):
+        """Test pairwise function with a list."""
+        result = list(pairwise_iterable([1, 2, 3, 4]))
+        expected = [(1, 2), (2, 3), (3, 4)]
+        assert result == expected
+
+    def test_pairwise_string(self):
+        """Test pairwise function with a string."""
+        result = list(pairwise_iterable("abcde"))
+        expected = [("a", "b"), ("b", "c"), ("c", "d"), ("d", "e")]
+        assert result == expected
+
+    def test_pairwise_tuple(self):
+        """Test pairwise function with a tuple."""
+        result = list(pairwise_iterable((10, 20, 30)))
+        expected = [(10, 20), (20, 30)]
+        assert result == expected
+
+    def test_pairwise_empty(self):
+        """Test pairwise function with an empty iterable."""
+        result = list(pairwise_iterable([]))
+        expected = []
+        assert result == expected
+
+    def test_pairwise_single_element(self):
+        """Test pairwise function with a single element."""
+        result = list(pairwise_iterable([1]))
+        expected = []
+        assert result == expected
+
+    def test_pairwise_non_iterable(self):
+        """Test pairwise function with a non-iterable input."""
+        with pytest.raises(TypeError, match="Input must be an iterable."):
+            pairwise_iterable(1)
+
+    def test_pairwise_custom_iterable(self):
+        """Test pairwise function with a custom iterable (e.g., a generator)."""
+
+        def my_gen():
+            """Test method."""
+            yield 5
+            yield 10
+            yield 15
+
+        result = list(pairwise_iterable(my_gen()))
+        expected = [(5, 10), (10, 15)]
+        assert result == expected
+
+
+class TestMergeMultiDfs:
+    """Test class for the merge_multi_dfs function."""
+
+    def test_merge_multi_inner(self):
+        """Test merge_multi with 'inner' merge."""
+        df1 = pd.DataFrame({"key": ["A", "B", "C"], "value1": [1, 2, 3]})
+        df2 = pd.DataFrame({"key": ["A", "B"], "value2": [4, 5]})
+        df3 = pd.DataFrame({"key": ["A"], "value3": [6]})
+
+        result = merge_multi_dfs([df1, df2, df3], on="key", how="inner")
+        expected = pd.DataFrame(
+            {"key": ["A"], "value1": [1], "value2": [4], "value3": [6]},
+        )
+        pd.testing.assert_frame_equal(result, expected)
+
+    def test_merge_multi_outer(self):
+        """Test merge_multi with 'outer' merge."""
+        df1 = pd.DataFrame({"key": ["A", "B", "C"], "value1": [1, 2, 3]})
+        df2 = pd.DataFrame({"key": ["A", "B"], "value2": [4, 5]})
+
+        result = merge_multi_dfs([df1, df2], on="key", how="outer", fillna_val=0)
+        expected = pd.DataFrame(
+            {"key": ["A", "B", "C"], "value1": [1, 2, 3], "value2": [4, 5, 0]},
+        )
+        pd.testing.assert_frame_equal(result, expected, check_dtype=False)
+
+    def test_merge_multi_left(self):
+        """Test merge_multi with 'left' merge."""
+        df1 = pd.DataFrame({"key": ["A", "B", "C"], "value1": [1, 2, 3]})
+        df2 = pd.DataFrame({"key": ["A", "B"], "value2": [4, 5]})
+
+        result = merge_multi_dfs([df1, df2], on="key", how="left")
+        expected = pd.DataFrame(
+            {"key": ["A", "B", "C"], "value1": [1, 2, 3], "value2": [4, 5, None]},
+        )
+        pd.testing.assert_frame_equal(result, expected)
+
+    def test_merge_multi_right(self):
+        """Test merge_multi with 'right' merge."""
+        df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
+        df2 = pd.DataFrame({"key": ["A", "B", "C"], "value2": [4, 5, 6]})
+
+        result = merge_multi_dfs([df1, df2], on="key", how="right")
+        expected = pd.DataFrame(
+            {"key": ["A", "B", "C"], "value1": [1, 2, None], "value2": [4, 5, 6]},
+        )
+        pd.testing.assert_frame_equal(result, expected)
+
+    def test_merge_multi_fillna(self):
+        """Test merge_multi with filling missing values."""
+        df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
+        df2 = pd.DataFrame({"key": ["A", "C"], "value2": [4, 5]})
+
+        result = merge_multi_dfs([df1, df2], on="key", how="outer", fillna_val=0)
+        expected = pd.DataFrame(
+            {"key": ["A", "B", "C"], "value1": [1, 2, 0], "value2": [4, 0, 5]},
+        )
+        pd.testing.assert_frame_equal(result, expected, check_dtype=False)
+
+    def test_merge_multi_invalid_how(self):
+        """Test merge_multi with an invalid 'how' value."""
+        df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
+        df2 = pd.DataFrame({"key": ["A", "B"], "value2": [4, 5]})
+
+        with pytest.raises(ValueError, match="`how` Must be one of"):
+            merge_multi_dfs([df1, df2], on="key", how="invalid_method")
+
+    def test_merge_multi_non_iterable_df_list(self):
+        """Test merge_multi with a non-iterable `df_list`."""
+        df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
+
+        with pytest.raises(
+            TypeError,
+            match="`df_list` must be a list of pandas DataFrames.",
+        ):
+            merge_multi_dfs(df1, on="key", how="inner")
+
+    def test_merge_multi_non_dataframe_in_list(self):
+        """Test merge_multi with a non-DataFrame element in `df_list`."""
+        df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
+
+        with pytest.raises(
+            TypeError,
+            match="`df_list` must be a list of pandas DataFrames.",
+        ):
+            merge_multi_dfs([df1, "not_a_dataframe"], on="key", how="inner")
+
+    def test_merge_multi_invalid_on(self):
+        """Test merge_multi with invalid 'on' parameter."""
+        df1 = pd.DataFrame({"key": ["A", "B"], "value1": [1, 2]})
+        df2 = pd.DataFrame({"key": ["A", "B"], "value2": [4, 5]})
+
+        with pytest.raises(
+            TypeError,
+            match="`on` must be a string or a list of strings.",
+        ):
+            merge_multi_dfs([df1, df2], on=123, how="inner")
