@@ -25,7 +25,7 @@ Note:
 
 import json
 import logging
-from io import BytesIO, StringIO
+from io import BytesIO, StringIO, TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -211,6 +211,84 @@ def is_s3_directory(
         return False
 
 
+def s3_walk(
+    client: boto3.client,
+    bucket_name: str,
+    dir_interest: str,
+) -> tuple:
+    """Print the structure of the s3 bucket in a dictionary format.
+
+    Mimics the functionality of os.walk in s3 bucket using long filenames with slashes.
+    Recursively goes through the long filenames and splits it into subdirectories, and
+    "files" - short file names.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
+    bucket_name
+        The name of the S3 bucket.
+    dir_interest
+        Name of "subdirectory" of root where you want to look for files.
+
+    Returns
+    -------
+    turple
+        A tuple of (root: (set(), {root/subdir: (set(), {files})).
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> s3_walk(client, 'mybucket', 'folder/')
+    ('folder/', ({'folder/subfolder1/': (set(), {'file1.txt'}),
+    'folder/subfolder2/': (set(), {'file2.txt'})}, set()))
+
+    >>> client = boto3.client('s3')
+    >>> s3_walk(client, 'mybucket', '')
+    ("": (set(), {'root_file.txt'}), {'folder/subfolder1/': (set(),
+    {'file1.txt'}), 'folder/subfolder2/': (set(), {'file2.txt'})}, set()))
+    """
+    directories = []
+    try:
+        paginator = client.get_paginator("list_objects_v2")
+        for page in paginator.paginate(
+            Bucket=bucket_name,
+            Prefix=dir_interest,
+            Delimiter="/",
+        ):
+            if "CommonPrefixes" in page:
+                for common_prefix in page["CommonPrefixes"]:
+                    directories.append(common_prefix["Prefix"])
+    except client.exceptions.ClientError as e:
+        logger.error(f"Failed to list directories: {str(e)}")
+
+    # recursively add location to roots starting from prefix
+    def process_location(root, prefix_local, location):
+        # add new root location if not available
+        if prefix_local not in root:
+            root[prefix_local] = (set(), set())
+        # check how many folders are available after prefix
+        remainder = location[len(prefix_local) :]
+        structure = remainder.split("/")
+
+        # If we are not yet in the folder of the file we need to continue with
+        # a larger prefix
+        if len(structure) > 1:
+            # add folder dir
+            root[prefix_local][0].add(structure[0])
+            # make sure file is added allong the way
+            process_location(root, prefix_local + "/" + structure[0], location)
+        else:
+            # add to file
+            root[prefix_local][1].add(structure[0])
+
+    root = {}
+    for directory in directories:
+        process_location(root, dir_interest, directory)
+
+    return root.items()
+
+
 def file_exists(
     client: boto3.client,
     bucket_name: str,
@@ -250,6 +328,191 @@ def file_exists(
         else:
             logger.error(f"Failed to check file existence: {str(e)}")
             return False
+
+
+def file_size(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> int:
+    """Check the size of a file in an AWS S3 bucket.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to check for size.
+
+    Returns
+    -------
+    int
+        an integer value indicating the size
+        of the file in bytes
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> file_size(client, 'mybucket', 'folder/file.txt')
+    8
+
+    """
+    response = client.head_object(Bucket=bucket_name, Key=object_name)
+    file_size = response["ContentLength"]
+
+    return file_size
+
+
+def md5sum(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> str:
+    """Get md5 hash of a specific object on s3.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to create md5 hash from.
+
+    Returns
+    -------
+    str
+        a string value with the MD5 hash of
+        the object data.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> md5sum(client, 'mybucket', 'folder/file.txt')
+    "d41d8cd98f00b204e9800998ecf8427e"
+    """
+    try:
+        md5result = client.head_object(Bucket=bucket_name, Key=object_name)["ETag"][
+            1:-1
+        ]
+    except client.exceptions.ClientError as e:
+        if e.response["Error"]["Code"] == "404":
+            # This is specifically for it to raise a ClientError exception
+            # when a file is not found.
+            raise client.exceptions.ClientError(
+                {
+                    "Error": {
+                        "Code": "404",
+                        "Message": f"The file {object_name} not in {bucket_name}.",
+                    },
+                },
+                operation_name="HeadObject",
+            ) from e
+        else:
+            logger.error(
+                f"Failed to get md5 from file: {str(e)}",
+            )
+
+        md5result = None
+
+    return md5result
+
+
+def read_header(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> str:
+    """Read the first line of a file on s3.
+
+    Gets the entire file using boto3 get_objects, converts its body into
+    an input stream, reads the first line and remove the carriage return
+    character (backslash-n) from the end.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to read header from.
+
+    Returns
+    -------
+    str
+        Returns the first line of the file.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> read_header(client, 'mybucket', 'folder/file.txt')
+    "First line"
+    """
+    # Create an input/output stream pointer, same as open
+    stream = TextIOWrapper(
+        client.get_object(
+            Bucket=bucket_name,
+            Key=object_name,
+        )["Body"],
+    )
+
+    # Read the first line from the stream
+    response = stream.readline()
+
+    # Remove the last character (carriage return, or new line)
+    response = response.rstrip("\n\r")
+
+    return response
+
+
+def write_string_to_file(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+    object_content: bytes,
+) -> None:
+    """Write a string into the specified object in the s3 bucket.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The S3 object name to write into.
+    object_content
+        The content (str) to be written to "object_name".
+
+    Returns
+    -------
+    None
+        The outcome of this operation is the string written
+        into the object in the s3 bucket. It will overwrite
+        anything in the object.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> write_string_to_file(client, 'mybucket', 'folder/file.txt', b'example content')
+    """
+    # Put context to a new Input-Output buffer
+    str_buffer = StringIO(object_content.decode("utf-8"))
+
+    # "Rewind" the stream to the start of the buffer
+    str_buffer.seek(0)
+
+    # Write the buffer into the s3 bucket
+    client.put_object(
+        Bucket=bucket_name,
+        Body=str_buffer.getvalue(),
+        Key=object_name,
+    )
+
+    return None
 
 
 def upload_file(
