@@ -531,7 +531,7 @@ class TestS3Walk:
         assert result == expected
 
     def test_s3_walk_nonexistent_dir_interest(self, s3_client):
-        """Test file_size raises an error for a nonexistent file."""
+        """Test that s3_walk raises a ClientError for a nonexistent directory."""
         with pytest.raises(s3_client.exceptions.ClientError):
             s3_walk(s3_client, "test-bucket", "nonexistent_dir")
 
