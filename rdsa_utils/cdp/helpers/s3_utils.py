@@ -260,7 +260,10 @@ def s3_walk(
                 for common_prefix in page["CommonPrefixes"]:
                     directories.append(common_prefix["Prefix"])
     except client.exceptions.ClientError as e:
-        logger.error(f"Failed to list directories: {str(e)}")
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            logger.error(f"Directory does not exist: {str(e)}")
+        else:
+            logger.error(f"Failed to list directories: {str(e)}")
 
     # recursively add location to roots starting from prefix
     def process_location(root, prefix_local, location):
