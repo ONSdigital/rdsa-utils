@@ -260,8 +260,18 @@ def s3_walk(
                 for common_prefix in page["CommonPrefixes"]:
                     directories.append(common_prefix["Prefix"])
     except client.exceptions.ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchKey":
-            logger.error(f"Directory does not exist: {str(e)}")
+        if e.response["Error"]["Code"] == "404":
+            # This is specifically for it to raise a ClientError exception
+            # when a directory is not found.
+            raise client.exceptions.ClientError(
+                {
+                    "Error": {
+                        "Code": "404",
+                        "Message": f"The {dir_interest} not in {bucket_name}.",
+                    },
+                },
+                operation_name="ListObjectsV2",
+            ) from e
         else:
             logger.error(f"Failed to list directories: {str(e)}")
 
