@@ -25,8 +25,7 @@ Note:
 
 import json
 import logging
-from io import BytesIO, StringIO
-
+from io import BytesIO, StringIO, TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional
 
