@@ -277,7 +277,7 @@ def s3_walk(
             # add folder dir
             root[prefix_local][0].add(structure[0])
             # make sure file is added allong the way
-            process_location(root, prefix_local + structure[0], location)
+            process_location(root, prefix_local + "/" + structure[0], location)
         else:
             # add to file
             root[prefix_local][1].add(structure[0])
