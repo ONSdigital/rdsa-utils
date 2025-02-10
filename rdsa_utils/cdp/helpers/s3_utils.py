@@ -249,6 +249,8 @@ def s3_walk(
     {'file1.txt'}), 'folder/subfolder2/': (set(), {'file2.txt'})}, set()))
     """
     directories = []
+    files = []
+
     try:
         paginator = client.get_paginator("list_objects_v2")
         for page in paginator.paginate(
@@ -259,6 +261,10 @@ def s3_walk(
             if "CommonPrefixes" in page:
                 for common_prefix in page["CommonPrefixes"]:
                     directories.append(common_prefix["Prefix"])
+            if "Contents" in page:
+                for content in page["Contents"]:
+                    if content["Key"] != dir_interest:
+                        files.append(content["Key"])
     except client.exceptions.ClientError as e:
         logger.error(f"Failed to list directories: {str(e)}")
 
@@ -285,6 +291,8 @@ def s3_walk(
     root = {}
     for directory in directories:
         process_location(root, dir_interest, directory)
+    for file in files:
+        process_location(root, dir_interest, file)
 
     return root.items()
 
