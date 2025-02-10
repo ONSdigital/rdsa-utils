@@ -445,99 +445,88 @@ class TestUploadFolder:
 class TestS3Walk:
     """Tests for s3_walk function."""
 
-    def test_s3_walk_single_level(self, s3_client):
-        """Test s3_walk with a single-level directory structure."""
-        s3_client.put_object(
-            Bucket="test-bucket",
-            Key="folder/file1.txt",
-            Body=b"content1",
-        )
-        s3_client.put_object(
-            Bucket="test-bucket",
-            Key="folder/file2.txt",
-            Body=b"content2",
-        )
+    class TestS3Walk:
+        """Tests for s3_walk function."""
 
-        result = dict(s3_walk(s3_client, "test-bucket", "folder"))
-        expected = {"folder/": (set(), {"file1.txt", "file2.txt"})}
-        assert result == expected
+        def setup_s3_structure(self, s3_client):
+            """Set up a folder structure in S3 for testing."""
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="folder1/file1.txt",
+                Body=b"content1",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="folder1/file2.txt",
+                Body=b"content2",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="folder1/subfolder1/file3.txt",
+                Body=b"content3",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="folder2/file4.txt",
+                Body=b"content4",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="file5.txt",
+                Body=b"content5",
+            )
 
-    def test_s3_walk_multi_level(self, s3_client):
-        """Test s3_walk with a multi-level directory structure."""
-        s3_client.put_object(
-            Bucket="test-bucket",
-            Key="folder/subfolder1/file1.txt",
-            Body=b"content1",
-        )
-        s3_client.put_object(
-            Bucket="test-bucket",
-            Key="folder/subfolder2/file2.txt",
-            Body=b"content2",
-        )
+        def test_s3_walk_basic(self, s3_client):
+            """Test basic functionality of s3_walk."""
+            self.setup_s3_structure(s3_client)
+            result = s3_walk(s3_client, "test-bucket", "")
+            expected = {
+                "folder1/": (
+                    {"folder1/file1.txt", "folder1/file2.txt"},
+                    {"folder1/subfolder1/": ({"folder1/subfolder1/file3.txt"}, {})},
+                ),
+                "folder2/": ({"folder2/file4.txt"}, {}),
+                "": ({"file5.txt"}, {}),
+            }
+            assert result == expected
 
-        result = dict(s3_walk(s3_client, "test-bucket", "folder/"))
-        expected = {
-            "folder/": ({"subfolder1/", "subfolder2/"}, set()),
-            "folder/subfolder1/": (set(), {"file1.txt"}),
-            "folder/subfolder2/": (set(), {"file2.txt"}),
-        }
-        assert result == expected
+        def test_s3_walk_with_prefix(self, s3_client):
+            """Test s3_walk with a specific prefix."""
+            self.setup_s3_structure(s3_client)
+            result = s3_walk(s3_client, "test-bucket", "folder1/")
+            expected = {
+                "folder1/": (
+                    {"folder1/file1.txt", "folder1/file2.txt"},
+                    {"folder1/subfolder1/": ({"folder1/subfolder1/file3.txt"}, {})},
+                ),
+            }
+            assert result == expected
 
-    def test_s3_walk_empty_directory(self, s3_client):
-        """Test s3_walk with an empty directory."""
-        s3_client.put_object(Bucket="test-bucket", Key="empty-folder/")
+        def test_s3_walk_empty_bucket(self, s3_client):
+            """Test s3_walk with an empty bucket."""
+            result = s3_walk(s3_client, "test-bucket", "")
+            expected = {}
+            assert result == expected
 
-        result = dict(s3_walk(s3_client, "test-bucket", "empty-folder/"))
-        expected = {"empty-folder/": (set(), set())}
-        assert result == expected
+        def test_s3_walk_nonexistent_prefix(self, s3_client):
+            """Test s3_walk with a nonexistent prefix."""
+            self.setup_s3_structure(s3_client)
+            result = s3_walk(s3_client, "test-bucket", "nonexistent/")
+            expected = {}
+            assert result == expected
 
-    def test_s3_walk_no_matching_prefix(self, s3_client):
-        """Test s3_walk with no matching prefix."""
-        result = dict(s3_walk(s3_client, "test-bucket", "nonexistent-folder/"))
-        expected = {}
-        assert result == expected
-
-    def test_s3_walk_files_at_root(self, s3_client):
-        """Test s3_walk with files at the root level."""
-        s3_client.put_object(Bucket="test-bucket", Key="file1.txt", Body=b"content1")
-        s3_client.put_object(Bucket="test-bucket", Key="file2.txt", Body=b"content2")
-
-        result = dict(s3_walk(s3_client, "test-bucket", ""))
-        expected = {"": (set(), {"file1.txt", "file2.txt"})}
-        assert result == expected
-
-    def test_s3_walk_no_prefix(self, s3_client):
-        """Test s3_walk with files and subdirectories at the root level."""
-        s3_client.put_object(Bucket="test-bucket", Key="file1.txt", Body=b"content1")
-        s3_client.put_object(Bucket="test-bucket", Key="file2.txt", Body=b"content2")
-        s3_client.put_object(
-            Bucket="test-bucket",
-            Key="folder/subfolder1/file1.txt",
-            Body=b"content1",
-        )
-        s3_client.put_object(
-            Bucket="test-bucket",
-            Key="folder2/subfolder2/file2.txt",
-            Body=b"content2",
-        )
-
-        result = dict(s3_walk(s3_client, "test-bucket", ""))
-        expected = {
-            "": (set(), {"file1.txt", "file2.txt"}),
-            "folder/": ({"subfolder1/", "subfolder2/"}, set()),
-            "folder/subfolder1/": (set(), {"file1.txt"}),
-            "folder2/subfolder2/": (set(), {"file2.txt"}),
-        }
-        assert result == expected
-
-    def test_s3_walk_nonexistent_dir_interest(self, s3_client):
-        """Test that s3_walk raises a ClientError for a nonexistent directory."""
-        result = dict(s3_walk(s3_client, "test-bucket", "nonexistent_dir"))
-        expected = {}
-        assert result == expected
+        def test_s3_walk_single_file(self, s3_client):
+            """Test s3_walk with a single file in the bucket."""
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="single_file.txt",
+                Body=b"content",
+            )
+            result = s3_walk(s3_client, "test-bucket", "")
+            expected = {"": ({"single_file.txt"}, {})}
+            assert result == expected
 
 
-@pytest.fixture
 def s3_client_for_list_files(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary

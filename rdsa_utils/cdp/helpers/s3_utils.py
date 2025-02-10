@@ -214,7 +214,7 @@ def is_s3_directory(
 def s3_walk(
     client: boto3.client,
     bucket_name: str,
-    dir_interest: str,
+    prefix: str,
 ) -> tuple:
     """Print the structure of the s3 bucket in a dictionary format.
 
@@ -225,11 +225,11 @@ def s3_walk(
     Parameters
     ----------
     client
-        The boto3 S3 client instance.
+        The boto3 S3 client instence.
     bucket_name
-        The name of the S3 bucket.
-    dir_interest
-        Name of "subdirectory" of root where you want to look for files.
+        The name of the bucket of interest.
+    prefix
+        The prefix of the object to start the walk from.
 
     Returns
     -------
@@ -240,61 +240,51 @@ def s3_walk(
     --------
     >>> client = boto3.client('s3')
     >>> s3_walk(client, 'mybucket', 'folder/')
-    ('folder/', ({'folder/subfolder1/': (set(), {'file1.txt'}),
-    'folder/subfolder2/': (set(), {'file2.txt'})}, set()))
-
-    >>> client = boto3.client('s3')
-    >>> s3_walk(client, 'mybucket', '')
-    ("": (set(), {'root_file.txt'}), {'folder/subfolder1/': (set(),
-    {'file1.txt'}), 'folder/subfolder2/': (set(), {'file2.txt'})}, set()))
+    {'folder/': ({'subfolder/'}, {'file1.txt', 'file2.txt'})}
     """
-    directories = []
-    files = []
 
-    try:
-        paginator = client.get_paginator("list_objects_v2")
-        for page in paginator.paginate(
-            Bucket=bucket_name,
-            Prefix=dir_interest,
-            Delimiter="/",
-        ):
-            if "CommonPrefixes" in page:
-                for common_prefix in page["CommonPrefixes"]:
-                    directories.append(common_prefix["Prefix"])
-            if "Contents" in page:
-                for content in page["Contents"]:
-                    if content["Key"] != dir_interest:
-                        files.append(content["Key"])
-    except client.exceptions.ClientError as e:
-        logger.error(f"Failed to list directories: {str(e)}")
-
-    # recursively add location to roots starting from prefix
     def process_location(root, prefix_local, location):
-        # add new root location if not available
+        # Add new root location if not available
         if prefix_local not in root:
             root[prefix_local] = (set(), set())
-        # check how many folders are available after prefix
+        # Check how many folders are available after prefix
         remainder = location[len(prefix_local) :]
         structure = remainder.split("/")
 
         # If we are not yet in the folder of the file we need to continue with
         # a larger prefix
         if len(structure) > 1:
-            # add folder dir
+            # Add folder dir
             root[prefix_local][0].add(structure[0] + "/")
-            # make sure file is added allong the way
-            process_location(root, prefix_local + "/" + structure[0], location)
+            # Make sure file is added along the way
+            process_location(
+                root,
+                prefix_local + structure[0] + "/",
+                location,
+            )
         else:
-            # add to file
+            # Add to file
             root[prefix_local][1].add(location)
 
     root = {}
-    for directory in directories:
-        process_location(root, dir_interest, directory)
-    for file in files:
-        process_location(root, dir_interest, file)
+    try:
+        paginator = client.get_paginator("list_objects_v2")
+        for page in paginator.paginate(
+            Bucket=bucket_name,
+            Prefix=prefix,
+            Delimiter="/",
+        ):
+            if "CommonPrefixes" in page:
+                for common_prefix in page["CommonPrefixes"]:
+                    process_location(root, prefix, common_prefix["Prefix"])
+            if "Contents" in page:
+                for content in page["Contents"]:
+                    if content["Key"] != prefix:
+                        process_location(root, prefix, content["Key"])
+    except client.exceptions.ClientError as e:
+        logger.error(f"Failed to list directories: {str(e)}")
 
-    return root.items()
+    return root
 
 
 def file_exists(
