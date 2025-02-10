@@ -281,12 +281,12 @@ def s3_walk(
         # a larger prefix
         if len(structure) > 1:
             # add folder dir
-            root[prefix_local][0].add(structure[0])
+            root[prefix_local][0].add(structure[0] + "/")
             # make sure file is added allong the way
             process_location(root, prefix_local + "/" + structure[0], location)
         else:
             # add to file
-            root[prefix_local][1].add(structure[0])
+            root[prefix_local][1].add(location)
 
     root = {}
     for directory in directories:
