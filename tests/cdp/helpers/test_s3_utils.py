@@ -458,7 +458,7 @@ class TestS3Walk:
             Body=b"content2",
         )
 
-        result = dict(s3_walk(s3_client, "test-bucket", "folder/"))
+        result = dict(s3_walk(s3_client, "test-bucket", "folder"))
         expected = {"folder/": (set(), {"file1.txt", "file2.txt"})}
         assert result == expected
 
