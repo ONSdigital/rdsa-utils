@@ -13,8 +13,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added `multi_line` param to `load_json` in `cdp/helpers/s3_utils`.
 
-### Changed
-
 ### Deprecated
 
 ### Fixed
