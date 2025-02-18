@@ -1046,15 +1046,15 @@ def load_json(
 
     Parameters
     ----------
-    client : boto3.client
+    client
         The boto3 S3 client instance.
-    bucket_name : str
+    bucket_name
         The name of the S3 bucket.
-    filepath : str
+    filepath
         The key (full path and filename) of the JSON file in the S3 bucket.
-    encoding : Optional[str], default="utf-8"
+    encoding
         The encoding of the JSON file.
-    multi_line : bool, default=False
+    multi_line
         If True, reads the JSON file line by line, treating each line as a
         separate JSON object.
 
