@@ -13,9 +13,9 @@ def convert_value(value: int, unit: str) -> float:
 
     Parameters
     ----------
-    value : int
+    value
         Raw value from logs.
-    unit : str
+    unit
         Type of conversion: 'ms' -> minutes, 'ns' -> minutes, 'bytes' -> megabytes.
 
     Returns
@@ -80,9 +80,9 @@ def parse_pyspark_logs(
 
     Parameters
     ----------
-    log_data : Dict[str, Any]
+    log_data
         Parsed JSON log data from Spark event logs.
-    log_summary : bool, optional
+    log_summary
         Whether to log the summary in a human-readable format (default is True).
 
     Returns
