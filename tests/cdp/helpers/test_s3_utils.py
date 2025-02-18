@@ -1083,6 +1083,37 @@ class TestLoadJSON:
         with pytest.raises(InvalidBucketNameError):
             load_json(s3_client, "INVALID_BUCKET", "test-file.json")
 
+    def test_load_json_multi_line_success(self, s3_client):
+        """Test load_json successfully reads a multi-line JSON file."""
+        data = [
+            {"event": "start", "timestamp": "2025-02-18T12:00:00Z"},
+            {"event": "stop", "timestamp": "2025-02-18T12:05:00Z"},
+        ]
+
+        # Convert list of dictionaries into a newline-separated JSON string
+        json_lines = "\n".join(json.dumps(entry) for entry in data)
+
+        # Upload to S3
+        s3_client.put_object(Bucket="test-bucket", Key="test-log.json", Body=json_lines)
+
+        # Read using multi_line=True
+        result = load_json(s3_client, "test-bucket", "test-log.json", multi_line=True)
+        assert result == data
+
+    def test_load_json_multi_line_invalid_json(self, s3_client):
+        """Test load_json raises an exception when multi-line JSON has an invalid entry."""
+        invalid_data = (
+            '{"event": "start", "timestamp": "2025-02-18T12:00:00Z"}\nINVALID_JSON_LINE'
+        )
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="invalid-log.json",
+            Body=invalid_data,
+        )
+
+        with pytest.raises(Exception):
+            load_json(s3_client, "test-bucket", "invalid-log.json", multi_line=True)
+
 
 class TestWriteCSV:
     """Tests for write_csv function."""
