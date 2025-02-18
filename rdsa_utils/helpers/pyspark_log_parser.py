@@ -68,6 +68,15 @@ def convert_value(value: int, unit: str) -> float:
     -------
     float
         Converted value.
+
+    Examples
+    --------
+    >>> convert_value(60000, 'ms')
+    1.0
+    >>> convert_value(60000000000, 'ns')
+    1.0
+    >>> convert_value(1048576, 'bytes')
+    1.0
     """
     if not isinstance(value, (int, float)):  # Ensure value is numeric
         return 0.0
@@ -126,8 +135,50 @@ def parse_pyspark_logs(
     -------
     Dict[str, Any]
         A dictionary containing aggregated summary metrics.
+
+    Examples
+    --------
+    >>> log_data = [
+    ...     {
+    ...         "Event": "SparkListenerTaskEnd",
+    ...         "Task Metrics": {
+    ...             "Executor Run Time": 60000,
+    ...             "Executor CPU Time": 60000000000,
+    ...             "Peak Execution Memory": 1048576
+    ...         }
+    ...     },
+    ...     {
+    ...         "Event": "SparkListenerTaskEnd",
+    ...         "Task Metrics": {
+    ...             "Executor Run Time": 120000,
+    ...             "Executor CPU Time": 120000000000,
+    ...             "Peak Execution Memory": 2097152
+    ...         }
+    ...     }
+    ... ]
+    >>> summary = parse_pyspark_logs(log_data)
+    >>> print(summary)
+    >>> {
+    ...     'Executor Deserialize Time': 0.0,
+    ...     'Executor Deserialize CPU Time': 0.0,
+    ...     'Executor Run Time': 3.0,
+    ...     'Executor CPU Time': 3.0,
+    ...     'Peak Execution Memory': 2.0,
+    ...     'Result Size': 0.0,
+    ...     'JVM GC Time': 0.0,
+    ...     'Result Serialization Time': 0.0,
+    ...     'Memory Bytes Spilled': 0.0,
+    ...     'Disk Bytes Spilled': 0.0,
+    ...     'Shuffle Bytes Written': 0.0,
+    ...     'Shuffle Write Time': 0.0,
+    ...     'Shuffle Records Written': 0,
+    ...     'Bytes Read': 0.0,
+    ...     'Records Read': 0,
+    ...     'Bytes Written': 0.0,
+    ...     'Records Written': 0
+    ... }
     """
-    # Initialize summary metrics with default values
+    # Initialise summary metrics with default values
     summary_metrics = defaultdict(int)
 
     # Aggregate metrics from each SparkListenerTaskEnd event
