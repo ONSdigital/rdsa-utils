@@ -147,13 +147,25 @@ def get_db_path() -> Path:
 
 
 def extract_instance_specs(instance_type: str) -> Optional[Dict]:
-    """Extract vCPU and memory specs from instance type naming convention."""
-    # Parse instance size multiplier
-    size_multipliers = {
-        "nano": 0.25,
-        "micro": 0.5,
-        "small": 1,
-        "medium": 1,
+    """Extract vCPU and memory specs from instance type naming convention.
+
+    Parameters
+    ----------
+    instance_type : str
+        AWS instance type (e.g., "m5a.8xlarge")
+
+    Returns
+    -------
+    Optional[Dict]
+        Dictionary containing vcpu, memory_gb, and family if valid instance type,
+        None otherwise
+    """
+    # Parse instance size multiplier for vCPU
+    size_vcpu = {
+        "nano": 2,
+        "micro": 2,
+        "small": 2,
+        "medium": 2,
         "large": 2,
         "xlarge": 4,
         "2xlarge": 8,
@@ -168,44 +180,55 @@ def extract_instance_specs(instance_type: str) -> Optional[Dict]:
         "metal": 96,
     }
 
-    # Parse instance family base specs
-    family_base_specs = {
-        "t3": {"vcpu": 2, "memory_gb": 0.5, "family": "General Purpose"},
-        "t4g": {"vcpu": 2, "memory_gb": 0.5, "family": "General Purpose"},
-        "m4": {"vcpu": 2, "memory_gb": 8, "family": "General Purpose"},
-        "m5": {"vcpu": 2, "memory_gb": 8, "family": "General Purpose"},
-        "m5a": {"vcpu": 2, "memory_gb": 8, "family": "General Purpose"},
-        "m5d": {"vcpu": 2, "memory_gb": 8, "family": "General Purpose"},
-        "m6a": {"vcpu": 2, "memory_gb": 8, "family": "General Purpose"},
-        "r4": {"vcpu": 2, "memory_gb": 15.25, "family": "Memory Optimized"},
-        "r5": {"vcpu": 2, "memory_gb": 16, "family": "Memory Optimized"},
-        "r5a": {"vcpu": 2, "memory_gb": 16, "family": "Memory Optimized"},
-        "r5b": {"vcpu": 2, "memory_gb": 16, "family": "Memory Optimized"},
-        "r6a": {"vcpu": 2, "memory_gb": 16, "family": "Memory Optimized"},
-        "x2gd": {"vcpu": 2, "memory_gb": 32, "family": "Memory Optimized"},
-        "c4": {"vcpu": 2, "memory_gb": 3.75, "family": "Compute Optimized"},
-        "c5": {"vcpu": 2, "memory_gb": 4, "family": "Compute Optimized"},
-        "c5a": {"vcpu": 2, "memory_gb": 4, "family": "Compute Optimized"},
-        "c6a": {"vcpu": 2, "memory_gb": 4, "family": "Compute Optimized"},
+    # Instance family specifications
+    # Format: {family: (memory_ratio, base_vcpu, family_category)}
+    # memory_ratio is GB of RAM per vCPU
+    family_specs = {
+        # General Purpose
+        "t3": (2, 2, "General Purpose"),  # 2 GB per vCPU
+        "t4g": (2, 2, "General Purpose"),
+        "m4": (4, 2, "General Purpose"),  # 4 GB per vCPU
+        "m5": (4, 2, "General Purpose"),
+        "m5a": (4, 2, "General Purpose"),
+        "m5d": (4, 2, "General Purpose"),
+        "m6a": (4, 2, "General Purpose"),
+        # Memory Optimized
+        "r4": (8, 2, "Memory Optimized"),  # 8 GB per vCPU
+        "r5": (8, 2, "Memory Optimized"),
+        "r5a": (8, 2, "Memory Optimized"),
+        "r5b": (8, 2, "Memory Optimized"),
+        "r6a": (8, 2, "Memory Optimized"),
+        "x2gd": (16, 2, "Memory Optimized"),  # 16 GB per vCPU
+        # Compute Optimized
+        "c4": (2, 2, "Compute Optimized"),  # 2 GB per vCPU
+        "c5": (2, 2, "Compute Optimized"),
+        "c5a": (2, 2, "Compute Optimized"),
+        "c6a": (2, 2, "Compute Optimized"),
     }
 
-    # Parse instance type (e.g., "r6a.xlarge")
+    # Parse instance type (e.g., "m5a.xlarge")
     match = re.match(r"([a-z]+\d+[a-z]*?)\.([a-z0-9]+)", instance_type)
     if not match:
         return None
 
     family, size = match.groups()
 
-    if family not in family_base_specs or size not in size_multipliers:
+    if family not in family_specs or size not in size_vcpu:
         return None
 
-    base_specs = family_base_specs[family]
-    multiplier = size_multipliers[size]
+    # Get the memory ratio and family category
+    mem_ratio, base_vcpu, family_category = family_specs[family]
+
+    # Calculate vCPU count
+    vcpu_count = size_vcpu[size]
+
+    # Calculate memory (ratio * vCPU count)
+    memory_gb = vcpu_count * mem_ratio
 
     return {
-        "vcpu": int(base_specs["vcpu"] * multiplier),
-        "memory_gb": base_specs["memory_gb"] * multiplier,
-        "family": base_specs["family"],
+        "vcpu": vcpu_count,
+        "memory_gb": memory_gb,
+        "family": family_category,
     }
 
 
