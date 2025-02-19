@@ -45,13 +45,18 @@ def calculate_emr_surcharge(instance_family: str, ec2_price: float) -> float:
     return ec2_price * (1 + surcharge_rate)
 
 
-def calculate_pipeline_cost(parsed_metrics: Dict[str, Any]) -> Dict[str, Any]:
+def calculate_pipeline_cost(
+    parsed_metrics: Dict[str, Any],
+    fetch_data: bool = False,
+) -> Dict[str, Any]:
     """Calculate EMR costs from parsed Spark metrics.
 
     Parameters
     ----------
     parsed_metrics
         Output from parse_pyspark_logs function containing parsed metrics
+    fetch_data
+        Whether to fetch fresh data from AWS
 
     Returns
     -------
@@ -76,7 +81,11 @@ def calculate_pipeline_cost(parsed_metrics: Dict[str, Any]) -> Dict[str, Any]:
     peak_memory_gb = parsed_metrics.get("Peak Execution Memory", 0)
 
     # Get matching instance type
-    instance = get_matching_instance(memory_per_executor, executor_cores)
+    instance = get_matching_instance(
+        memory_gb=memory_per_executor,
+        cores=executor_cores,
+        fetch_data=fetch_data,
+    )
     if not instance:
         error_msg = (
             f"No suitable instance type found for {memory_per_executor}GB memory "
