@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import boto3
 import pytest
-from moto import mock_s3
+from moto import mock_aws
 
 from rdsa_utils.helpers.pyspark_log_parser import (
     convert_value,
@@ -104,6 +104,15 @@ class TestParsePySparkLogs:
 class TestFindPysparkLogFiles:
     """Tests for find_pyspark_log_files function."""
 
+    @pytest.fixture(scope="class")
+    def _aws_credentials(self):
+        """Mock AWS Credentials for moto."""
+        boto3.setup_default_session(
+            aws_access_key_id="testing",
+            aws_secret_access_key="testing",
+            aws_session_token="testing",
+        )
+
     @pytest.fixture
     def s3_client_for_find_pyspark_log_files(self, _aws_credentials):
         """
@@ -115,7 +124,7 @@ class TestFindPysparkLogFiles:
 
         Yields the S3 client for use in the test functions.
         """
-        with mock_s3():
+        with mock_aws():
             client = boto3.client("s3", region_name="us-east-1")
             client.create_bucket(Bucket="test-bucket")
             # Set up some objects in S3 for testing
