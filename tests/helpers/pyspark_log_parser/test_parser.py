@@ -1,4 +1,4 @@
-"""Tests for pyspark_log_parser.py module."""
+"""Tests for parser.py module."""
 
 from unittest.mock import patch
 
@@ -6,7 +6,7 @@ import boto3
 import pytest
 from moto import mock_aws
 
-from rdsa_utils.helpers.pyspark_log_parser import (
+from rdsa_utils.helpers.pyspark_log_parser.parser import (
     convert_value,
     find_pyspark_log_files,
     parse_pyspark_logs,
@@ -194,7 +194,7 @@ class TestFindPysparkLogFiles:
                 )
             yield client
 
-    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.list_files")
     def test_find_pyspark_log_files(
         self,
         mock_list_files,
@@ -219,7 +219,7 @@ class TestFindPysparkLogFiles:
             "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678" in log_files
         )
 
-    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.list_files")
     def test_find_pyspark_log_files_no_match(
         self,
         mock_list_files,
@@ -236,7 +236,7 @@ class TestFindPysparkLogFiles:
         log_files = find_pyspark_log_files(client, bucket_name, folder)
         assert len(log_files) == 0
 
-    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.list_files")
     def test_find_pyspark_log_files_with_prefix(
         self,
         mock_list_files,
@@ -260,7 +260,7 @@ class TestFindPysparkLogFiles:
             "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678" in log_files
         )
 
-    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.list_files")
     def test_find_pyspark_log_files_empty_folder(
         self,
         mock_list_files,
