@@ -7,7 +7,8 @@ from typing import Any, Dict, List
 
 import boto3
 
-from rdsa_utils.cdp.helpers.s3_utils import list_files
+from rdsa_utils.cdp.helpers.s3_utils import list_files, load_json
+from rdsa_utils.helpers.pyspark_log_parser.ec2_pricing import calculate_pipeline_cost
 
 logger = logging.getLogger(__name__)
 
@@ -301,3 +302,56 @@ def find_pyspark_log_files(
         if file.startswith(f"{folder}/eventlog_v2_spark-") and "events_1_spark" in file
     ]
     return log_files
+
+
+def process_pyspark_logs(
+    client: boto3.client,
+    s3_bucket: str,
+    user_folder: str,
+) -> Dict[str, List[Any]]:
+    """Find all PySpark log files in specified S3 folder & calculate pipeline costs.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
+    s3_bucket
+        The name of the S3 bucket.
+    user_folder
+        The folder to search for PySpark log files.
+
+    Returns
+    -------
+    Dict[str, List[Any]]
+        A dictionary containing aggregated log metrics and cost metrics.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> s3_bucket = "your-bucket-name"
+    >>> user_folder = 'user/dominic.bean'
+    >>> result = process_pyspark_logs(client, s3_bucket, user_folder)
+    >>> print(result)
+    {
+        'agg_log_metrics': [...],
+        'agg_cost_metrics': [...]
+    }
+    """
+    log_files = find_pyspark_log_files(client, s3_bucket, user_folder)
+
+    agg_log_metrics = []
+    agg_cost_metrics = []
+    for json_object_file_path in log_files:
+        log_data = load_json(
+            client,
+            s3_bucket,
+            json_object_file_path,
+            multi_line=True,
+        )
+
+        metrics_dict = parse_pyspark_logs(log_data)
+        agg_log_metrics.append(metrics_dict)
+
+        agg_cost_metrics.append(calculate_pipeline_cost(metrics_dict, fetch_data=False))
+
+    return {"agg_log_metrics": agg_log_metrics, "agg_cost_metrics": agg_cost_metrics}
