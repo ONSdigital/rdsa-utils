@@ -134,7 +134,7 @@ class InstanceType:
 def get_db_path() -> Path:
     """Get the path to the SQLite database."""
     module_dir = Path(__file__).parent
-    return module_dir / "ec2_pricing.db"
+    return module_dir / "data" / "ec2_pricing.db"
 
 
 def extract_instance_specs(instance_type: str) -> Optional[Dict]:
