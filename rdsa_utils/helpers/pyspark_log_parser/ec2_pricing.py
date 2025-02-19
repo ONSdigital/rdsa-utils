@@ -68,8 +68,8 @@ def calculate_pipeline_cost(
     total_cores = parsed_metrics.get("Total Cores", 0)
     total_executors = parsed_metrics.get("Total Executors", 1)
 
-    # Calculate cores per executor
-    executor_cores = total_cores // total_executors if total_executors > 0 else 0
+    # Calculate total memory required
+    total_memory_gb = memory_per_executor * total_executors
 
     # Convert runtime from minutes to hours
     runtime_ms = (
@@ -82,14 +82,14 @@ def calculate_pipeline_cost(
 
     # Get matching instance type
     instance = get_matching_instance(
-        memory_gb=memory_per_executor,
-        cores=executor_cores,
+        memory_gb=total_memory_gb,
+        cores=total_cores,
         fetch_data=fetch_data,
     )
     if not instance:
         error_msg = (
-            f"No suitable instance type found for {memory_per_executor}GB memory "
-            f"and {executor_cores} cores",
+            f"No suitable instance type found for {total_memory_gb}GB memory "
+            f"and {total_cores} cores",
         )
         raise ValueError(error_msg)
 
@@ -101,8 +101,8 @@ def calculate_pipeline_cost(
 
     return {
         "configuration": {
-            "memory_requested_gb": memory_per_executor,
-            "cores_requested": executor_cores,
+            "memory_requested_gb": total_memory_gb,
+            "cores_requested": total_cores,
             "peak_memory_gb": peak_memory_gb,
             "total_executors": total_executors,
         },
@@ -122,7 +122,7 @@ def calculate_pipeline_cost(
         },
         "utilization": {
             "memory_utilization": (
-                peak_memory_gb / memory_per_executor if memory_per_executor > 0 else 0
+                peak_memory_gb / total_memory_gb if total_memory_gb > 0 else 0
             ),
             "cost_per_hour": emr_price,
         },
