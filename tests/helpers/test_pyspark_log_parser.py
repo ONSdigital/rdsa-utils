@@ -45,7 +45,13 @@ class TestParsePySparkLogs:
 
     def test_empty_log_data(self) -> None:
         """Test with empty log data (should return empty summary)."""
-        assert parse_pyspark_logs([]) == {}
+        assert parse_pyspark_logs([]) == {
+            "Timestamp": None,
+            "Total Cores": 0,
+            "Total Executors": 0,
+            "Memory Per Executor": 0,
+            "Total Memory": 0,
+        }
 
     def test_single_event(self) -> None:
         """Test with a single event log entry."""
@@ -59,14 +65,35 @@ class TestParsePySparkLogs:
                     "Shuffle Write Metrics": {"Shuffle Bytes Written": 5242880},  # 5 MB
                 },
             },
+            {
+                "Event": "SparkListenerApplicationStart",
+                "Timestamp": 1739793526775,
+            },
+            {
+                "Event": "SparkListenerExecutorAdded",
+                "Executor Info": {"Total Cores": 4},
+            },
+            {
+                "Event": "SparkListenerStageSubmitted",
+                "Properties": {
+                    "spark.executor.memory": "4g",
+                    "spark.yarn.executor.memoryOverhead": "2g",
+                    "spark.executor.cores": "4",
+                },
+            },
         ]
         actual_output = parse_pyspark_logs(log_data)
 
-        # Validate only expected keys
+        # Validate expected keys
         assert actual_output["Executor Deserialize Time"] == 1.0
         assert actual_output["Executor Run Time"] == 5.0
         assert actual_output["Peak Execution Memory"] == 1.0
         assert actual_output["Shuffle Bytes Written"] == 5.0
+        assert actual_output["Timestamp"] == 1739793526775
+        assert actual_output["Total Cores"] == 4
+        assert actual_output["Total Executors"] == 1
+        assert actual_output["Memory Per Executor"] == 6  # 4GB + 2GB
+        assert actual_output["Total Memory"] == 6
 
     def test_multiple_events(self) -> None:
         """Test with multiple event log entries."""
@@ -76,8 +103,8 @@ class TestParsePySparkLogs:
                 "Task Metrics": {
                     "Executor Deserialize Time": 60000,
                     "Executor Run Time": 300000,
-                    "Peak Execution Memory": 1048576,
-                    "Shuffle Write Metrics": {"Shuffle Bytes Written": 5242880},
+                    "Peak Execution Memory": 1048576,  # 1 MB
+                    "Shuffle Write Metrics": {"Shuffle Bytes Written": 5242880},  # 5 MB
                 },
             },
             {
@@ -91,14 +118,39 @@ class TestParsePySparkLogs:
                     },
                 },
             },
+            {
+                "Event": "SparkListenerApplicationStart",
+                "Timestamp": 1739793526775,
+            },
+            {
+                "Event": "SparkListenerExecutorAdded",
+                "Executor Info": {"Total Cores": 4},
+            },
+            {
+                "Event": "SparkListenerExecutorAdded",
+                "Executor Info": {"Total Cores": 4},
+            },
+            {
+                "Event": "SparkListenerStageSubmitted",
+                "Properties": {
+                    "spark.executor.memory": "4g",
+                    "spark.yarn.executor.memoryOverhead": "2g",
+                    "spark.executor.cores": "4",
+                },
+            },
         ]
         actual_output = parse_pyspark_logs(log_data)
 
-        # Validate only expected keys
-        assert actual_output["Executor Deserialize Time"] == 3.0
-        assert actual_output["Executor Run Time"] == 15.0
-        assert actual_output["Peak Execution Memory"] == 2.0  # Max value across tasks
-        assert actual_output["Shuffle Bytes Written"] == 15.0
+        # Validate expected keys
+        assert actual_output["Executor Deserialize Time"] == 3.0  # 1 min + 2 min
+        assert actual_output["Executor Run Time"] == 15.0  # 5 min + 10 min
+        assert actual_output["Peak Execution Memory"] == 2.0  # Max of 1 MB and 2 MB
+        assert actual_output["Shuffle Bytes Written"] == 15.0  # 5 MB + 10 MB
+        assert actual_output["Timestamp"] == 1739793526775
+        assert actual_output["Total Cores"] == 8  # 4 cores per executor * 2 executors
+        assert actual_output["Total Executors"] == 2
+        assert actual_output["Memory Per Executor"] == 6  # 4GB + 2GB overhead
+        assert actual_output["Total Memory"] == 12  # 6GB * 2 executors
 
 
 class TestFindPysparkLogFiles:
