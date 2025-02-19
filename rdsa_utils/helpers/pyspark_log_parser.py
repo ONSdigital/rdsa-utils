@@ -3,7 +3,11 @@
 import logging
 from collections import defaultdict
 from datetime import timedelta
-from typing import Any, Dict
+from typing import Any, Dict, List
+
+import boto3
+
+from rdsa_utils.cdp.helpers.s3_utils import list_files
 
 logger = logging.getLogger(__name__)
 
@@ -219,3 +223,43 @@ def parse_pyspark_logs(
         logger.info("Summary of Task Metrics: %s", summary_metrics)
 
     return dict(summary_metrics)
+
+
+def find_pyspark_log_files(
+    client: boto3.client,
+    bucket_name: str,
+    folder: str,
+) -> List[str]:
+    """Find all PySpark log files in the specified folder.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
+    bucket_name
+        The name of the S3 bucket.
+    folder
+        The folder to search for PySpark log files.
+
+    Returns
+    -------
+    List[str]
+        A list of S3 object keys for the PySpark log files.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> bucket_name = 'your-bucket-name'
+    >>> folder = 'user/dominic.bean'
+    >>> log_files = find_pyspark_log_files(client, bucket_name, folder)
+    >>> print(log_files)
+    ['user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234', ...]
+    """
+    prefix = f"{folder}/"
+    all_files = list_files(client, bucket_name, prefix)
+    log_files = [
+        file
+        for file in all_files
+        if file.startswith(f"{folder}/eventlog_v2_spark-") and "events_1_spark" in file
+    ]
+    return log_files

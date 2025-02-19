@@ -1,6 +1,16 @@
 """Tests for pyspark_log_parser.py module."""
 
-from rdsa_utils.helpers.pyspark_log_parser import convert_value, parse_pyspark_logs
+from unittest.mock import patch
+
+import boto3
+import pytest
+from moto import mock_s3
+
+from rdsa_utils.helpers.pyspark_log_parser import (
+    convert_value,
+    find_pyspark_log_files,
+    parse_pyspark_logs,
+)
 
 
 class TestConvertValue:
@@ -89,3 +99,116 @@ class TestParsePySparkLogs:
         assert actual_output["Executor Run Time"] == 15.0
         assert actual_output["Peak Execution Memory"] == 2.0  # Max value across tasks
         assert actual_output["Shuffle Bytes Written"] == 15.0
+
+
+class TestFindPysparkLogFiles:
+    """Tests for find_pyspark_log_files function."""
+
+    @pytest.fixture
+    def s3_client_for_find_pyspark_log_files(self, _aws_credentials):
+        """
+        Provide a mocked AWS S3 client with temporary
+        credentials for testing find_pyspark_log_files function.
+
+        Creates a temporary S3 bucket and sets up some
+        objects within it for testing.
+
+        Yields the S3 client for use in the test functions.
+        """
+        with mock_s3():
+            client = boto3.client("s3", region_name="us-east-1")
+            client.create_bucket(Bucket="test-bucket")
+            # Set up some objects in S3 for testing
+            objects = [
+                "user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234",
+                "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678",
+                "user/dominic.bean/eventlog_v2_spark-1234/other_file.txt",
+                "user/dominic.bean/other_folder/file.txt",
+            ]
+            for obj in objects:
+                client.put_object(
+                    Bucket="test-bucket",
+                    Key=obj,
+                    Body=b"Test content",
+                )
+            yield client
+
+    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    def test_find_pyspark_log_files(
+        self,
+        mock_list_files,
+        s3_client_for_find_pyspark_log_files,
+    ):
+        """Test finding PySpark log files in the folder."""
+        mock_list_files.return_value = [
+            "user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234",
+            "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678",
+            "user/dominic.bean/eventlog_v2_spark-1234/other_file.txt",
+            "user/dominic.bean/other_folder/file.txt",
+        ]
+        client = s3_client_for_find_pyspark_log_files
+        bucket_name = "test-bucket"
+        folder = "user/dominic.bean"
+        log_files = find_pyspark_log_files(client, bucket_name, folder)
+        assert len(log_files) == 2
+        assert (
+            "user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234" in log_files
+        )
+        assert (
+            "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678" in log_files
+        )
+
+    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    def test_find_pyspark_log_files_no_match(
+        self,
+        mock_list_files,
+        s3_client_for_find_pyspark_log_files,
+    ):
+        """Test finding PySpark log files when no files match."""
+        mock_list_files.return_value = [
+            "user/dominic.bean/other_folder/file.txt",
+            "user/dominic.bean/eventlog_v2_spark-1234/other_file.txt",
+        ]
+        client = s3_client_for_find_pyspark_log_files
+        bucket_name = "test-bucket"
+        folder = "user/dominic.bean"
+        log_files = find_pyspark_log_files(client, bucket_name, folder)
+        assert len(log_files) == 0
+
+    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    def test_find_pyspark_log_files_with_prefix(
+        self,
+        mock_list_files,
+        s3_client_for_find_pyspark_log_files,
+    ):
+        """Test finding PySpark log files with a specific prefix."""
+        mock_list_files.return_value = [
+            "user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234",
+            "user/dominic.bean/eventlog_v2_spark-1234/other_file.txt",
+            "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678",
+        ]
+        client = s3_client_for_find_pyspark_log_files
+        bucket_name = "test-bucket"
+        folder = "user/dominic.bean"
+        log_files = find_pyspark_log_files(client, bucket_name, folder)
+        assert len(log_files) == 2
+        assert (
+            "user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234" in log_files
+        )
+        assert (
+            "user/dominic.bean/eventlog_v2_spark-5678/events_1_spark-5678" in log_files
+        )
+
+    @patch("rdsa_utils.helpers.pyspark_log_parser.list_files")
+    def test_find_pyspark_log_files_empty_folder(
+        self,
+        mock_list_files,
+        s3_client_for_find_pyspark_log_files,
+    ):
+        """Test finding PySpark log files in an empty folder."""
+        mock_list_files.return_value = []
+        client = s3_client_for_find_pyspark_log_files
+        bucket_name = "test-bucket"
+        folder = "user/dominic.bean"
+        log_files = find_pyspark_log_files(client, bucket_name, folder)
+        assert len(log_files) == 0
