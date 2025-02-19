@@ -8,7 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added `pyspark_log_parser.py` module in `helpers/`.
+- Added `pyspark_log_parser/` module in `helpers/`.
 
 ### Changed
 - Added `multi_line` param to `load_json` in `cdp/helpers/s3_utils`.
