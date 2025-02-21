@@ -203,7 +203,7 @@ def extract_instance_specs(instance_type: str) -> Optional[Dict]:
 
     Parameters
     ----------
-    instance_type : str
+    instance_type
         AWS instance type (e.g., "m5a.8xlarge")
 
     Returns

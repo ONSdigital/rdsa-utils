@@ -25,9 +25,9 @@ def generate_report(logs_data: List[Dict], output_path: str) -> None:
 
     Parameters
     ----------
-    logs_data : list
+    logs_data
         A list of dictionaries containing PySpark log metrics and cost details.
-    output_path : str
+    output_path
         The path where the generated HTML report will be saved.
 
     Examples
