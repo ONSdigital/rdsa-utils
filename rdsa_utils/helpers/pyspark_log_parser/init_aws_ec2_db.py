@@ -1,4 +1,4 @@
-"""Module to initialize SQLite database with EC2 pricing data from AWS."""
+"""Module to initialise SQLite database with EC2 pricing data from AWS."""
 
 import logging
 import sqlite3
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def init_db(db_path: Path) -> None:
-    """Initialize the SQLite database with schema."""
+    """Initialise the SQLite database with schema."""
     with sqlite3.connect(db_path) as conn:
         cursor = conn.cursor()
 
@@ -110,7 +110,7 @@ def main() -> None:
 
     db_path = data_dir / "ec2_pricing.db"
 
-    # Initialize database
+    # initialise database
     logger.info(f"Initializing database at: {db_path}")
     init_db(db_path)
 
