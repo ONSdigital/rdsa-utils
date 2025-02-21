@@ -545,8 +545,8 @@ def convert_struc_col_to_columns(
 def cut_lineage(df: SparkDF) -> SparkDF:
     """Convert the SparkDF to a Java RDD and back again.
 
-    This function is helpful in instances where Catalyst optimizer is causing
-    memory errors or problems, as it only tries to optimize till the conversion
+    This function is helpful in instances where Catalyst optimiser is causing
+    memory errors or problems, as it only tries to optimise till the conversion
     point.
 
     Note: This uses internal members and may break between versions.

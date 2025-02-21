@@ -23,13 +23,13 @@ class TestCalculateEmrSurcharge:
         """Test surcharge for General Purpose family."""
         assert calculate_emr_surcharge("General Purpose", 1.0) == 1.25
 
-    def test_compute_optimized(self):
-        """Test surcharge for Compute Optimized family."""
-        assert calculate_emr_surcharge("Compute Optimized", 1.0) == 1.25
+    def test_compute_optimised(self):
+        """Test surcharge for Compute optimised family."""
+        assert calculate_emr_surcharge("Compute optimised", 1.0) == 1.25
 
-    def test_memory_optimized(self):
-        """Test surcharge for Memory Optimized family."""
-        assert calculate_emr_surcharge("Memory Optimized", 1.0) == 1.25
+    def test_memory_optimised(self):
+        """Test surcharge for Memory optimised family."""
+        assert calculate_emr_surcharge("Memory optimised", 1.0) == 1.25
 
     def test_unknown_family(self):
         """Test surcharge for unknown family."""

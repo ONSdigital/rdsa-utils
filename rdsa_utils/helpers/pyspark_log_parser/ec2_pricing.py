@@ -19,7 +19,7 @@ def calculate_emr_surcharge(instance_family: str, ec2_price: float) -> float:
     Parameters
     ----------
     instance_family
-        The instance family (e.g., 'General Purpose', 'Compute Optimized')
+        The instance family (e.g., 'General Purpose', 'Compute optimised')
     ec2_price
         The base EC2 price per hour
 
@@ -32,9 +32,9 @@ def calculate_emr_surcharge(instance_family: str, ec2_price: float) -> float:
     # These percentages are approximations and might need adjustment
     surcharge_rates = {
         "General Purpose": 0.25,  # 25% surcharge
-        "Compute Optimized": 0.25,  # 25% surcharge
-        "Memory Optimized": 0.25,  # 25% surcharge
-        "Storage Optimized": 0.25,  # 25% surcharge
+        "Compute optimised": 0.25,  # 25% surcharge
+        "Memory optimised": 0.25,  # 25% surcharge
+        "Storage optimised": 0.25,  # 25% surcharge
         "Accelerated Computing": 0.25,  # 25% surcharge
     }
 
@@ -107,7 +107,7 @@ def calculate_pipeline_cost(
             'ec2_cost': 0.0107,
             'emr_surcharge': 0.0026,
         },
-        'utilization': {
+        'utilisation': {
             'cost_per_hour': 0.48,
         },
         'surcharge_applied': True,
@@ -174,7 +174,7 @@ def calculate_pipeline_cost(
                 else 0
             ),
         },
-        "utilization": {
+        "utilisation": {
             "cost_per_hour": emr_price,
         },
         "surcharge_applied": apply_emr_surcharge,
@@ -244,18 +244,18 @@ def extract_instance_specs(instance_type: str) -> Optional[Dict]:
         "m5a": (4, 2, "General Purpose"),
         "m5d": (4, 2, "General Purpose"),
         "m6a": (4, 2, "General Purpose"),
-        # Memory Optimized
-        "r4": (8, 2, "Memory Optimized"),  # 8 GB per vCPU
-        "r5": (8, 2, "Memory Optimized"),
-        "r5a": (8, 2, "Memory Optimized"),
-        "r5b": (8, 2, "Memory Optimized"),
-        "r6a": (8, 2, "Memory Optimized"),
-        "x2gd": (16, 2, "Memory Optimized"),  # 16 GB per vCPU
-        # Compute Optimized
-        "c4": (2, 2, "Compute Optimized"),  # 2 GB per vCPU
-        "c5": (2, 2, "Compute Optimized"),
-        "c5a": (2, 2, "Compute Optimized"),
-        "c6a": (2, 2, "Compute Optimized"),
+        # Memory optimised
+        "r4": (8, 2, "Memory optimised"),  # 8 GB per vCPU
+        "r5": (8, 2, "Memory optimised"),
+        "r5a": (8, 2, "Memory optimised"),
+        "r5b": (8, 2, "Memory optimised"),
+        "r6a": (8, 2, "Memory optimised"),
+        "x2gd": (16, 2, "Memory optimised"),  # 16 GB per vCPU
+        # Compute optimised
+        "c4": (2, 2, "Compute optimised"),  # 2 GB per vCPU
+        "c5": (2, 2, "Compute optimised"),
+        "c5a": (2, 2, "Compute optimised"),
+        "c6a": (2, 2, "Compute optimised"),
     }
 
     # Parse instance type (e.g., "m5a.xlarge")
