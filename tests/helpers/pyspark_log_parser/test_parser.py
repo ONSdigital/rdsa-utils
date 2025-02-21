@@ -288,8 +288,10 @@ class TestProcessPysparkLogs:
 
     @patch("rdsa_utils.helpers.pyspark_log_parser.parser.find_pyspark_log_files")
     @patch("rdsa_utils.helpers.pyspark_log_parser.parser.load_json")
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.calculate_pipeline_cost")
     def test_process_pyspark_logs(
         self,
+        mock_calculate_pipeline_cost,
         mock_load_json,
         mock_find_pyspark_log_files,
         s3_client_for_process_pyspark_logs,
@@ -306,6 +308,30 @@ class TestProcessPysparkLogs:
             },
             {"Event": "SparkListenerApplicationEnd", "Timestamp": 1739793626775},
         ]
+        mock_calculate_pipeline_cost.return_value = {
+            "configuration": {
+                "memory_requested_gb": 1,
+                "cores_requested": 1,
+            },
+            "instance_recommendation": {
+                "type": "t2.micro",
+                "family": "General Purpose",
+                "vcpu": 1,
+                "memory_gb": 1,
+                "ec2_price": 0.0116,
+                "emr_price": 0.0145,
+            },
+            "runtime": {"milliseconds": 10000, "hours": 0.0028},
+            "costs": {
+                "pipeline_cost": 0.0001,
+                "ec2_cost": 0.0001,
+                "emr_surcharge": 0.0001,
+            },
+            "utilisation": {
+                "cost_per_hour": 0.0145,
+            },
+            "surcharge_applied": True,
+        }
 
         client = s3_client_for_process_pyspark_logs
         s3_bucket = "test-bucket"
@@ -318,6 +344,20 @@ class TestProcessPysparkLogs:
         assert result[0]["log_metrics"]["Timestamp"] == 1739793526775
         assert result[0]["log_metrics"]["Start Time"] == 1739793526775
         assert result[0]["log_metrics"]["End Time"] == 1739793626775
+        assert (
+            result[0]["cost_metrics"]["instance_recommendation"]["type"] == "t2.micro"
+        )
+        assert result[0]["cost_metrics"]["instance_recommendation"]["memory_gb"] == 1
+        assert result[0]["cost_metrics"]["instance_recommendation"]["vcpu"] == 1
+        assert (
+            result[0]["cost_metrics"]["instance_recommendation"]["ec2_price"] == 0.0116
+        )
+        assert (
+            result[0]["cost_metrics"]["instance_recommendation"]["emr_price"] == 0.0145
+        )
+        assert result[0]["cost_metrics"]["costs"]["pipeline_cost"] == 0.0001
+        assert result[0]["cost_metrics"]["costs"]["ec2_cost"] == 0.0001
+        assert result[0]["cost_metrics"]["costs"]["emr_surcharge"] == 0.0001
 
 
 class TestFilterAndSortLogsByAppName:
