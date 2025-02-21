@@ -278,7 +278,11 @@ class TestProcessPysparkLogs:
                 client.put_object(
                     Bucket="test-bucket",
                     Key=obj,
-                    Body=b'[{"Event": "SparkListenerApplicationStart", "Timestamp": 1739793526775, "App Name": "TestApp"}, {"Event": "SparkListenerApplicationEnd", "Timestamp": 1739793626775}]',
+                    Body=(
+                        b'[{"Event": "SparkListenerApplicationStart", "Timestamp": '
+                        b'1739793526775, "App Name": "TestApp"}, {"Event": '
+                        b'"SparkListenerApplicationEnd", "Timestamp": 1739793626775}]'
+                    ),
                 )
             yield client
 
