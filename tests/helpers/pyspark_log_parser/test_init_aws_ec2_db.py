@@ -2,6 +2,8 @@
 
 import sqlite3
 
+import pytest
+
 from rdsa_utils.helpers.pyspark_log_parser.ec2_pricing import InstanceType
 from rdsa_utils.helpers.pyspark_log_parser.init_aws_ec2_db import (
     init_db,
@@ -56,3 +58,12 @@ class TestUpdatePricingData:
             cursor.execute("SELECT value FROM metadata WHERE key='last_updated'")
             last_updated = cursor.fetchone()[0]
             assert last_updated is not None
+
+
+@pytest.mark.initialise(reason="Not required to test main function.")
+class TestMain:
+    """Tests for main function."""
+
+    def test_main(self):
+        """Test main function."""
+        pass
