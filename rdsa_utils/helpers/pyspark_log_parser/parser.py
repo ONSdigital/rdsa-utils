@@ -134,27 +134,8 @@ def parse_pyspark_logs(
     >>> summary = parse_pyspark_logs(log_data)
     >>> print(summary)
     >>> {
-    ...     'Executor Deserialize Time': 0.0,
-    ...     'Executor Deserialize CPU Time': 0.0,
-    ...     'Executor Run Time': 3.0,  # 1 min + 2 min
-    ...     'Executor CPU Time': 3.0,  # 1 min + 2 min
-    ...     'Peak Execution Memory': 2.0,  # Max of 1 MB and 2 MB
-    ...     'Result Size': 0.0,
-    ...     'JVM GC Time': 0.0,
-    ...     'Result Serialization Time': 0.0,
-    ...     'Memory Bytes Spilled': 0.0,
-    ...     'Disk Bytes Spilled': 0.0,
-    ...     'Shuffle Bytes Written': 0.0,
-    ...     'Shuffle Write Time': 0.0,
-    ...     'Shuffle Records Written': 0,
-    ...     'Bytes Read': 0.0,
-    ...     'Records Read': 0,
-    ...     'Bytes Written': 0.0,
-    ...     'Records Written': 0,
     ...     'Timestamp': 1739793526775,
     ...     'Total Cores': 4,
-    ...     'Total Executors': 1,
-    ...     'Memory Per Executor': 6.0,  # 4 GB + 2 GB overhead
     ...     'Total Memory': 6.0  # Memory Per Executor * Total Executors
     ... }
     """
@@ -169,68 +150,10 @@ def parse_pyspark_logs(
         },
     )
 
-    metric_mappings = {
-        "Executor Deserialize Time": ("Executor Deserialize Time", "ms"),
-        "Executor Deserialize CPU Time": ("Executor Deserialize CPU Time", "ns"),
-        "Executor Run Time": ("Executor Run Time", "ms"),
-        "Executor CPU Time": ("Executor CPU Time", "ns"),
-        "Result Size": ("Result Size", "bytes"),
-        "JVM GC Time": ("JVM GC Time", "ms"),
-        "Result Serialization Time": ("Result Serialization Time", "ms"),
-        "Memory Bytes Spilled": ("Memory Bytes Spilled", "bytes"),
-        "Disk Bytes Spilled": ("Disk Bytes Spilled", "bytes"),
-    }
-
-    def update_metrics(task_metrics: Dict[str, Any]) -> None:
-        for metric, (key, unit) in metric_mappings.items():
-            summary_metrics[metric] += convert_value(task_metrics.get(key, 0), unit)
-
-        summary_metrics["Peak Execution Memory"] = max(
-            summary_metrics["Peak Execution Memory"],
-            convert_value(task_metrics.get("Peak Execution Memory", 0), "bytes"),
-        )
-
-        summary_metrics["Shuffle Bytes Written"] += convert_value(
-            task_metrics.get("Shuffle Write Metrics", {}).get(
-                "Shuffle Bytes Written",
-                0,
-            ),
-            "bytes",
-        )
-        summary_metrics["Shuffle Write Time"] += convert_value(
-            task_metrics.get("Shuffle Write Metrics", {}).get("Shuffle Write Time", 0),
-            "ns",
-        )
-        summary_metrics["Shuffle Records Written"] += task_metrics.get(
-            "Shuffle Write Metrics",
-            {},
-        ).get("Shuffle Records Written", 0)
-
-        summary_metrics["Bytes Read"] += convert_value(
-            task_metrics.get("Input Metrics", {}).get("Bytes Read", 0),
-            "bytes",
-        )
-        summary_metrics["Records Read"] += task_metrics.get(
-            "Input Metrics",
-            {},
-        ).get("Records Read", 0)
-
-        summary_metrics["Bytes Written"] += convert_value(
-            task_metrics.get("Output Metrics", {}).get("Bytes Written", 0),
-            "bytes",
-        )
-        summary_metrics["Records Written"] += task_metrics.get(
-            "Output Metrics",
-            {},
-        ).get("Records Written", 0)
-
     for event in log_data:
         event_type = event.get("Event")
 
-        if event_type == "SparkListenerTaskEnd":
-            update_metrics(event.get("Task Metrics", {}))
-
-        elif event_type == "SparkListenerApplicationStart":
+        if event_type == "SparkListenerApplicationStart":
             summary_metrics["Timestamp"] = event.get("Timestamp")
 
         elif event_type == "SparkListenerExecutorAdded":
