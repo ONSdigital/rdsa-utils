@@ -246,7 +246,7 @@ def process_pyspark_logs(
     client: boto3.client,
     s3_bucket: str,
     user_folder: str,
-) -> Dict[str, List[Any]]:
+) -> List[Dict[str, Any]]:
     """Find all PySpark log files in specified S3 folder & calculate pipeline costs.
 
     Parameters
@@ -260,8 +260,9 @@ def process_pyspark_logs(
 
     Returns
     -------
-    Dict[str, List[Any]]
-        A dictionary containing aggregated log metrics and cost metrics.
+    List[Dict[str, Any]]
+        A list of dictionaries, each containing log metrics and cost metrics
+        for a log file.
 
     Examples
     --------
@@ -270,15 +271,18 @@ def process_pyspark_logs(
     >>> user_folder = 'user/dominic.bean'
     >>> result = process_pyspark_logs(client, s3_bucket, user_folder)
     >>> print(result)
-    {
-        'agg_log_metrics': [...],
-        'agg_cost_metrics': [...]
-    }
+    [
+        {
+            'file_path': 'user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234',
+            'log_metrics': {...},
+            'cost_metrics': {...}
+        },
+        ...
+    ]
     """
     log_files = find_pyspark_log_files(client, s3_bucket, user_folder)
 
-    agg_log_metrics = []
-    agg_cost_metrics = []
+    results = []
     for json_object_file_path in log_files:
         log_data = load_json(
             client,
@@ -288,8 +292,69 @@ def process_pyspark_logs(
         )
 
         metrics_dict = parse_pyspark_logs(log_data)
-        agg_log_metrics.append(metrics_dict)
+        cost_metrics = calculate_pipeline_cost(metrics_dict, fetch_data=False)
 
-        agg_cost_metrics.append(calculate_pipeline_cost(metrics_dict, fetch_data=False))
+        results.append(
+            {
+                "file_path": json_object_file_path,
+                "log_metrics": metrics_dict,
+                "cost_metrics": cost_metrics,
+            },
+        )
 
-    return {"agg_log_metrics": agg_log_metrics, "agg_cost_metrics": agg_cost_metrics}
+    return results
+
+
+def filter_and_sort_logs_by_app_name(
+    logs: List[Dict[str, Any]],
+    app_name: str = None,
+    order_by_latest: bool = True,
+) -> List[Dict[str, Any]]:
+    """Filter logs by application name and sort them by the latest or oldest date.
+
+    Parameters
+    ----------
+    logs
+        A list of dictionaries containing log metrics and cost metrics.
+    app_name
+        The application name to filter logs by. If None, all logs are processed.
+    order_by_latest
+        If True, order logs by the latest date. If False, order by the oldest date.
+
+    Returns
+    -------
+    List[Dict[str, Any]]
+        A list of dictionaries filtered by application name and sorted
+        by the specified date order.
+
+    Examples
+    --------
+    >>> logs = process_pyspark_logs(client, s3_bucket, user_folder)
+    >>> filtered_sorted_logs = filter_and_sort_logs_by_app_name(
+    ...     logs,
+    ...     'MyMetricsApp',
+    ...     order_by_latest=True
+    ... )
+    >>> print(filtered_sorted_logs)
+    [
+        {
+            'file_path': 'user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234',
+            'log_metrics': {...},
+            'cost_metrics': {...}
+        },
+        ...
+    ]
+    """
+    if app_name:
+        filtered_logs = [
+            log for log in logs if log["log_metrics"]["Pipeline Name"] == app_name
+        ]
+    else:
+        filtered_logs = logs
+
+    sorted_logs = sorted(
+        filtered_logs,
+        key=lambda x: x["log_metrics"]["Timestamp"],
+        reverse=order_by_latest,
+    )
+    return sorted_logs
