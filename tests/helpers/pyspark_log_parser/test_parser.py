@@ -3,6 +3,7 @@
 from unittest.mock import patch
 
 import boto3
+import pandas as pd
 import pytest
 from moto import mock_aws
 
@@ -10,6 +11,7 @@ from rdsa_utils.helpers.pyspark_log_parser.parser import (
     convert_value,
     filter_and_sort_logs_by_app_name,
     find_pyspark_log_files,
+    logs_to_dataframe,
     parse_pyspark_logs,
     process_pyspark_logs,
 )
@@ -429,3 +431,55 @@ class TestFilterAndSortLogsByAppName:
         assert result[0]["log_metrics"]["Timestamp"] == 1739793526775
         assert result[1]["log_metrics"]["Timestamp"] == 1739793626775
         assert result[2]["log_metrics"]["Timestamp"] == 1739793726775
+
+
+class TestLogsToDataFrame:
+    """Tests for logs_to_dataframe function."""
+
+    def test_logs_to_dataframe(self):
+        """Test conversion of logs to DataFrame."""
+        logs = [
+            {
+                "file_path": "user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234",  # noqa: E501
+                "log_metrics": {
+                    "Timestamp": 1739978272448,
+                    "Pipeline Name": "TestApp",
+                    "Start Time": 1739978272448,
+                    "End Time": 1739978655597,
+                    "Total Time": 383149,
+                    "Total Cores": 63,
+                    "Total Memory": 168,
+                    "Memory Per Executor": 8,
+                    "Total Executors": 21,
+                },
+                "cost_metrics": {
+                    "configuration": {
+                        "memory_requested_gb": 168,
+                        "cores_requested": 63,
+                    },
+                    "instance_recommendation": {
+                        "type": "m5a.16xlarge",
+                        "family": "General Purpose",
+                        "vcpu": 64,
+                        "memory_gb": 256.0,
+                        "ec2_price": 3.413,
+                        "emr_price": 4.266249999999999,
+                    },
+                    "runtime": {"milliseconds": 383149, "hours": 0.10643027777777778},
+                    "costs": {
+                        "pipeline_cost": 0.4541,
+                        "ec2_cost": 0.3632,
+                        "emr_surcharge": 0.0908,
+                    },
+                    "utilisation": {"cost_per_hour": 4.266249999999999},
+                    "surcharge_applied": True,
+                },
+            },
+        ]
+
+        df = logs_to_dataframe(logs)
+        assert isinstance(df, pd.DataFrame)
+        assert not df.empty
+        assert "file_path" in df.columns
+        assert "log_metrics.Timestamp" in df.columns
+        assert "cost_metrics.configuration.memory_requested_gb" in df.columns

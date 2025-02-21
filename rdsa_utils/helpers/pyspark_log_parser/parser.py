@@ -6,6 +6,7 @@ from datetime import timedelta
 from typing import Any, Dict, List
 
 import boto3
+import pandas as pd
 
 from rdsa_utils.cdp.helpers.s3_utils import list_files, load_json
 from rdsa_utils.helpers.pyspark_log_parser.ec2_pricing import calculate_pipeline_cost
@@ -358,3 +359,67 @@ def filter_and_sort_logs_by_app_name(
         reverse=order_by_latest,
     )
     return sorted_logs
+
+
+def logs_to_dataframe(logs: List[Dict[str, Any]]) -> pd.DataFrame:
+    """Convert a list of log dictionaries to a pandas DataFrame.
+
+    Parameters
+    ----------
+    logs
+        A list of dictionaries containing log metrics and cost metrics.
+
+    Returns
+    -------
+    pd.DataFrame
+        A pandas DataFrame with columns for file_path, log_metrics, and cost_metrics.
+
+    Examples
+    --------
+    >>> logs = [
+    ...     {
+    ...         'file_path': 'user/dominic.bean/eventlog_v2_spark-1234/events_1_spark-1234',
+    ...         'log_metrics': {
+    ...             'Timestamp': 1739978272448,
+    ...             'Pipeline Name': 'TestApp',
+    ...             'Start Time': 1739978272448,
+    ...             'End Time': 1739978655597,
+    ...             'Total Time': 383149,
+    ...             'Total Cores': 63,
+    ...             'Total Memory': 168,
+    ...             'Memory Per Executor': 8,
+    ...             'Total Executors': 21
+    ...         },
+    ...         'cost_metrics': {
+    ...             'configuration': {
+    ...                 'memory_requested_gb': 168,
+    ...                 'cores_requested': 63
+    ...             },
+    ...             'instance_recommendation': {
+    ...                 'type': 'm5a.16xlarge',
+    ...                 'family': 'General Purpose',
+    ...                 'vcpu': 64,
+    ...                 'memory_gb': 256.0,
+    ...                 'ec2_price': 3.413,
+    ...                 'emr_price': 4.266249999999999
+    ...             },
+    ...             'runtime': {
+    ...                 'milliseconds': 383149,
+    ...                 'hours': 0.10643027777777778
+    ...             },
+    ...             'costs': {
+    ...                 'pipeline_cost': 0.4541,
+    ...                 'ec2_cost': 0.3632,
+    ...                 'emr_surcharge': 0.0908
+    ...             },
+    ...             'utilisation': {
+    ...                 'cost_per_hour': 4.266249999999999
+    ...             },
+    ...             'surcharge_applied': True
+    ...         }
+    ...     }
+    ... ]
+    >>> df = logs_to_dataframe(logs)
+    >>> print(df)
+    """  # noqa: E501
+    return pd.json_normalize(logs)
