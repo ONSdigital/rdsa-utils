@@ -9,6 +9,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added `pyspark_log_parser/` module in `helpers/`.
+- Added `papermill`, `nbconvert`, `matplotlib` dependencies.
 
 ### Changed
 - Added `multi_line` param to `load_json` in `cdp/helpers/s3_utils`.
