@@ -8,8 +8,10 @@ from moto import mock_aws
 
 from rdsa_utils.helpers.pyspark_log_parser.parser import (
     convert_value,
+    filter_and_sort_logs_by_app_name,
     find_pyspark_log_files,
     parse_pyspark_logs,
+    process_pyspark_logs,
 )
 
 
@@ -248,3 +250,138 @@ class TestFindPysparkLogFiles:
         folder = "user/dominic.bean"
         log_files = find_pyspark_log_files(client, bucket_name, folder)
         assert len(log_files) == 0
+
+
+class TestProcessPysparkLogs:
+    """Tests for process_pyspark_logs function."""
+
+    @pytest.fixture(scope="class")
+    def _aws_credentials(self):
+        """Mock AWS Credentials for moto."""
+        boto3.setup_default_session(
+            aws_access_key_id="testing",
+            aws_secret_access_key="testing",
+            aws_session_token="testing",
+        )
+
+    @pytest.fixture
+    def s3_client_for_process_pyspark_logs(self, _aws_credentials):
+        """Provide a mocked AWS S3 client with temporary credentials for testing process_pyspark_logs function."""
+        with mock_aws():
+            client = boto3.client("s3", region_name="us-east-1")
+            client.create_bucket(Bucket="test-bucket")
+            # Set up some objects in S3 for testing
+            objects = [
+                "user/test/eventlog_v2_spark-1234/events_1_spark-1234",
+            ]
+            for obj in objects:
+                client.put_object(
+                    Bucket="test-bucket",
+                    Key=obj,
+                    Body=b'[{"Event": "SparkListenerApplicationStart", "Timestamp": 1739793526775, "App Name": "TestApp"}, {"Event": "SparkListenerApplicationEnd", "Timestamp": 1739793626775}]',
+                )
+            yield client
+
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.find_pyspark_log_files")
+    @patch("rdsa_utils.helpers.pyspark_log_parser.parser.load_json")
+    def test_process_pyspark_logs(
+        self,
+        mock_load_json,
+        mock_find_pyspark_log_files,
+        s3_client_for_process_pyspark_logs,
+    ):
+        """Test processing PySpark logs."""
+        mock_find_pyspark_log_files.return_value = [
+            "user/test/eventlog_v2_spark-1234/events_1_spark-1234",
+        ]
+        mock_load_json.return_value = [
+            {
+                "Event": "SparkListenerApplicationStart",
+                "Timestamp": 1739793526775,
+                "App Name": "TestApp",
+            },
+            {"Event": "SparkListenerApplicationEnd", "Timestamp": 1739793626775},
+        ]
+
+        client = s3_client_for_process_pyspark_logs
+        s3_bucket = "test-bucket"
+        user_folder = "user/test"
+
+        result = process_pyspark_logs(client, s3_bucket, user_folder)
+
+        assert len(result) == 1
+        assert result[0]["log_metrics"]["Pipeline Name"] == "TestApp"
+        assert result[0]["log_metrics"]["Timestamp"] == 1739793526775
+        assert result[0]["log_metrics"]["Start Time"] == 1739793526775
+        assert result[0]["log_metrics"]["End Time"] == 1739793626775
+
+
+class TestFilterAndSortLogsByAppName:
+    """Tests for filter_and_sort_logs_by_app_name function."""
+
+    def test_filter_and_sort_logs_by_app_name(self):
+        """Test filtering and sorting logs by application name."""
+        logs = [
+            {
+                "file_path": "user/test/eventlog_v2_spark-1234/events_1_spark-1234",
+                "log_metrics": {"Pipeline Name": "TestApp", "Timestamp": 1739793526775},
+                "cost_metrics": {},
+            },
+            {
+                "file_path": "user/test/eventlog_v2_spark-5678/events_1_spark-5678",
+                "log_metrics": {"Pipeline Name": "TestApp", "Timestamp": 1739793626775},
+                "cost_metrics": {},
+            },
+            {
+                "file_path": "user/test/eventlog_v2_spark-91011/events_1_spark-91011",
+                "log_metrics": {
+                    "Pipeline Name": "OtherApp",
+                    "Timestamp": 1739793726775,
+                },
+                "cost_metrics": {},
+            },
+        ]
+
+        result = filter_and_sort_logs_by_app_name(
+            logs,
+            app_name="TestApp",
+            order_by_latest=True,
+        )
+
+        assert len(result) == 2
+        assert result[0]["log_metrics"]["Timestamp"] == 1739793626775
+        assert result[1]["log_metrics"]["Timestamp"] == 1739793526775
+
+    def test_filter_and_sort_logs_by_app_name_no_app_name(self):
+        """Test sorting logs by timestamp when no application name is provided."""
+        logs = [
+            {
+                "file_path": "user/test/eventlog_v2_spark-1234/events_1_spark-1234",
+                "log_metrics": {"Pipeline Name": "TestApp", "Timestamp": 1739793526775},
+                "cost_metrics": {},
+            },
+            {
+                "file_path": "user/test/eventlog_v2_spark-5678/events_1_spark-5678",
+                "log_metrics": {"Pipeline Name": "TestApp", "Timestamp": 1739793626775},
+                "cost_metrics": {},
+            },
+            {
+                "file_path": "user/test/eventlog_v2_spark-91011/events_1_spark-91011",
+                "log_metrics": {
+                    "Pipeline Name": "OtherApp",
+                    "Timestamp": 1739793726775,
+                },
+                "cost_metrics": {},
+            },
+        ]
+
+        result = filter_and_sort_logs_by_app_name(
+            logs,
+            app_name=None,
+            order_by_latest=False,
+        )
+
+        assert len(result) == 3
+        assert result[0]["log_metrics"]["Timestamp"] == 1739793526775
+        assert result[1]["log_metrics"]["Timestamp"] == 1739793626775
+        assert result[2]["log_metrics"]["Timestamp"] == 1739793726775
