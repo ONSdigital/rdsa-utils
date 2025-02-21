@@ -51,34 +51,73 @@ def calculate_pipeline_cost(
 ) -> Dict[str, Any]:
     """Calculate EMR costs from parsed Spark metrics.
 
+    This function calculates the cost of running a Spark pipeline on Amazon EMR
+    based on the parsed metrics from the Spark event logs. It determines the
+    appropriate EC2 instance type, calculates the runtime, and estimates the
+    total cost including the EMR surcharge.
+
     Parameters
     ----------
     parsed_metrics
-        Output from parse_pyspark_logs function containing parsed metrics
+        Output from parse_pyspark_logs function containing parsed metrics.
     fetch_data
-        Whether to fetch fresh data from AWS
+        Whether to fetch fresh data from AWS.
 
     Returns
     -------
     Dict[str, Any]
-        Cost analysis including instance recommendations and costs
+        Cost analysis including instance recommendations and costs.
+
+    Examples
+    --------
+    >>> parsed_metrics = {
+    ...     "Timestamp": 1739793526775,
+    ...     "Pipeline Name": "ExamplePipeline",
+    ...     "Total Cores": 8,
+    ...     "Total Memory": 12,
+    ...     "Start Time": 1739793526775,
+    ...     "End Time": 1739793626775,
+    ... }
+    >>> calculate_pipeline_cost(parsed_metrics)
+    {
+        'configuration': {
+            'memory_requested_gb': 12,
+            'cores_requested': 8,
+        },
+        'instance_recommendation': {
+            'type': 'm5.2xlarge',
+            'family': 'General Purpose',
+            'vcpu': 8,
+            'memory_gb': 32,
+            'ec2_price': 0.384,
+            'emr_price': 0.48,
+        },
+        'runtime': {'milliseconds': 100000, 'hours': 0.0278},
+        'costs': {
+            'pipeline_cost': 0.0133,
+            'ec2_cost': 0.0107,
+            'emr_surcharge': 0.0026,
+        },
+        'utilization': {
+            'cost_per_hour': 0.48,
+        },
+    }
+
+    Notes
+    -----
+    - EC2 Price: The base price for using an EC2 instance per hour.
+    - EMR Price: The price for using an EC2 instance with EMR,
+      which includes a surcharge.
     """
     # Extract memory and cores configuration from parsed metrics
-    memory_per_executor = parsed_metrics.get("Memory Per Executor", 0)  # Already in GB
+    total_memory_gb = parsed_metrics.get("Total Memory", 0)  # Already in GB
     total_cores = parsed_metrics.get("Total Cores", 0)
-    total_executors = parsed_metrics.get("Total Executors", 1)
 
-    # Calculate total memory required
-    total_memory_gb = memory_per_executor * total_executors
-
-    # Convert runtime from minutes to hours
-    runtime_ms = (
-        parsed_metrics.get("Executor Run Time", 0) * 60 * 1000
-    )  # Convert minutes to ms
+    # Convert runtime from milliseconds to hours
+    start_time = parsed_metrics.get("Start Time", 0)
+    end_time = parsed_metrics.get("End Time", 0)
+    runtime_ms = end_time - start_time
     runtime_hours = runtime_ms / (1000 * 60 * 60)
-
-    # Get peak memory in GB (already converted in parse_pyspark_logs)
-    peak_memory_gb = parsed_metrics.get("Peak Execution Memory", 0)
 
     # Get matching instance type
     instance = get_matching_instance(
@@ -103,8 +142,6 @@ def calculate_pipeline_cost(
         "configuration": {
             "memory_requested_gb": total_memory_gb,
             "cores_requested": total_cores,
-            "peak_memory_gb": peak_memory_gb,
-            "total_executors": total_executors,
         },
         "instance_recommendation": {
             "type": instance.name,
@@ -121,9 +158,6 @@ def calculate_pipeline_cost(
             "emr_surcharge": round(runtime_hours * (emr_price - instance.ec2_price), 4),
         },
         "utilization": {
-            "memory_utilization": (
-                peak_memory_gb / total_memory_gb if total_memory_gb > 0 else 0
-            ),
             "cost_per_hour": emr_price,
         },
     }

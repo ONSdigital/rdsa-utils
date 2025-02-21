@@ -99,53 +99,48 @@ def parse_pyspark_logs(
     --------
     >>> log_data = [
     ...     {
-    ...         "Event": "SparkListenerTaskEnd",
-    ...         "Task Metrics": {
-    ...             "Executor Run Time": 60000,  # 1 min
-    ...             "Executor CPU Time": 60000000000,  # 1 min
-    ...             "Peak Execution Memory": 1048576  # 1 MB
-    ...         }
-    ...     },
-    ...     {
-    ...         "Event": "SparkListenerTaskEnd",
-    ...         "Task Metrics": {
-    ...             "Executor Run Time": 120000,  # 2 min
-    ...             "Executor CPU Time": 120000000000,  # 2 min
-    ...             "Peak Execution Memory": 2097152  # 2 MB
-    ...         }
-    ...     },
-    ...     {
     ...         "Event": "SparkListenerApplicationStart",
-    ...         "Timestamp": 1739793526775
+    ...         "Timestamp": 1739793526775,
+    ...         "App Name": "ExamplePipeline"
     ...     },
     ...     {
     ...         "Event": "SparkListenerExecutorAdded",
-    ...         "Executor Info": {"Total Cores": 4}
+    ...         "Executor Info": {"Total Cores": 4},
     ...     },
     ...     {
     ...         "Event": "SparkListenerStageSubmitted",
     ...         "Properties": {
     ...             "spark.executor.memory": "4g",
     ...             "spark.yarn.executor.memoryOverhead": "2g",
-    ...             "spark.executor.cores": "4"
-    ...         }
-    ...     }
+    ...             "spark.executor.cores": "4",
+    ...         },
+    ...     },
+    ...     {
+    ...         "Event": "SparkListenerApplicationEnd",
+    ...         "Timestamp": 1739793626775,
+    ...     },
     ... ]
     >>> summary = parse_pyspark_logs(log_data)
     >>> print(summary)
     >>> {
     ...     'Timestamp': 1739793526775,
+    ...     'Pipeline Name': 'ExamplePipeline',
+    ...     'Start Time': 1739793526775,
+    ...     'End Time': 1739793626775,
+    ...     'Total Time': 100000,  # 10 minutes in milliseconds
     ...     'Total Cores': 4,
-    ...     'Total Memory': 6.0  # Memory Per Executor * Total Executors
+    ...     'Total Memory': 6  # 4GB + 2GB
     ... }
     """
     summary_metrics = defaultdict(
         int,
         {
             "Timestamp": None,
+            "Pipeline Name": None,
+            "Start Time": None,
+            "End Time": None,
+            "Total Time": 0,
             "Total Cores": 0,
-            "Total Executors": 0,
-            "Memory Per Executor": 0,
             "Total Memory": 0,
         },
     )
@@ -155,6 +150,10 @@ def parse_pyspark_logs(
 
         if event_type == "SparkListenerApplicationStart":
             summary_metrics["Timestamp"] = event.get("Timestamp")
+            summary_metrics["Pipeline Name"] = event.get("App Name")
+
+        elif event_type == "SparkListenerApplicationEnd":
+            summary_metrics["End Time"] = event.get("Timestamp")
 
         elif event_type == "SparkListenerExecutorAdded":
             summary_metrics["Total Executors"] += 1
@@ -180,6 +179,11 @@ def parse_pyspark_logs(
                 int(props.get("spark.executor.cores", 0))
                 * summary_metrics["Total Executors"]
             )
+
+    summary_metrics["Start Time"] = summary_metrics["Timestamp"]
+    summary_metrics["Total Time"] = (
+        summary_metrics["End Time"] - summary_metrics["Start Time"]
+    )
 
     if log_summary:
         logger.info("Summary of Task Metrics: %s", summary_metrics)
