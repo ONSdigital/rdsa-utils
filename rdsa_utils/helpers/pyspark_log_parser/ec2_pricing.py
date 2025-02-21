@@ -48,13 +48,14 @@ def calculate_emr_surcharge(instance_family: str, ec2_price: float) -> float:
 def calculate_pipeline_cost(
     parsed_metrics: Dict[str, Any],
     fetch_data: bool = False,
+    apply_emr_surcharge: bool = True,
 ) -> Dict[str, Any]:
     """Calculate EMR costs from parsed Spark metrics.
 
     This function calculates the cost of running a Spark pipeline on Amazon EMR
     based on the parsed metrics from the Spark event logs. It determines the
     appropriate EC2 instance type, calculates the runtime, and estimates the
-    total cost including the EMR surcharge.
+    total cost including the EMR surcharge if specified.
 
     Parameters
     ----------
@@ -62,11 +63,19 @@ def calculate_pipeline_cost(
         Output from parse_pyspark_logs function containing parsed metrics.
     fetch_data
         Whether to fetch fresh data from AWS.
+    apply_emr_surcharge
+        Whether to apply the EMR surcharge to the cost calculation.
 
     Returns
     -------
     Dict[str, Any]
         Cost analysis including instance recommendations and costs.
+
+    Raises
+    ------
+    ValueError
+        If no suitable instance type is found for the given memory
+        and core requirements.
 
     Examples
     --------
@@ -101,6 +110,7 @@ def calculate_pipeline_cost(
         'utilization': {
             'cost_per_hour': 0.48,
         },
+        'surcharge_applied': True,
     }
 
     Notes
@@ -133,7 +143,10 @@ def calculate_pipeline_cost(
         raise ValueError(error_msg)
 
     # Calculate EMR price based on EC2 price
-    emr_price = calculate_emr_surcharge(instance.family, instance.ec2_price)
+    if apply_emr_surcharge:
+        emr_price = calculate_emr_surcharge(instance.family, instance.ec2_price)
+    else:
+        emr_price = instance.ec2_price
 
     # Calculate costs
     pipeline_cost = runtime_hours * emr_price
@@ -155,11 +168,16 @@ def calculate_pipeline_cost(
         "costs": {
             "pipeline_cost": round(pipeline_cost, 4),
             "ec2_cost": round(runtime_hours * instance.ec2_price, 4),
-            "emr_surcharge": round(runtime_hours * (emr_price - instance.ec2_price), 4),
+            "emr_surcharge": (
+                round(runtime_hours * (emr_price - instance.ec2_price), 4)
+                if apply_emr_surcharge
+                else 0
+            ),
         },
         "utilization": {
             "cost_per_hour": emr_price,
         },
+        "surcharge_applied": apply_emr_surcharge,
     }
 
 

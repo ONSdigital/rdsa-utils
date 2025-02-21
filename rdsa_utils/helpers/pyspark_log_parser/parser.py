@@ -95,6 +95,11 @@ def parse_pyspark_logs(
     Dict[str, Any]
         A dictionary containing aggregated summary metrics.
 
+    Raises
+    ------
+    ValueError
+        If either Start Time or End Time is None.
+
     Examples
     --------
     >>> log_data = [
@@ -181,6 +186,12 @@ def parse_pyspark_logs(
             )
 
     summary_metrics["Start Time"] = summary_metrics["Timestamp"]
+
+    if summary_metrics["Start Time"] is None or summary_metrics["End Time"] is None:
+        error_msg = "Both Start Time and End Time must be present in the log data."
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
     summary_metrics["Total Time"] = (
         summary_metrics["End Time"] - summary_metrics["Start Time"]
     )

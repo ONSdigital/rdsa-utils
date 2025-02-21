@@ -44,16 +44,12 @@ class TestParsePySparkLogs:
     """Tests for parse_pyspark_logs function."""
 
     def test_empty_log_data(self) -> None:
-        """Test with empty log data (should return empty summary)."""
-        assert parse_pyspark_logs([]) == {
-            "Timestamp": None,
-            "Pipeline Name": None,
-            "Start Time": None,
-            "End Time": None,
-            "Total Time": 0,
-            "Total Cores": 0,
-            "Total Memory": 0,
-        }
+        """Test with empty log data (should raise ValueError)."""
+        with pytest.raises(
+            ValueError,
+            match="Both Start Time and End Time must be present in the log data.",
+        ):
+            parse_pyspark_logs([])
 
     def test_single_event(self) -> None:
         """Test with a single event log entry."""
@@ -61,6 +57,7 @@ class TestParsePySparkLogs:
             {
                 "Event": "SparkListenerApplicationStart",
                 "Timestamp": 1739793526775,
+                "App Name": "ExamplePipeline",
             },
             {
                 "Event": "SparkListenerExecutorAdded",
@@ -83,7 +80,7 @@ class TestParsePySparkLogs:
 
         # Validate expected keys
         assert actual_output["Timestamp"] == 1739793526775
-        assert actual_output["Pipeline Name"] is None
+        assert actual_output["Pipeline Name"] == "ExamplePipeline"
         assert actual_output["Start Time"] == 1739793526775
         assert actual_output["End Time"] == 1739793626775
         assert actual_output["Total Time"] == 100000  # 10 minutes in milliseconds
@@ -96,6 +93,7 @@ class TestParsePySparkLogs:
             {
                 "Event": "SparkListenerApplicationStart",
                 "Timestamp": 1739793526775,
+                "App Name": "ExamplePipeline",
             },
             {
                 "Event": "SparkListenerExecutorAdded",
@@ -122,7 +120,7 @@ class TestParsePySparkLogs:
 
         # Validate expected keys
         assert actual_output["Timestamp"] == 1739793526775
-        assert actual_output["Pipeline Name"] is None
+        assert actual_output["Pipeline Name"] == "ExamplePipeline"
         assert actual_output["Start Time"] == 1739793526775
         assert actual_output["End Time"] == 1739793626775
         assert actual_output["Total Time"] == 100000  # 10 minutes in milliseconds
