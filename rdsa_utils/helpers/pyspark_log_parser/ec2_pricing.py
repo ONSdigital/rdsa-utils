@@ -429,13 +429,20 @@ def get_matching_instance(
     -------
     Optional[InstanceType]
         Most cost-effective instance meeting requirements
+
+    Raises
+    ------
+    ValueError
+        If no suitable instance type is found for the given memory
+        and core requirements.
     """
     if instances is None:
         instances = fetch_pricing(fetch_data=fetch_data)
 
     if not instances:
-        # Fallback to base instance if both AWS and SQLite fail
-        return InstanceType("m5.xlarge", 4, 16, 0.192, "General Purpose")
+        error_msg = "No instances available to match the requirements."
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
     # Find instances that meet minimum requirements
     valid_instances = [
@@ -443,7 +450,12 @@ def get_matching_instance(
     ]
 
     if not valid_instances:
-        return None
+        error_msg = (
+            f"No suitable instance type found for {memory_gb}GB memory "
+            f"and {cores} cores.",
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
     # Return the cheapest valid instance
     return min(valid_instances, key=lambda x: x.ec2_price)
