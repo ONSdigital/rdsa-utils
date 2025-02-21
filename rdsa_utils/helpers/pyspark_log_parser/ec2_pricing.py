@@ -433,6 +433,8 @@ def get_matching_instance(
     Raises
     ------
     ValueError
+        If no instances are available to match the requirements.
+    ValueError
         If no suitable instance type is found for the given memory
         and core requirements.
     """
