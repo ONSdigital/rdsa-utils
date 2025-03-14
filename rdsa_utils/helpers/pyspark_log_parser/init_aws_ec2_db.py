@@ -110,7 +110,7 @@ def main() -> None:
 
     db_path = data_dir / "ec2_pricing.db"
 
-    # initialise database
+    # Initialise database
     logger.info(f"Initializing database at: {db_path}")
     init_db(db_path)
 
