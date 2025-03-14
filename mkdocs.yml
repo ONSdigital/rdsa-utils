@@ -46,6 +46,8 @@ nav:
   - API Reference: reference.md
   - Contribution Guide: contribution_guide.md
   - Branching & Deployment Guide: branch_and_deploy_guide.md
+  - Guides:
+      - CDP AWS Resource Estimator: guides/cdp_aws_resource_estimator.md
 
 extra:
   social:
