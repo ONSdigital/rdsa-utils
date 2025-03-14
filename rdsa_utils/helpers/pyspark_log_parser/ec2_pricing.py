@@ -19,9 +19,9 @@ def calculate_emr_surcharge(instance_family: str, ec2_price: float) -> float:
     Parameters
     ----------
     instance_family
-        The instance family (e.g., 'General Purpose', 'Compute optimised')
+        The instance family (e.g., 'General Purpose', 'Compute optimised').
     ec2_price
-        The base EC2 price per hour
+        The base EC2 price per hour.
 
     Returns
     -------
@@ -204,13 +204,13 @@ def extract_instance_specs(instance_type: str) -> Optional[Dict]:
     Parameters
     ----------
     instance_type
-        AWS instance type (e.g., "m5a.8xlarge")
+        AWS instance type (e.g., "m5a.8xlarge").
 
     Returns
     -------
     Optional[Dict]
         Dictionary containing vcpu, memory_gb, and family if valid instance type,
-        None otherwise
+        None otherwise.
     """
     # Parse instance size multiplier for vCPU
     size_vcpu = {
@@ -395,7 +395,7 @@ def fetch_pricing(fetch_data: bool = False) -> List[InstanceType]:
     Returns
     -------
     List[InstanceType]
-        List of instance types with pricing information
+        List of instance types with pricing information.
     """
     if fetch_data:
         instances = fetch_from_aws()
@@ -417,18 +417,18 @@ def get_matching_instance(
     Parameters
     ----------
     memory_gb
-        Required memory in GB
+        Required memory in GB.
     cores
-        Required number of CPU cores
+        Required number of CPU cores.
     instances
-        Pre-fetched list of instances (optional)
+        Pre-fetched list of instances (optional).
     fetch_data
-        Whether to fetch fresh data from AWS
+        Whether to fetch fresh data from AWS.
 
     Returns
     -------
     Optional[InstanceType]
-        Most cost-effective instance meeting requirements
+        Most cost-effective instance meeting requirements.
 
     Raises
     ------
