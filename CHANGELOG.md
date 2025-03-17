@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.7.1] 2025-03-17
+
+### Added
 - Added `__init__.py` to `helpers/pyspark_log_parser`.
 
 ### Changed
@@ -582,6 +594,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.7.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.1) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.7.1/)
 - rdsa-utils v0.7.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.7.0/)
 - rdsa-utils v0.6.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.6.0) |
