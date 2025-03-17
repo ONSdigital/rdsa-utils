@@ -8,6 +8,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `include_package_data = True` and `* = *.db` to `setup.cfg`
+  to include SQLite database files in the package.
 
 ### Changed
 
