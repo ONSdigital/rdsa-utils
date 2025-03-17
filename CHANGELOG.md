@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.7.2] 2025-03-17
+
+### Added
+- Added `include_package_data = True` and `* = *.db` to `setup.cfg`
+  to include SQLite database files in the package.
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.7.1] 2025-03-17
 
 ### Added
@@ -594,6 +608,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.7.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.2) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.7.2/)
 - rdsa-utils v0.7.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.1) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.7.1/)
 - rdsa-utils v0.7.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.0) |
