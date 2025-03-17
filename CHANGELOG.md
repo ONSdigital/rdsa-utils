@@ -14,6 +14,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+- Fixed `setup.cfg` to include `data/*.db` files in the `pyspark_log_parser` module.
 
 ### Removed
 
