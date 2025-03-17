@@ -1,0 +1,960 @@
+<!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+<!--
+  Copyright (c) 2016-2024 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<!-- Meta tags -->
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<!-- Page description -->
+<!-- Page author -->
+<!-- Canonical -->
+<!-- Previous page -->
+<link href="../../branch_and_deploy_guide/" rel="prev"/>
+<!-- Next page -->
+<!-- RSS feed -->
+<!-- Favicon -->
+<link href="../../assets/images/favicon.ico" rel="icon"/>
+<!-- Generator banner -->
+<meta content="mkdocs-1.6.0, $md-name$-$md-version$" name="generator"/>
+<!-- Site title -->
+<title>CDP AWS Resource Estimator - rdsa-utils Documentation</title>
+<!-- Theme-related style sheets -->
+<link href="../../assets/stylesheets/main.css" rel="stylesheet"/>
+<!-- Extra color palette -->
+<!-- Custom icons -->
+<!-- JavaScript libraries -->
+<!-- Webfonts -->
+<!-- Load fonts from Google -->
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>
+          :root {
+            --md-text-font: "Roboto";
+            --md-code-font: "Roboto Mono";
+          }
+        </style>
+<!-- Custom style sheets -->
+<link href="../../assets/_mkdocstrings.css" rel="stylesheet"/>
+<!-- Helper functions for inline scripts -->
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<!-- Meta tags from front matter or plugins -->
+<!-- Custom front matter -->
+</head>
+<!-- Set text direction and color palette, if defined -->
+<body dir="ltr">
+<!--
+      State toggles - we need to set autocomplete="off" in order to reset the
+      drawer on back button invocation in some browsers
+    -->
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<!-- Overlay for expanded drawer -->
+<label class="md-overlay" for="__drawer"></label>
+<!-- Skip to content -->
+<div data-md-component="skip">
+<a class="md-skip" href="#estimating-aws-costs-from-pyspark-event-logs-in-a-managed-cloudera-environment">
+          Skip to content
+        </a>
+</div>
+<!-- Announcement bar -->
+<div data-md-component="announce">
+</div>
+<!-- Version warning -->
+<!-- Header -->
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="rdsa-utils Documentation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="rdsa-utils Documentation">
+<img alt="logo" src="../../assets/images/logo.svg"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            rdsa-utils Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              CDP AWS Resource Estimator
+            
+          </span>
+</div>
+</div>
+</div>
+<script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ONSdigital/rdsa-utils" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    rdsa-utils
+  </div>
+</a>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+    
+  
+  rdsa-utils
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../reference/">
+        
+  
+    
+  
+  API Reference
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../contribution_guide/">
+        
+  
+    
+  
+  Contribution Guide
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../branch_and_deploy_guide/">
+        
+  
+    
+  
+  Branching &amp; Deployment Guide
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="./">
+          
+  
+  Guides
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<!-- Container -->
+<div class="md-container" data-md-component="container">
+<!-- Hero teaser -->
+<!-- Navigation tabs (collapsing) -->
+<!-- Main area -->
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<!-- Sidebars -->
+<!-- Navigation -->
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="rdsa-utils Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="rdsa-utils Documentation">
+<img alt="logo" src="../../assets/images/logo.svg"/>
+</a>
+    rdsa-utils Documentation
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ONSdigital/rdsa-utils" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+</div>
+<div class="md-source__repository">
+    rdsa-utils
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    rdsa-utils
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../reference/">
+<span class="md-ellipsis">
+    API Reference
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../contribution_guide/">
+<span class="md-ellipsis">
+    Contribution Guide
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../branch_and_deploy_guide/">
+<span class="md-ellipsis">
+    Branching &amp; Deployment Guide
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    Guides
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    CDP AWS Resource Estimator
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    CDP AWS Resource Estimator
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-managed-environment-on-cloudera-with-aws-backend">
+<span class="md-ellipsis">
+      1. Managed Environment on Cloudera with AWS Backend
+    </span>
+</a>
+<nav aria-label="1. Managed Environment on Cloudera with AWS Backend" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-a-managed-environment">
+<span class="md-ellipsis">
+      What Is a Managed Environment?
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#opposite-a-self-managed-environment">
+<span class="md-ellipsis">
+      Opposite: A Self-Managed Environment
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-noisy-neighbour-problem-in-shared-kubernetes-environments">
+<span class="md-ellipsis">
+      2. The “Noisy Neighbour” Problem in Shared Kubernetes Environments
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-methodology-for-cost-estimation">
+<span class="md-ellipsis">
+      3. Methodology for Cost Estimation
+    </span>
+</a>
+<nav aria-label="3. Methodology for Cost Estimation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#session-duration-as-a-proxy-for-billed-time">
+<span class="md-ellipsis">
+      Session Duration as a Proxy for Billed Time.
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resource-configuration-and-mapping-to-ec2-billing">
+<span class="md-ellipsis">
+      Resource Configuration and Mapping to EC2 Billing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#calculation">
+<span class="md-ellipsis">
+      Calculation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-estimate-is-a-reasonable-rough-guess">
+<span class="md-ellipsis">
+      Why This Estimate Is a Reasonable Rough Guess
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-visualising-the-architecture">
+<span class="md-ellipsis">
+      4. Visualising the Architecture
+    </span>
+</a>
+<nav aria-label="4. Visualising the Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-cloudera-managed-environment-with-kubernetes-orchestration">
+<span class="md-ellipsis">
+      4.1. Cloudera-Managed Environment with Kubernetes Orchestration
+    </span>
+</a>
+<nav aria-label="4.1. Cloudera-Managed Environment with Kubernetes Orchestration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#diagram-explanation">
+<span class="md-ellipsis">
+      Diagram Explanation:
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-diagram-comparison-dedicated-vs-shared-ec2-approaches">
+<span class="md-ellipsis">
+      4.2. Diagram Comparison: Dedicated vs. Shared EC2 Approaches
+    </span>
+</a>
+<nav aria-label="4.2. Diagram Comparison: Dedicated vs. Shared EC2 Approaches" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dedicated-ec2-per-job">
+<span class="md-ellipsis">
+      Dedicated EC2 per Job
+    </span>
+</a>
+<nav aria-label="Dedicated EC2 per Job" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#explanation">
+<span class="md-ellipsis">
+      Explanation:
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#shared-ec2-instances">
+<span class="md-ellipsis">
+      Shared EC2 Instances
+    </span>
+</a>
+<nav aria-label="Shared EC2 Instances" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#explanation_1">
+<span class="md-ellipsis">
+      Explanation:
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-conclusion">
+<span class="md-ellipsis">
+      4.3. Conclusion
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conclusion">
+<span class="md-ellipsis">
+      Conclusion
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-to-use-rdsa-utils-for-pyspark-cost-estimation">
+<span class="md-ellipsis">
+      How to Use rdsa-utils for PySpark Cost Estimation
+    </span>
+</a>
+<nav aria-label="How to Use rdsa-utils for PySpark Cost Estimation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-configuring-pyspark-for-event-logging">
+<span class="md-ellipsis">
+      1. Configuring PySpark for Event Logging
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-required-dependencies-and-setup">
+<span class="md-ellipsis">
+      2. Required Dependencies and Setup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-parsing-a-single-pyspark-log-file">
+<span class="md-ellipsis">
+      3. Parsing a Single PySpark Log File
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-processing-multiple-pyspark-log-files-at-once">
+<span class="md-ellipsis">
+      4. Processing Multiple PySpark Log Files at Once
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-generating-an-html-report">
+<span class="md-ellipsis">
+      5. Generating an HTML Report
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-converting-logs-to-a-pandas-dataframe">
+<span class="md-ellipsis">
+      6. Converting Logs to a Pandas DataFrame
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<!-- Table of contents -->
+<!-- Page content -->
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="estimating-aws-costs-from-pyspark-event-logs-in-a-managed-cloudera-environment">Estimating AWS Costs from PySpark Event Logs in a Managed Cloudera Environment</h1>
+<p>This report details a methodology for estimating AWS EC2 costs using PySpark event logs
+in a managed Cloudera environment that leverages Kubernetes orchestration.</p>
+<p>It explains the challenges of cost estimation in a shared infrastructure scenario,
+outlines the assumptions made for a simplified estimate,
+and discusses the implications of the “noisy neighbour” problem.</p>
+<h2 id="1-managed-environment-on-cloudera-with-aws-backend">1. Managed Environment on Cloudera with AWS Backend</h2>
+<h3 id="what-is-a-managed-environment">What Is a Managed Environment?</h3>
+<p>In a managed environment like Cloudera deployed on AWS:</p>
+<ul>
+<li>
+<p><strong>Automated Provisioning and Management</strong>: The platform handles provisioning,
+  configuration, scaling, and maintenance of the infrastructure.
+  Users do not manually select individual EC2 instances.</p>
+</li>
+<li>
+<p><strong>Kubernetes-Based Orchestration</strong>: Spark applications are run as sets of pods
+  (driver and executors) managed by Kubernetes.
+  When you submit a PySpark pipeline, Cloudera automatically provisions
+  the necessary pods, and the Kubernetes scheduler assigns these pods to underlying
+  EC2 instances based on resource requirements.</p>
+</li>
+<li>
+<p><strong>Shared Infrastructure</strong>: Although each pipeline (or mini-cluster) is logically isolated,
+  multiple pipelines can share the same pool of EC2 instances. The underlying nodes host
+  pods from different users, leading to efficient resource usage. AWS bills based on
+  the total duration the EC2 instances are active, regardless of how many pipelines
+  share those resources.</p>
+</li>
+</ul>
+<h3 id="opposite-a-self-managed-environment">Opposite: A Self-Managed Environment</h3>
+<p>In a self-managed environment, you manually launch and configure EC2 instances,
+set up Spark, and handle scaling and maintenance. This approach offers granular
+control but increases operational overhead and risks misconfiguration.</p>
+<p>Moreover, in self-managed clusters, you might be able to tightly monitor resource
+usage per pipeline; however, cost optimisation becomes more complex when handling
+varied workloads.</p>
+<h2 id="2-the-noisy-neighbour-problem-in-shared-kubernetes-environments">2. The “Noisy Neighbour” Problem in Shared Kubernetes Environments</h2>
+<p>In a Kubernetes-managed Cloudera environment:</p>
+<ul>
+<li>
+<p><strong>Resource Sharing</strong>: Multiple users’ pipelines run concurrently on the same
+  underlying EC2 instances. Although each pipeline is isolated at the pod level,
+  they share the same hardware resources.</p>
+</li>
+<li>
+<p><strong>Noisy Neighbours</strong>: One pipeline (or a “noisy neighbour”) that consumes an unusually
+  high amount of CPU or memory may impact the performance of other pipelines sharing
+  the same node. However, the resource scheduler in Kubernetes generally mitigates
+  this by enforcing resource limits and priorities.</p>
+</li>
+<li>
+<p><strong>Billing Implications</strong>: Since AWS charges are based on the total duration that
+  EC2 instances are active (not per pod), the cost estimation becomes challenging
+  when resources are shared. It is hard to assign a precise cost to an individual
+  pipeline when multiple pipelines run on the same node.</p>
+</li>
+<li>
+<p><strong>Simplified Assumption for Estimation</strong>: For ease of estimation, we assume a
+  scenario where each pipeline spins up its own dedicated mini-cluster
+  (i.e., a set of pods that run exclusively on their own dedicated EC2 instance).
+  This assumption simplifies cost calculation by attributing the entire cost of an
+  EC2 instance to one pipeline, even though, in reality, the infrastructure is
+  shared among many users.</p>
+</li>
+</ul>
+<h2 id="3-methodology-for-cost-estimation">3. Methodology for Cost Estimation</h2>
+<h3 id="session-duration-as-a-proxy-for-billed-time">Session Duration as a Proxy for Billed Time.</h3>
+<ul>
+<li>
+<p><strong>Extraction Method:</strong> By parsing the PySpark event logs, we extract the session’s
+  start and end times. Events such as <code>SparkListenerApplicationStart</code>
+  and <code>SparkListenerApplicationEnd</code> mark these boundaries.</p>
+</li>
+<li>
+<p><strong>Assumption:</strong> The total session duration reflects the time during which the cluster
+  (or the pods on Kubernetes) is provisioned. AWS bills for the full duration that
+  the EC2 instances are active, including idle periods.</p>
+</li>
+</ul>
+<h3 id="resource-configuration-and-mapping-to-ec2-billing">Resource Configuration and Mapping to EC2 Billing</h3>
+<p>Key Spark configuration parameters are extracted:</p>
+<ul>
+<li><code>spark.dynamicAllocation.maxExecutors</code></li>
+<li><code>spark.executor.cores</code></li>
+<li><code>spark.executor.memory</code></li>
+</ul>
+<h3 id="calculation">Calculation</h3>
+<p>The maximum resources available for a pipeline are approximated by multiplying
+the number of executors by the per-executor cores (which roughly map to vCPUs)
+and memory.</p>
+<ul>
+<li><strong>Simplified Assumption for Estimation</strong>:
+For cost estimation, we assume that each pipeline’s mini-cluster runs on dedicated EC2
+instances. This simplifies the model by treating the total vCPUs (or cores) and memory
+allocated to the pipeline as if they were provisioned on isolated instances. Although,
+in a shared Kubernetes environment, multiple pipelines share the underlying hardware,
+this assumption provides a conservative upper-bound estimate.</li>
+</ul>
+<h3 id="why-this-estimate-is-a-reasonable-rough-guess">Why This Estimate Is a Reasonable Rough Guess</h3>
+<ul>
+<li>
+<p><strong>Billing Alignment</strong>: AWS bills based on the active time of EC2 instances. Using the
+  session start and end times captures the full duration during which resources
+  are provisioned, reflecting what you would be billed.</p>
+</li>
+<li>
+<p><strong>Upper-Bound Estimate</strong>: Including idle periods provides an upper-bound cost estimate,
+  which is practical for budgeting and cost management discussions with management.</p>
+</li>
+<li>
+<p><strong>Simplification in a Complex Environment</strong>: Aggregating fine-grained, task-level metrics
+  in a dynamic, multi-tenant environment is challenging due to overlapping tasks,
+  dynamic scaling, and shared resource usage. The session-based approach avoids
+  these pitfalls by focusing on the overall provisioning time.</p>
+</li>
+<li>
+<p><strong>Assumed Dedicated Instance Model</strong>: While multiple users typically share EC2 instances,
+  the assumption that each pipeline gets its own dedicated instance simplifies
+  cost estimation. This assumption is particularly useful for explaining the
+  methodology to management, even though it might not precisely mirror the
+  actual shared infrastructure setup.</p>
+</li>
+</ul>
+<h2 id="4-visualising-the-architecture">4. Visualising the Architecture</h2>
+<h3 id="41-cloudera-managed-environment-with-kubernetes-orchestration">4.1. Cloudera-Managed Environment with Kubernetes Orchestration</h3>
+<p>Below is a Mermaid diagram that illustrates the logical flow of pipelines
+in a Cloudera-managed environment with Kubernetes orchestration:</p>
+<div class="mermaid">flowchart TD
+    subgraph "Pipeline 1 (User 1)"
+        A1[PySpark Job Submission]
+        D1[Spark Driver Pod]
+        E1[Spark Executor Pods]
+        A1 --&gt; D1
+        A1 --&gt; E1
+    end
+
+    subgraph "Pipeline 2 (User 2)"
+        A2[PySpark Job Submission]
+        D2[Spark Driver Pod]
+        E2[Spark Executor Pods]
+        A2 --&gt; D2
+        A2 --&gt; E2
+    end
+
+    B[Cloudera Managed Environment]
+    C[Kubernetes Orchestration]
+    F[AWS EC2 Instances]
+
+    A1 --&gt; B
+    A2 --&gt; B
+    B --&gt; C
+    C --&gt; D1
+    C --&gt; E1
+    C --&gt; D2
+    C --&gt; E2
+    D1 --&gt; F
+    E1 --&gt; F
+    D2 --&gt; F
+    E2 --&gt; F
+</div>
+<h4 id="diagram-explanation">Diagram Explanation:</h4>
+<ul>
+<li>
+<p><strong>Pipeline Isolation:</strong> Each user’s pipeline is represented as an
+  isolated mini-cluster with its own driver and executor pods.</p>
+</li>
+<li>
+<p><strong>Shared Management &amp; Orchestration:</strong> The Cloudera managed environment,
+  together with Kubernetes, abstracts the underlying resource scheduling and management.</p>
+</li>
+<li>
+<p><strong>Underlying Infrastructure:</strong> All pods are deployed on AWS EC2 instances.
+  Although each pipeline is logically isolated, they share the same pool of
+  EC2 instances, which may lead to “noisy neighbour” challenges.</p>
+</li>
+<li>
+<p><strong>Simplified Estimation Assumption:</strong> For the purposes of cost estimation,
+  we assume that each pipeline’s pods run on dedicated EC2 instances—even
+  though in reality, the infrastructure is shared. This simplifies mapping
+  session duration and resource configuration directly to AWS billing.</p>
+</li>
+</ul>
+<h3 id="42-diagram-comparison-dedicated-vs-shared-ec2-approaches">4.2. Diagram Comparison: Dedicated vs. Shared EC2 Approaches</h3>
+<p>Below are two diagrams summarising alternative deployment approaches
+and their implications for cost estimation.</p>
+<h4 id="dedicated-ec2-per-job">Dedicated EC2 per Job</h4>
+<div class="mermaid">flowchart TD
+    subgraph "Pipeline (User Job)"
+        A[PySpark Job Submission]
+        D[Spark Driver Pod]
+        E[Spark Executor Pods]
+        A --&gt; D
+        A --&gt; E
+    end
+
+    B[Cloudera Managed Environment]
+    C[Kubernetes Orchestration]
+    F[Dedicated EC2 Instance]
+
+    A --&gt; B
+    B --&gt; C
+    C --&gt; D
+    C --&gt; E
+    D --&gt; F
+    E --&gt; F
+</div>
+<h5 id="explanation">Explanation:</h5>
+<p>In this model, a job’s pods run exclusively on a dedicated EC2 instance.
+This approach makes it straightforward to map the allocated resources
+(e.g., total memory and vCPUs) to a specific instance’s hourly cost,
+resulting in an easy-to-calculate billing estimate.</p>
+<h4 id="shared-ec2-instances">Shared EC2 Instances</h4>
+<div class="mermaid">flowchart TD
+    subgraph "Pipeline 1 (User 1)"
+        A1[PySpark Job Submission]
+        D1[Spark Driver Pod]
+        E1[Spark Executor Pods]
+        A1 --&gt; D1
+        A1 --&gt; E1
+    end
+
+    subgraph "Pipeline 2 (User 2)"
+        A2[PySpark Job Submission]
+        D2[Spark Driver Pod]
+        E2[Spark Executor Pods]
+        A2 --&gt; D2
+        A2 --&gt; E2
+    end
+
+    B[Cloudera Managed Environment]
+    C[Kubernetes Orchestration]
+    F[AWS EC2 Instances -- Shared Pool]
+
+    A1 --&gt; B
+    A2 --&gt; B
+    B --&gt; C
+    C --&gt; D1
+    C --&gt; E1
+    C --&gt; D2
+    C --&gt; E2
+    D1 --&gt; F
+    E1 --&gt; F
+    D2 --&gt; F
+    E2 --&gt; F
+</div>
+<h5 id="explanation_1">Explanation:</h5>
+<p>In this scenario, multiple pipelines share the same pool of EC2 instances.
+Although this shared model optimises resource usage, it complicates cost
+estimation since billing is aggregated across many users. Isolating the cost
+impact for a single job becomes challenging due to dynamic resource allocation,
+overlapping workloads, and the “noisy neighbour” effect.</p>
+<h3 id="43-conclusion">4.3. Conclusion</h3>
+<ul>
+<li>
+<p><strong>Dedicated Instances</strong>: A dedicated EC2 per job simplifies cost estimation.
+  The job’s resource allocation is directly tied to a specific instance’s pricing,
+  allowing for a clear calculation of the billing cost based on session duration
+  and configuration.</p>
+</li>
+<li>
+<p><strong>Shared Architecture</strong>: While shared EC2 instances lead to higher overall
+  resource utilisation and efficiency, they complicate the process of accurately
+  attributing costs to individual jobs. In such environments, cost estimates
+  must account for the effects of resource sharing, dynamic scaling, and
+  potential performance interference from other pipelines.</p>
+</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Estimating AWS costs for PySpark pipelines in a Cloudera-managed,
+Kubernetes-orchestrated environment requires understanding both the
+shared nature of the infrastructure and the billing model of AWS. By:</p>
+<ul>
+<li>
+<p>Using overall session duration (from log events) as a proxy for resource
+  provisioning time,</p>
+</li>
+<li>
+<p>Extracting maximum resource configurations from Spark properties,</p>
+</li>
+<li>
+<p>Assuming a simplified model where each pipeline is treated as if it were
+  running on dedicated EC2 instances.</p>
+</li>
+</ul>
+<p>we arrive at a robust rough estimate that serves as an upper-bound cost
+approximation. This method, while simplified, captures the essential dynamics
+of a shared, managed environment and provides a clear, explainable basis
+for cost estimation discussions with management.</p>
+<h2 id="how-to-use-rdsa-utils-for-pyspark-cost-estimation">How to Use <code>rdsa-utils</code> for PySpark Cost Estimation</h2>
+<p>This section explains how to use the <code>rdsa-utils</code> library to estimate
+AWS EC2 costs from PySpark event logs in a Cloudera-managed environment.</p>
+<p>The steps include configuring PySpark to generate event logs, loading and
+processing log data, estimating costs, and generating reports.</p>
+<h3 id="1-configuring-pyspark-for-event-logging">1. Configuring PySpark for Event Logging</h3>
+<p>Before running PySpark jobs, add the following configurations to your
+PySpark setup to enable event logging:</p>
+<pre><code class="language-python">.config("spark.eventLog.enabled", "true")
+.config("spark.eventLog.dir", "s3a://&lt;bucket-name&gt;/&lt;folder&gt;/&lt;log_dir&gt;/")
+</code></pre>
+<p>This ensures that Spark event logs are stored in an S3 bucket for later analysis.</p>
+<h3 id="2-required-dependencies-and-setup">2. Required Dependencies and Setup</h3>
+<p>Ensure the necessary modules from <code>rdsa-utils</code> are imported:</p>
+<pre><code class="language-python">import logging
+import boto3
+import raz_client
+
+from rdsa_utils.cdp.helpers.s3_utils import list_files, load_json
+from rdsa_utils.helpers.pyspark_log_parser.ec2_pricing import calculate_pipeline_cost
+from rdsa_utils.helpers.pyspark_log_parser.parser import (
+    find_pyspark_log_files,
+    parse_pyspark_logs,
+    process_pyspark_logs,
+    filter_and_sort_logs_by_app_name,
+    logs_to_dataframe,
+)
+from rdsa_utils.helpers.pyspark_log_parser.report import generate_report
+</code></pre>
+<p>Set up logging and configure AWS S3 client with Ranger RAZ authentication:</p>
+<pre><code class="language-python">logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
+
+config = {
+    "ssl_file": "&lt;add_ssl_file/path/here&gt;",
+    "s3_bucket": "&lt;add_s3_bucket_name_here&gt;",
+}
+
+client = boto3.client("s3")
+raz_client.configure_ranger_raz(client, ssl_file=config["ssl_file"])
+</code></pre>
+<h3 id="3-parsing-a-single-pyspark-log-file">3. Parsing a Single PySpark Log File</h3>
+<ol>
+<li>Load event log data from an S3 bucket.</li>
+<li>Parse the log data to extract relevant execution metrics.</li>
+<li>Estimate the cost based on extracted metrics.</li>
+</ol>
+<pre><code class="language-python">log_data = load_json(
+    client,
+    config["s3_bucket"],
+    "&lt;add_s3_folder/path/here&gt;",
+    multi_line=True,
+)
+
+metrics_dict = parse_pyspark_logs(log_data)
+cost_analysis = calculate_pipeline_cost(metrics_dict, fetch_data=False)
+</code></pre>
+<h3 id="4-processing-multiple-pyspark-log-files-at-once">4. Processing Multiple PySpark Log Files at Once</h3>
+<p>This is the recommended approach for real-world usage when analysing
+multiple pipeline runs. It automates log retrieval and processing for multiple jobs:</p>
+<pre><code class="language-python">user_folder = "&lt;add_s3_folder/path/here&gt;"
+list_of_logs = process_pyspark_logs(client, config["s3_bucket"], user_folder)
+filtered_sorted_logs = filter_and_sort_logs_by_app_name(list_of_logs, "&lt;app_name&gt;")
+</code></pre>
+<p><strong>Note:</strong> <code>&lt;app_name&gt;</code> should match the <code>spark.app.name</code> configuration set
+in the PySpark job.</p>
+<h3 id="5-generating-an-html-report">5. Generating an HTML Report</h3>
+<p>To create a human-readable report summarising cost estimates and execution details:</p>
+<pre><code class="language-python">generate_report(filtered_sorted_logs, "/home/cdsw/pyspark_log_report_output.html")
+</code></pre>
+<h3 id="6-converting-logs-to-a-pandas-dataframe">6. Converting Logs to a Pandas DataFrame</h3>
+<p>For further analysis and visualisation, convert parsed logs to a Pandas DataFrame:</p>
+<pre><code class="language-python">df = logs_to_dataframe(filtered_sorted_logs)
+print(df.head())
+</code></pre>
+<aside class="md-source-file">
+<span class="md-source-file__fact">
+<span class="md-icon" title="Last update">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"></path></svg>
+</span>
+<span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 17, 2025 13:05:04">March 17, 2025</span>
+</span>
+</aside>
+</article>
+</div>
+<!-- User preference: content -->
+<script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<!-- Back-to-top button -->
+</main>
+<!-- Footer -->
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">
+<img height="60px" src="../../assets/images/govuk-crest.svg" width="60px">
+<p>©  <a href="https://www.ons.gov.uk">Office for National Statistics 2024</a>
+</p>
+</img></div>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="&lt;insert repo link&gt;" rel="noopener" target="_blank" title="">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<!-- Dialog -->
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<!-- Progress indicator -->
+<!-- Consent -->
+<!-- Theme-related configuration -->
+<!-- Versioning --><!-- Tags --><!-- Translations --><!-- Configuration -->
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "toc.integrate", "content.tabs.link", "content.code.annotation", "content.code.copy"], "search": "../../assets/javascripts/workers/search.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+<!-- Theme-related JavaScript -->
+<script src="../../assets/javascripts/bundle.js"></script>
+<!-- Custom JavaScript -->
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>
