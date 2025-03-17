@@ -8,6 +8,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `include_package_data = True` and
+  `rdsa_utils.helpers.pyspark_log_parser = *.db, *.ipynb`
+  to `setup.cfg` to include `.db` and `.ipynb` files
+  in the `pyspark_log_parser` module.
 
 ### Changed
 
