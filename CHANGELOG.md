@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.7.0] 2025-03-17
+
+### Added
 - Added `pyspark_log_parser/` module in `helpers/`.
 - Added `papermill`, `nbconvert`, `matplotlib` dependencies.
 
@@ -569,6 +581,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.7.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.7.0/)
 - rdsa-utils v0.6.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.6.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.6.0/)
 - rdsa-utils v0.5.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.5.0) |
