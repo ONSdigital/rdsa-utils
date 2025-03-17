@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.7.3] 2025-03-17
+
+### Added
 - Added `include_package_data = True` and
   `rdsa_utils.helpers.pyspark_log_parser = *.db, *.ipynb`
   to `setup.cfg` to include `.db` and `.ipynb` files
@@ -612,6 +624,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.7.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.3) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.7.3/)
 - rdsa-utils v0.7.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.2) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.7.2/)
 - rdsa-utils v0.7.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.1) |
