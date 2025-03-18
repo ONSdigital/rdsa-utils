@@ -225,9 +225,9 @@ def s3_walk(
     Parameters
     ----------
     client
-        The boto3 S3 client instence.
+        The boto3 S3 client.
     bucket_name
-        The name of the bucket of interest.
+        The name of the bucket.
     prefix
         The prefix of the object to start the walk from.
 
