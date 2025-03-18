@@ -382,7 +382,7 @@ def file_size(
     return file_size
 
 
-def md5sum(
+def md5_sum(
     client: boto3.client,
     bucket_name: str,
     object_name: str,
@@ -406,7 +406,7 @@ def md5sum(
     Examples
     --------
     >>> client = boto3.client('s3')
-    >>> md5sum(client, 'mybucket', 'folder/file.txt')
+    >>> md5_sum(client, 'mybucket', 'folder/file.txt')
     "d41d8cd98f00b204e9800998ecf8427e"
     """
     try:
