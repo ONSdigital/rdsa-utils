@@ -368,15 +368,13 @@ def file_size(
     Returns
     -------
     int
-        an integer value indicating the size
-        of the file in bytes
+        An integer value indicating the size of the file in bytes,
 
     Examples
     --------
     >>> client = boto3.client('s3')
     >>> file_size(client, 'mybucket', 'folder/file.txt')
     8
-
     """
     response = client.head_object(Bucket=bucket_name, Key=object_name)
     file_size = response["ContentLength"]
@@ -403,8 +401,7 @@ def md5sum(
     Returns
     -------
     str
-        a string value with the MD5 hash of
-        the object data.
+        A string value with the MD5 hash of the object data.
 
     Examples
     --------
