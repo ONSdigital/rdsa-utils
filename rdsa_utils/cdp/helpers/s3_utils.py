@@ -215,8 +215,8 @@ def s3_walk(
     client: boto3.client,
     bucket_name: str,
     prefix: str,
-) -> tuple:
-    """Print the structure of the s3 bucket in a dictionary format.
+) -> Dict:
+    """Traverse an S3 bucket and return its structure in a dictionary format.
 
     Mimics the functionality of os.walk in s3 bucket using long filenames with slashes.
     Recursively goes through the long filenames and splits it into subdirectories, and
@@ -233,14 +233,35 @@ def s3_walk(
 
     Returns
     -------
-    turple
-        A tuple of (root: (set(), {root/subdir: (set(), {files})).
+    Dict
+        A dictionary representing the bucket structure where:
+        - Keys are directory paths ending with '/'
+        - Values are tuples of (set(subdirectories), set(files)) where:
+          - subdirectories: a set of directory names ending with '/'
+          - files: a set of file paths
 
     Examples
     --------
     >>> client = boto3.client('s3')
-    >>> s3_walk(client, 'mybucket', 'folder/')
-    {'folder/': ({'subfolder/'}, {'file1.txt', 'file2.txt'})}
+    >>> # For a bucket with files: file5.txt, folder1/file1.txt, folder1/file2.txt,
+    >>> # folder1/subfolder1/file3.txt, and folder2/file4.txt
+    >>> s3_walk(client, 'test-bucket', '')
+    {
+        '': ({"folder1/", "folder2/"}, {"file5.txt"}),
+        'folder1/': (set(), {"folder1/"}),
+        'folder2/': (set(), {"folder2/"})
+    }
+
+    >>> # When using a specific prefix
+    >>> s3_walk(client, 'test-bucket', 'folder1/')
+    {
+        'folder1/': ({"subfolder1/"}, {"folder1/file1.txt", "folder1/file2.txt"}),
+        'folder1/subfolder1/': (set(), {"folder1/subfolder1/"})
+    }
+
+    >>> # Empty bucket or nonexistent prefix
+    >>> s3_walk(client, 'test-bucket', 'nonexistent/')
+    {}
     """
 
     def process_location(root, prefix_local, location):

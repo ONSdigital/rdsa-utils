@@ -481,12 +481,9 @@ class TestS3Walk:
             self.setup_s3_structure(s3_client)
             result = s3_walk(s3_client, "test-bucket", "")
             expected = {
-                "folder1/": (
-                    {"folder1/file1.txt", "folder1/file2.txt"},
-                    {"folder1/subfolder1/": ({"folder1/subfolder1/file3.txt"}, {})},
-                ),
-                "folder2/": ({"folder2/file4.txt"}, {}),
-                "": ({"file5.txt"}, {}),
+                "": ({"folder2/", "folder1/"}, {"file5.txt"}),
+                "folder1/": (set(), {"folder1/"}),
+                "folder2/": (set(), {"folder2/"}),
             }
             assert result == expected
 
@@ -496,9 +493,10 @@ class TestS3Walk:
             result = s3_walk(s3_client, "test-bucket", "folder1/")
             expected = {
                 "folder1/": (
+                    {"subfolder1/"},
                     {"folder1/file1.txt", "folder1/file2.txt"},
-                    {"folder1/subfolder1/": ({"folder1/subfolder1/file3.txt"}, {})},
                 ),
+                "folder1/subfolder1/": (set(), {"folder1/subfolder1/"}),
             }
             assert result == expected
 
@@ -523,10 +521,13 @@ class TestS3Walk:
                 Body=b"content",
             )
             result = s3_walk(s3_client, "test-bucket", "")
-            expected = {"": ({"single_file.txt"}, {})}
+            expected = {
+                "": (set(), {"single_file.txt"}),
+            }
             assert result == expected
 
 
+@pytest.fixture
 def s3_client_for_list_files(_aws_credentials):
     """
     Provide a mocked AWS S3 client with temporary
