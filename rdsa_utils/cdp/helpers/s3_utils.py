@@ -27,7 +27,7 @@ import json
 import logging
 from io import BytesIO, StringIO, TextIOWrapper
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 import boto3
 import pandas as pd
@@ -1319,8 +1319,9 @@ def load_json(
     bucket_name: str,
     filepath: str,
     encoding: Optional[str] = "utf-8",
-) -> Dict:
-    """Load a JSON file from an S3 bucket.
+    multi_line: bool = False,
+) -> Union[Dict, List[Dict]]:
+    """Load a JSON file from an S3 bucket, with optional line-by-line parsing.
 
     Parameters
     ----------
@@ -1331,12 +1332,17 @@ def load_json(
     filepath
         The key (full path and filename) of the JSON file in the S3 bucket.
     encoding
-        The encoding of the JSON file. Default is 'utf-8'.
+        The encoding of the JSON file.
+    multi_line
+        If True, reads the JSON file line by line, treating each line as a
+        separate JSON object.
 
     Returns
     -------
-    Dict
-        Dictionary containing the data from the JSON file.
+    Union[Dict, List[Dict]]
+        - If `multi_line=False`: A dictionary containing the parsed JSON data.
+        - If `multi_line=True`: A list of dictionaries, each corresponding to
+          a JSON object per line.
 
     Raises
     ------
@@ -1355,6 +1361,10 @@ def load_json(
         "age": 30,
         "city": "Manchester"
     }
+
+    >>> log_data = load_json(client, 'my-bucket', 'path/to/log.json', multi_line=True)
+    >>> print(log_data)
+    [{'event': 'start', 'timestamp': '2025-02-18T12:00:00Z'}, ...]
     """
     # Validate bucket name and clean the filepath
     bucket_name = validate_bucket_name(bucket_name)
@@ -1367,14 +1377,18 @@ def load_json(
             f"Loaded JSON file from S3 bucket {bucket_name}, filepath {filepath}",
         )
 
-        # Read the JSON content
+        # Read and parse JSON data
         json_data = response["Body"].read().decode(encoding)
-        data = json.loads(json_data)
+
+        if multi_line:
+            data = [json.loads(line) for line in json_data.strip().split("\n")]
+        else:
+            data = json.loads(json_data)
 
     except Exception as e:
         error_message = (
             f"Error loading or parsing JSON file from bucket {bucket_name}, "
-            "filepath {filepath}: {e}"
+            f"filepath {filepath}: {str(e)}"
         )
         logger.error(error_message)
         raise Exception(error_message) from e

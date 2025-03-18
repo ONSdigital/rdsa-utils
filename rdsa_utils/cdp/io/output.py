@@ -82,7 +82,7 @@ def insert_df_to_hive_table(
     When using repartition with a number:
     - Affects physical file structure but preserves Hive partitioning scheme.
     - Controls number of output files per write operation per Hive partition.
-    - Maintains partition-based query optimization.
+    - Maintains partition-based query optimisation.
 
     When repartitioning by column:
     - Helps balance file sizes across Hive partitions.
@@ -263,7 +263,7 @@ def write_and_read_hive_table(
     with large PySpark DataFrames by leveraging Hive's on-disk storage.
 
     Predicate pushdown is used when reading the data back into a PySpark
-    DataFrame, minimizing the memory usage and optimizing the read
+    DataFrame, minimizing the memory usage and optimising the read
     operation.
 
     As part of the design, there is always a column called filter_col in the

@@ -39,3 +39,5 @@ inline-quotes = "double"
 "rdsa_utils/logging.py" = ["A005"]
 
 "rdsa_utils/typing.py" = ["A005"]
+
+"rdsa_utils/helpers/pyspark_log_parser/parser.py" = ["A005"]
