@@ -934,6 +934,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.file_size" class="md-nav__link">
+    <span class="md-ellipsis">
+      file_size
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdp.helpers.s3_utils.is_s3_directory" class="md-nav__link">
     <span class="md-ellipsis">
       is_s3_directory
@@ -970,6 +979,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.md5_sum" class="md-nav__link">
+    <span class="md-ellipsis">
+      md5_sum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdp.helpers.s3_utils.move_file" class="md-nav__link">
     <span class="md-ellipsis">
       move_file
@@ -979,9 +997,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.read_header" class="md-nav__link">
+    <span class="md-ellipsis">
+      read_header
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.cdp.helpers.s3_utils.remove_leading_slash" class="md-nav__link">
     <span class="md-ellipsis">
       remove_leading_slash
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.s3_walk" class="md-nav__link">
+    <span class="md-ellipsis">
+      s3_walk
     </span>
   </a>
   
@@ -1041,6 +1077,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.cdp.helpers.s3_utils.write_string_to_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      write_string_to_file
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1055,15 +1100,6 @@
   
     <nav class="md-nav" aria-label="hdfs_utils">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.helpers.hdfs_utils._perform" class="md-nav__link">
-    <span class="md-ellipsis">
-      _perform
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#rdsa_utils.cdp.helpers.hdfs_utils.change_permissions" class="md-nav__link">
@@ -1247,33 +1283,6 @@
   
     <nav class="md-nav" aria-label="pipeline_runlog">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog._get_run_ids" class="md-nav__link">
-    <span class="md-ellipsis">
-      _get_run_ids
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string" class="md-nav__link">
-    <span class="md-ellipsis">
-      _parse_runlog_as_string
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.cdp.io.pipeline_runlog._write_entry" class="md-nav__link">
-    <span class="md-ellipsis">
-      _write_entry
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#rdsa_utils.cdp.io.pipeline_runlog.add_runlog_entry" class="md-nav__link">
@@ -1706,15 +1715,6 @@
   
     <nav class="md-nav" aria-label="pyspark">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.helpers.pyspark._convert_to_spark_col" class="md-nav__link">
-    <span class="md-ellipsis">
-      _convert_to_spark_col
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#rdsa_utils.helpers.pyspark.aggregate_col" class="md-nav__link">
@@ -2193,39 +2193,6 @@
       LoadConfig
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="LoadConfig">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.config.LoadConfig._apply_config_validators" class="md-nav__link">
-    <span class="md-ellipsis">
-      _apply_config_validators
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.config.LoadConfig._get_config_parser" class="md-nav__link">
-    <span class="md-ellipsis">
-      _get_config_parser
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rdsa_utils.io.config.LoadConfig._print_config_string" class="md-nav__link">
-    <span class="md-ellipsis">
-      _print_config_string
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -5157,6 +5124,117 @@ set to True to ignore non-existence on delete.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.file_size" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">file_size</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check the size of a file in an AWS S3 bucket.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>client</code>
+            </td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bucket_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>object_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The S3 object name to check for size.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>An integer value indicating the size of the file in bytes.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">file_size</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;mybucket&#39;</span><span class="p">,</span> <span class="s1">&#39;folder/file.txt&#39;</span><span class="p">)</span>
+<span class="go">8</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="rdsa_utils.cdp.helpers.s3_utils.is_s3_directory" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">is_s3_directory</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
 
@@ -5830,6 +5908,117 @@ separate JSON object.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.md5_sum" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">md5_sum</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Get md5 hash of a specific object on s3.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>client</code>
+            </td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bucket_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>object_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The S3 object name to create md5 hash from.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A string value with the MD5 hash of the object data.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">md5_sum</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;mybucket&#39;</span><span class="p">,</span> <span class="s1">&#39;folder/file.txt&#39;</span><span class="p">)</span>
+<span class="go">&quot;d41d8cd98f00b204e9800998ecf8427e&quot;</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="rdsa_utils.cdp.helpers.s3_utils.move_file" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">move_file</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">source_bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">destination_bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">destination_object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
 
@@ -5979,6 +6168,120 @@ separate JSON object.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.read_header" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">read_header</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Read the first line of a file on s3.</p>
+<p>Gets the entire file using boto3 get_objects, converts its body into
+an input stream, reads the first line and remove the carriage return
+character (backslash-n) from the end.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>client</code>
+            </td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bucket_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>object_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The S3 object name to read header from.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Returns the first line of the file.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_header</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;mybucket&#39;</span><span class="p">,</span> <span class="s1">&#39;folder/file.txt&#39;</span><span class="p">)</span>
+<span class="go">&quot;First line&quot;</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="rdsa_utils.cdp.helpers.s3_utils.remove_leading_slash" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">remove_leading_slash</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
 
@@ -6047,6 +6350,141 @@ separate JSON object.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">remove_leading_slash</span><span class="p">(</span><span class="s1">&#39;/example/path&#39;</span><span class="p">)</span>
 <span class="go">&#39;example/path&#39;</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.s3_walk" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">s3_walk</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Traverse an S3 bucket and return its structure in a dictionary format.</p>
+<p>Mimics the functionality of os.walk in s3 bucket using long filenames with slashes.
+Recursively goes through the long filenames and splits it into subdirectories, and
+"files" - short file names.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>client</code>
+            </td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bucket_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefix</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The prefix of the object to start the walk from.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Dict">Dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A dictionary representing the bucket structure where:
+- Keys are directory paths ending with '/'
+- Values are tuples of (set(subdirectories), set(files)) where:
+  - subdirectories: a set of directory names ending with '/'
+  - files: a set of file paths</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># For a bucket with files: file5.txt, folder1/file1.txt, folder1/file2.txt,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># folder1/subfolder1/file3.txt, and folder2/file4.txt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_walk</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;test-bucket&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">    &#39;&#39;: ({&quot;folder1/&quot;, &quot;folder2/&quot;}, {&quot;file5.txt&quot;}),</span>
+<span class="go">    &#39;folder1/&#39;: (set(), {&quot;folder1/&quot;}),</span>
+<span class="go">    &#39;folder2/&#39;: (set(), {&quot;folder2/&quot;})</span>
+<span class="go">}</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># When using a specific prefix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_walk</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;test-bucket&#39;</span><span class="p">,</span> <span class="s1">&#39;folder1/&#39;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">    &#39;folder1/&#39;: ({&quot;subfolder1/&quot;}, {&quot;folder1/file1.txt&quot;, &quot;folder1/file2.txt&quot;}),</span>
+<span class="go">    &#39;folder1/subfolder1/&#39;: (set(), {&quot;folder1/subfolder1/&quot;})</span>
+<span class="go">}</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Empty bucket or nonexistent prefix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s3_walk</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;test-bucket&#39;</span><span class="p">,</span> <span class="s1">&#39;nonexistent/&#39;</span><span class="p">)</span>
+<span class="go">{}</span>
 </code></pre></div>
 
 
@@ -6929,6 +7367,134 @@ using the boto3.put_object method.</p>
 
 </div>
 
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.cdp.helpers.s3_utils.write_string_to_file" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">write_string_to_file</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_content</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Write a string into the specified object in the s3 bucket.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>client</code>
+            </td>
+            <td>
+                  <code><span title="boto3.client">client</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The boto3 S3 client.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bucket_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the bucket.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>object_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The S3 object name to write into.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>object_content</code>
+            </td>
+            <td>
+                  <code><span title="bytes">bytes</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The content (str) to be written to "object_name".</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The outcome of this operation is the string written
+into the object in the s3 bucket. It will overwrite
+anything in the object.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_string_to_file</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;mybucket&#39;</span><span class="p">,</span> <span class="s1">&#39;folder/file.txt&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;example content&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
+
 
 
   </div>
@@ -6968,107 +7534,6 @@ using the boto3.put_object method.</p>
 
 
 
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="rdsa_utils.cdp.helpers.hdfs_utils._perform" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_perform</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Execute a command via subprocess, capturing stdout and stderr.</p>
-<p>This function creates a subprocess with the provided command list, then
-communicates with it to retrieve the stdout and stderr. After the
-command execution, it checks the process's return code to determine success
-or failure. A zero return code indicates success.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>command</code>
-            </td>
-            <td>
-                  <code><span title="typing.List">List</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A list of command elements representing the system
-command to be executed. For example, ['ls', '-l', '/home/user'].</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>True if the command execution is successful (return code 0),
-otherwise False.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="subprocess.TimeoutExpired">TimeoutExpired</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the process does not complete within the default timeout.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
 
 <div class="doc doc-object doc-function">
 
@@ -8805,320 +9270,6 @@ intervention, making outdated metadata issues less likely to occur.</p>
 
 
 
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="rdsa_utils.cdp.io.pipeline_runlog._get_run_ids" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_get_run_ids</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">log_table</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pipeline_runlog&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Retrieve the most recent run ids.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>spark</code>
-            </td>
-            <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A running Spark session.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>limit</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The number of recent run ids to retrieve.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>pipeline</code>
-            </td>
-            <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If specified, the result will be for the listed pipeline only.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>log_table</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The target runlog table. If the database is not set, this should
-include the database.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;pipeline_runlog&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="list">list</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>List of the most recent run ids. Returns an empty list
-if the log table is empty.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="rdsa_utils.cdp.io.pipeline_runlog._parse_runlog_as_string" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_parse_runlog_as_string</span><span class="p">(</span><span class="n">spark</span><span class="p">:</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">runlog_table</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runlog_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Parse a single runlog entry as a string.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>spark</code>
-            </td>
-            <td>
-                  <code><span title="pyspark.sql.SparkSession">SparkSession</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A running spark session.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>runlog_table</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Table containing the runlog entries.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>runlog_id</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>ID of the desired entry.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Parsed runlog entry.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="rdsa_utils.cdp.io.pipeline_runlog._write_entry" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_write_entry</span><span class="p">(</span><span class="n">entry_df</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">log_table</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Write a DataFrame entry into a specified table.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>entry_df</code>
-            </td>
-            <td>
-                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The DataFrame containing the data to be written to the table.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>log_table</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The name of the table into which the data should be written.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
 
 <div class="doc doc-object doc-function">
 
@@ -14232,24 +14383,6 @@ for more information on querying clustered tables.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="rdsa_utils.helpers.pyspark._convert_to_spark_col" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_convert_to_spark_col</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SparkCol</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SparkCol</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Convert strings to Spark Columns, otherwise returns input.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h3 id="rdsa_utils.helpers.pyspark.aggregate_col" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">aggregate_col</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
 
@@ -19219,178 +19352,6 @@ to alert that they have not been validated.</p>
 
 
 
-<div class="doc doc-object doc-function">
-
-
-<h4 id="rdsa_utils.io.config.LoadConfig._apply_config_validators" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_apply_config_validators</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Apply validators to every key in config.</p>
-<p>Warnings are raised if a key doesn't have a validator.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="rdsa_utils.io.config.LoadConfig._get_config_parser" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_get_config_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Config</span><span class="p">]</span></code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return the appropriate config parsing function.</p>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="typing.Callable">Callable</span>[[<span title="str">str</span>], <span title="rdsa_utils.typing.Config">Config</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Function that will parse a string into a config object.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ConfigError (rdsa_utils.exceptions.ConfigError)" href="#rdsa_utils.exceptions.ConfigError">ConfigError</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the specified config file type does not have a config parser
-implemented.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="rdsa_utils.io.config.LoadConfig._print_config_string" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">_print_config_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span></code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Build string to use for printing config dictionary.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>text</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Any text to be printed before the config.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>data</code>
-            </td>
-            <td>
-                  <code><span title="rdsa_utils.typing.Config">Config</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The config to be printed</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>String with nicely formatted dictionary.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    </div>
-
-</div>
-
 
 
   </div>
@@ -20084,7 +20045,7 @@ Default is False.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 17, 2025 14:50:09">March 17, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 18, 2025 17:04:08">March 18, 2025</span>
   </span>
 
     
