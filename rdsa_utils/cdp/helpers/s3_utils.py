@@ -368,7 +368,7 @@ def file_size(
     Returns
     -------
     int
-        An integer value indicating the size of the file in bytes,
+        An integer value indicating the size of the file in bytes.
 
     Examples
     --------
