@@ -10,7 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a function in `cdp/helpers/s3_utils.py` called `file_size` to check a 
   file size in an s3 bucket.
-- Added a function in `cdp/helpers/s3_utils.py` called `md5sum` to create md5 
+- Added a function in `cdp/helpers/s3_utils.py` called `md5_sum` to create md5 
   hash for an object in s3 bucket.
 - Added a function in `cdp/helpers/s3_utils.py` called `read_header` to read 
   the first line of a file in s3 bucket.
