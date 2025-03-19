@@ -481,7 +481,7 @@ class TestS3Walk:
 
         def test_s3_walk_basic(self, s3_client):
             """Test basic functionality of s3_walk."""
-            self.s3_client_structure(s3_client)
+            self.setup_s3_structure(s3_client)
             result = s3_walk(s3_client, "test-bucket", "")
             expected = {
                 "": ({"folder2/", "folder1/"}, {"file5.txt"}),
@@ -492,7 +492,7 @@ class TestS3Walk:
 
         def test_s3_walk_with_prefix(self, s3_client):
             """Test s3_walk with a specific prefix."""
-            self.s3_client_structure(s3_client)
+            self.setup_s3_structure(s3_client)
             result = s3_walk(s3_client, "test-bucket", "folder1/")
             expected = {
                 "folder1/": (
@@ -511,7 +511,7 @@ class TestS3Walk:
 
         def test_s3_walk_nonexistent_prefix(self, s3_client):
             """Test s3_walk with a nonexistent prefix."""
-            self.s3_client_structure(s3_client)
+            self.setup_s3_structure(s3_client)
             result = s3_walk(s3_client, "test-bucket", "nonexistent/")
             expected = {}
             assert result == expected
