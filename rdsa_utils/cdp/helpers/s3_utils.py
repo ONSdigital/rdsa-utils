@@ -1554,6 +1554,7 @@ def delete_old_objects_and_folders(
     bucket_name: str,
     prefix: str,
     age: str = "1 week",
+    dry_run: bool = False,
 ) -> bool:
     """Delete objects and folders in an S3 bucket that are older than a specified age.
 
@@ -1570,16 +1571,31 @@ def delete_old_objects_and_folders(
         - "1 day", "2 days", etc.
         - "1 week", "2 weeks", etc.
         - "1 month", "2 months", etc.
+    dry_run
+        If True, the function will only log the objects and folders
+        that would be deleted, without actually performing the deletion.
+        Default is False.
 
     Returns
     -------
     bool
-        True if the objects and folders were deleted successfully, otherwise False.
+        True if the objects and folders were (or would be)
+        deleted successfully, otherwise False.
 
     Examples
     --------
     >>> client = boto3.client('s3')
+    >>> # This will actually delete objects:
     >>> delete_old_objects_and_folders(client, 'mybucket', 'folder/', '1 week')
+    True
+    >>> # This will only log the objects/folders to be deleted:
+    >>> delete_old_objects_and_folders(
+    ...     client,
+    ...     'mybucket',
+    ...     'folder/',
+    ...     '1 week',
+    ...     dry_run=True
+    ... )
     True
     """
     if not prefix:
@@ -1617,24 +1633,41 @@ def delete_old_objects_and_folders(
                 for obj in page["Contents"]:
                     last_modified = obj["LastModified"]
                     if last_modified < cutoff_date:
-                        client.delete_object(Bucket=bucket_name, Key=obj["Key"])
-                        logger.info(
-                            f"Deleted {obj['Key']} last modified on {last_modified}",
-                        )
+                        if dry_run:
+                            logger.info(
+                                f"Dry-run: would delete {obj['Key']} last "
+                                f"modified on {last_modified}",
+                            )
+                        else:
+                            client.delete_object(Bucket=bucket_name, Key=obj["Key"])
+                            logger.info(
+                                f"Deleted {obj['Key']} last modified "
+                                f"on {last_modified}",
+                            )
             if "CommonPrefixes" in page:
                 for common_prefix in page["CommonPrefixes"]:
                     folder_prefix = common_prefix["Prefix"]
-                    folder_last_modified = client.list_objects_v2(
+                    folder_response = client.list_objects_v2(
                         Bucket=bucket_name,
                         Prefix=folder_prefix,
                         MaxKeys=1,
-                    )["Contents"][0]["LastModified"]
-                    if folder_last_modified < cutoff_date:
-                        delete_folder(client, bucket_name, folder_prefix)
-                        logger.info(
-                            f"Deleted folder {folder_prefix} last modified"
-                            " on {folder_last_modified}",
-                        )
+                    )
+                    if "Contents" in folder_response:
+                        folder_last_modified = folder_response["Contents"][0][
+                            "LastModified"
+                        ]
+                        if folder_last_modified < cutoff_date:
+                            if dry_run:
+                                logger.info(
+                                    f"Dry-run: would delete folder {folder_prefix}"
+                                    " last modified on {folder_last_modified}",
+                                )
+                            else:
+                                delete_folder(client, bucket_name, folder_prefix)
+                                logger.info(
+                                    f"Deleted folder {folder_prefix} last modified"
+                                    " on {folder_last_modified}",
+                                )
         return True
     except client.exceptions.ClientError as e:
         logger.error(f"Failed to delete old objects and folders: {str(e)}")
