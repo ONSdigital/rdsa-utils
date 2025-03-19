@@ -1553,7 +1553,7 @@ def delete_old_objects_and_folders(
     client: boto3.client,
     bucket_name: str,
     prefix: str,
-    age: str = "1 week",
+    age: str,
     dry_run: bool = False,
 ) -> bool:
     """Delete objects and folders in an S3 bucket that are older than a specified age.
