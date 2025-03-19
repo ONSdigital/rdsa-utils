@@ -1,6 +1,7 @@
 """Tests for s3_utils.py module."""
 
 import json
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 
 import boto3
@@ -13,6 +14,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     create_folder_on_s3,
     delete_file,
     delete_folder,
+    delete_old_objects_and_folders,
     download_file,
     download_folder,
     file_exists,
@@ -1467,3 +1469,110 @@ class TestWriteExcel:
             index=False,
         )
         assert not result
+
+
+class TestDeleteOldObjectsAndFolders:
+    """Tests for delete_old_objects_and_folders function."""
+
+    def setup_s3_structure(self, s3_client):
+        """Set up a folder structure in S3 for testing."""
+        now = datetime.now(timezone.utc)
+        old_date = (now - timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        recent_date = (now - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="old-folder/old-file.txt",
+            Body=b"old content",
+            Metadata={"LastModified": old_date},
+        )
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="recent-folder/recent-file.txt",
+            Body=b"recent content",
+            Metadata={"LastModified": recent_date},
+        )
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="old-file.txt",
+            Body=b"old content",
+            Metadata={"LastModified": old_date},
+        )
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="recent-file.txt",
+            Body=b"recent content",
+            Metadata={"LastModified": recent_date},
+        )
+
+    class TestDeleteByDay:
+        """Tests for deleting objects and folders by day."""
+
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting old objects and folders by day."""
+            TestDeleteOldObjectsAndFolders().setup_s3_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "",
+                "1 day",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            assert "recent-folder/recent-file.txt" in remaining_keys
+            assert "recent-file.txt" in remaining_keys
+            assert "old-folder/old-file.txt" not in remaining_keys
+            assert "old-file.txt" not in remaining_keys
+
+    class TestDeleteByWeek:
+        """Tests for deleting objects and folders by week."""
+
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting old objects and folders by week."""
+            TestDeleteOldObjectsAndFolders().setup_s3_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "",
+                "1 week",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            assert "recent-folder/recent-file.txt" in remaining_keys
+            assert "recent-file.txt" in remaining_keys
+            assert "old-folder/old-file.txt" not in remaining_keys
+            assert "old-file.txt" not in remaining_keys
+
+    class TestDeleteByMonth:
+        """Tests for deleting objects and folders by month."""
+
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting old objects and folders by month."""
+            TestDeleteOldObjectsAndFolders().setup_s3_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "",
+                "1 month",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            assert "recent-folder/recent-file.txt" in remaining_keys
+            assert "recent-file.txt" in remaining_keys
+            assert "old-folder/old-file.txt" not in remaining_keys
+            assert "old-file.txt" not in remaining_keys
