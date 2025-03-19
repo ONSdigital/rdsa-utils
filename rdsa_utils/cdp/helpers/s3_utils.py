@@ -1626,6 +1626,11 @@ def delete_old_objects_and_folders(
 
     cutoff_date = datetime.now(timezone.utc) - delta
 
+    logger.info(
+        f"Deleting objects with prefix '{prefix}' older "
+        f"than '{age}' (cutoff date: {cutoff_date})",
+    )
+
     try:
         paginator = client.get_paginator("list_objects_v2")
         for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
