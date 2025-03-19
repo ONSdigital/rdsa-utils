@@ -1644,7 +1644,7 @@ def delete_old_objects_and_folders(
                                 f"modified on {last_modified}",
                             )
                         else:
-                            client.delete_object(Bucket=bucket_name, Key=obj["Key"])
+                            delete_file(client, bucket_name, obj["Key"], overwrite=True)
                             logger.info(
                                 f"Deleted {obj['Key']} last modified "
                                 f"on {last_modified}",
