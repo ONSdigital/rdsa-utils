@@ -1565,7 +1565,7 @@ def delete_old_objects_and_folders(
     bucket_name
         The name of the S3 bucket.
     prefix
-        The prefix to filter objects, by default "".
+        The prefix to filter objects.
     age
         The age threshold for deleting objects. Supported formats:
         - "1 day", "2 days", etc.
