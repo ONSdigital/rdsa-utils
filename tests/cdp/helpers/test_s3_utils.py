@@ -451,7 +451,7 @@ class TestS3Walk:
     class TestS3Walk:
         """Tests for s3_walk function."""
 
-        def s3_client_structure(self, s3_client):
+        def setup_s3_structure(self, s3_client):
             """Set up a folder structure in S3 for testing."""
             s3_client.put_object(
                 Bucket="test-bucket",
