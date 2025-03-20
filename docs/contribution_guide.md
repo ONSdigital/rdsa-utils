@@ -54,6 +54,10 @@ ensure clarity, consistency, and ease of use for others:
 - Ensure the function is readable, maintainable, and easy for others
   to understand — readability is preferred over overly clever one-liners.
 
+> **Note:** If your function raises any exceptions, make sure to include
+> a `Raises` section in the docstring describing the exception type and
+> when it is triggered.
+
 #### Example:
 
 ```python
