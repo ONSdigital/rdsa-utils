@@ -8,6 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add house-style example functions and unit tests to `docs/contribution_guide.md`.
 
 ### Changed
 
