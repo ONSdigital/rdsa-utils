@@ -110,3 +110,24 @@ def read_file(file: Union[CloudPath, Path]) -> str:
         msg = f"{file=} cannot be found."
         logger.error(msg)
         raise FileNotFoundError(msg)
+
+
+def file_size(
+    filepath: str,
+) -> int:
+    """Return the size of the file from the network drive in bytes.
+
+    Parameters
+    ----------
+        filepath (string): The filepath
+
+    Returns
+    -------
+        int: An integer value indicating the size of the file in bytes
+    """
+    if Path(filepath).exists():
+        return Path(filepath).stat().st_size
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
