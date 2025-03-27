@@ -76,3 +76,28 @@ class TestFileSize:
         """Test behavior when file does not exist."""
         with pytest.raises(FileNotFoundError):
             file_size("non_existent_file.txt")
+
+
+class TestMd5Sum:
+    """Tests for md5_sum function."""
+
+    def test_expected(self, tmp_path):
+        """Test expected functionality."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "This is a test file."
+        temp_file.write_text(content)
+
+        # Calculate the expected md5 sum
+        expected_md5 = hashlib.md5(content.encode()).hexdigest()
+
+        # Get the actual md5 sum
+        actual_md5 = md5_sum(str(temp_file))
+
+        # Assert the md5 sums match
+        assert actual_md5 == expected_md5
+
+    def test_file_not_found(self):
+        """Test behavior when file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            md5_sum("non_existent_file.txt")
