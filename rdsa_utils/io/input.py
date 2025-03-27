@@ -1,6 +1,5 @@
 """Module containing generic input functionality code."""
 
-import hashlib
 import json
 import logging
 from pathlib import Path
@@ -109,47 +108,5 @@ def read_file(file: Union[CloudPath, Path]) -> str:
         return file.read_text()
     else:
         msg = f"{file=} cannot be found."
-        logger.error(msg)
-        raise FileNotFoundError(msg)
-
-
-def file_size(
-    filepath: str,
-) -> int:
-    """Return the size of the file from the network drive in bytes.
-
-    Parameters
-    ----------
-        filepath (string): The filepath
-
-    Returns
-    -------
-        int: An integer value indicating the size of the file in bytes
-    """
-    if Path(filepath).exists():
-        return Path(filepath).stat().st_size
-    else:
-        msg = f"{filepath=} cannot be found."
-        logger.error(msg)
-        raise FileNotFoundError(msg)
-
-
-def md5_sum(filepath: str):
-    """
-    Get md5sum of a specific file on the local file system.
-
-    Parameters
-    ----------
-        filepath (string): The filepath
-
-    Returns
-    -------
-    The md5sum of the file.
-    """
-    if Path(filepath).exists():
-        with open(filepath, "rb") as f:
-            return hashlib.md5(f.read()).hexdigest()
-    else:
-        msg = f"{filepath=} cannot be found."
         logger.error(msg)
         raise FileNotFoundError(msg)

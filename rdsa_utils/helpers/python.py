@@ -1,8 +1,10 @@
 """Miscellaneous helper functions for Python."""
 
+import hashlib
 import itertools
 import json
 import logging
+import pathlib as Path
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
@@ -654,3 +656,45 @@ def merge_multi_dfs(
         merged_df = merged_df.fillna(fillna_val)
 
     return merged_df
+
+
+def file_size(
+    filepath: str,
+) -> int:
+    """Return the size of the file from the network drive in bytes.
+
+    Parameters
+    ----------
+        filepath (string): The filepath
+
+    Returns
+    -------
+        int: An integer value indicating the size of the file in bytes
+    """
+    if Path(filepath).exists():
+        return Path(filepath).stat().st_size
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
+def md5_sum(filepath: str):
+    """
+    Get md5sum of a specific file on the local file system.
+
+    Parameters
+    ----------
+        filepath (string): The filepath
+
+    Returns
+    -------
+    The md5sum of the file.
+    """
+    if Path(filepath).exists():
+        with open(filepath, "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)

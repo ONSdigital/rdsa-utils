@@ -762,3 +762,50 @@ class TestMergeMultiDfs:
             match="`on` must be a string or a list of strings.",
         ):
             merge_multi_dfs([df1, df2], on=123, how="inner")
+
+
+class TestFileSize:
+    """Tests for file_size function."""
+
+    def test_expected(self, tmp_path):
+        """Test expected functionality."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "This is a test file."
+        temp_file.write_text(content)
+
+        # Get the file size
+        actual = file_size(str(temp_file))
+
+        # Assert the file size matches the content length
+        assert actual == len(content)
+
+    def test_file_not_found(self):
+        """Test behavior when file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            file_size("non_existent_file.txt")
+
+
+class TestMd5Sum:
+    """Tests for md5_sum function."""
+
+    def test_expected(self, tmp_path):
+        """Test expected functionality."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "This is a test file."
+        temp_file.write_text(content)
+
+        # Calculate the expected md5 sum
+        expected_md5 = hashlib.md5(content.encode()).hexdigest()
+
+        # Get the actual md5 sum
+        actual_md5 = md5_sum(str(temp_file))
+
+        # Assert the md5 sums match
+        assert actual_md5 == expected_md5
+
+    def test_file_not_found(self):
+        """Test behavior when file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            md5_sum("non_existent_file.txt")

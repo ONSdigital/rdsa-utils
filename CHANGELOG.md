@@ -8,9 +8,9 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added a function in `io/input.py` called `file_size` to check a
+- Added a function in `helpers/python.py` called `file_size` to check a
   file size in a local drive.
-- Added a function in `io/input.py` called `md5_sum` to create md5
+- Added a function in `helpers/python.py` called `md5_sum` to create md5
   hash for an object in a local drive.
 
 ### Changed
