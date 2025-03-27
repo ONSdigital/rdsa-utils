@@ -1,11 +1,13 @@
 """Miscellaneous helper functions for Python."""
 
+import hashlib
 import itertools
 import json
 import logging
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
+from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
 import pandas as pd
@@ -654,3 +656,57 @@ def merge_multi_dfs(
         merged_df = merged_df.fillna(fillna_val)
 
     return merged_df
+
+
+def file_size(
+    filepath: str,
+) -> int:
+    """Return the size of the file from the network drive in bytes.
+
+    Parameters
+    ----------
+        filepath (string): The filepath of file to check for size.
+
+    Returns
+    -------
+        int: An integer value indicating the size of the file in bytes
+
+    Example
+    -------
+    >>> file_size("folder/file.txt")
+    >>> 90
+    """
+    if Path(filepath).exists():
+        return Path(filepath).stat().st_size
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
+def md5_sum(
+    filepath: str,
+) -> str:
+    """
+    Get md5sum of a specific file on the local file system.
+
+    Parameters
+    ----------
+        filepath (string): filepath of file to create md5 hash from.
+
+    Returns
+    -------
+    The md5sum of the file.
+
+    Example
+    -------
+    >>> md5_sum("folder/file.txt")
+    >>> "d41d8cd98f00b204e9800998ecf8427e"
+    """
+    if Path(filepath).exists():
+        with open(filepath, "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
