@@ -4,10 +4,10 @@ import hashlib
 import itertools
 import json
 import logging
-import pathlib as Path
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
+from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
 import pandas as pd
