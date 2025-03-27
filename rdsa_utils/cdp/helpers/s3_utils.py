@@ -436,6 +436,44 @@ def md5_sum(
     return md5result
 
 
+def check_file(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> bool:
+    """Check file in s3 bucket.
+
+    Test if given path is a file that it exists in s3 bucket, that it is
+    not a directory and the size is greater than 0.
+
+    Paramenters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The path to a file in s3 bucket.
+
+    Returns
+    -------
+    bool
+        True if the file exists, is not a directory, and size > 0,
+        otherwise False.
+
+    """
+    if object_name is None:
+        response = False
+
+    if file_exists(object_name):
+        isdir = is_s3_directory(client, bucket_name, object_name)
+        size = file_size(client, bucket_name, object_name)
+        response = (not isdir) and (size > 0)
+    else:
+        response = False
+    return response
+
+
 def read_header(
     client: boto3.client,
     bucket_name: str,

@@ -12,6 +12,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   file size in a local drive.
 - Added a function in `helpers/python.py` called `md5_sum` to create md5
   hash for an object in a local drive.
+- Added a function in `cdp/helpers/s3_utils.py` called `check_file` to check a
+  file exists, is not a directory and size > 0 in an s3 bucket.
 
 ### Changed
 
