@@ -665,11 +665,16 @@ def file_size(
 
     Parameters
     ----------
-        filepath (string): The filepath
+        filepath (string): The filepath of file to check for size.
 
     Returns
     -------
         int: An integer value indicating the size of the file in bytes
+
+    Example
+    -------
+    >>> file_size("folder/file.txt")
+    >>> 90
     """
     if Path(filepath).exists():
         return Path(filepath).stat().st_size
@@ -679,17 +684,24 @@ def file_size(
         raise FileNotFoundError(msg)
 
 
-def md5_sum(filepath: str):
+def md5_sum(
+    filepath: str,
+) -> str:
     """
     Get md5sum of a specific file on the local file system.
 
     Parameters
     ----------
-        filepath (string): The filepath
+        filepath (string): filepath of file to create md5 hash from.
 
     Returns
     -------
     The md5sum of the file.
+
+    Example
+    -------
+    >>> md5_sum("folder/file.txt")
+    >>> "d41d8cd98f00b204e9800998ecf8427e"
     """
     if Path(filepath).exists():
         with open(filepath, "rb") as f:
