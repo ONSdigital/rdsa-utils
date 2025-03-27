@@ -465,7 +465,7 @@ def check_file(
     if object_name is None:
         response = False
 
-    if file_exists(object_name):
+    if file_exists(client, bucket_name, object_name):
         isdir = is_s3_directory(client, bucket_name, object_name)
         size = file_size(client, bucket_name, object_name)
         response = (not isdir) and (size > 0)
