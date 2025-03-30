@@ -1735,7 +1735,8 @@ def zip_s3_directory_to_s3(
             source_prefix = f"{source_prefix}/"
 
         # List all objects in the source directory
-        pages = list_files(client, source_bucket_name, source_prefix)
+        paginator = client.get_paginator("list_objects_v2")
+        pages = paginator.paginate(Bucket=source_bucket_name, Prefix=source_prefix)
 
         # Create a buffer for the zip file
         zip_buffer = io.BytesIO()
