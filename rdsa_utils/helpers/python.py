@@ -665,11 +665,13 @@ def file_size(
 
     Parameters
     ----------
-        filepath (string): The filepath of file to check for size.
+    filepath
+        The filepath of file to check for size.
 
     Returns
     -------
-        int: An integer value indicating the size of the file in bytes
+    int
+        An integer value indicating the size of the file in bytes
 
     Example
     -------
@@ -692,11 +694,13 @@ def md5_sum(
 
     Parameters
     ----------
-        filepath (string): filepath of file to create md5 hash from.
+    filepath
+        Filepath of file to create md5 hash from.
 
     Returns
     -------
-    The md5sum of the file.
+    str
+        The md5sum of the file.
 
     Example
     -------
@@ -720,11 +724,13 @@ def file_exists(
 
     Parameters
     ----------
-        filepath (string): filepath of file to create md5 hash from.
+    filepath
+        Filepath of file to create md5 hash from.
 
     Returns
     -------
-    True if the file exists. Else False.
+    bool
+        True if the file exists. Else False.
     """
     if Path(filepath).exists():
         return Path(filepath).is_file()
@@ -742,7 +748,7 @@ def directory_exists(
 
     Parameters
     ----------
-    dirpath (string)
+    dirpath
         The directory path to check.
 
     Returns
@@ -768,7 +774,8 @@ def check_file(
 
     Paramenters
     ----------
-    filepath (str): The path to a local/network file.
+    filepath
+        The path to a local/network file.
 
     Returns
     -------
@@ -786,18 +793,22 @@ def check_file(
     return response
 
 
-def read_header(path: str):
+def read_header(
+    path: str,
+) -> str:
     """Return the first line of a file on the local file system.
 
     Reads the first line and removes the newline/returncarriage symbol.
 
     Parameters
     ----------
-    filepath (str): The path to a local/network file.
+    filepath
+        The path to a local/network file.
 
     Returns
     -------
-    The first line of the file as a string.
+    str
+        The first line of the file as a string.
     """
     with open(path, "r") as f:
         first_line = f.readline()
