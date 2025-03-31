@@ -710,3 +710,77 @@ def md5_sum(
         msg = f"{filepath=} cannot be found."
         logger.error(msg)
         raise FileNotFoundError(msg)
+
+
+def file_exists(
+    filepath: str,
+) -> bool:
+    """
+    Test if file exists on the local file system.
+
+    Parameters
+    ----------
+        filepath (string): filepath of file to create md5 hash from.
+
+    Returns
+    -------
+    True if the file exists. Else False.
+    """
+    if Path(filepath).exists():
+        return Path(filepath).is_file()
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
+def directory_exists(
+    dirpath: str,
+) -> bool:
+    """
+    Test if given path is a directory on the local file system.
+
+    Parameters
+    ----------
+    dirpath (string)
+        The directory path to check.
+
+    Returns
+    -------
+    bool
+        True if the dirpath is a directory, false otherwise.
+    """
+    if Path(dirpath).exists():
+        return Path(dirpath).is_dir()
+    else:
+        msg = f"{dirpath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
+def check_file(
+    filepath: str,
+) -> bool:
+    """Check file.
+
+    Test if given path is a file exists, is not a
+    directory and the size is greater than 0.
+
+    Paramenters
+    ----------
+    filepath (str): The path to a local/network file.
+
+    Returns
+    -------
+    bool
+        True if the file exists, is not a directory, and size > 0,
+        otherwise False.
+
+    """
+    if file_exists(filepath):
+        isdir = directory_exists(filepath)
+        size = file_size(filepath)
+        response = (not isdir) and (size > 0)
+    else:
+        response = False
+    return response

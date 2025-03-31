@@ -14,6 +14,12 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
   hash for an object in a local drive.
 - Added a function in `cdp/helpers/s3_utils.py` called `check_file` to check a
   file exists, is not a directory and size > 0 in an s3 bucket.
+- Added a function in `helpers/python.py` called `file_exists` to check if
+a file exists in a local drive.
+- Added a function in `helpers/python.py` called `is_local_directory` to check if
+a directory exists in a local drive.
+- Added a function in `helpers/python.py` called `check_file` to check a
+  file exists, is not a directory and size > 0 in a local drive.
 
 ### Changed
 

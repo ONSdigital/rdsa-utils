@@ -809,3 +809,64 @@ class TestMd5Sum:
         """Test behavior when file does not exist."""
         with pytest.raises(FileNotFoundError):
             md5_sum("non_existent_file.txt")
+
+
+class TestFileExists:
+    """Tests for file_exists function."""
+
+    def test_file_exists(self, tmp_path):
+        """Test when the file exists."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("This is a test file.")
+        assert file_exists(str(temp_file)) is True
+
+    def test_file_does_not_exist(self):
+        """Test when the file does not exist."""
+        assert file_exists("non_existent_file.txt") is False
+
+    def test_directory_instead_of_file(self, tmp_path):
+        """Test when the path is a directory."""
+        assert file_exists(str(tmp_path)) is False
+
+
+class TestDirectoryExists:
+    """Tests for directory_exists function."""
+
+    def test_is_directory(self, tmp_path):
+        """Test when the path is a directory."""
+        assert directory_exists(str(tmp_path)) is True
+
+    def test_is_not_directory(self, tmp_path):
+        """Test when the path is not a directory."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("This is a test file.")
+        assert directory_exists(str(temp_file)) is False
+
+    def test_non_existent_path(self):
+        """Test when the path does not exist."""
+        with pytest.raises(FileNotFoundError):
+            directory_exists("non_existent_path")
+
+
+class TestCheckFile:
+    """Tests for the check_file function."""
+
+    def test_file_exists(self, tmp_path):
+        """Test when the file exists."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("This is a test file.")
+        assert check_file(str(temp_file)) is True
+
+    def test_file_does_not_exist(self):
+        """Test when the file does not exist."""
+        assert check_file("non_existent_file.txt") is False
+
+    def test_is_directory(self, tmp_path):
+        """Test when the path is a directory."""
+        assert check_file(str(tmp_path)) is False
+
+    def test_size_less_0(self, tmp_path):
+        """Test when the path an empty file."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("")
+        assert check_file(str(temp_file)) is False
