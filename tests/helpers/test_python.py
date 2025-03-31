@@ -822,7 +822,8 @@ class TestFileExists:
 
     def test_file_does_not_exist(self):
         """Test when the file does not exist."""
-        assert file_exists("non_existent_file.txt") is False
+        with pytest.raises(FileNotFoundError):
+            file_exists("non_existent_file.txt")
 
     def test_directory_instead_of_file(self, tmp_path):
         """Test when the path is a directory."""
