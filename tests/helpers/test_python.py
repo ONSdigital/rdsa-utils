@@ -901,3 +901,62 @@ class TestReadHeader:
         """Test behavior when the file does not exist."""
         with pytest.raises(FileNotFoundError):
             read_header("non_existent_file.txt")
+
+
+class TestWriteStringToFile:
+    """Tests for the write_string_to_file function."""
+
+    def test_write_string_to_file_expected(self, tmp_path):
+        """Test writing content to a file."""
+        # Create a temporary file path
+        temp_file = tmp_path / "test_file.txt"
+        content = b"This is a test file."
+
+        # Write the content to the file
+        write_string_to_file(content, str(temp_file))
+
+        # Read the file and verify the content
+        with open(temp_file, "rb") as f:
+            actual_content = f.read()
+
+        assert actual_content == content
+
+    def test_overwrite_existing_file(self, tmp_path):
+        """Test overwriting an existing file."""
+        # Create a temporary file and write initial content
+        temp_file = tmp_path / "test_file.txt"
+        initial_content = b"Initial content."
+        temp_file.write_bytes(initial_content)
+
+        # New content to overwrite the file
+        new_content = b"New content."
+        write_string_to_file(new_content, str(temp_file))
+
+        # Read the file and verify the new content
+        with open(temp_file, "rb") as f:
+            actual_content = f.read()
+
+        assert actual_content == new_content
+
+    def test_empty_content(self, tmp_path):
+        """Test writing empty content to a file."""
+        # Create a temporary file path
+        temp_file = tmp_path / "test_file.txt"
+        content = b""
+
+        # Write the empty content to the file
+        write_string_to_file(content, str(temp_file))
+
+        # Read the file and verify the content is empty
+        with open(temp_file, "rb") as f:
+            actual_content = f.read()
+
+        assert actual_content == content
+
+    def test_invalid_path(self):
+        """Test behavior when the file path is invalid."""
+        invalid_path = "/invalid_path/test_file.txt"
+        content = b"Test content."
+
+        with pytest.raises(OSError):
+            write_string_to_file(content, invalid_path)

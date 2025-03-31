@@ -802,3 +802,30 @@ def read_header(path: str):
     with open(path, "r") as f:
         first_line = f.readline()
         return first_line.rstrip("\n\r")
+
+
+def write_string_to_file(
+    content: bytes,
+    filepath: str,
+) -> None:
+    """Write a string into the specified file path on the local file system.
+
+    Parameters
+    ----------
+    content
+        The content to write into the file.
+    filepath
+        The path to the file where the content will be written.
+        If the file already exists, it will be overwritten.
+
+    Returns
+    -------
+    None
+
+    Example
+    -------
+    >>> write_string_to_file(b"Hello, World!", "example.txt")
+    >>> # The content "Hello, World!" will be written to example.txt
+    """
+    with open(filepath, "wb") as f:
+        f.write(content)

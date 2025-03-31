@@ -22,6 +22,8 @@ a directory exists in a local drive.
   file exists, is not a directory and size > 0 in a local drive.
 - Added a function in `helpers/python.py` called `read_header` to print the first
 line of a file in a local drive.
+- Added a function in `helpers/python.py` called `write_string_to_file` to write
+content into an existing file.
 
 ### Changed
 
