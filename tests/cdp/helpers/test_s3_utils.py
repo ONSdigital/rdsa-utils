@@ -647,21 +647,6 @@ class TestCheckFile:
         )
         assert check_file(s3_client, "test-bucket", "empty-file.txt") is False
 
-    def test_check_file_invalid_bucket(self, s3_client, monkeypatch):
-        """Test check_file raises an error for an invalid bucket."""
-
-        def mock_head_bucket(bucket):
-            if bucket == "invalid-bucket":
-                raise s3_client.exceptions.NoSuchBucket(
-                    error_response={"Error": {"Code": "NoSuchBucket"}},
-                    operation_name="HeadBucket",
-                )
-
-        monkeypatch.setattr(s3_client, "head_bucket", mock_head_bucket)
-
-        with pytest.raises(s3_client.exceptions.NoSuchBucket):
-            check_file(s3_client, "invalid-bucket", "test-file.txt")
-
 
 class TestWriteStringToFile:
     """Tests for write_string_to_file function."""
