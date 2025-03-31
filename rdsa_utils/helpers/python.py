@@ -784,3 +784,21 @@ def check_file(
     else:
         response = False
     return response
+
+
+def read_header(path: str):
+    """Return the first line of a file on the local file system.
+
+    Reads the first line and removes the newline/returncarriage symbol.
+
+    Parameters
+    ----------
+    filepath (str): The path to a local/network file.
+
+    Returns
+    -------
+    The first line of the file as a string.
+    """
+    with open(path, "r") as f:
+        first_line = f.readline()
+        return first_line.rstrip("\n\r")

@@ -858,11 +858,6 @@ class TestCheckFile:
         temp_file.write_text("This is a test file.")
         assert check_file(str(temp_file)) is True
 
-    def test_file_does_not_exist(self):
-        """Test when the file does not exist."""
-        with pytest.raises(FileNotFoundError):
-            check_file("non_existent_file.txt")
-
     def test_is_directory(self, tmp_path):
         """Test when the path is a directory."""
         assert check_file(str(tmp_path)) is False
@@ -872,3 +867,37 @@ class TestCheckFile:
         temp_file = tmp_path / "test_file.txt"
         temp_file.write_text("")
         assert check_file(str(temp_file)) is False
+
+
+class TestReadHeader:
+    """Tests for the read_header function."""
+
+    def test_read_header_expected(self, tmp_path):
+        """Test reading the first line of a file."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "First line\nSecond line\nThird line"
+        temp_file.write_text(content)
+
+        # Read the header
+        actual = read_header(str(temp_file))
+
+        # Assert the header matches the first line
+        assert actual == "First line"
+
+    def test_read_header_empty_file(self, tmp_path):
+        """Test reading the header of an empty file."""
+        # Create an empty temporary file
+        temp_file = tmp_path / "empty_file.txt"
+        temp_file.write_text("")
+
+        # Read the header
+        actual = read_header(str(temp_file))
+
+        # Assert the header is an empty string
+        assert actual == ""
+
+    def test_read_header_file_not_found(self):
+        """Test behavior when the file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            read_header("non_existent_file.txt")

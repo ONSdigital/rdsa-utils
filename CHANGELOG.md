@@ -20,6 +20,8 @@ a file exists in a local drive.
 a directory exists in a local drive.
 - Added a function in `helpers/python.py` called `check_file` to check a
   file exists, is not a directory and size > 0 in a local drive.
+- Added a function in `helpers/python.py` called `read_header` to print the first
+line of a file in a local drive.
 
 ### Changed
 
