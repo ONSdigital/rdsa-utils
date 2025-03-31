@@ -827,7 +827,7 @@ def copy_file(
         return False
 
 
-def create_folder_on_s3(
+def create_folder(
     client: boto3.client,
     bucket_name: str,
     folder_path: str,
@@ -852,7 +852,7 @@ def create_folder_on_s3(
     Examples
     --------
     >>> client = boto3.client('s3')
-    >>> create_folder_on_s3(client, 'mybucket', 'new_folder/')
+    >>> create_folder(client, 'mybucket', 'new_folder/')
     True
     """
     bucket_name = validate_bucket_name(bucket_name)
@@ -930,7 +930,7 @@ def upload_folder(
     prefix = remove_leading_slash(prefix)
 
     # Ensure the folder exists on S3
-    if not create_folder_on_s3(client, bucket_name, prefix):
+    if not create_folder(client, bucket_name, prefix):
         logger.error("Failed to create folder on S3.")
         return False
 

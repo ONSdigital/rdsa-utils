@@ -960,3 +960,35 @@ class TestWriteStringToFile:
 
         with pytest.raises(OSError):
             write_string_to_file(content, invalid_path)
+
+
+class TestCreateFolder:
+    """Tests for the create_folder function."""
+
+    def test_create_new_folder(self, tmp_path):
+        """Test creating a new folder."""
+        new_folder = tmp_path / "new_folder"
+        create_folder(str(new_folder))
+        assert new_folder.exists()
+        assert new_folder.is_dir()
+
+    def test_create_existing_folder(self, tmp_path):
+        """Test creating a folder that already exists."""
+        existing_folder = tmp_path / "existing_folder"
+        existing_folder.mkdir()
+        create_folder(str(existing_folder))
+        assert existing_folder.exists()
+        assert existing_folder.is_dir()
+
+    def test_create_nested_folders(self, tmp_path):
+        """Test creating nested folders."""
+        nested_folder = tmp_path / "parent_folder" / "child_folder"
+        create_folder(str(nested_folder))
+        assert nested_folder.exists()
+        assert nested_folder.is_dir()
+
+    def test_invalid_path(self):
+        """Test behavior when the path is invalid."""
+        invalid_path = "/invalid_path/new_folder"
+        with pytest.raises(OSError):
+            create_folder(invalid_path)

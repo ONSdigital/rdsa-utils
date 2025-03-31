@@ -840,3 +840,21 @@ def write_string_to_file(
     """
     with open(filepath, "wb") as f:
         f.write(content)
+
+
+def create_folder(dirpath):
+    """Create a directory on a local network drive.
+
+    Parameters
+    ----------
+    dirpath
+        The path to the directory to create.
+
+    Returns
+    -------
+    None
+        The directory will be created if it does not already exist,
+        including parent directories.
+    """
+    Path(dirpath).mkdir(parents=True, exist_ok=True)
+    return None

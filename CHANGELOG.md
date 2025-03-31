@@ -24,8 +24,11 @@ a directory exists in a local drive.
 line of a file in a local drive.
 - Added a function in `helpers/python.py` called `write_string_to_file` to write
 content into an existing file.
+- Added a function in `helpers/python.py` called `create_folder` to create a directory.
 
 ### Changed
+- Changed a function in `cdp/helpers/s3_utils.py` called `create_folder_on_s3` to 
+`create_folder`.
 
 ### Deprecated
 
