@@ -673,10 +673,17 @@ def file_size(
     int
         An integer value indicating the size of the file in bytes
 
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
     Example
     -------
     >>> file_size("folder/file.txt")
-    >>> 90
+    90
+    >>> file_size("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='.../folder/non_existing_file.txt' cannot be found.
     """
     if Path(filepath).exists():
         return Path(filepath).stat().st_size
@@ -701,10 +708,17 @@ def md5_sum(
     str
         The md5sum of the file.
 
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
     Example
     -------
     >>> md5_sum("folder/file.txt")
-    >>> "d41d8cd98f00b204e9800998ecf8427e"
+    "d41d8cd98f00b204e9800998ecf8427e"
+    >>> md5_sum("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='../folder/non_existing_file.txt' cannot be found.
     """
     if Path(filepath).exists():
         with open(filepath, "rb") as f:
@@ -723,19 +737,26 @@ def file_exists(
     Parameters
     ----------
     filepath
-        Filepath of file to create md5 hash from.
+        Filepath of file check exists.
 
     Returns
     -------
     bool
-        True if the file exists. Else False.
+        True if the file exists, else False.
+
+    Example
+    -------
+    >>> file_exists("folder/file.txt")
+    True
+    >>> file_exists("folder/non_existing_file.txt")
+    filepath='.../folder/non_existing_file.txt' cannot be found.
+    False
     """
     if Path(filepath).exists():
         return Path(filepath).is_file()
     else:
-        msg = f"{filepath=} cannot be found."
-        logger.error(msg)
-        raise FileNotFoundError(msg)
+        logger.warning(f"{filepath=} cannot be found.")
+        return False
 
 
 def directory_exists(
@@ -746,19 +767,26 @@ def directory_exists(
     Parameters
     ----------
     dirpath
-        The directory path to check.
+        The directory path to check exists.
 
     Returns
     -------
     bool
         True if the dirpath is a directory, false otherwise.
+
+    Example
+    -------
+    >>> directory_exists("folder")
+    True
+    >>> directory_exists("non_existing_folder")
+    dirpath='.../non_existing_folder' cannot be found.
+    False
     """
     if Path(dirpath).exists():
         return Path(dirpath).is_dir()
     else:
-        msg = f"{dirpath=} cannot be found."
-        logger.error(msg)
-        raise FileNotFoundError(msg)
+        logger.warning(f"{dirpath=} cannot be found.")
+        return False
 
 
 def check_file(
@@ -780,6 +808,13 @@ def check_file(
     bool
         True if the file exists, is not a directory, and size > 0,
         otherwise False.
+
+    Example
+    -------
+    >>> check_file("folder/file.txt")
+    True
+    >>> check_file("folder/file_0_bytes.txt")
+    False
     """
     if file_exists(filepath):
         isdir = directory_exists(filepath)
@@ -791,7 +826,7 @@ def check_file(
 
 
 def read_header(
-    path: str,
+    filepath: str,
 ) -> str:
     """Return the first line of a file on the local file system.
 
@@ -806,10 +841,27 @@ def read_header(
     -------
     str
         The first line of the file as a string.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
+    Example
+    -------
+    >>> read_header("folder/file.txt")
+    "This is the first line of the file."
+    >>> read_header("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='.../folder/non_existing_file.txt' cannot be found.
     """
-    with open(path, "r") as f:
-        first_line = f.readline()
-        return first_line.rstrip("\n\r")
+    try:
+        with open(filepath, "r") as f:
+            first_line = f.readline()
+            return first_line.rstrip("\n\r")
+    except FileNotFoundError:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg) from None
 
 
 def write_string_to_file(
@@ -833,7 +885,7 @@ def write_string_to_file(
     Example
     -------
     >>> write_string_to_file(b"Hello, World!", "example.txt")
-    >>> # The content "Hello, World!" will be written to example.txt
+    # The content "Hello, World!" will be written to "example.txt"
     """
     with open(filepath, "wb") as f:
         f.write(content)
