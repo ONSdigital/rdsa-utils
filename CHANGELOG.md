@@ -15,20 +15,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 - Added a function in `cdp/helpers/s3_utils.py` called `check_file` to check a
   file exists, is not a directory and size > 0 in an s3 bucket.
 - Added a function in `helpers/python.py` called `file_exists` to check if
-a file exists in a local drive.
+  a file exists in a local drive.
 - Added a function in `helpers/python.py` called `is_local_directory` to check if
-a directory exists in a local drive.
+  a directory exists in a local drive.
 - Added a function in `helpers/python.py` called `check_file` to check a
   file exists, is not a directory and size > 0 in a local drive.
 - Added a function in `helpers/python.py` called `read_header` to print the first
-line of a file in a local drive.
+  line of a file in a local drive.
 - Added a function in `helpers/python.py` called `write_string_to_file` to write
-content into an existing file.
+  content into an existing file.
 - Added a function in `helpers/python.py` called `create_folder` to create a directory.
 
 ### Changed
-- Changed a function in `cdp/helpers/s3_utils.py` called `create_folder_on_s3` to 
-`create_folder`.
+- Changed a function in `cdp/helpers/s3_utils.py` called `create_folder_on_s3` to
+  `create_folder`.
 
 ### Deprecated
 

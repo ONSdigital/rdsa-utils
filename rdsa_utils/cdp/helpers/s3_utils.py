@@ -441,12 +441,12 @@ def check_file(
     bucket_name: str,
     object_name: str,
 ) -> bool:
-    """Check file in s3 bucket.
+    """Check if a file exists in an S3 bucket and meets specific criteria.
 
-    Test if given path is a file that it exists in s3 bucket, that it is
-    not a directory and the size is greater than 0.
+    Verifies that the given path corresponds to a file in an S3 bucket,
+    ensuring it exists, is not a directory, and has a size greater than 0.
 
-    Paramenters
+    Parameters
     ----------
     client
         The boto3 S3 client.
@@ -461,6 +461,17 @@ def check_file(
         True if the file exists, is not a directory, and size > 0,
         otherwise False.
 
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> check_file(client, 'mybucket', 'folder/file.txt')
+    True
+
+    >>> check_file(client, 'mybucket', 'folder/nonexistent_file.txt')
+    False
+
+    >>> check_file(client, 'mybucket', 'folder/')
+    False
     """
     if object_name is None:
         response = False

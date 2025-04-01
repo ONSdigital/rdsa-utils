@@ -689,8 +689,7 @@ def file_size(
 def md5_sum(
     filepath: str,
 ) -> str:
-    """
-    Get md5sum of a specific file on the local file system.
+    """Get md5sum of a specific file on the local file system.
 
     Parameters
     ----------
@@ -719,8 +718,7 @@ def md5_sum(
 def file_exists(
     filepath: str,
 ) -> bool:
-    """
-    Test if file exists on the local file system.
+    """Test if file exists on the local file system.
 
     Parameters
     ----------
@@ -743,8 +741,7 @@ def file_exists(
 def directory_exists(
     dirpath: str,
 ) -> bool:
-    """
-    Test if given path is a directory on the local file system.
+    """Test if given path is a directory on the local file system.
 
     Parameters
     ----------
@@ -767,12 +764,13 @@ def directory_exists(
 def check_file(
     filepath: str,
 ) -> bool:
-    """Check file.
+    """Check if a file exists on the local file system and meets specific criteria.
 
-    Test if given path is a file exists, is not a
-    directory and the size is greater than 0.
+    This function checks whether the given path corresponds to a valid file
+    on the local or network file system. It ensures the file exists, is not
+    a directory, and its size is greater than zero bytes.
 
-    Paramenters
+    Parameters
     ----------
     filepath
         The path to a local/network file.
@@ -782,7 +780,6 @@ def check_file(
     bool
         True if the file exists, is not a directory, and size > 0,
         otherwise False.
-
     """
     if file_exists(filepath):
         isdir = directory_exists(filepath)
