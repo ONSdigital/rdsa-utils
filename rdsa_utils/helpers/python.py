@@ -1,11 +1,13 @@
 """Miscellaneous helper functions for Python."""
 
+import hashlib
 import itertools
 import json
 import logging
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
+from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
 
 import pandas as pd
@@ -654,3 +656,259 @@ def merge_multi_dfs(
         merged_df = merged_df.fillna(fillna_val)
 
     return merged_df
+
+
+def file_size(
+    filepath: str,
+) -> int:
+    """Return the size of the file from the network drive in bytes.
+
+    Parameters
+    ----------
+    filepath
+        The filepath of file to check for size.
+
+    Returns
+    -------
+    int
+        An integer value indicating the size of the file in bytes
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
+    Example
+    -------
+    >>> file_size("folder/file.txt")
+    90
+    >>> file_size("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='.../folder/non_existing_file.txt' cannot be found.
+    """
+    if Path(filepath).exists():
+        return Path(filepath).stat().st_size
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
+def md5_sum(
+    filepath: str,
+) -> str:
+    """Get md5sum of a specific file on the local file system.
+
+    Parameters
+    ----------
+    filepath
+        Filepath of file to create md5 hash from.
+
+    Returns
+    -------
+    str
+        The md5sum of the file.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
+    Example
+    -------
+    >>> md5_sum("folder/file.txt")
+    "d41d8cd98f00b204e9800998ecf8427e"
+    >>> md5_sum("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='../folder/non_existing_file.txt' cannot be found.
+    """
+    if Path(filepath).exists():
+        with open(filepath, "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
+def file_exists(
+    filepath: str,
+) -> bool:
+    """Test if file exists on the local file system.
+
+    Parameters
+    ----------
+    filepath
+        Filepath of file check exists.
+
+    Returns
+    -------
+    bool
+        True if the file exists, else False.
+
+    Example
+    -------
+    >>> file_exists("folder/file.txt")
+    True
+    >>> file_exists("folder/non_existing_file.txt")
+    filepath='.../folder/non_existing_file.txt' cannot be found.
+    False
+    """
+    if Path(filepath).exists():
+        return Path(filepath).is_file()
+    else:
+        logger.warning(f"{filepath=} cannot be found.")
+        return False
+
+
+def directory_exists(
+    dirpath: str,
+) -> bool:
+    """Test if given path is a directory on the local file system.
+
+    Parameters
+    ----------
+    dirpath
+        The directory path to check exists.
+
+    Returns
+    -------
+    bool
+        True if the dirpath is a directory, False otherwise.
+
+    Example
+    -------
+    >>> directory_exists("folder")
+    True
+    >>> directory_exists("non_existing_folder")
+    dirpath='.../non_existing_folder' cannot be found.
+    False
+    """
+    if Path(dirpath).exists():
+        return Path(dirpath).is_dir()
+    else:
+        logger.warning(f"{dirpath=} cannot be found.")
+        return False
+
+
+def check_file(
+    filepath: str,
+) -> bool:
+    """Check if a file exists on the local file system and meets specific criteria.
+
+    This function checks whether the given path corresponds to a valid file
+    on the local or network file system. It ensures the file exists, is not
+    a directory, and its size is greater than zero bytes.
+
+    Parameters
+    ----------
+    filepath
+        The path to a local/network file.
+
+    Returns
+    -------
+    bool
+        True if the file exists, is not a directory, and size > 0,
+        otherwise False.
+
+    Example
+    -------
+    >>> check_file("folder/file.txt")
+    True
+    >>> check_file("folder/file_0_bytes.txt")
+    False
+    """
+    if file_exists(filepath):
+        isdir = directory_exists(filepath)
+        size = file_size(filepath)
+        response = (not isdir) and (size > 0)
+    else:
+        response = False
+    return response
+
+
+def read_header(
+    filepath: str,
+) -> str:
+    """Return the first line of a file on the local file system.
+
+    Reads the first line and removes the newline/returncarriage symbol.
+
+    Parameters
+    ----------
+    filepath
+        The path to a local/network file.
+
+    Returns
+    -------
+    str
+        The first line of the file as a string.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
+    Example
+    -------
+    >>> read_header("folder/file.txt")
+    "This is the first line of the file."
+    >>> read_header("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='.../folder/non_existing_file.txt' cannot be found.
+    """
+    try:
+        with open(filepath, "r") as f:
+            first_line = f.readline()
+            return first_line.rstrip("\n\r")
+    except FileNotFoundError:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg) from None
+
+
+def write_string_to_file(
+    content: bytes,
+    filepath: str,
+) -> None:
+    """Write a string into the specified file path on the local file system.
+
+    Parameters
+    ----------
+    content
+        The content to write into the file.
+    filepath
+        The path to the file where the content will be written.
+        If the file already exists, it will be overwritten.
+
+    Returns
+    -------
+    None
+
+    Example
+    -------
+    >>> write_string_to_file(b"Hello, World!", "example.txt")
+    # The content "Hello, World!" will be written to "example.txt"
+    """
+    with open(filepath, "wb") as f:
+        f.write(content)
+
+
+def create_folder(dirpath: str) -> None:
+    """Create a directory on a local network drive.
+
+    Parameters
+    ----------
+    dirpath
+        The path to the directory to create.
+
+    Returns
+    -------
+    None
+        The directory will be created if it does not already exist,
+        including parent directories.
+
+    Example
+    -------
+    >>> create_folder("example_folder/subfolder")
+    # The directory "example_folder/subfolder" will be created if it does not exist.
+    """
+    Path(dirpath).mkdir(parents=True, exist_ok=True)
+    return None
