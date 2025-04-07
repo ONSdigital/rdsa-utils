@@ -772,7 +772,7 @@ def directory_exists(
     Returns
     -------
     bool
-        True if the dirpath is a directory, false otherwise.
+        True if the dirpath is a directory, False otherwise.
 
     Example
     -------
@@ -891,7 +891,7 @@ def write_string_to_file(
         f.write(content)
 
 
-def create_folder(dirpath):
+def create_folder(dirpath: str) -> None:
     """Create a directory on a local network drive.
 
     Parameters
@@ -904,6 +904,11 @@ def create_folder(dirpath):
     None
         The directory will be created if it does not already exist,
         including parent directories.
+
+    Example
+    -------
+    >>> create_folder("example_folder/subfolder")
+    # The directory "example_folder/subfolder" will be created if it does not exist.
     """
     Path(dirpath).mkdir(parents=True, exist_ok=True)
     return None
