@@ -11,8 +11,9 @@ from freezegun import freeze_time
 from moto import mock_aws
 
 from rdsa_utils.cdp.helpers.s3_utils import (
+    check_file,
     copy_file,
-    create_folder_on_s3,
+    create_folder,
     delete_file,
     delete_folder,
     delete_old_objects_and_folders,
@@ -370,7 +371,7 @@ def setup_folder(tmp_path):
     for testing folder upload functionality.
 
     Returns the path of the created local folder, which
-    is provided to the create_folder_on_s3 and upload_folder function.
+    is provided to the create_folder and upload_folder function.
     """
     folder_path = tmp_path / "test_folder"
     folder_path.mkdir()
@@ -383,16 +384,16 @@ def setup_folder(tmp_path):
 
 
 class TestCreateFolderOnS3:
-    """Tests for create_folder_on_s3 function."""
+    """Tests for create_folder function."""
 
     def test_create_new_folder(self, s3_client):
         """Test creation of a new folder on S3."""
-        assert create_folder_on_s3(s3_client, "test-bucket", "new_folder/") is True
+        assert create_folder(s3_client, "test-bucket", "new_folder/") is True
 
     def test_folder_already_exists(self, s3_client):
         """Test handling when the folder already exists on S3."""
         s3_client.put_object(Bucket="test-bucket", Key="existing_folder/")
-        assert create_folder_on_s3(s3_client, "test-bucket", "existing_folder/") is True
+        assert create_folder(s3_client, "test-bucket", "existing_folder/") is True
 
 
 class TestUploadFolder:
@@ -617,6 +618,37 @@ class TestMd5sum:
         )
         md5 = md5_sum(s3_client_for_list_files, "test-bucket", "empty-file.txt")
         assert md5 == "d41d8cd98f00b204e9800998ecf8427e"  # MD5 hash of an empty string
+
+
+class TestCheckFile:
+    """Tests for check_file function."""
+
+    def test_check_file_exists_and_valid(self, s3_client):
+        """Test check_file returns True for an existing valid file."""
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="valid-file.txt",
+            Body=b"content",
+        )
+        assert check_file(s3_client, "test-bucket", "valid-file.txt") is True
+
+    def test_check_file_nonexistent(self, s3_client):
+        """Test check_file returns False for a nonexistent file."""
+        assert check_file(s3_client, "test-bucket", "nonexistent.txt") is False
+
+    def test_check_file_is_directory(self, s3_client):
+        """Test check_file returns False when the object is a directory."""
+        s3_client.put_object(Bucket="test-bucket", Key="test-folder/")
+        assert check_file(s3_client, "test-bucket", "test-folder/") is False
+
+    def test_check_file_empty_file(self, s3_client):
+        """Test check_file returns False for an empty file."""
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body=b"",
+        )
+        assert check_file(s3_client, "test-bucket", "empty-file.txt") is False
 
 
 class TestWriteStringToFile:

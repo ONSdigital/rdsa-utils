@@ -438,6 +438,55 @@ def md5_sum(
     return md5result
 
 
+def check_file(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+) -> bool:
+    """Check if a file exists in an S3 bucket and meets specific criteria.
+
+    Verifies that the given path corresponds to a file in an S3 bucket,
+    ensuring it exists, is not a directory, and has a size greater than 0.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client.
+    bucket_name
+        The name of the bucket.
+    object_name
+        The path to a file in s3 bucket.
+
+    Returns
+    -------
+    bool
+        True if the file exists, is not a directory, and size > 0,
+        otherwise False.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> check_file(client, 'mybucket', 'folder/file.txt')
+    True
+
+    >>> check_file(client, 'mybucket', 'folder/nonexistent_file.txt')
+    False
+
+    >>> check_file(client, 'mybucket', 'folder/')
+    False
+    """
+    if object_name is None:
+        response = False
+
+    if file_exists(client, bucket_name, object_name):
+        isdir = is_s3_directory(client, bucket_name, object_name)
+        size = file_size(client, bucket_name, object_name)
+        response = (not isdir) and (size > 0)
+    else:
+        response = False
+    return response
+
+
 def read_header(
     client: boto3.client,
     bucket_name: str,
@@ -791,7 +840,7 @@ def copy_file(
         return False
 
 
-def create_folder_on_s3(
+def create_folder(
     client: boto3.client,
     bucket_name: str,
     folder_path: str,
@@ -816,7 +865,7 @@ def create_folder_on_s3(
     Examples
     --------
     >>> client = boto3.client('s3')
-    >>> create_folder_on_s3(client, 'mybucket', 'new_folder/')
+    >>> create_folder(client, 'mybucket', 'new_folder/')
     True
     """
     bucket_name = validate_bucket_name(bucket_name)
@@ -894,7 +943,7 @@ def upload_folder(
     prefix = remove_leading_slash(prefix)
 
     # Ensure the folder exists on S3
-    if not create_folder_on_s3(client, bucket_name, prefix):
+    if not create_folder(client, bucket_name, prefix):
         logger.error("Failed to create folder on S3.")
         return False
 
