@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.9.1] 2025-04-07
+
+### Added
+
+### Changed
+- Pinned `mkdocs` to `1.6.0` in `doc` extra to resolve dependency
+  conflict with `ons-mkdocs-theme`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.9.0] 2025-04-07
 
 ### Added
