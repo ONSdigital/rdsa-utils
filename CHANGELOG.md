@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.9.0] 2025-04-07
+
+### Added
 - Added `zip_local_directory_to_s3` & `zip_s3_directory_to_s3`
   to `cdp/helpers/s3_utils.py`.
 - Added `freezegun` package to `dev` dependency in `setup.cfg`.
@@ -683,6 +695,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.9.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.9.0/)
 - rdsa-utils v0.8.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.8.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.8.0/)
 - rdsa-utils v0.7.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.4) |
