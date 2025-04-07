@@ -8,6 +8,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `zip_local_directory_to_s3` & `zip_s3_directory_to_s3`
+  to `cdp/helpers/s3_utils.py`.
 - Added `freezegun` package to `dev` dependency in `setup.cfg`.
 - Added `delete_old_objects_and_folders` function in `cdp/helpers/s3_utils.py`
 - Added house-style example functions and unit tests to `docs/contribution_guide.md`.
