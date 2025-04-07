@@ -1,18 +1,23 @@
 """Tests for s3_utils.py module."""
 
 import json
+import zipfile
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 
 import boto3
 import pandas as pd
 import pytest
+from freezegun import freeze_time
 from moto import mock_aws
 
 from rdsa_utils.cdp.helpers.s3_utils import (
+    check_file,
     copy_file,
-    create_folder_on_s3,
+    create_folder,
     delete_file,
     delete_folder,
+    delete_old_objects_and_folders,
     download_file,
     download_folder,
     file_exists,
@@ -33,6 +38,8 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     write_csv,
     write_excel,
     write_string_to_file,
+    zip_local_directory_to_s3,
+    zip_s3_directory_to_s3,
 )
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -367,7 +374,7 @@ def setup_folder(tmp_path):
     for testing folder upload functionality.
 
     Returns the path of the created local folder, which
-    is provided to the create_folder_on_s3 and upload_folder function.
+    is provided to the create_folder and upload_folder function.
     """
     folder_path = tmp_path / "test_folder"
     folder_path.mkdir()
@@ -380,16 +387,16 @@ def setup_folder(tmp_path):
 
 
 class TestCreateFolderOnS3:
-    """Tests for create_folder_on_s3 function."""
+    """Tests for create_folder function."""
 
     def test_create_new_folder(self, s3_client):
         """Test creation of a new folder on S3."""
-        assert create_folder_on_s3(s3_client, "test-bucket", "new_folder/") is True
+        assert create_folder(s3_client, "test-bucket", "new_folder/") is True
 
     def test_folder_already_exists(self, s3_client):
         """Test handling when the folder already exists on S3."""
         s3_client.put_object(Bucket="test-bucket", Key="existing_folder/")
-        assert create_folder_on_s3(s3_client, "test-bucket", "existing_folder/") is True
+        assert create_folder(s3_client, "test-bucket", "existing_folder/") is True
 
 
 class TestUploadFolder:
@@ -614,6 +621,37 @@ class TestMd5sum:
         )
         md5 = md5_sum(s3_client_for_list_files, "test-bucket", "empty-file.txt")
         assert md5 == "d41d8cd98f00b204e9800998ecf8427e"  # MD5 hash of an empty string
+
+
+class TestCheckFile:
+    """Tests for check_file function."""
+
+    def test_check_file_exists_and_valid(self, s3_client):
+        """Test check_file returns True for an existing valid file."""
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="valid-file.txt",
+            Body=b"content",
+        )
+        assert check_file(s3_client, "test-bucket", "valid-file.txt") is True
+
+    def test_check_file_nonexistent(self, s3_client):
+        """Test check_file returns False for a nonexistent file."""
+        assert check_file(s3_client, "test-bucket", "nonexistent.txt") is False
+
+    def test_check_file_is_directory(self, s3_client):
+        """Test check_file returns False when the object is a directory."""
+        s3_client.put_object(Bucket="test-bucket", Key="test-folder/")
+        assert check_file(s3_client, "test-bucket", "test-folder/") is False
+
+    def test_check_file_empty_file(self, s3_client):
+        """Test check_file returns False for an empty file."""
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="empty-file.txt",
+            Body=b"",
+        )
+        assert check_file(s3_client, "test-bucket", "empty-file.txt") is False
 
 
 class TestWriteStringToFile:
@@ -1467,3 +1505,306 @@ class TestWriteExcel:
             index=False,
         )
         assert not result
+
+
+class TestDeleteOldObjectsAndFolders:
+    """Tests for delete_old_objects_and_folders function."""
+
+    def s3_client_structure(self, s3_client):
+        """Set up a folder structure in S3 for testing using a fixed current time."""
+        fixed_now = datetime(2025, 3, 19, 12, 0, 0, tzinfo=timezone.utc)
+
+        # Freeze time to our fixed_now for creating "old" objects
+        with freeze_time(fixed_now - timedelta(days=10)):
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/old-folder/old-file.txt",
+                Body=b"old content",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/old-file.txt",
+                Body=b"old content",
+            )
+
+        # Freeze time to our fixed_now for creating "recent" objects
+        with freeze_time(fixed_now - timedelta(days=1)):
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/recent-folder/recent-file.txt",
+                Body=b"recent content",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/recent-file.txt",
+                Body=b"recent content",
+            )
+
+    class TestDeleteByDay:
+        """Tests for deleting objects and folders by day."""
+
+        @freeze_time("2025-03-19T12:00:00Z")
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting objects and folders older than 1 day."""
+            s3_client = s3_client
+            # Use the common prefix "test/"
+            TestDeleteOldObjectsAndFolders().s3_client_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "test/",
+                "1 day",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            # Expect the "old" objects (10 days old) to be deleted,
+            # while the "recent" objects (1 day old) remain.
+            assert "test/recent-folder/recent-file.txt" in remaining_keys
+            assert "test/recent-file.txt" in remaining_keys
+            assert "test/old-folder/old-file.txt" not in remaining_keys
+            assert "test/old-file.txt" not in remaining_keys
+
+    class TestDeleteByWeek:
+        """Tests for deleting objects and folders by week."""
+
+        @freeze_time("2025-03-19T12:00:00Z")
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting objects and folders older than 1 week."""
+            s3_client = s3_client
+            TestDeleteOldObjectsAndFolders().s3_client_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "test/",
+                "1 week",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            # With a 1 week threshold, old objects (10 days old) are deleted
+            # and recent objects (1 day old) remain.
+            assert "test/recent-folder/recent-file.txt" in remaining_keys
+            assert "test/recent-file.txt" in remaining_keys
+            assert "test/old-folder/old-file.txt" not in remaining_keys
+            assert "test/old-file.txt" not in remaining_keys
+
+    class TestDeleteByMonth:
+        """Tests for deleting objects and folders by month."""
+
+        @freeze_time("2025-03-19T12:00:00Z")
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting objects and folders older than 1 month."""
+            s3_client = s3_client
+            TestDeleteOldObjectsAndFolders().s3_client_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "test/",
+                "1 month",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            # With a 1 month threshold, both old (10 days old) and recent (1 day old)
+            # objects should remain because they are newer than 1 month.
+            assert "test/recent-folder/recent-file.txt" in remaining_keys
+            assert "test/recent-file.txt" in remaining_keys
+            assert "test/old-folder/old-file.txt" in remaining_keys
+            assert "test/old-file.txt" in remaining_keys
+
+
+class TestZipLocalDirectoryToS3:
+    """Tests for zip_local_directory_to_s3 function."""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="test-bucket")
+            yield s3
+
+    def test_zip_local_directory_to_s3_success(self, s3_client, tmp_path):
+        """Test successful zipping and uploading of a local directory."""
+        # Create a local directory with files
+        local_dir = tmp_path / "test_dir"
+        local_dir.mkdir()
+        (local_dir / "file1.txt").write_text("Content of file 1")
+        (local_dir / "file2.txt").write_text("Content of file 2")
+
+        # Call the function
+        result = zip_local_directory_to_s3(
+            s3_client,
+            local_dir,
+            "test-bucket",
+            "test_dir.zip",
+            overwrite=True,
+        )
+
+        # Verify the result
+        assert result is True
+
+        # Verify the zip file exists in S3
+        response = s3_client.get_object(Bucket="test-bucket", Key="test_dir.zip")
+        zip_content = BytesIO(response["Body"].read())
+
+        # Verify the contents of the zip file
+        with zipfile.ZipFile(zip_content, "r") as zf:
+            assert set(zf.namelist()) == {"file1.txt", "file2.txt"}
+
+    def test_zip_local_directory_to_s3_nonexistent_directory(self, s3_client):
+        """Test handling when the local directory does not exist."""
+        result = zip_local_directory_to_s3(
+            s3_client,
+            "nonexistent_dir",
+            "test-bucket",
+            "test_dir.zip",
+        )
+        assert result is False
+
+    def test_zip_local_directory_to_s3_no_overwrite(self, s3_client, tmp_path):
+        """Test no overwrite of existing S3 object without permission."""
+        # Create a local directory with files
+        local_dir = tmp_path / "test_dir"
+        local_dir.mkdir()
+        (local_dir / "file1.txt").write_text("Content of file 1")
+
+        # Upload an existing zip file to S3
+        s3_client.put_object(
+            Bucket="test-bucket",
+            Key="test_dir.zip",
+            Body=b"existing content",
+        )
+
+        # Call the function without overwrite
+        result = zip_local_directory_to_s3(
+            s3_client,
+            local_dir,
+            "test-bucket",
+            "test_dir.zip",
+            overwrite=False,
+        )
+
+        # Verify the result - should be True now since we changed the return value
+        # when a file exists and overwrite=False
+        assert result is True
+
+        # Verify the existing file was not changed
+        response = s3_client.get_object(Bucket="test-bucket", Key="test_dir.zip")
+        content = response["Body"].read()
+        assert content == b"existing content"
+
+
+class TestZipS3DirectoryToS3:
+    """Tests for zip_s3_directory_to_s3 function."""
+
+    @pytest.fixture(scope="class")
+    def s3_client(self):
+        """Boto3 S3 client fixture for this test class."""
+        with mock_aws():
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket="source-bucket")
+            s3.create_bucket(Bucket="destination-bucket")
+            yield s3
+
+    def setup_s3_directory(self, s3_client):
+        """Set up a directory structure in S3 for testing."""
+        s3_client.put_object(
+            Bucket="source-bucket",
+            Key="folder1/file1.txt",
+            Body=b"Content of file 1",
+        )
+        s3_client.put_object(
+            Bucket="source-bucket",
+            Key="folder1/file2.txt",
+            Body=b"Content of file 2",
+        )
+        s3_client.put_object(
+            Bucket="source-bucket",
+            Key="folder1/subfolder/file3.txt",
+            Body=b"Content of file 3",
+        )
+
+    def test_zip_s3_directory_to_s3_success(self, s3_client):
+        """Test successful zipping of an S3 directory and uploading to another bucket."""
+        self.setup_s3_directory(s3_client)
+
+        # Call the function
+        result = zip_s3_directory_to_s3(
+            s3_client,
+            "source-bucket",
+            "folder1/",
+            "destination-bucket",
+            "folder1.zip",
+            overwrite=True,
+        )
+
+        # Verify the result
+        assert result is True
+
+        # Verify the zip file exists in the destination bucket
+        response = s3_client.get_object(Bucket="destination-bucket", Key="folder1.zip")
+        zip_content = BytesIO(response["Body"].read())
+
+        # Verify the contents of the zip file
+        with zipfile.ZipFile(zip_content, "r") as zf:
+            assert set(zf.namelist()) == {
+                "file1.txt",
+                "file2.txt",
+                "subfolder/file3.txt",
+            }
+
+    def test_zip_s3_directory_to_s3_nonexistent_source(self, s3_client):
+        """Test handling when the source directory does not exist."""
+        result = zip_s3_directory_to_s3(
+            s3_client,
+            "source-bucket",
+            "nonexistent_folder/",
+            "destination-bucket",
+            "nonexistent_folder.zip",
+        )
+        assert result is False
+
+    def test_zip_s3_directory_to_s3_no_overwrite(self, s3_client):
+        """Test no overwrite of existing S3 object without permission."""
+        # Set up test data in source bucket
+        self.setup_s3_directory(s3_client)
+
+        # Upload an existing zip file to the destination bucket
+        s3_client.put_object(
+            Bucket="destination-bucket",
+            Key="folder1.zip",
+            Body=b"existing content",
+        )
+
+        # Call the function without overwrite
+        result = zip_s3_directory_to_s3(
+            s3_client,
+            "source-bucket",
+            "folder1/",
+            "destination-bucket",
+            "folder1.zip",
+            overwrite=False,
+        )
+
+        # Verify the result - should be True now since we changed the return value
+        # when a file exists and overwrite=False
+        assert result is True
+
+        # Verify the existing file was not changed
+        response = s3_client.get_object(Bucket="destination-bucket", Key="folder1.zip")
+        content = response["Body"].read()
+        assert content == b"existing content"

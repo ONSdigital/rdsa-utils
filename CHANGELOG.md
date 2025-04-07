@@ -17,6 +17,42 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.9.0] 2025-04-07
+
+### Added
+- Added `zip_local_directory_to_s3` & `zip_s3_directory_to_s3`
+  to `cdp/helpers/s3_utils.py`.
+- Added `freezegun` package to `dev` dependency in `setup.cfg`.
+- Added `delete_old_objects_and_folders` function in `cdp/helpers/s3_utils.py`
+- Added house-style example functions and unit tests to `docs/contribution_guide.md`.
+- Added a function in `helpers/python.py` called `file_size` to check a
+  file size in a local drive.
+- Added a function in `helpers/python.py` called `md5_sum` to create md5
+  hash for an object in a local drive.
+- Added a function in `cdp/helpers/s3_utils.py` called `check_file` to check a
+  file exists, is not a directory and size > 0 in an s3 bucket.
+- Added a function in `helpers/python.py` called `file_exists` to check if
+  a file exists in a local drive.
+- Added a function in `helpers/python.py` called `is_local_directory` to check if
+  a directory exists in a local drive.
+- Added a function in `helpers/python.py` called `check_file` to check a
+  file exists, is not a directory and size > 0 in a local drive.
+- Added a function in `helpers/python.py` called `read_header` to print the first
+  line of a file in a local drive.
+- Added a function in `helpers/python.py` called `write_string_to_file` to write
+  content into an existing file.
+- Added a function in `helpers/python.py` called `create_folder` to create a directory.
+
+### Changed
+- Changed a function in `cdp/helpers/s3_utils.py` called `create_folder_on_s3` to
+  `create_folder`.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.8.0] 2025-03-18
 
 ### Added
@@ -659,6 +695,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.9.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.9.0/)
 - rdsa-utils v0.8.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.8.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.8.0/)
 - rdsa-utils v0.7.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.7.4) |

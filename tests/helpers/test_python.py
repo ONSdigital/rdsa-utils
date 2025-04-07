@@ -762,3 +762,231 @@ class TestMergeMultiDfs:
             match="`on` must be a string or a list of strings.",
         ):
             merge_multi_dfs([df1, df2], on=123, how="inner")
+
+
+class TestFileSize:
+    """Tests for file_size function."""
+
+    def test_expected(self, tmp_path):
+        """Test expected functionality."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "This is a test file."
+        temp_file.write_text(content)
+
+        # Get the file size
+        actual = file_size(str(temp_file))
+
+        # Assert the file size matches the content length
+        assert actual == len(content)
+
+    def test_file_not_found(self):
+        """Test behavior when file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            file_size("non_existent_file.txt")
+
+
+class TestMd5Sum:
+    """Tests for md5_sum function."""
+
+    def test_expected(self, tmp_path):
+        """Test expected functionality."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "This is a test file."
+        temp_file.write_text(content)
+
+        # Calculate the expected md5 sum
+        expected_md5 = hashlib.md5(content.encode()).hexdigest()
+
+        # Get the actual md5 sum
+        actual_md5 = md5_sum(str(temp_file))
+
+        # Assert the md5 sums match
+        assert actual_md5 == expected_md5
+
+    def test_file_not_found(self):
+        """Test behavior when file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            md5_sum("non_existent_file.txt")
+
+
+class TestFileExists:
+    """Tests for file_exists function."""
+
+    def test_file_exists(self, tmp_path):
+        """Test when the file exists."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("This is a test file.")
+        assert file_exists(str(temp_file)) is True
+
+    def test_file_does_not_exist(self):
+        """Test when the file does not exist."""
+        assert file_exists("non_existent_file.txt") is False
+
+    def test_directory_instead_of_file(self, tmp_path):
+        """Test when the path is a directory."""
+        assert file_exists(str(tmp_path)) is False
+
+
+class TestDirectoryExists:
+    """Tests for directory_exists function."""
+
+    def test_is_directory(self, tmp_path):
+        """Test when the path is a directory."""
+        assert directory_exists(str(tmp_path)) is True
+
+    def test_is_not_directory(self, tmp_path):
+        """Test when the path is not a directory."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("This is a test file.")
+        assert directory_exists(str(temp_file)) is False
+
+    def test_non_existent_path(self):
+        """Test when the path does not exist."""
+        assert directory_exists("non_existent_path") is False
+
+
+class TestCheckFile:
+    """Tests for the check_file function."""
+
+    def test_file_exists(self, tmp_path):
+        """Test when the file exists."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("This is a test file.")
+        assert check_file(str(temp_file)) is True
+
+    def test_is_directory(self, tmp_path):
+        """Test when the path is a directory."""
+        assert check_file(str(tmp_path)) is False
+
+    def test_size_less_0(self, tmp_path):
+        """Test when the path an empty file."""
+        temp_file = tmp_path / "test_file.txt"
+        temp_file.write_text("")
+        assert check_file(str(temp_file)) is False
+
+
+class TestReadHeader:
+    """Tests for the read_header function."""
+
+    def test_read_header_expected(self, tmp_path):
+        """Test reading the first line of a file."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "First line\nSecond line\nThird line"
+        temp_file.write_text(content)
+
+        # Read the header
+        actual = read_header(str(temp_file))
+
+        # Assert the header matches the first line
+        assert actual == "First line"
+
+    def test_read_header_empty_file(self, tmp_path):
+        """Test reading the header of an empty file."""
+        # Create an empty temporary file
+        temp_file = tmp_path / "empty_file.txt"
+        temp_file.write_text("")
+
+        # Read the header
+        actual = read_header(str(temp_file))
+
+        # Assert the header is an empty string
+        assert actual == ""
+
+    def test_read_header_file_not_found(self):
+        """Test behavior when the file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            read_header("non_existent_file.txt")
+
+
+class TestWriteStringToFile:
+    """Tests for the write_string_to_file function."""
+
+    def test_write_string_to_file_expected(self, tmp_path):
+        """Test writing content to a file."""
+        # Create a temporary file path
+        temp_file = tmp_path / "test_file.txt"
+        content = b"This is a test file."
+
+        # Write the content to the file
+        write_string_to_file(content, str(temp_file))
+
+        # Read the file and verify the content
+        with open(temp_file, "rb") as f:
+            actual_content = f.read()
+
+        assert actual_content == content
+
+    def test_overwrite_existing_file(self, tmp_path):
+        """Test overwriting an existing file."""
+        # Create a temporary file and write initial content
+        temp_file = tmp_path / "test_file.txt"
+        initial_content = b"Initial content."
+        temp_file.write_bytes(initial_content)
+
+        # New content to overwrite the file
+        new_content = b"New content."
+        write_string_to_file(new_content, str(temp_file))
+
+        # Read the file and verify the new content
+        with open(temp_file, "rb") as f:
+            actual_content = f.read()
+
+        assert actual_content == new_content
+
+    def test_empty_content(self, tmp_path):
+        """Test writing empty content to a file."""
+        # Create a temporary file path
+        temp_file = tmp_path / "test_file.txt"
+        content = b""
+
+        # Write the empty content to the file
+        write_string_to_file(content, str(temp_file))
+
+        # Read the file and verify the content is empty
+        with open(temp_file, "rb") as f:
+            actual_content = f.read()
+
+        assert actual_content == content
+
+    def test_invalid_path(self):
+        """Test behavior when the file path is invalid."""
+        invalid_path = "/invalid_path/test_file.txt"
+        content = b"Test content."
+
+        with pytest.raises(OSError):
+            write_string_to_file(content, invalid_path)
+
+
+class TestCreateFolder:
+    """Tests for the create_folder function."""
+
+    def test_create_new_folder(self, tmp_path):
+        """Test creating a new folder."""
+        new_folder = tmp_path / "new_folder"
+        create_folder(str(new_folder))
+        assert new_folder.exists()
+        assert new_folder.is_dir()
+
+    def test_create_existing_folder(self, tmp_path):
+        """Test creating a folder that already exists."""
+        existing_folder = tmp_path / "existing_folder"
+        existing_folder.mkdir()
+        create_folder(str(existing_folder))
+        assert existing_folder.exists()
+        assert existing_folder.is_dir()
+
+    def test_create_nested_folders(self, tmp_path):
+        """Test creating nested folders."""
+        nested_folder = tmp_path / "parent_folder" / "child_folder"
+        create_folder(str(nested_folder))
+        assert nested_folder.exists()
+        assert nested_folder.is_dir()
+
+    def test_invalid_path(self):
+        """Test behavior when the path is invalid."""
+        invalid_path = "/invalid_path/new_folder"
+        with pytest.raises(OSError):
+            create_folder(invalid_path)
