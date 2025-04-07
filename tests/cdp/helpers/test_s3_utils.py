@@ -1,11 +1,13 @@
 """Tests for s3_utils.py module."""
 
 import json
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 
 import boto3
 import pandas as pd
 import pytest
+from freezegun import freeze_time
 from moto import mock_aws
 
 from rdsa_utils.cdp.helpers.s3_utils import (
@@ -14,6 +16,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     create_folder,
     delete_file,
     delete_folder,
+    delete_old_objects_and_folders,
     download_file,
     download_folder,
     file_exists,
@@ -1499,3 +1502,122 @@ class TestWriteExcel:
             index=False,
         )
         assert not result
+
+
+class TestDeleteOldObjectsAndFolders:
+    """Tests for delete_old_objects_and_folders function."""
+
+    def s3_client_structure(self, s3_client):
+        """Set up a folder structure in S3 for testing using a fixed current time."""
+        fixed_now = datetime(2025, 3, 19, 12, 0, 0, tzinfo=timezone.utc)
+
+        # Freeze time to our fixed_now for creating "old" objects
+        with freeze_time(fixed_now - timedelta(days=10)):
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/old-folder/old-file.txt",
+                Body=b"old content",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/old-file.txt",
+                Body=b"old content",
+            )
+
+        # Freeze time to our fixed_now for creating "recent" objects
+        with freeze_time(fixed_now - timedelta(days=1)):
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/recent-folder/recent-file.txt",
+                Body=b"recent content",
+            )
+            s3_client.put_object(
+                Bucket="test-bucket",
+                Key="test/recent-file.txt",
+                Body=b"recent content",
+            )
+
+    class TestDeleteByDay:
+        """Tests for deleting objects and folders by day."""
+
+        @freeze_time("2025-03-19T12:00:00Z")
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting objects and folders older than 1 day."""
+            s3_client = s3_client
+            # Use the common prefix "test/"
+            TestDeleteOldObjectsAndFolders().s3_client_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "test/",
+                "1 day",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            # Expect the "old" objects (10 days old) to be deleted,
+            # while the "recent" objects (1 day old) remain.
+            assert "test/recent-folder/recent-file.txt" in remaining_keys
+            assert "test/recent-file.txt" in remaining_keys
+            assert "test/old-folder/old-file.txt" not in remaining_keys
+            assert "test/old-file.txt" not in remaining_keys
+
+    class TestDeleteByWeek:
+        """Tests for deleting objects and folders by week."""
+
+        @freeze_time("2025-03-19T12:00:00Z")
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting objects and folders older than 1 week."""
+            s3_client = s3_client
+            TestDeleteOldObjectsAndFolders().s3_client_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "test/",
+                "1 week",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            # With a 1 week threshold, old objects (10 days old) are deleted
+            # and recent objects (1 day old) remain.
+            assert "test/recent-folder/recent-file.txt" in remaining_keys
+            assert "test/recent-file.txt" in remaining_keys
+            assert "test/old-folder/old-file.txt" not in remaining_keys
+            assert "test/old-file.txt" not in remaining_keys
+
+    class TestDeleteByMonth:
+        """Tests for deleting objects and folders by month."""
+
+        @freeze_time("2025-03-19T12:00:00Z")
+        def test_delete_old_objects_and_folders(self, s3_client):
+            """Test deleting objects and folders older than 1 month."""
+            s3_client = s3_client
+            TestDeleteOldObjectsAndFolders().s3_client_structure(s3_client)
+            result = delete_old_objects_and_folders(
+                s3_client,
+                "test-bucket",
+                "test/",
+                "1 month",
+            )
+            assert result is True
+
+            remaining_objects = s3_client.list_objects_v2(Bucket="test-bucket")
+            remaining_keys = [
+                obj["Key"] for obj in remaining_objects.get("Contents", [])
+            ]
+
+            # With a 1 month threshold, both old (10 days old) and recent (1 day old)
+            # objects should remain because they are newer than 1 month.
+            assert "test/recent-folder/recent-file.txt" in remaining_keys
+            assert "test/recent-file.txt" in remaining_keys
+            assert "test/old-folder/old-file.txt" in remaining_keys
+            assert "test/old-file.txt" in remaining_keys

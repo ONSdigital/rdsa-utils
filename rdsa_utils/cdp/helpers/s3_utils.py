@@ -25,12 +25,14 @@ Note:
 
 import json
 import logging
+from datetime import datetime, timedelta, timezone
 from io import BytesIO, StringIO, TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 import boto3
 import pandas as pd
+from dateutil.relativedelta import relativedelta
 
 from rdsa_utils.exceptions import InvalidBucketNameError, InvalidS3FilePathError
 
@@ -1593,4 +1595,134 @@ def write_excel(
             f"Error writing to Excel or saving to bucket {bucket_name}, "
             f"filepath {filepath}: {e}",
         )
+        return False
+
+
+def delete_old_objects_and_folders(
+    client: boto3.client,
+    bucket_name: str,
+    prefix: str,
+    age: str,
+    dry_run: bool = False,
+) -> bool:
+    """Delete objects and folders in an S3 bucket that are older than a specified age.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
+    bucket_name
+        The name of the S3 bucket.
+    prefix
+        The prefix to filter objects.
+    age
+        The age threshold for deleting objects. Supported formats:
+        - "1 day", "2 days", etc.
+        - "1 week", "2 weeks", etc.
+        - "1 month", "2 months", etc.
+    dry_run
+        If True, the function will only log the objects and folders
+        that would be deleted, without actually performing the deletion.
+        Default is False.
+
+    Returns
+    -------
+    bool
+        True if the objects and folders were (or would be)
+        deleted successfully, otherwise False.
+
+    Examples
+    --------
+    >>> client = boto3.client('s3')
+    >>> # This will actually delete objects:
+    >>> delete_old_objects_and_folders(client, 'mybucket', 'folder/', '1 week')
+    True
+    >>> # This will only log the objects/folders to be deleted:
+    >>> delete_old_objects_and_folders(
+    ...     client,
+    ...     'mybucket',
+    ...     'folder/',
+    ...     '1 week',
+    ...     dry_run=True
+    ... )
+    True
+    """
+    if not prefix:
+        logger.error(
+            "Prefix must be specified to avoid accidental deletion of all objects.",
+        )
+        return False
+    bucket_name = validate_bucket_name(bucket_name)
+    prefix = remove_leading_slash(prefix)
+
+    # Parse the age parameter
+    try:
+        number, unit = age.split()
+        number = int(number)
+    except ValueError:
+        logger.error("Invalid age format. Use formats like '1 day', '2 weeks', etc.")
+        return False
+
+    if unit in ["day", "days"]:
+        delta = timedelta(days=number)
+    elif unit in ["week", "weeks"]:
+        delta = timedelta(weeks=number)
+    elif unit in ["month", "months"]:
+        delta = relativedelta(months=number)
+    else:
+        logger.error("Unsupported time unit. Use 'day', 'week', or 'month'.")
+        return False
+
+    cutoff_date = datetime.now(timezone.utc) - delta
+
+    logger.info(
+        f"Deleting objects with prefix '{prefix}' older "
+        f"than '{age}' (cutoff date: {cutoff_date})",
+    )
+
+    try:
+        paginator = client.get_paginator("list_objects_v2")
+        for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
+            if "Contents" in page:
+                for obj in page["Contents"]:
+                    last_modified = obj["LastModified"]
+                    if last_modified < cutoff_date:
+                        if dry_run:
+                            logger.info(
+                                f"Dry-run: would delete {obj['Key']} last "
+                                f"modified on {last_modified}",
+                            )
+                        else:
+                            delete_file(client, bucket_name, obj["Key"], overwrite=True)
+                            logger.info(
+                                f"Deleted {obj['Key']} last modified "
+                                f"on {last_modified}",
+                            )
+            if "CommonPrefixes" in page:
+                for common_prefix in page["CommonPrefixes"]:
+                    folder_prefix = common_prefix["Prefix"]
+                    folder_response = client.list_objects_v2(
+                        Bucket=bucket_name,
+                        Prefix=folder_prefix,
+                        MaxKeys=1,
+                    )
+                    if "Contents" in folder_response:
+                        folder_last_modified = folder_response["Contents"][0][
+                            "LastModified"
+                        ]
+                        if folder_last_modified < cutoff_date:
+                            if dry_run:
+                                logger.info(
+                                    f"Dry-run: would delete folder {folder_prefix}"
+                                    " last modified on {folder_last_modified}",
+                                )
+                            else:
+                                delete_folder(client, bucket_name, folder_prefix)
+                                logger.info(
+                                    f"Deleted folder {folder_prefix} last modified"
+                                    " on {folder_last_modified}",
+                                )
+        return True
+    except client.exceptions.ClientError as e:
+        logger.error(f"Failed to delete old objects and folders: {str(e)}")
         return False
