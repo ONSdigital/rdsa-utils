@@ -549,6 +549,87 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#house-style-for-example-functions-and-unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      House Style for Example Functions and Unit Tests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="House Style for Example Functions and Unit Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-house-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function House Style
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function House Style">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-writing-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Function Writing Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unit-test-house-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Test House Style
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unit Test House Style">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Testing Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#issues" class="md-nav__link">
     <span class="md-ellipsis">
       Issues
@@ -763,7 +844,7 @@
 <p>We welcome contributions. To contribute, please follow these guidelines:</p>
 <h2 id="pull-requests">Pull Requests</h2>
 <ul>
-<li>All pull requests should be made to the <code>development</code> branch. Please use the following 
+<li>All pull requests should be made to the <code>development</code> branch. Please use the following
 <strong>Naming Conventions</strong> for your <strong>branches</strong>:<ul>
 <li><strong>Feature Branches</strong>: <code>feature-&lt;feature_name&gt;</code> for introducing new features.</li>
 <li><strong>Bug Fixes</strong>: <code>fix-&lt;bug_description&gt;</code> for resolving bugs.</li>
@@ -789,6 +870,170 @@
 <li>If you are adding a new dependency, please include a brief explanation of why it is necessary and what it does.</li>
 <li>If you are making significant changes to the project's architecture or design, please discuss your ideas with the project maintainers first to ensure they align with the project's goals and vision.</li>
 </ul>
+<hr />
+<h2 id="house-style-for-example-functions-and-unit-tests">House Style for Example Functions and Unit Tests</h2>
+<h3 id="function-house-style">Function House Style</h3>
+<p>When writing functions in <code>rdsa-utils</code>, please follow these guidelines to
+ensure clarity, consistency, and ease of use for others:</p>
+<ul>
+<li>Use <strong>type hints</strong> in the function signature to clearly indicate input and
+  output types. Avoid repeating type information in the docstring — this reduces
+  duplication and keeps documentation clean.</li>
+<li>Docstrings must follow the <strong>Numpy/Scipy format</strong>, with clearly
+  defined <code>Parameters</code>, <code>Returns</code>, and an <code>Examples</code> section.</li>
+<li>Try to include an <strong>Examples</strong> section showing how the function can be
+  used in practice. These examples should be minimal, runnable, and
+  demonstrate typical use cases.</li>
+<li>Use clear, descriptive, and self-explanatory parameter and variable
+  names — avoid overly abbreviated or cryptic names.</li>
+<li>If a function is complex, split it into smaller helper functions
+  where possible, and ensure that each part has a clear purpose.</li>
+<li>Keep explanatory comments focused and purposeful. Comment on the
+  <em>why</em> rather than the <em>what</em> when the code’s intent isn't obvious.</li>
+<li>Ensure the function is readable, maintainable, and easy for others
+  to understand — readability is preferred over overly clever one-liners.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> If your function raises any exceptions, make sure to include
+a <code>Raises</code> section in the docstring describing the exception type and
+when it is triggered.</p>
+</blockquote>
+<h4 id="example">Example:</h4>
+<pre><code class="language-python">def delete_file(
+    client: boto3.client,
+    bucket_name: str,
+    object_name: str,
+    overwrite: bool = False,
+) -&gt; bool:
+    &quot;&quot;&quot;Delete a file from an AWS S3 bucket.
+
+    Parameters
+    ----------
+    client
+        The boto3 S3 client instance.
+    bucket_name
+        The name of the bucket from which the file will be deleted.
+    object_name
+        The S3 object name of the file to delete.
+    overwrite
+        If False, the function will not delete the file if it does not exist;
+        set to True to ignore non-existence on delete.
+
+    Returns
+    -------
+    bool
+        True if the file was deleted successfully, otherwise False.
+
+    Examples
+    --------
+    &gt;&gt;&gt; client = boto3.client('s3')
+    &gt;&gt;&gt; delete_file(client, 'mybucket', 'folder/s3_file.txt')
+    True
+    &quot;&quot;&quot;
+</code></pre>
+<h4 id="function-writing-checklist">✅ Function Writing Checklist</h4>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Check before submitting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Type hints</strong> used in function signature</td>
+<td>Clearly specify input and output types; no duplication in docstring</td>
+</tr>
+<tr>
+<td><strong>Docstring format</strong></td>
+<td>Follow Numpy/Scipy style with <code>Parameters</code>, <code>Returns</code>, <code>Examples</code></td>
+</tr>
+<tr>
+<td><strong>Examples section</strong> included</td>
+<td>Example is runnable, minimal, and shows common usage</td>
+</tr>
+<tr>
+<td>Parameter and variable names are descriptive</td>
+<td>Avoid cryptic or overly abbreviated names</td>
+</tr>
+<tr>
+<td>Complex logic is broken into helpers</td>
+<td>Keep functions focused and small where possible</td>
+</tr>
+<tr>
+<td>Comments explain <em>why</em>, not <em>what</em></td>
+<td>Only where the intent isn’t obvious</td>
+</tr>
+<tr>
+<td>Code prioritises readability</td>
+<td>Prefer clear structure over clever one-liners</td>
+</tr>
+</tbody>
+</table>
+<h3 id="unit-test-house-style">Unit Test House Style</h3>
+<ul>
+<li><strong>Use test classes</strong> with clear, one-line docstrings explaining the
+  purpose of the class, where possible. For more complex test classes,
+  a short descriptive multi-line docstring is acceptable.</li>
+<li><strong>Write test functions</strong> with concise, descriptive names and one-line docstrings
+  explaining the scenario being tested, where possible.
+  Longer explanations are fine if needed.</li>
+<li>Write separate test methods for each scenario.</li>
+<li>Use assertions that clearly show expected vs. actual results.</li>
+<li>Aim for full test coverage, including edge cases to ensure robustness
+  and handle unexpected input.</li>
+</ul>
+<h4 id="example_1">Example:</h4>
+<pre><code class="language-python">class TestParseYaml:
+    &quot;&quot;&quot;Tests for parse_yaml function.&quot;&quot;&quot;
+
+    def test_expected(
+        self,
+        yaml_config_string,
+        expected_standard_config,
+    ):
+        &quot;&quot;&quot;Test expected functionality.&quot;&quot;&quot;
+        actual = parse_yaml(yaml_config_string)
+
+        assert actual == expected_standard_config
+
+    def test_invalid_yaml_string(self):
+        &quot;&quot;&quot;Test that invalid YAML input raises YAMLError.&quot;&quot;&quot;
+        with pytest.raises(YAMLError):
+            parse_yaml('invalid: [unclosed_list')
+</code></pre>
+<h4 id="testing-checklist">✅ Testing Checklist</h4>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Check before submitting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Test classes</strong> used where applicable</td>
+<td>One-line descriptive docstring where possible, multi-line if needed</td>
+</tr>
+<tr>
+<td><strong>Test functions</strong> are clear and focused</td>
+<td>One scenario per test, descriptive function names</td>
+</tr>
+<tr>
+<td>Assertions are clear and meaningful</td>
+<td>Shows expected vs. actual results</td>
+</tr>
+<tr>
+<td>Edge cases are covered</td>
+<td>Aim for full coverage, not just the happy path</td>
+</tr>
+<tr>
+<td>Parameterised tests used if helpful</td>
+<td>Reduce duplication for similar test scenarios</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="issues">Issues</h2>
 <p>If you find a bug or would like to request a feature, please open an issue on the project's <a href="https://github.com/ONSdigital/rdsa-utils/issues">GitHub page</a>. When opening an issue, please provide as much detail as possible, including:</p>
 <ul>
@@ -799,6 +1044,7 @@
 </ul>
 <p>Please search through the existing issues before opening a new one to avoid duplicates. If you find an existing issue that covers your problem, please add any additional information as a comment. Issues will be triaged and prioritized by the project maintainers.</p>
 <p>If you would like to contribute to the project by fixing an existing issue, please leave a comment on the issue to let the maintainers know that you are working on it.</p>
+<hr />
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="installing-python">Installing Python</h3>
 <p>Before getting started, you need to have Python 3.8 or higher installed on your system. You can download Python from the <a href="https://www.python.org/downloads/">official website</a>. Make sure to add Python to your <code>PATH</code> during the installation process.</p>
@@ -871,7 +1117,7 @@ cd rdsa-utils
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 18, 2025 17:04:08">March 18, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 7, 2025 13:51:18">April 7, 2025</span>
   </span>
 
     
