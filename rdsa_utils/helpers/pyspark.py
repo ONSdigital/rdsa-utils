@@ -581,7 +581,14 @@ def cut_lineage(df: SparkDF) -> SparkDF:
         jrdd = df._jdf.toJavaRDD()
         jschema = df._jdf.schema()
         jrdd.cache()
-        spark = df.sparkSession
+
+        # Check for sparkSession attribute (introduced in Spark 3.3.0)
+        if hasattr(df, "sparkSession"):
+            spark = df.sparkSession
+        else:
+            # Fallback for Spark 3.2.3
+            spark = df.sql_ctx.sparkSession
+
         new_java_df = spark._jsparkSession.createDataFrame(jrdd, jschema)
         new_df = SparkDF(new_java_df, spark)
         return new_df

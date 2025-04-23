@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.9.2] 2025-04-23
+
+### Added
+
+### Changed
+- Updated `cut_lineage` function in `helpers/pyspark.py` to include a fallback for
+  PySpark 3.2.3 when accessing the `sparkSession` attribute.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.9.1] 2025-04-07
 
 ### Added
@@ -709,6 +723,10 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.9.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.2) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.9.2/)
+- rdsa-utils v0.9.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.1) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.9.1/)
 - rdsa-utils v0.9.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.9.0/)
 - rdsa-utils v0.8.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.8.0) |
