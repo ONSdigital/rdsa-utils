@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Updated `cut_lineage` function in `helpers/pyspark.py` to include a fallback for
+  PySpark 3.2.3 when accessing the `sparkSession` attribute.
 
 ### Deprecated
 
