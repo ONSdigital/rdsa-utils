@@ -1,5 +1,6 @@
-# 🧰 rdsa-utils 
+# 🧰 rdsa-utils
 
+![Code Coverage]()
 [![Deploy to PyPI](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml)
 [![Deploy MkDocs](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml)
 [![PyPI version](https://badge.fury.io/py/rdsa-utils.svg)](https://pypi.org/project/rdsa-utils/)
@@ -14,11 +15,11 @@ The RDSA team sits within the Economic Statistics Change Directorate, and uses c
 
 `rdsa-utils` is a Python codebase built with Python 3.8 and higher, and uses `setup.py`, `setup.cfg`, and `pyproject.toml` for dependency management and packaging.
 
-## 📋 Prerequisites 
+## 📋 Prerequisites
 
 - Python 3.8 or higher
 
-## 💾 Installation 
+## 💾 Installation
 
 `rdsa-utils` is available for installation via [PyPI](https://pypi.org/project/rdsa-utils/) and can also be found on [GitHub Releases](https://github.com/ONSdigital/rdsa-utils/releases) for direct downloads and version history.
 
@@ -47,7 +48,7 @@ The `rdsa-utils` package is designed to make it easy to work with different plat
 
 This structure keeps the tools for each platform separate, so you can easily find what you need, whether you're working in a cloud environment or on general Python tasks.
 
-## 📖 Documentation and Further Information 
+## 📖 Documentation and Further Information
 
 Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).
 
@@ -63,7 +64,7 @@ We highly recommend checking out the following resources to learn more about cre
 
 - [PySpark Introduction and Training Book](https://best-practice-and-impact.github.io/ons-spark/intro.html) - An introduction to using PySpark for large-scale data processing.
 
-Additionally, if you are facing the challenge of repeatedly setting up new developers and new users in local Python, then you may want to consider making a batch file to carry out the setup process for you. The [easypipelinerun](https://github.com/ONSdigital/easy_pipeline_run/) repo has a batch file that can be modified to set your users up for your project, taking care of things like conda and pip set up as well as environment management.  
+Additionally, if you are facing the challenge of repeatedly setting up new developers and new users in local Python, then you may want to consider making a batch file to carry out the setup process for you. The [easypipelinerun](https://github.com/ONSdigital/easy_pipeline_run/) repo has a batch file that can be modified to set your users up for your project, taking care of things like conda and pip set up as well as environment management.
 
 ## 🙌 Acknowledgements
 
