@@ -8,7 +8,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added `generate_badge.yaml` GitHub Action to generate pytest coverage report when pushing to the `main` branch.
+- Added `generate_coverage_badge.yaml` GitHub Action to generate pytest coverage report when pushing to the `main` branch.
 
 ### Changed
 - Updated `README.md` to include information about pytest coverage badge.
