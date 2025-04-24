@@ -17,6 +17,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.9.4] 2025-04-24
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+- Removed `generate_coverage_badge.yaml`.
+
 ## [0.9.3] 2025-04-24
 
 ### Added
@@ -738,6 +751,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.9.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.4) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.9.4/)
 - rdsa-utils v0.9.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.3) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.9.3/)
 - rdsa-utils v0.9.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.2) |
