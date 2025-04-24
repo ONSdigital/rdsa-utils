@@ -22,14 +22,13 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- Updated GitHub Actions workflow `generate_coverage_badge.yaml` to push coverage
-  badge updates to the development branch.
 
 ### Deprecated
 
 ### Fixed
 
 ### Removed
+- Removed `generate_coverage_badge.yaml`.
 
 ## [0.9.3] 2025-04-24
 
