@@ -11,6 +11,8 @@ The validation scripts do two main things:
 2) creates a batch of "expectations" from the toml to validate the data against
 3) validates the data against the schema
 
+![Image](https://github.com/ONSdigital/rdsa-utils/blob/0b358882fcf57d002cd1aed58e965ae49077ff50/docs/img/Data_Validator_Diagram.png)
+
 ## Structure
 
 The TOML file is structured as a series of tables, where each table represents a column in your DataFrame and its associated validation rules. The `[data_asset]` table is used to name the data asset these rules apply to within Great Expectations.
