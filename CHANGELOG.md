@@ -16,6 +16,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
+- Removed explicit `mkdocs` version pin from `doc` extra in `setup.cfg`
+  because `mkdocs` is installed as a dependency of `ons-mkdocs-theme`.
 
 ## [0.10.0] - 2025-06-07
 
