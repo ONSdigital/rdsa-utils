@@ -17,6 +17,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.10.0] - 2025-06-07
+
+### Added
+- Added `smart_coalesce` function in `helpers/pyspark.py`.
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.9.4] 2025-04-24
 
 ### Added
@@ -751,6 +764,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.10.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.10.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.10.0/)
 - rdsa-utils v0.9.4: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.4) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.9.4/)
 - rdsa-utils v0.9.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.9.3) |
