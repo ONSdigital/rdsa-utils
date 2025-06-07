@@ -1690,4 +1690,4 @@ def smart_coalesce(df: SparkDF, target_file_size_mb: int = 512) -> SparkDF:
         f"coalescing to {num_files} partitions.",
     )
 
-    return df.coalesce(int(num_files))
+    return df.coalesce(num_files)
