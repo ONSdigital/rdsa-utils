@@ -1668,7 +1668,6 @@ def smart_coalesce(df: SparkDF, target_file_size_mb: int = 512) -> SparkDF:
     Examples
     --------
     Reduce number of output files for a moderate-sized DataFrame:
-
     >>> coalesced_df = smart_coalesce(df, target_file_size_mb=200)
     >>> coalesced_df.write.mode("overwrite").saveAsTable("my_optimised_table")
     """
