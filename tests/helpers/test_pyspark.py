@@ -1776,3 +1776,18 @@ class TestMapColumnValues:
 
         with pytest.raises(TypeError, match="dict_ must be a dictionary"):
             map_column_values(input_df, "not_a_dict", "col1")
+
+
+@pytest.mark.skip(
+    reason=(
+        "Cannot reliably test smart_coalesce: .coalesce() only reduces partitions "
+        "and does not increase them. Mocking Catalyst stats has no effect on physical execution, "
+        "and coalesce is not meaningfully testable on a local pytest Spark cluster due to limited parallelism."
+    ),
+)
+class TestSmartCoalesce:
+    """Tests for smart_coalesce function."""
+
+    def test_expected(self):
+        """Test expected behaviour."""
+        pass
