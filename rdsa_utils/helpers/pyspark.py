@@ -1597,3 +1597,98 @@ def map_column_values(
         F.coalesce(mapping_expr.getItem(F.col(input_col)), F.col(input_col)),
     )
     return df
+
+
+def smart_coalesce(df: SparkDF, target_file_size_mb: int = 512) -> SparkDF:
+    """Coalesce a Spark DataFrame to an appropriate number of partitions.
+
+    Coalesces a Spark DataFrame to an appropriate number of partitions based on its
+    estimated size using Spark's Catalyst optimiser and a user-defined target file size.
+
+    This function helps to reduce the number of output files written when saving a
+    DataFrame to storage systems such as Hive or Amazon S3 by adjusting the number of
+    partitions using `.coalesce()`. It is especially useful for avoiding the
+    "small files problem", which can negatively affect performance,
+    metadata management, and query planning.
+
+    It leverages Spark Catalyst's query plan statistics to get a logical estimate
+    of the DataFrame's size in bytes without triggering a full job or action.
+    Based on the provided `target_file_size_mb`, it calculates how many output files
+    are needed and reduces the number of partitions accordingly.
+
+    Parameters
+    ----------
+    df
+        The input Spark DataFrame that will be written to storage.
+    target_file_size_mb
+        The desired maximum size of each output file in megabytes. This controls the
+        number of output files by estimating how many are needed to approximately
+        match the total data volume.
+        Default is 512 MB.
+
+    Returns
+    -------
+    SparkDF
+        A Spark DataFrame with a reduced number of partitions, ready to be written
+        to disk using `.write()`. The number of partitions is chosen to produce
+        output files close to the target size.
+
+    Notes
+    -----
+    - This function uses Spark Catalyst's logical plan statistics. These may be
+      outdated or unavailable if statistics haven't been collected
+      (e.g., ANALYZE TABLE not run).
+    - If the estimated size is zero or unavailable, it defaults to a single partition.
+    - This function uses `.coalesce()` which avoids a shuffle but can cause skew if the
+      data is unevenly distributed. For very large datasets, consider using
+      `repartition()` instead.
+    - This function is best used as a final optimisation before writing output files,
+      especially to S3, Hive, or HDFS.
+
+    Why Small Files Are a Problem
+    -----------------------------
+    Writing many small files (e.g., thousands of files per partition)
+    negatively impacts:
+
+    1. Hive Metastore:
+       - Hive must track every individual file in the metastore.
+       - Too many files lead to slow table listings, metadata queries,
+         and planning time.
+
+    2. Spark Performance:
+       - During reads, Spark spawns a task per file.
+       - Thousands of tiny files = thousands of tasks =
+         job scheduling overhead + slow query startup.
+
+    3. S3 Performance:
+       - S3 is object storage, not a filesystem. Each file written = one PUT request.
+       - Too many files increase write latency and cost.
+       - During reads, many GET requests slow down performance.
+
+    Examples
+    --------
+    Reduce number of output files for a moderate-sized DataFrame:
+
+    >>> coalesced_df = smart_coalesce(df, target_file_size_mb=200)
+    >>> coalesced_df.write.mode("overwrite").saveAsTable("my_optimised_table")
+    """
+    # Get estimated size from Catalyst (in bytes)
+    estimated_size_bytes = (
+        df._jdf.queryExecution().optimizedPlan().stats().sizeInBytes()
+    )
+
+    # Convert target file size to bytes
+    target_bytes = target_file_size_mb * 1024 * 1024
+
+    # Determine number of output files
+    num_files = max(1, estimated_size_bytes // target_bytes)
+
+    estimated_size_gb = estimated_size_bytes / (1024**3)
+
+    logger.info(
+        f"Estimated logical size: {estimated_size_gb:.2f} GB, "
+        f"target file size: {target_file_size_mb} MB, "
+        f"coalescing to {num_files} partitions.",
+    )
+
+    return df.coalesce(num_files)
