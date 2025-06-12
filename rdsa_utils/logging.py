@@ -87,7 +87,7 @@ def init_logger_advanced(
     ideally in your package’s top-level `__init__.py` —- to enforce consistent
     logging configuration across all modules.
 
-    After initialization, modules should obtain their
+    After initialisation, modules should obtain their
     own logger via: `logger = logging.getLogger(__name__)`
 
     Parameters
@@ -97,9 +97,9 @@ def init_logger_advanced(
         emitted by the root logger.
     handlers
         A list of handler instances (e.g., StreamHandler, FileHandler) to attach.
-        If None or empty, logging.basicConfig is used with the given formats.
+        If None or empty, `logging.basicConfig` is used with the given formats.
     log_format
-        A logging.Formatter format string for log messages.
+        A `logging.Formatter` format string for log messages.
         Defaults to: "%(asctime)s %(levelname)s %(name)s: %(message)s".
     date_format
         A strftime format string for timestamps.
@@ -108,7 +108,7 @@ def init_logger_advanced(
     Raises
     ------
     ValueError
-        If any item in handlers is not an instance of logging.Handler.
+        If any item in handlers is not an instance of `logging.Handler`.
 
     Notes
     -----
