@@ -78,9 +78,10 @@ def init_logger_advanced(
 ) -> None:
     """Instantiate a logger with provided handlers.
 
-    This function allows the logger to be used across modules. Logs can be
-    handled by any number of handlers, e.g., FileHandler, StreamHandler, etc.,
-    provided in the `handlers` list.
+    This function configures the root logger, which is shared across all modules
+    in a Python application. By setting up the root logger, all loggers created
+    via `logging.getLogger(__name__)` in other modules will inherit the same
+    configuration unless explicitly overridden.
 
     Parameters
     ----------
@@ -114,13 +115,21 @@ def init_logger_advanced(
         If any item in the `handlers` list is not an instance of
         `logging.Handler`.
 
+    Notes
+    -----
+    If the root logger already has handlers configured (e.g., due to a previous
+    call or from an imported module), this function will exit early to avoid
+    adding duplicate handlers.
+
     Examples
     --------
+    >>> import logging
+    >>> import sys
     >>> file_handler = logging.FileHandler('logfile.log')
-    >>> rich_handler = RichHandler()
+    >>> stream_handler = logging.StreamHandler(sys.stdout)
     >>> init_logger_advanced(
-    ...     logging.DEBUG,
-    ...     [file_handler, rich_handler],
+    ...     logging.INFO,
+    ...     [file_handler, stream_handler],
     ...     "%(levelname)s: %(message)s",
     ...     "%H:%M:%S"
     ... )
