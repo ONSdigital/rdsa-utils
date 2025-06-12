@@ -76,63 +76,60 @@ def init_logger_advanced(
     log_format: str = None,
     date_format: str = None,
 ) -> None:
-    """Instantiate a logger with provided handlers.
+    """Set up the root logger with specified settings, avoiding duplicate handlers.
 
-    This function configures the root logger, which is shared across all modules
-    in a Python application. By setting up the root logger, all loggers created
-    via `logging.getLogger(__name__)` in other modules will inherit the same
-    configuration unless explicitly overridden.
+    This function initialises the root logger at the desired log_level,
+    applies a consistent message and date format, and attaches any provided
+    handlers. If the root logger already has handlers (e.g., from a previous
+    call or another module), it returns immediately to prevent duplicate setup.
+
+    Recommended usage: call this function once during application startup—
+    ideally in your package’s top-level `__init__.py` —- to enforce consistent
+    logging configuration across all modules.
+
+    After initialization, modules should obtain their
+    own logger via: `logger = logging.getLogger(__name__)`
 
     Parameters
     ----------
     log_level
-        The level of logging to be recorded. Can be defined either as the
-        integer level or the logging.<LEVEL> values in line with the definitions
-        of the logging module.
-        (see - https://docs.python.org/3/library/logging.html#levels)
+        The logging level (e.g., logging.INFO, logging.DEBUG) for all messages
+        emitted by the root logger.
     handlers
-        List of handler instances to be added to the logger. Each handler
-        instance must be a subclass of `logging.Handler`. Default is an
-        empty list, and in this case, basicConfig with `log_level`,
-        `log_format`, and `date_format` is used.
+        A list of handler instances (e.g., StreamHandler, FileHandler) to attach.
+        If None or empty, logging.basicConfig is used with the given formats.
     log_format
-        The format of the log message. If not provided, a default format
-        `'%(asctime)s %(levelname)s %(name)s: %(message)s'` is used.
+        A logging.Formatter format string for log messages.
+        Defaults to: "%(asctime)s %(levelname)s %(name)s: %(message)s".
     date_format
-        The format of the date in the log message. If not provided, a default
-        format `'%Y-%m-%d %H:%M:%S'` is used.
-
-    Returns
-    -------
-    None
-        The logger created by this function is available in any other modules
-        by using `logging.getLogger(__name__)` at the global scope level in a
-        module (i.e., below imports, not in a function).
+        A strftime format string for timestamps.
+        Defaults to: "%Y-%m-%d %H:%M:%S".
 
     Raises
     ------
     ValueError
-        If any item in the `handlers` list is not an instance of
-        `logging.Handler`.
+        If any item in handlers is not an instance of logging.Handler.
 
     Notes
     -----
-    If the root logger already has handlers configured (e.g., due to a previous
-    call or from an imported module), this function will exit early to avoid
-    adding duplicate handlers.
+    - Checks `root_logger.hasHandlers()`: if True, exits without changes.
+    - Sets the root logger's level to log_level before adding handlers.
+    - If no handlers provided, calls `logging.basicConfig` after formatter setup.
 
     Examples
     --------
-    >>> import logging
+    >>> import logging, sys
     >>> import sys
-    >>> file_handler = logging.FileHandler('logfile.log')
-    >>> stream_handler = logging.StreamHandler(sys.stdout)
+    >>> from rdsa_utils.logging import init_logger_advanced
+    >>> # Initialise once in your package’s __init__.py
     >>> init_logger_advanced(
-    ...     logging.INFO,
-    ...     [file_handler, stream_handler],
-    ...     "%(levelname)s: %(message)s",
-    ...     "%H:%M:%S"
+    ...     log_level=logging.INFO,
+    ...     handlers=[logging.StreamHandler(sys.stdout)],
+    ...     log_format="%(levelname)s: %(message)s",
+    ...     date_format="%H:%M:%S"
     ... )
+    >>> # In other modules, get a named logger
+    >>> logger = logging.getLogger(__name__)
     """
     # Get the root logger
     root_logger = logging.getLogger()
