@@ -55,13 +55,6 @@ def init_logger_basic(log_level: int) -> None:
         by using `logger = logging.getLogger(__name__)` at the global scope
         level in a module (i.e. below imports, not in a function).
     """
-    # Get the root logger
-    root_logger = logging.getLogger()
-
-    # Prevent duplicate handlers
-    if root_logger.hasHandlers():
-        return
-
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
