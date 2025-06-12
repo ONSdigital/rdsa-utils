@@ -55,6 +55,13 @@ def init_logger_basic(log_level: int) -> None:
         by using `logger = logging.getLogger(__name__)` at the global scope
         level in a module (i.e. below imports, not in a function).
     """
+    # Get the root logger
+    root_logger = logging.getLogger()
+
+    # Prevent duplicate handlers
+    if root_logger.hasHandlers():
+        return
+
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
@@ -125,22 +132,26 @@ def init_logger_advanced(
     ...     "%H:%M:%S"
     ... )
     """
+    # Get the root logger
+    root_logger = logging.getLogger()
+
+    # Prevent duplicate handlers
+    if root_logger.hasHandlers():
+        return
+
     # Set default log format and date format if not provided
     if log_format is None:
         log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
     if date_format is None:
         date_format = "%Y-%m-%d %H:%M:%S"
 
-    # Prepare a formatter
-    formatter = logging.Formatter(log_format, date_format)
-
-    # Create a logger
-    logger = logging.getLogger(__name__)
-    logger.setLevel(log_level)
-
     # Check if handlers is None, if so assign an empty list to it
     if handlers is None:
         handlers = []
+
+    # Prepare a formatter and set the log level
+    formatter = logging.Formatter(log_format, date_format)
+    root_logger.setLevel(log_level)
 
     # Validate each handler
     for handler in handlers:
@@ -152,11 +163,10 @@ def init_logger_advanced(
             raise ValueError(
                 msg,
             )
-
         handler.setFormatter(formatter)
-        logger.addHandler(handler)
+        root_logger.addHandler(handler)
 
-    # If no handlers provided, use basicConfig
+    # Use basicConfig if no handlers provided
     if not handlers:
         logging.basicConfig(
             level=log_level,
