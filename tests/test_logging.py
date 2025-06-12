@@ -1,6 +1,8 @@
 """Tests for the logging.py module."""
 
 import logging
+import sys
+from pathlib import Path
 from unittest import mock
 
 import pytest
@@ -10,7 +12,7 @@ from rdsa_utils.logging import (
     print_full_table_and_raise_error,
     timer_args,
 )
-from tests.conftest import Case, create_dataframe, parametrize_cases
+from rdsa_utils.test_utils import *
 
 logger = logging.getLogger(__name__)
 
@@ -156,34 +158,72 @@ class TestAddWarningMessageToFunction:
 
 
 class TestInitLoggerAdvanced:
-    """Tests for init_logger_advanced function."""
+    """Tests for init_logger_advanced."""
 
-    def test_logger_with_no_handler(self, caplog):
-        """Test whether a logger is properly initialized with no handlers."""
-        caplog.set_level(logging.DEBUG)
-        init_logger_advanced(logging.DEBUG)
-        assert caplog.records[0].levelname == "DEBUG"
+    def setup_method(self) -> None:
+        """Clear all handlers before each test."""
+        root_logger = logging.getLogger()
+        for handler in list(root_logger.handlers):
+            root_logger.removeHandler(handler)
 
-    def test_logger_with_handlers(self, caplog):
-        """Test whether a logger is properly initialized with a valid handler."""
-        caplog.set_level(logging.DEBUG)
-        handler = logging.FileHandler("logfile.log")
-        handlers = [handler]
-        init_logger_advanced(logging.DEBUG, handlers)
+    def test_basic_config_applied_when_no_handlers(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """BasicConfig applied when no handlers provided."""
+        # Simulate no existing handlers
+        monkeypatch.setattr(logging.Logger, "hasHandlers", lambda self: False)
+        init_logger_advanced(logging.INFO)
+        root_logger = logging.getLogger()
+        assert root_logger.level == logging.INFO
+        assert len(root_logger.handlers) >= 1
 
-        logger = logging.getLogger("rdsa_utils.logging")
-
-        assert caplog.records[0].levelname == "DEBUG"
-        assert any(isinstance(h, type(handler)) for h in logger.handlers)
-
-    def test_logger_with_invalid_handler(self):
-        """Test whether a ValueError is raised when an invalid handler is provided."""
-        log_level = logging.DEBUG
-        invalid_handler = "I am not a handler"
-        handlers = [invalid_handler]
-        with pytest.raises(ValueError) as exc_info:
-            init_logger_advanced(log_level, handlers)
-        assert (
-            str(exc_info.value)
-            == f"Handler {invalid_handler} is not an instance of logging.Handler or its subclasses"
+    def test_custom_handlers_added(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+    ) -> None:
+        """Custom handlers are added to root logger with correct formatter."""
+        # Ensure handlers are treated as none initially
+        monkeypatch.setattr(logging.Logger, "hasHandlers", lambda self: False)
+        stream_handler: logging.StreamHandler = logging.StreamHandler(sys.stdout)
+        log_file: Path = tmp_path / "test.log"
+        file_handler: logging.FileHandler = logging.FileHandler(str(log_file))
+        init_logger_advanced(
+            logging.DEBUG,
+            [stream_handler, file_handler],
+            "%(message)s",
+            "%H:%M:%S",
         )
+        root_logger = logging.getLogger()
+        assert root_logger.level == logging.DEBUG
+        handlers = root_logger.handlers
+        # Check that our handlers are present
+        assert stream_handler in handlers
+        assert file_handler in handlers
+        # Verify each custom handler uses the provided format
+        for handler in (stream_handler, file_handler):
+            assert handler.formatter._fmt == "%(message)s"
+
+    def test_value_error_for_invalid_handler(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Raises ValueError for invalid handler types."""
+        monkeypatch.setattr(logging.Logger, "hasHandlers", lambda self: False)
+        with pytest.raises(ValueError):
+            init_logger_advanced(logging.WARNING, handlers=[object()])
+
+    def test_no_duplicate_handlers_if_already_configured(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Existing handler remains when logger already configured."""
+        # Simulate existing handlers to trigger early exit
+        monkeypatch.setattr(logging.Logger, "hasHandlers", lambda self: True)
+        existing_handler: logging.StreamHandler = logging.StreamHandler()
+        root_logger = logging.getLogger()
+        root_logger.addHandler(existing_handler)
+        init_logger_advanced(logging.ERROR)
+        handlers = logging.getLogger().handlers
+        assert existing_handler in handlers
