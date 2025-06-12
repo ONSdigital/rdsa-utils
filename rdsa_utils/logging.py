@@ -118,7 +118,7 @@ def init_logger_advanced(
 
     Examples
     --------
-    >>> import logging, sys
+    >>> import logging
     >>> import sys
     >>> from rdsa_utils.logging import init_logger_advanced
     >>> # Initialise once in your package’s __init__.py
