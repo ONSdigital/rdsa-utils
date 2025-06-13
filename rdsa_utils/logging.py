@@ -140,7 +140,7 @@ def init_logger_advanced(
 
     # Set default log format and date format if not provided
     if log_format is None:
-        log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s"
+        log_format = "%(asctime)s (%(levelname)s) [%(name)s] %(message)s"
     if date_format is None:
         date_format = "%Y-%m-%d %H:%M:%S"
 
