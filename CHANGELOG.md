@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.11.0] - 2025-06-13
+
+### Added
+
+### Changed
+- Added support in `init_logger_advanced` to detect existing root logger handlers
+  and prevent duplicate configuration; updated corresponding unit tests.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.10.1] - 2025-06-07
 
 ### Added
@@ -778,6 +792,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.11.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.11.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.11.0/)
 - rdsa-utils v0.10.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.10.1) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.10.1/)
 - rdsa-utils v0.10.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.10.0) |
