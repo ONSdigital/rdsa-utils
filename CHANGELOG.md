@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Added support in `init_logger_advanced` to detect existing root logger handlers
+  and prevent duplicate configuration; updated corresponding unit tests.
 
 ### Deprecated
 
