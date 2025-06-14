@@ -4,6 +4,7 @@ import hashlib
 import itertools
 import json
 import logging
+import subprocess
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
@@ -912,3 +913,68 @@ def create_folder(dirpath: str) -> None:
     """
     Path(dirpath).mkdir(parents=True, exist_ok=True)
     return None
+
+
+def dump_environment_requirements(
+    output_file: str,
+    tool: str = "pip",
+    args: List[str] = ["list", "--format=freeze"],
+) -> None:
+    """Dump the current Python environment dependencies to a text file.
+
+    Parameters
+    ----------
+    output_file
+        Path to the output text file where the list of dependencies will be saved.
+        If the directory does not exist, it will be created.
+
+    tool
+        The command-line tool to use for exporting dependencies
+        (e.g. 'pip', 'poetry', or 'uv').
+        Default is 'pip'.
+
+    args
+        The arguments to pass to the selected tool.
+        For pip, the default is ['list', '--format=freeze'].
+        For poetry, a common option is ['export', '--without-hashes'].
+        For uv, you might use ['pip', 'freeze'].
+
+    Returns
+    -------
+    None
+        This function writes to the specified file and does not return anything.
+
+    Examples
+    --------
+    >>> dump_environment_requirements("requirements.txt")
+    >>> dump_environment_requirements(
+    ...     "requirements.txt",
+    ...     tool="pip",
+    ...     args=["freeze"]
+    ... )
+    >>> dump_environment_requirements(
+    ...     "requirements.txt",
+    ...     tool="poetry",
+    ...     args=["export", "--without-hashes"]
+    ... )
+    >>> dump_environment_requirements(
+    ...     "requirements.txt",
+    ...     tool="uv",
+    ...     args=["pip", "freeze"]
+    ... )
+    """
+    output_path = Path(output_file)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    result = subprocess.run(
+        [tool] + args,
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    logger.info(
+        f"Dumping environment to '{output_path}' using tool='{tool}' "
+        f"with args={args}",
+    )
+    output_path.write_text(result.stdout)
