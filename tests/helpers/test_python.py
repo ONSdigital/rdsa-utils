@@ -2,6 +2,7 @@
 
 from time import sleep
 from unittest import mock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -990,3 +991,60 @@ class TestCreateFolder:
         invalid_path = "/invalid_path/new_folder"
         with pytest.raises(OSError):
             create_folder(invalid_path)
+
+
+class TestDumpEnvironmentRequirements:
+    """Tests for the dump_environment_requirements function."""
+
+    def test_writes_expected_output_to_file(self, tmp_path: Path) -> None:
+        """Write output to file when tool runs successfully."""
+        mock_output = "package-a==1.0.0\npackage-b==2.0.0"
+        output_file = tmp_path / "requirements.txt"
+
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(stdout=mock_output)
+            dump_environment_requirements(str(output_file))
+
+        assert output_file.exists()
+        assert output_file.read_text() == mock_output
+
+    def test_calls_tool_with_custom_args(self, tmp_path: Path) -> None:
+        """Call specified tool with provided arguments."""
+        output_file = tmp_path / "reqs.txt"
+        tool = "poetry"
+        args = ["export", "--without-hashes"]
+
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(stdout="exported output")
+            dump_environment_requirements(str(output_file), tool=tool, args=args)
+
+            mock_run.assert_called_once_with(
+                [tool] + args,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+
+    def test_creates_nested_output_directory(self, tmp_path: Path) -> None:
+        """Create parent directories if they do not exist."""
+        nested_dir = tmp_path / "nested" / "dir"
+        output_file = nested_dir / "reqs.txt"
+
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(stdout="some content")
+            dump_environment_requirements(str(output_file))
+
+        assert output_file.exists()
+        assert output_file.read_text() == "some content"
+
+    def test_raises_on_subprocess_failure(self, tmp_path: Path) -> None:
+        """Raise CalledProcessError if tool execution fails."""
+        output_file = tmp_path / "fail.txt"
+
+        with patch(
+            "subprocess.run",
+            side_effect=subprocess.CalledProcessError(1, "cmd"),
+        ):
+            with pytest.raises(subprocess.CalledProcessError):
+                dump_environment_requirements(str(output_file))
