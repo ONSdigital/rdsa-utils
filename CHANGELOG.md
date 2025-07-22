@@ -17,6 +17,19 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.12.1] - 2025-07-22
+
+### Added
+- Added RDSA email to `setup.cfg`, `README.md`, `index.md`.
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.12.0] - 2025-06-15
 
 ### Added
@@ -805,6 +818,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.12.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.12.1) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.12.1/)
 - rdsa-utils v0.12.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.12.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.12.0/)
 - rdsa-utils v0.11.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.11.0) |
