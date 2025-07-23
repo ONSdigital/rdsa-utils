@@ -49,7 +49,9 @@ This structure keeps the tools for each platform separate, so you can easily fin
 
 ## 📖 Documentation and Further Information
 
-Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).
+Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. It uses the [`ons_mkdocs_theme`](https://github.com/ONSdigital/ons_mkdocs_theme) package for a consistent ONS look and feel on GitHub Pages.
+
+For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).
 
 ## 📘 Further Reading on Reproducible Analytical Pipelines
 

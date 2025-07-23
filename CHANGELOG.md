@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Noted in `README.md` that the documentation uses the `ons_mkdocs_theme` package
+  for the MkDocs theme, with a link to its GitHub repository.
 
 ### Deprecated
 
