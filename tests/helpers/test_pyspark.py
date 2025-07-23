@@ -1791,3 +1791,64 @@ class TestSmartCoalesce:
     def test_expected(self):
         """Test expected behaviour."""
         pass
+
+
+class TestFilterOutValues:
+    """Tests for filter_out_values function."""
+
+    def test_basic_exclusion(self, create_spark_df) -> None:
+        """Filter out simple list of values, keep nulls by default."""
+        schema = T.StructType(
+            [
+                T.StructField("id", T.IntegerType(), True),
+                T.StructField("fruit", T.StringType(), True),
+            ],
+        )
+        data = [(1, "apple"), (2, None), (3, "banana"), (4, "cherry"), (5, "apple")]
+        df = create_spark_df([schema] + data)
+        expected = create_spark_df([schema, (2, None), (4, "cherry")])
+        result = filter_out_values(df, "fruit", ["apple", "banana"])
+        assert_df_equality(result, expected)
+
+    def test_keep_nulls_false(self, create_spark_df) -> None:
+        """Drop specified string values and nulls when keep_nulls=False."""
+        schema = T.StructType([T.StructField("fruit", T.StringType(), True)])
+        data = [("apple",), (None,), ("banana",), ("cherry",), ("apple",)]
+        df = create_spark_df([schema] + data)
+        expected = create_spark_df([schema, ("cherry",)])
+        result = filter_out_values(df, "fruit", ["apple", "banana"], keep_nulls=False)
+        assert_df_equality(result, expected)
+
+    def test_empty_exclusion_list_raises(self, create_spark_df) -> None:
+        """Calling with empty exclusion list raises ValueError."""
+        schema = T.StructType([T.StructField("x", T.StringType(), True)])
+        df = create_spark_df([schema, ("a",), ("b",)])
+        with pytest.raises(ValueError) as exc:
+            filter_out_values(df, "x", [])
+        assert "must contain at least one value" in str(exc.value)
+
+    def test_column_not_found_raises(self, create_spark_df) -> None:
+        """Calling with non-existent column raises ValueError."""
+        schema = T.StructType([T.StructField("a", T.IntegerType(), True)])
+        df = create_spark_df([schema, (1,), (2,)])
+        with pytest.raises(ValueError) as exc:
+            filter_out_values(df, "missing", [1])
+        assert "not found in DataFrame" in str(exc.value)
+
+    def test_integer_exclusion(self, create_spark_df) -> None:
+        """Filter out integer values correctly."""
+        schema = T.StructType([T.StructField("num", T.IntegerType(), True)])
+        data = [(1,), (2,), (3,), (4,), (5,)]
+        df = create_spark_df([schema] + data)
+        expected = create_spark_df([schema, (1,), (3,), (5,)])
+        result = filter_out_values(df, "num", [2, 4])
+        assert_df_equality(result, expected)
+
+    def test_double_exclusion(self, create_spark_df) -> None:
+        """Filter out float values correctly using DoubleType to avoid precision issues."""
+        schema = T.StructType([T.StructField("val", T.DoubleType(), True)])
+        data = [(1.1,), (2.2,), (3.3,), (4.4,), (None,)]
+        df = create_spark_df([schema] + data)
+        expected = create_spark_df([schema, (1.1,), (3.3,), (None,)])
+        result = filter_out_values(df, "val", [2.2, 4.4])
+        assert_df_equality(result, expected, ignore_row_order=True)
