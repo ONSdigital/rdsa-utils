@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.13.0] - 2025-07-23
+
+### Added
 - Added function `filter_out_values` to `helpers/pyspark.py`.
 
 ### Changed
@@ -819,6 +831,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.13.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.13.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.13.0/)
 - rdsa-utils v0.12.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.12.1) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.12.1/)
 - rdsa-utils v0.12.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.12.0) |
