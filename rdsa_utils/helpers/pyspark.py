@@ -1691,3 +1691,99 @@ def smart_coalesce(df: SparkDF, target_file_size_mb: int = 512) -> SparkDF:
     )
 
     return df.coalesce(num_files)
+
+
+def filter_out_values(
+    df: SparkDF,
+    column: str,
+    values_to_exclude: List[Union[str, int, float]],
+    keep_nulls: bool = True,
+) -> SparkDF:
+    """Exclude rows whose column value appears in the exclusion list.
+
+    Parameters
+    ----------
+    df
+        Input DataFrame.
+    column
+        Name of the column to filter on.
+    values_to_exclude
+        List of values to remove.
+    keep_nulls
+        Whether to preserve NULL values in the column.
+
+    Raises
+    ------
+    ValueError
+        If `values_to_exclude` is empty.
+        If `column` is not found in `df`.
+
+    Returns
+    -------
+    DataFrame
+        Filtered DataFrame with specified values excluded.
+
+    Notes
+    -----
+    - `isin` performs exact matching. For reliable filtering of floating-point data,
+      prefer defining the column as DoubleType.
+    - FloatType columns may suffer from binary precision issues,
+      causing literal comparisons to fail unexpectedly.
+    - If you must filter on FloatType with approximate values, consider:
+      1. Rounding the column to a fixed precision:
+         ```python
+         df = df.withColumn("col", F.round(F.col("col"), 2))
+         filter_out_values(df, "col", [1.23, 4.56])
+         ```
+      2. Filtering by range to capture an approximate match:
+         ```python
+         df.filter(~((F.col("col") >= 1.229) & (F.col("col") <= 1.231)))
+         ```
+
+    Examples
+    --------
+    # Keep nulls (default)
+    >>> data = [(1, "apple"), (2, None), (3, "banana")]
+    >>> df = spark.createDataFrame(data, ["id", "fruit"])
+    >>> filter_out_values(df, "fruit", ["apple"]).show()
+    +---+------+
+    | id| fruit|
+    +---+------+
+    |  2|  null|
+    |  3|banana|
+    +---+------+
+
+    # Exclude nulls
+    >>> filter_out_values(df, "fruit", ["apple"], keep_nulls=False).show()
+    +---+------+
+    | id| fruit|
+    +---+------+
+    |  3|banana|
+    +---+------+
+    """
+    if not values_to_exclude:
+        error_msg = (
+            f"`values_to_exclude` for column='{column}' "
+            "must contain at least one value."
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    if column not in df.columns:
+        error_msg = f"Column '{column}' not found in DataFrame."
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    logger.info(
+        f"filter_out_values function called with column='{column}', "
+        "values_to_exclude={values_to_exclude}, keep_nulls={keep_nulls}",
+    )
+
+    col_expr = F.col(column)
+    base_condition = ~col_expr.isin(values_to_exclude)
+    if keep_nulls:
+        condition = base_condition | col_expr.isNull()
+    else:
+        condition = base_condition
+
+    return df.filter(condition)
