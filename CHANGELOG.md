@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Fix logging in `filter_out_values` in `helpers/pyspark.py`, use f-string for
+  message formatting.
 
 ### Deprecated
 

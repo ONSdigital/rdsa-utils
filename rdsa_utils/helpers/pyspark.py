@@ -1776,7 +1776,7 @@ def filter_out_values(
 
     logger.info(
         f"filter_out_values function called with column='{column}', "
-        "values_to_exclude={values_to_exclude}, keep_nulls={keep_nulls}",
+        f"values_to_exclude={values_to_exclude}, keep_nulls={keep_nulls}",
     )
 
     col_expr = F.col(column)
