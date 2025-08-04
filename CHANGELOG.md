@@ -14,6 +14,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Fixed
+- Modified `load_csv` in `helpers/pyspark.py` to improve logging with conditional
+  inclusion of read options.
 
 ### Removed
 
