@@ -877,7 +877,14 @@ def load_csv(
     """
     try:
         df = spark.read.csv(filepath, header=True, **kwargs)
-        logger.info(f"Loaded CSV file {filepath} with parameters {kwargs}")
+        logger.info(
+            (
+                f"Loaded CSV file: {filepath}. "
+                f"Keep columns: {keep_columns}, Drop columns: {drop_columns}, "
+                f"Rename columns: {rename_columns}."
+                + (f" Additional read options: {kwargs}." if kwargs else "")
+            ),
+        )
     except Exception as e:
         error_message = f"Error loading file {filepath}: {e}"
         logger.error(error_message)
