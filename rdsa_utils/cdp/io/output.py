@@ -17,6 +17,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     list_files,
     remove_leading_slash,
     validate_bucket_name,
+    validate_s3_file_path,
 )
 from rdsa_utils.cdp.io.input import load_and_validate_table
 from rdsa_utils.exceptions import (
@@ -35,12 +36,14 @@ def insert_df_to_hive_table(
     table_name: str,
     overwrite: bool = False,
     fill_missing_cols: bool = False,
+    repartition_data_by: Union[int, str, None] = None,
 ) -> None:
-    """Write the SparkDF contents to a Hive table.
+    """Write SparkDF to Hive table with optional configuration.
 
-    This function writes data from a SparkDF into a Hive table, allowing
-    optional handling of missing columns. The table's column order is ensured to
-    match that of the DataFrame.
+    This function writes data from a SparkDF into a Hive table, handling missing
+    columns and optional repartitioning. It ensures the table's column order matches
+    the DataFrame and manages different overwrite behaviors for partitioned and
+    non-partitioned data.
 
     Parameters
     ----------
@@ -51,10 +54,39 @@ def insert_df_to_hive_table(
     table_name
         Name of the Hive table to write data into.
     overwrite
-        If True, existing data in the table will be overwritten,
-        by default False.
+        Controls how existing data is handled, default is False:
+
+        For non-partitioned data:
+        - True: Replaces entire table with DataFrame data.
+        - False: Appends DataFrame data to existing table.
+
+        For partitioned data:
+        - True: Replaces data only in partitions present in DataFrame.
+        - False: Appends data to existing partitions or creates new ones.
     fill_missing_cols
-        If True, missing columns will be filled with nulls, by default False.
+        If True, adds missing columns as NULL values. If False, raises an error
+        on schema mismatch, default is False.
+
+        - Explicitly casts DataFrame columns to match the Hive table schema to
+          avoid type mismatch errors.
+        - Adds missing columns as NULL values when `fill_missing_cols` is True,
+          regardless of their data type (e.g., String, Integer, Double, Boolean, etc.).
+    repartition_data_by
+        Controls data repartitioning, default is None:
+        - int: Sets target number of partitions.
+        - str: Specifies column to repartition by.
+        - None: No repartitioning performed.
+
+    Notes
+    -----
+    When using repartition with a number:
+    - Affects physical file structure but preserves Hive partitioning scheme.
+    - Controls number of output files per write operation per Hive partition.
+    - Maintains partition-based query optimisation.
+
+    When repartitioning by column:
+    - Helps balance file sizes across Hive partitions.
+    - Reduces creation of small files.
 
     Raises
     ------
@@ -64,36 +96,81 @@ def insert_df_to_hive_table(
     ValueError
         If the SparkDF schema does not match the Hive table schema and
         'fill_missing_cols' is set to False.
+    DataframeEmptyError
+        If input DataFrame is empty.
     Exception
         For other general exceptions when writing data to the table.
+
+    Examples
+    --------
+    Write a DataFrame to a Hive table without overwriting:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table"
+    ... )
+
+    Overwrite an existing table with a DataFrame:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     overwrite=True
+    ... )
+
+    Write a DataFrame to a Hive table with missing columns filled:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     fill_missing_cols=True
+    ... )
+
+    Repartition by column before writing to Hive:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     repartition_data_by="partition_column"
+    ... )
+
+    Repartition into a fixed number of partitions before writing:
+    >>> insert_df_to_hive_table(
+    ...     spark=spark,
+    ...     df=df,
+    ...     table_name="my_database.my_table",
+    ...     repartition_data_by=10
+    ... )
     """
-    logger.info(f"Preparing to write data to {table_name}.")
+    logger.info(f"Preparing to write data to {table_name} with overwrite={overwrite}.")
+
+    # Check if the table exists; if not, set flag for later creation
+    table_exists = True
+    try:
+        table_schema = spark.read.table(table_name).schema
+        table_columns = spark.read.table(table_name).columns
+    except AnalysisException:
+        logger.info(
+            f"Table {table_name} does not exist and will be "
+            "created after transformations.",
+        )
+        table_exists = False
+        table_columns = df.columns  # Use DataFrame columns as initial schema
 
     # Validate SparkDF before writing
     if is_df_empty(df):
         msg = f"Cannot write an empty SparkDF to {table_name}"
-        raise DataframeEmptyError(
-            msg,
-        )
+        raise DataframeEmptyError(msg)
 
-    try:
-        table_columns = spark.read.table(table_name).columns
-    except AnalysisException:
-        logger.error(
-            (
-                f"Error reading table {table_name}. "
-                f"Make sure the table exists and you have access to it."
-            ),
-        )
-
-        raise
-
-    if fill_missing_cols:
+    # Handle missing columns if specified
+    if fill_missing_cols and table_exists:
         missing_columns = list(set(table_columns) - set(df.columns))
-
         for col in missing_columns:
-            df = df.withColumn(col, F.lit(None))
-    else:
+            column_type = [
+                field.dataType for field in table_schema if field.name == col
+            ][0]
+            df = df.withColumn(col, F.lit(None).cast(column_type))
+    elif not fill_missing_cols and table_exists:
         # Validate schema before writing
         if set(table_columns) != set(df.columns):
             msg = (
@@ -102,10 +179,32 @@ def insert_df_to_hive_table(
             )
             raise ValueError(msg)
 
-    df = df.select(table_columns)
+    # Ensure column order
+    df = df.select(table_columns) if table_exists else df
 
+    # Apply repartitioning if specified
+    if repartition_data_by is not None:
+        if isinstance(repartition_data_by, int):
+            logger.info(f"Repartitioning data into {repartition_data_by} partitions.")
+            df = df.repartition(repartition_data_by)
+        elif isinstance(repartition_data_by, str):
+            logger.info(f"Repartitioning data by column {repartition_data_by}.")
+            df = df.repartition(repartition_data_by)
+
+    # Write DataFrame to Hive table based on existence and overwrite parameter
     try:
-        df.write.insertInto(table_name, overwrite)
+        if table_exists:
+            if overwrite:
+                logger.info(f"Overwriting existing table {table_name}.")
+                df.write.mode("overwrite").saveAsTable(table_name)
+            else:
+                logger.info(
+                    f"Inserting into existing table {table_name} without overwrite.",
+                )
+                df.write.insertInto(table_name)
+        else:
+            df.write.saveAsTable(table_name)
+            logger.info(f"Table {table_name} created successfully.")
         logger.info(f"Successfully wrote data to {table_name}.")
     except Exception:
         logger.error(f"Error writing data to {table_name}.")
@@ -164,7 +263,7 @@ def write_and_read_hive_table(
     with large PySpark DataFrames by leveraging Hive's on-disk storage.
 
     Predicate pushdown is used when reading the data back into a PySpark
-    DataFrame, minimizing the memory usage and optimizing the read
+    DataFrame, minimizing the memory usage and optimising the read
     operation.
 
     As part of the design, there is always a column called filter_col in the
@@ -363,6 +462,10 @@ def save_csv_to_s3(
     ------
     ValueError
         If the file_name does not end with ".csv".
+    InvalidBucketNameError
+        If the bucket name does not meet AWS specifications.
+    InvalidS3FilePathError
+        If the file_path contains an S3 URI scheme like 's3://' or 's3a://'.
     IOError
         If overwrite is False and the target file already exists.
 
@@ -386,6 +489,7 @@ def save_csv_to_s3(
     ```
     """
     bucket_name = validate_bucket_name(bucket_name)
+    file_path = validate_s3_file_path(file_path, allow_s3_scheme=False)
     file_path = remove_leading_slash(file_path)
 
     if not file_name.endswith(".csv"):

@@ -1,4 +1,4 @@
-# 🧰 rdsa-utils 
+# 🧰 rdsa-utils
 
 [![Deploy to PyPI](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_pypi.yaml)
 [![Deploy MkDocs](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml/badge.svg?branch=main)](https://github.com/ONSdigital/rdsa-utils/actions/workflows/deploy_mkdocs.yaml)
@@ -14,11 +14,11 @@ The RDSA team sits within the Economic Statistics Change Directorate, and uses c
 
 `rdsa-utils` is a Python codebase built with Python 3.8 and higher, and uses `setup.py`, `setup.cfg`, and `pyproject.toml` for dependency management and packaging.
 
-## 📋 Prerequisites 
+## 📋 Prerequisites
 
 - Python 3.8 or higher
 
-## 💾 Installation 
+## 💾 Installation
 
 `rdsa-utils` is available for installation via [PyPI](https://pypi.org/project/rdsa-utils/) and can also be found on [GitHub Releases](https://github.com/ONSdigital/rdsa-utils/releases) for direct downloads and version history.
 
@@ -28,9 +28,30 @@ To install via `pip`, simply run:
 pip install rdsa-utils
 ```
 
-## 📖 Documentation and Further Information 
+## 🗂️ How the Project is Organised
 
-Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).
+The `rdsa-utils` package is designed to make it easy to work with different platforms like Cloudera Data Platform (CDP) and Google Cloud Platform (GCP), as well as handle general Python tasks. Here's a breakdown of how everything is organised:
+
+- **General Utilities (Top-Level)**:
+  - These are tools you can use for any project, regardless of the platform you're working on. They focus on common Python, PySpark, and Pandas tasks.
+  - 📂 **Helpers**: Handy functions that simplify working with Python and PySpark.
+  - 📂 **IO**: Functions for handling input and output, like reading configurations or saving results.
+
+- **Platform-Specific Utilities**:
+  - **CDP (Cloudera Data Platform)**:
+    - 📂 **Helpers**: Functions that help you work with tools supported by CDP, such as HDFS, Impala, and AWS S3.
+    - 📂 **IO**: Input/output functions specifically for CDP, such as managing data and logs in CDP environments.
+  - **GCP (Google Cloud Platform)**:
+    - 📂 **Helpers**: Functions to help you interact with GCP tools like Google Cloud Storage and BigQuery.
+    - 📂 **IO**: Input/output functions for managing data with GCP services.
+
+This structure keeps the tools for each platform separate, so you can easily find what you need, whether you're working in a cloud environment or on general Python tasks.
+
+## 📖 Documentation and Further Information
+
+Our documentation is automatically generated using **GitHub Actions** and **MkDocs**. It uses the [`ons_mkdocs_theme`](https://github.com/ONSdigital/ons_mkdocs_theme) package for a consistent ONS look and feel on GitHub Pages.
+
+For an in-depth understanding of `rdsa-utils`, how to contribute to `rdsa-utils`, and more, please refer to our [MkDocs-generated documentation](https://onsdigital.github.io/rdsa-utils/).
 
 ## 📘 Further Reading on Reproducible Analytical Pipelines
 
@@ -43,6 +64,16 @@ We highly recommend checking out the following resources to learn more about cre
 - [Quality Assurance of Code for Analysis and Research](https://best-practice-and-impact.github.io/qa-of-code-guidance/intro.html) - This book details methods and practices for ensuring high-quality coding in research and analysis, including unit testing and peer reviews.
 
 - [PySpark Introduction and Training Book](https://best-practice-and-impact.github.io/ons-spark/intro.html) - An introduction to using PySpark for large-scale data processing.
+
+Additionally, if you are facing the challenge of repeatedly setting up new developers and new users in local Python, then you may want to consider making a batch file to carry out the setup process for you. The [easypipelinerun](https://github.com/ONSdigital/easy_pipeline_run/) repo has a batch file that can be modified to set your users up for your project, taking care of things like conda and pip set up as well as environment management.
+
+## 📬 Contact
+
+For questions, support, or feedback about `rdsa-utils`, please email [RDSA.Support@ons.gov.uk](mailto:RDSA.Support@ons.gov.uk).
+
+## 🙌 Acknowledgements
+
+Thanks to colleagues from the ONS **Data Science Campus (DSC)** and the ONS **Methods and Quality Directorate (MQD)** for their contributions to `rdsa-utils`.
 
 ## 🛡️ Licence
 
