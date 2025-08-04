@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.13.3] - 2025-08-04
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+- Modified `load_csv` in `helpers/pyspark.py` to improve logging with conditional
+  inclusion of read options.
+
+### Removed
+
 ## [0.13.2] - 2025-07-24
 
 ### Added
@@ -859,6 +873,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.13.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.13.3) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.13.3/)
 - rdsa-utils v0.13.2: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.13.2) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.13.2/)
 - rdsa-utils v0.13.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.13.1) |
