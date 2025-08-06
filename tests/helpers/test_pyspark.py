@@ -1863,10 +1863,6 @@ class TestHasNoNullsWithValidData:
         df = create_spark_df([schema, (1,), (2,), (3,)])
         assert has_no_nulls(df, "id") is True
 
-
-class TestHasNoNulls:
-    """Tests has_no_nulls with a column that contains nulls."""
-
     def test_column_with_some_nulls(self, create_spark_df: Callable) -> None:
         """Test column with some nulls returns False."""
         schema = T.StructType([T.StructField("id", T.IntegerType(), True)])
