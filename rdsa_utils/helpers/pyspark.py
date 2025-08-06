@@ -1811,8 +1811,8 @@ def has_no_nulls(df: SparkDF, column_name: str) -> bool:
     bool
         True if the column contains no nulls, False otherwise.
     """
-    found_null = df.filter(F.col(column_name).isNull()).first()
-    if found_null:
+    has_null = df.filter(F.col(column_name).isNull()).limit(1).count() > 0
+    if has_null:
         error_msg = f"Column '{column_name}' contains null values."
         logger.error(error_msg)
         return False
