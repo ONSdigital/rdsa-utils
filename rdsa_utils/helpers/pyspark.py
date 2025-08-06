@@ -1794,3 +1794,28 @@ def filter_out_values(
         condition = base_condition
 
     return df.filter(condition)
+
+
+def has_no_nulls(df: SparkDF, column_name: str) -> bool:
+    """Check whether a specified column in a SparkDF contains no null values.
+
+    Parameters
+    ----------
+    df
+        SparkDF to check.
+    column_name
+        Name of the column to inspect for null values.
+
+    Returns
+    -------
+    bool
+        True if the column contains no nulls, False otherwise.
+    """
+    has_null = df.filter(F.col(column_name).isNull()).limit(1).count() > 0
+    if has_null:
+        error_msg = f"Column '{column_name}' contains null values."
+        logger.error(error_msg)
+        return False
+    else:
+        logger.info(f"Column '{column_name}' contains no null values.")
+        return True

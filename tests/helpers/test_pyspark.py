@@ -1852,3 +1852,36 @@ class TestFilterOutValues:
         expected = create_spark_df([schema, (1.1,), (3.3,), (None,)])
         result = filter_out_values(df, "val", [2.2, 4.4])
         assert_df_equality(result, expected, ignore_row_order=True)
+
+
+class TestHasNoNullsWithValidData:
+    """Tests for has_no_nulls function."""
+
+    def test_no_nulls_in_column(self, create_spark_df: Callable) -> None:
+        """Test column with no nulls returns True."""
+        schema = T.StructType([T.StructField("id", T.IntegerType(), True)])
+        df = create_spark_df([schema, (1,), (2,), (3,)])
+        assert has_no_nulls(df, "id") is True
+
+    def test_column_with_some_nulls(self, create_spark_df: Callable) -> None:
+        """Test column with some nulls returns False."""
+        schema = T.StructType([T.StructField("id", T.IntegerType(), True)])
+        df = create_spark_df([schema, (1,), (None,), (3,)])
+        assert has_no_nulls(df, "id") is False
+
+    def test_all_nulls_column(self, create_spark_df: Callable) -> None:
+        """Test column with all nulls returns False."""
+        schema = T.StructType([T.StructField("id", T.IntegerType(), True)])
+        df = create_spark_df([schema, (None,), (None,)])
+        assert has_no_nulls(df, "id") is False
+
+    def test_empty_dataframe(self, create_spark_df: Callable) -> None:
+        """Test empty DataFrame returns True."""
+        schema = T.StructType([T.StructField("id", T.IntegerType(), True)])
+        df = create_spark_df(
+            [
+                schema,
+                # No rows
+            ],
+        )
+        assert has_no_nulls(df, "id") is True
