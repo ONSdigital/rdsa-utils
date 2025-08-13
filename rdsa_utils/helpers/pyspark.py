@@ -1819,3 +1819,51 @@ def has_no_nulls(df: SparkDF, column_name: str) -> bool:
     else:
         logger.info(f"Column '{column_name}' contains no null values.")
         return True
+        
+
+def null_rich_left_eqijoin(
+    left_df: SparkDF, 
+    right_df: SparkDF, 
+    on: str, 
+    how: str = "left",
+    **join_kwargs
+) -> SparkDF:
+    """
+    Enhanced method for carrying out a left join on the provided DataFrame.
+    Useful where left_df contains a lot of nulls in the join key.
+
+    This is done by:
+    1. Filtering out the nulls from the left-hand table
+    2. Joining as usual
+    3. Adding the nulls back in
+    This can improve performance compared to joining directly using Spark
+    by avoiding the creation of skewed data partitions.
+
+    Parameters
+    ----------
+    left_df : SparkDF
+        Spark DataFrame to join.
+    right_df : SparkDF
+        Spark DataFrame to join.
+    on : str
+        Single column to join on.
+    how : str, optional
+        Type of join to perform (default is "left").
+    **join_kwargs
+        Additional keyword arguments to pass to the join method.
+
+    Returns
+    -------
+    SparkDF
+        The resulting DataFrame after performing the optimized join.
+    """
+    left_df_nulls = left_df.where(F.col(on).isNull())
+    left_df_non_nulls = left_df.where(F.col(on).isNotNull())
+
+    joined_df = left_df_non_nulls.join(
+        right_df, on=on, how=how, **join_kwargs
+    ).unionByName(
+        left_df_nulls, allowMissingColumns=True
+    )
+
+    return joined_df
