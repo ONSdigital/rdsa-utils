@@ -160,6 +160,7 @@ def insert_df_to_hive_table(
     # Validate SparkDF before writing
     if is_df_empty(df):
         msg = f"Cannot write an empty SparkDF to {table_name}"
+        logger.error(msg)
         raise DataframeEmptyError(msg)
 
     # Handle schema validation and alignment
@@ -194,7 +195,9 @@ def insert_df_to_hive_table(
                 if extra_in_df:
                     error_msg.append(f"  - Extra columns in DataFrame: {extra_in_df}")
 
-                raise ValueError("\n".join(error_msg))
+                error_msg = "\n".join(error_msg)
+                logger.error(error_msg)
+                raise ValueError(error_msg)
 
     # Ensure column order
     df = df.select(table_columns) if table_exists else df
