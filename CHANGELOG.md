@@ -17,6 +17,20 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.14.1] - 2025-08-13
+
+### Added
+
+### Changed
+- Updated `insert_df_to_hive_table` function in `cdp/io/output.py`; enhanced schema
+  mismatch error logging to show specific column differences.
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
 ## [0.14.0] - 2025-08-06
 
 ### Added
@@ -886,6 +900,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.14.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.14.1) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.14.1/)
 - rdsa-utils v0.14.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.14.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.14.0/)
 - rdsa-utils v0.13.3: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.13.3) |
