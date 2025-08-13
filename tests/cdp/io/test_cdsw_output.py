@@ -1,5 +1,6 @@
 """Tests for the cdp/io/output.py module."""
 
+import re
 from typing import Callable
 from unittest.mock import MagicMock, Mock, patch
 
@@ -129,25 +130,62 @@ class TestInsertDataFrameToHiveTable:
         # Compare the exact column expression (the expected one, not the mock)
         mock_with_column.assert_any_call("address", expected_column)
 
+    @patch("rdsa_utils.cdp.io.output.is_df_empty", return_value=False)
     @patch("pyspark.sql.DataFrameReader.table")
-    def test_insert_df_to_hive_table_without_missing_columns(
+    def test_insert_df_to_hive_table_schema_mismatch(
         self,
         mock_table,
+        mock_is_empty,
         spark_session: SparkSession,
-        test_df: SparkDF,
+        caplog,
+        test_df,
     ) -> None:
-        """Test that insert_df_to_hive_table raises a ValueError when
-        'fill_missing_cols' is False and DataFrame schema doesn't match with the
-        table schema.
+        """Test ValueError for schema mismatch with 'fill_missing_cols=False'.
+
+        This test verifies that the function correctly identifies and reports a
+        schema mismatch between the source DataFrame and the target Hive table
+        when automatic column filling is disabled.
+
+        The specific mismatch scenario is configured as follows:
+        - DataFrame columns: ['id', 'name', 'age']
+        - Mock Hive table columns: ['id', 'name', 'address', 'status']
+
+        This creates a difference where:
+        - Columns `'address'` and `'status'` are **missing** from the DataFrame.
+        - Column `'age'` is an extra column in the DataFrame that is not
+          present in the target table.
+
+        The test asserts that a `ValueError` is raised and that its message
+        accurately details these specific column differences.
         """
-        table_name = "test_table"
-        # Mock the table columns
-        mock_table.return_value.columns = ["id", "name", "age", "address"]
-        with pytest.raises(ValueError):
+        table_name = "test_db.mismatched_table"
+
+        mock_table_schema = T.StructType(
+            [
+                T.StructField("id", T.IntegerType()),
+                T.StructField("name", T.StringType()),
+                T.StructField("address", T.StringType()),
+                T.StructField("status", T.StringType()),
+            ],
+        )
+        mock_hive_df = MagicMock()
+        mock_hive_df.schema = mock_table_schema
+        mock_hive_df.columns = ["id", "name", "address", "status"]
+        mock_table.return_value = mock_hive_df
+
+        expected_error_pattern = re.escape(
+            f"Schema mismatch for table '{table_name}' with 'fill_missing_cols=False'.\n"
+            f"  - Columns missing from DataFrame: ['address', 'status']\n"
+            f"  - Extra columns in DataFrame: ['age']",
+        )
+
+        caplog.set_level(logging.INFO)
+
+        with pytest.raises(ValueError, match=expected_error_pattern):
             insert_df_to_hive_table(
-                spark_session,
-                test_df,
-                table_name,
+                spark=spark_session,
+                df=test_df,
+                table_name=table_name,
                 fill_missing_cols=False,
             )
 
