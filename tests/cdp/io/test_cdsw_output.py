@@ -151,8 +151,8 @@ class TestInsertDataFrameToHiveTable:
         - Mock Hive table columns: ['id', 'name', 'address', 'status']
 
         This creates a difference where:
-        - Columns `'address'` and `'status'` are **missing** from the DataFrame.
-        - Column `'age'` is an extra column in the DataFrame that is not
+        - Columns 'address' and 'status' are missing from the DataFrame.
+        - Column 'age' is an extra column in the DataFrame that is not
           present in the target table.
 
         The test asserts that a `ValueError` is raised and that its message
