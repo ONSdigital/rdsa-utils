@@ -162,22 +162,39 @@ def insert_df_to_hive_table(
         msg = f"Cannot write an empty SparkDF to {table_name}"
         raise DataframeEmptyError(msg)
 
-    # Handle missing columns if specified
-    if fill_missing_cols and table_exists:
-        missing_columns = list(set(table_columns) - set(df.columns))
-        for col in missing_columns:
-            column_type = [
-                field.dataType for field in table_schema if field.name == col
-            ][0]
-            df = df.withColumn(col, F.lit(None).cast(column_type))
-    elif not fill_missing_cols and table_exists:
-        # Validate schema before writing
-        if set(table_columns) != set(df.columns):
-            msg = (
-                f"SparkDF schema does not match table {table_name} "
-                f"schema and 'fill_missing_cols' is False."
-            )
-            raise ValueError(msg)
+    # Handle schema validation and alignment
+    if table_exists:
+        df_cols_set = set(df.columns)
+        table_cols_set = set(table_columns)
+
+        if df_cols_set != table_cols_set:
+            if fill_missing_cols:
+                missing_in_df = list(table_cols_set - df_cols_set)
+                logger.info(f"Adding missing columns with null values: {missing_in_df}")
+                for col_name in missing_in_df:
+                    # Find the correct data type from the target table's schema
+                    col_type = next(
+                        field.dataType
+                        for field in table_schema
+                        if field.name == col_name
+                    )
+                    df = df.withColumn(col_name, F.lit(None).cast(col_type))
+            else:
+                missing_in_df = sorted(table_cols_set - df_cols_set)
+                extra_in_df = sorted(df_cols_set - table_cols_set)
+
+                error_msg = [
+                    f"Schema mismatch for table '{table_name}' with "
+                    "'fill_missing_cols=False'.",
+                ]
+                if missing_in_df:
+                    error_msg.append(
+                        f"  - Columns missing from DataFrame: {missing_in_df}",
+                    )
+                if extra_in_df:
+                    error_msg.append(f"  - Extra columns in DataFrame: {extra_in_df}")
+
+                raise ValueError("\n".join(error_msg))
 
     # Ensure column order
     df = df.select(table_columns) if table_exists else df
