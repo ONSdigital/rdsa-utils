@@ -1933,7 +1933,7 @@ def assert_same_distinct_values(df1: SparkDF, df2: SparkDF, col_name: str) -> No
         The first DataFrame for comparison.
     df2
         The second DataFrame for comparison.
-    col_name : str
+    col_name
         The name of the column whose distinct values will be compared.
 
     Returns
