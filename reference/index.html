@@ -1771,6 +1771,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rdsa_utils.helpers.pyspark.assert_same_distinct_values" class="md-nav__link">
+    <span class="md-ellipsis">
+      assert_same_distinct_values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#rdsa_utils.helpers.pyspark.cache_time_df" class="md-nav__link">
     <span class="md-ellipsis">
       cache_time_df
@@ -1783,6 +1792,15 @@
   <a href="#rdsa_utils.helpers.pyspark.calc_median_price" class="md-nav__link">
     <span class="md-ellipsis">
       calc_median_price
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rdsa_utils.helpers.pyspark.check_year_range" class="md-nav__link">
+    <span class="md-ellipsis">
+      check_year_range
     </span>
   </a>
   
@@ -15397,6 +15415,172 @@ for more information on querying clustered tables.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="rdsa_utils.helpers.pyspark.assert_same_distinct_values" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">assert_same_distinct_values</span><span class="p">(</span><span class="n">df1</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">df2</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Assert that two DataFrames have an identical set of distinct values.</p>
+<p>This function extracts the unique values from the specified column in each
+DataFrame and asserts that the two resulting sets are identical.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>df1</code>
+            </td>
+            <td>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The first DataFrame for comparison.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>df2</code>
+            </td>
+            <td>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The second DataFrame for comparison.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>col_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the column whose distinct values will be compared.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The function completes successfully if the sets are identical.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>If <code>col_name</code> is not found in either <code>df1</code> or <code>df2</code>.</li>
+<li>If the sets of distinct values in the specified column are not identical.</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span><span class="p">,</span> <span class="n">types</span> <span class="k">as</span> <span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;DistinctExample&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># --- Create Sample DataFrames ---</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">StructType</span><span class="p">([</span><span class="n">T</span><span class="o">.</span><span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">StringType</span><span class="p">())])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_a</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;A&quot;</span><span class="p">,),</span> <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,),</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,)],</span> <span class="n">schema</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_b</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;B&quot;</span><span class="p">,),</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,)],</span> <span class="n">schema</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_c</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;B&quot;</span><span class="p">,),</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,)],</span> <span class="n">schema</span><span class="p">)</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># --- 1. Success Case: Identical Sets ---</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assertion passes silently because the distinct values {&#39;A&#39;, &#39;B&#39;} are the same.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assert_same_distinct_values</span><span class="p">(</span><span class="n">df_a</span><span class="p">,</span> <span class="n">df_c</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># --- 2. Failure Case: Different Sets ---</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This will raise a ValueError with a descriptive message.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">assert_same_distinct_values</span><span class="p">(</span><span class="n">df_a</span><span class="p">,</span> <span class="n">df_b</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">Column &#39;category&#39; has different distinct values across DataFrames.</span>
+<span class="go">Values only in first DataFrame: {&#39;A&#39;}</span>
+<span class="go">Values only in second DataFrame: {&#39;C&#39;}</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># --- 3. Failure Case: Column Not Found ---</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This will raise a ValueError because the column does not exist.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">assert_same_distinct_values</span><span class="p">(</span><span class="n">df_a</span><span class="p">,</span> <span class="n">df_b</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s2">&quot;product_id&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">Column &#39;product_id&#39; not found in the first DataFrame. Available: [&#39;category&#39;]</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="rdsa_utils.helpers.pyspark.cache_time_df" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">cache_time_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
 
@@ -15548,6 +15732,177 @@ for more information on querying clustered tables.</p>
           </tr>
       </tbody>
     </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="rdsa_utils.helpers.pyspark.check_year_range" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">check_year_range</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">SparkDF</span><span class="p">,</span> <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">year_col</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check if a DataFrame contains all years within a given range.</p>
+<p>This function verifies that every year from <code>start_year</code> to <code>end_year</code>
+(inclusive) exists in the specified year column of the DataFrame. If any
+years are missing, it raises a ValueError.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>df</code>
+            </td>
+            <td>
+                  <code><span title="pyspark.sql.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The input DataFrame to be checked.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>start_year</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The starting year of the range (inclusive).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>end_year</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The ending year of the range (inclusive).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>year_col</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the column containing integer year values.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>If <code>start_year</code> is greater than <code>end_year</code>.</li>
+<li>If the specified <code>year_col</code> is not found in the DataFrame.</li>
+<li>If one or more years within the specified range are missing from
+  the DataFrame's <code>year_col</code>.</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The function completes successfully if all years within the specified
+range are present in the DataFrame.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;YearCheckExample&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example DataFrame</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">2018</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">])</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># This will pass successfully and print log messages</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_year_range</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_year</span><span class="o">=</span><span class="mi">2019</span><span class="p">,</span> <span class="n">end_year</span><span class="o">=</span><span class="mi">2021</span><span class="p">,</span> <span class="n">year_col</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># This will raise a ValueError because 2022 is missing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">check_year_range</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_year</span><span class="o">=</span><span class="mi">2018</span><span class="p">,</span> <span class="n">end_year</span><span class="o">=</span><span class="mi">2022</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
 
 
     </div>
@@ -22184,7 +22539,7 @@ Default is False.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1-2.1-2M12.5 7v5.2l4 2.4-1 1L11 13V7h1.5M11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2v1.8Z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 13, 2025 13:07:13 UTC">August 13, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 21, 2025 09:04:49 UTC">August 21, 2025</span>
   </span>
 
     
