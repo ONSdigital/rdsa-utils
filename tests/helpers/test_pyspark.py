@@ -1900,7 +1900,7 @@ class TestCheckYearRange:
         schema = T.StructType([T.StructField("year", T.IntegerType())])
         input_df = create_spark_df([schema, (2018,), (2019,), (2020,), (2021,)])
 
-        check_year_range(input_df, start_year=2019, end_year=2020)
+        check_year_range(input_df, start_year=2019, end_year=2020, year_col="year")
 
         assert (
             "Starting year range check for column 'year' from 2019 to 2020"
@@ -1919,7 +1919,7 @@ class TestCheckYearRange:
         schema = T.StructType([T.StructField("year", T.IntegerType())])
         input_df = create_spark_df([schema, (2020,), (2021,), (2021,), (2022,)])
 
-        check_year_range(input_df, start_year=2020, end_year=2022)
+        check_year_range(input_df, start_year=2020, end_year=2022, year_col="year")
 
     def test_success_with_custom_column_name(self, create_spark_df: Callable) -> None:
         """Tests the function passes when using a non-default column name for the year."""
@@ -1939,7 +1939,7 @@ class TestCheckYearRange:
         input_df = create_spark_df([schema, (2019,), (2021,)])
 
         with pytest.raises(ValueError) as excinfo:
-            check_year_range(input_df, start_year=2019, end_year=2021)
+            check_year_range(input_df, start_year=2019, end_year=2021, year_col="year")
 
         assert "missing the following required year(s): [2020]" in str(excinfo.value)
 
@@ -1952,7 +1952,7 @@ class TestCheckYearRange:
         input_df = create_spark_df([schema, (2020,)])
 
         with pytest.raises(ValueError) as excinfo:
-            check_year_range(input_df, start_year=2019, end_year=2022)
+            check_year_range(input_df, start_year=2019, end_year=2022, year_col="year")
 
         assert "missing the following required year(s): [2019, 2021, 2022]" in str(
             excinfo.value,
@@ -1982,7 +1982,7 @@ class TestCheckYearRange:
         input_df = create_spark_df([schema, (2020,)])
 
         with pytest.raises(ValueError) as excinfo:
-            check_year_range(input_df, start_year=2022, end_year=2020)
+            check_year_range(input_df, start_year=2022, end_year=2020, year_col="year")
 
         assert "start_year (2022) cannot be greater than end_year (2020)" in str(
             excinfo.value,
