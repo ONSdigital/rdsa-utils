@@ -10,6 +10,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Reordered docstrings to place Returns above Raises in `check_year_range`
+  in `helpers/pyspark.py`
 
 ### Deprecated
 
