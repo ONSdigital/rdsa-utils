@@ -13,6 +13,7 @@ from typing import (
     Mapping,
     Optional,
     Sequence,
+    Set,
     Union,
 )
 
@@ -1819,3 +1820,202 @@ def has_no_nulls(df: SparkDF, column_name: str) -> bool:
     else:
         logger.info(f"Column '{column_name}' contains no null values.")
         return True
+
+
+def check_year_range(
+    df: SparkDF,
+    start_year: int,
+    end_year: int,
+    year_col: str,
+) -> None:
+    """Check if a SparkDF contains all years within a given range.
+
+    This function verifies that every year from `start_year` to `end_year`
+    (inclusive) exists in the specified year column of the DataFrame. If any
+    years are missing, it raises a ValueError.
+
+    Parameters
+    ----------
+    df
+        The input DataFrame to be checked.
+    start_year
+        The starting year of the range (inclusive).
+    end_year
+        The ending year of the range (inclusive).
+    year_col
+        The name of the column containing integer year values.
+
+    Raises
+    ------
+    ValueError
+        - If `start_year` is greater than `end_year`.
+        - If the specified `year_col` is not found in the DataFrame.
+        - If one or more years within the specified range are missing from
+          the DataFrame's `year_col`.
+
+    Examples
+    --------
+    >>> from pyspark.sql import SparkSession
+    >>> spark = SparkSession.builder.appName("YearCheckExample").getOrCreate()
+
+    >>> # Example DataFrame
+    >>> data = [(2018, "A"), (2019, "B"), (2020, "C"), (2021, "D")]
+    >>> df = spark.createDataFrame(data, ["year", "data"])
+
+    >>> # This will pass successfully and print log messages
+    >>> check_year_range(df, start_year=2019, end_year=2021, year_col="year")
+
+    >>> # This will raise a ValueError because 2022 is missing
+    >>> try:
+    ...     check_year_range(df, start_year=2018, end_year=2022)
+    ... except ValueError as e:
+    ...     print(f"ERROR: {e}")
+    """
+    logger.info(
+        f"Starting year range check for column '{year_col}' "
+        f"from {start_year} to {end_year}.",
+    )
+
+    # --- 1. Input Validation ---
+    if start_year > end_year:
+        error_msg = (
+            f"start_year ({start_year}) cannot be greater than end_year ({end_year})."
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    if year_col not in df.columns:
+        error_msg = (
+            f"Column '{year_col}' not found in the DataFrame. "
+            f"Available columns: {df.columns}",
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    # --- 2. Identify Required and Actual Years ---
+    required_years = set(range(start_year, end_year + 1))
+    logger.info(f"Generated a requirement set of {len(required_years)} years.")
+
+    actual_years_rows = df.select(year_col).distinct().collect()
+    actual_years = {row[year_col] for row in actual_years_rows}
+    logger.info(f"Found {len(actual_years)} distinct years in the DataFrame.")
+
+    # --- 3. Compare and Raise Error if Necessary ---
+    if not required_years.issubset(actual_years):
+        missing_years: List[int] = sorted(required_years - actual_years)
+        error_msg = (
+            f"DataFrame is missing the following required year(s): {missing_years}"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    logger.info(
+        f"Validation successful: All years from {start_year} "
+        f"to {end_year} are present.",
+    )
+
+
+def assert_same_distinct_values(df1: SparkDF, df2: SparkDF, col_name: str) -> None:
+    """Assert that two DataFrames have an identical set of distinct values.
+
+    This function extracts the unique values from the specified column in each
+    DataFrame and asserts that the two resulting sets are identical.
+
+    Parameters
+    ----------
+    df1
+        The first DataFrame for comparison.
+    df2
+        The second DataFrame for comparison.
+    col_name : str
+        The name of the column whose distinct values will be compared.
+
+    Returns
+    -------
+    None
+        The function completes successfully if the sets are identical.
+
+    Raises
+    ------
+    ValueError
+        - If `col_name` is not found in either `df1` or `df2`.
+        - If the sets of distinct values in the specified column are not identical.
+
+    Examples
+    --------
+    >>> from pyspark.sql import SparkSession, types as T
+    >>> spark = SparkSession.builder.appName("DistinctExample").getOrCreate()
+
+    >>> # --- Create Sample DataFrames ---
+    >>> schema = T.StructType([T.StructField("category", T.StringType())])
+    >>> df_a = spark.createDataFrame([("A",), ("B",), ("A",)], schema)
+    >>> df_b = spark.createDataFrame([("B",), ("C",)], schema)
+    >>> df_c = spark.createDataFrame([("B",), ("A",)], schema)
+
+    >>> # --- 1. Success Case: Identical Sets ---
+    >>> # Assertion passes silently because the distinct values {'A', 'B'} are the same.
+    >>> assert_same_distinct_values(df_a, df_c, col_name="category")
+
+    >>> # --- 2. Failure Case: Different Sets ---
+    >>> # This will raise a ValueError with a descriptive message.
+    >>> try:
+    ...     assert_same_distinct_values(df_a, df_b, col_name="category")
+    ... except ValueError as e:
+    ...     print(e)
+    Column 'category' has different distinct values across DataFrames.
+    Values only in first DataFrame: {'A'}
+    Values only in second DataFrame: {'C'}
+
+    >>> # --- 3. Failure Case: Column Not Found ---
+    >>> # This will raise a ValueError because the column does not exist.
+    >>> try:
+    ...     assert_same_distinct_values(df_a, df_b, col_name="product_id")
+    ... except ValueError as e:
+    ...     print(e)
+    Column 'product_id' not found in the first DataFrame. Available: ['category']
+    """
+    logger.info(f"Asserting same distinct values in column '{col_name}'.")
+
+    # --- 1. Input Validation ---
+    if col_name not in df1.columns:
+        error_msg = (
+            f"Column '{col_name}' not found in the first DataFrame. "
+            f"Available: {df1.columns}"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+    if col_name not in df2.columns:
+        error_msg = (
+            f"Column '{col_name}' not found in the second DataFrame. "
+            f"Available: {df2.columns}"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    # --- 2. Extract Distinct Values ---
+    values1: Set[Any] = {
+        row[col_name] for row in df1.select(col_name).distinct().collect()
+    }
+    logger.info(f"Found {len(values1)} distinct values in the first DataFrame.")
+
+    values2: Set[Any] = {
+        row[col_name] for row in df2.select(col_name).distinct().collect()
+    }
+    logger.info(f"Found {len(values2)} distinct values in the second DataFrame.")
+
+    # --- 3. Assert and Raise on Failure ---
+    if values1 != values2:
+        values_only_in_df1 = values1 - values2
+        values_only_in_df2 = values2 - values1
+
+        error_msg = (
+            f"Column '{col_name}' has different distinct values across DataFrames.\n"
+            "Values only in first DataFrame: "
+            f"{values_only_in_df1 if values_only_in_df1 else '{}'}\n"
+            "Values only in second DataFrame: "
+            f"{values_only_in_df2 if values_only_in_df2 else '{}'}"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    logger.info(f"Assertion successful: Sets are identical for column '{col_name}'.")

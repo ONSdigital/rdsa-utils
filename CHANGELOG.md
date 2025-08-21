@@ -8,6 +8,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added functions `check_year_range` & `assert_same_distinct_value`
+  to `helpers/pyspark.py`.
 
 ### Changed
 
