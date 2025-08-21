@@ -1828,7 +1828,7 @@ def check_year_range(
     end_year: int,
     year_col: str,
 ) -> None:
-    """Check if a SparkDF contains all years within a given range.
+    """Check if a DataFrame contains all years within a given range.
 
     This function verifies that every year from `start_year` to `end_year`
     (inclusive) exists in the specified year column of the DataFrame. If any
