@@ -1853,6 +1853,12 @@ def check_year_range(
         - If one or more years within the specified range are missing from
           the DataFrame's `year_col`.
 
+    Returns
+    -------
+    None
+        The function completes successfully if all years within the specified
+        range are present in the DataFrame.
+
     Examples
     --------
     >>> from pyspark.sql import SparkSession
