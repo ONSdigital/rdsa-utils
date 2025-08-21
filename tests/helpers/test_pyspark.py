@@ -1885,3 +1885,210 @@ class TestHasNoNullsWithValidData:
             ],
         )
         assert has_no_nulls(df, "id") is True
+
+
+class TestCheckYearRange:
+    """Tests for check_year_range function."""
+
+    def test_success_case_logs(
+        self,
+        create_spark_df: Callable,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Tests the function passes and emits the correct logs on success."""
+        caplog.set_level(logging.INFO)
+        schema = T.StructType([T.StructField("year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2018,), (2019,), (2020,), (2021,)])
+
+        check_year_range(input_df, start_year=2019, end_year=2020, year_col="year")
+
+        assert (
+            "Starting year range check for column 'year' from 2019 to 2020"
+            in caplog.text
+        )
+        assert (
+            "Validation successful: All years from 2019 to 2020 are present"
+            in caplog.text
+        )
+
+    def test_success_with_exact_match_and_duplicates(
+        self,
+        create_spark_df: Callable,
+    ) -> None:
+        """Tests the function passes when the data contains exactly the required years, with duplicates."""
+        schema = T.StructType([T.StructField("year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2020,), (2021,), (2021,), (2022,)])
+
+        check_year_range(input_df, start_year=2020, end_year=2022, year_col="year")
+
+    def test_success_with_custom_column_name(self, create_spark_df: Callable) -> None:
+        """Tests the function passes when using a non-default column name for the year."""
+        schema = T.StructType([T.StructField("fiscal_year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2019,), (2020,)])
+
+        check_year_range(
+            input_df,
+            start_year=2019,
+            end_year=2020,
+            year_col="fiscal_year",
+        )
+
+    def test_raises_error_for_missing_year(self, create_spark_df: Callable) -> None:
+        """Tests the function raises a ValueError when a year in the middle of the range is missing."""
+        schema = T.StructType([T.StructField("year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2019,), (2021,)])
+
+        with pytest.raises(ValueError) as excinfo:
+            check_year_range(input_df, start_year=2019, end_year=2021, year_col="year")
+
+        assert "missing the following required year(s): [2020]" in str(excinfo.value)
+
+    def test_raises_error_for_multiple_missing_years(
+        self,
+        create_spark_df: Callable,
+    ) -> None:
+        """Tests the function raises a ValueError listing all missing years."""
+        schema = T.StructType([T.StructField("year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2020,)])
+
+        with pytest.raises(ValueError) as excinfo:
+            check_year_range(input_df, start_year=2019, end_year=2022, year_col="year")
+
+        assert "missing the following required year(s): [2019, 2021, 2022]" in str(
+            excinfo.value,
+        )
+
+    def test_raises_error_for_invalid_year_column(
+        self,
+        create_spark_df: Callable,
+    ) -> None:
+        """Tests the function raises a ValueError if the specified year column does not exist."""
+        schema = T.StructType([T.StructField("year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2020,)])
+
+        with pytest.raises(ValueError) as excinfo:
+            check_year_range(
+                input_df,
+                start_year=2019,
+                end_year=2020,
+                year_col="non_existent_col",
+            )
+
+        assert "Column 'non_existent_col' not found" in str(excinfo.value)
+
+    def test_raises_error_for_invalid_range(self, create_spark_df: Callable) -> None:
+        """Tests the function raises a ValueError if start_year is greater than end_year."""
+        schema = T.StructType([T.StructField("year", T.IntegerType())])
+        input_df = create_spark_df([schema, (2020,)])
+
+        with pytest.raises(ValueError) as excinfo:
+            check_year_range(input_df, start_year=2022, end_year=2020, year_col="year")
+
+        assert "start_year (2022) cannot be greater than end_year (2020)" in str(
+            excinfo.value,
+        )
+
+
+class TestAssertSameDistinctValues:
+    """Tests for assert_same_distinct_values function."""
+
+    def test_success_identical_sets_logs(
+        self,
+        create_spark_df: Callable,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Tests the function passes and emits all expected logs on success."""
+        caplog.set_level(logging.INFO)
+        schema = T.StructType([T.StructField("category", T.StringType())])
+        df1 = create_spark_df([schema, ("A",), ("B",), ("A",)])
+        df2 = create_spark_df([schema, ("B",), ("A",)])
+
+        assert_same_distinct_values(df1, df2, col_name="category")
+
+        assert "Asserting same distinct values in column 'category'" in caplog.text
+        assert "Found 2 distinct values in the first DataFrame" in caplog.text
+        assert "Found 2 distinct values in the second DataFrame" in caplog.text
+        assert (
+            "Assertion successful: Sets are identical for column 'category'"
+            in caplog.text
+        )
+
+    def test_success_with_null_values(self, create_spark_df: Callable) -> None:
+        """Tests the function passes when both sets contain null values."""
+        schema = T.StructType([T.StructField("id", T.StringType(), True)])
+        df1 = create_spark_df([schema, ("1",), (None,)])
+        df2 = create_spark_df([schema, (None,), ("1",)])
+
+        assert_same_distinct_values(df1, df2, col_name="id")
+
+    def test_success_with_empty_dataframes(self, create_spark_df: Callable) -> None:
+        """Tests the function passes when both DataFrames are empty."""
+        schema = T.StructType([T.StructField("id", T.StringType())])
+        df1 = create_spark_df([schema])
+        df2 = create_spark_df([schema])
+
+        assert_same_distinct_values(df1, df2, col_name="id")
+
+    def test_raises_error_on_different_sets_logs(
+        self,
+        create_spark_df: Callable,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Tests the function emits logs correctly before raising a ValueError."""
+        caplog.set_level(logging.INFO)
+        schema = T.StructType([T.StructField("category", T.StringType())])
+        df1 = create_spark_df([schema, ("A",), ("B",)])
+        df2 = create_spark_df([schema, ("A",), ("C",)])
+
+        with pytest.raises(ValueError) as excinfo:
+            assert_same_distinct_values(df1, df2, col_name="category")
+
+        assert "Values only in first DataFrame: {'B'}" in str(excinfo.value)
+        assert "Values only in second DataFrame: {'C'}" in str(excinfo.value)
+
+        assert "Asserting same distinct values in column 'category'" in caplog.text
+        assert "Found 2 distinct values in the first DataFrame" in caplog.text
+        assert "Found 2 distinct values in the second DataFrame" in caplog.text
+        assert "Assertion successful" not in caplog.text
+
+    def test_raises_error_when_one_is_subset(self, create_spark_df: Callable) -> None:
+        """Tests the function raises a ValueError when one set is a subset of the other."""
+        schema = T.StructType([T.StructField("category", T.StringType())])
+        df1 = create_spark_df([schema, ("A",), ("B",), ("C",)])
+        df2 = create_spark_df([schema, ("A",), ("B",)])
+
+        with pytest.raises(ValueError) as excinfo:
+            assert_same_distinct_values(df1, df2, col_name="category")
+
+        assert "Values only in first DataFrame: {'C'}" in str(excinfo.value)
+        assert "Values only in second DataFrame: {}" in str(excinfo.value)
+
+    def test_raises_error_if_col_not_in_first_df(
+        self,
+        create_spark_df: Callable,
+    ) -> None:
+        """Tests the function raises a ValueError if the column is missing from the first DataFrame."""
+        schema1 = T.StructType([T.StructField("col_a", T.StringType())])
+        schema2 = T.StructType([T.StructField("col_b", T.StringType())])
+        df1 = create_spark_df([schema1, ("val",)])
+        df2 = create_spark_df([schema2, ("val",)])
+
+        with pytest.raises(ValueError) as excinfo:
+            assert_same_distinct_values(df1, df2, col_name="col_b")
+
+        assert "Column 'col_b' not found in the first DataFrame" in str(excinfo.value)
+
+    def test_raises_error_if_col_not_in_second_df(
+        self,
+        create_spark_df: Callable,
+    ) -> None:
+        """Tests the function raises a ValueError if the column is missing from the second DataFrame."""
+        schema1 = T.StructType([T.StructField("col_a", T.StringType())])
+        schema2 = T.StructType([T.StructField("col_b", T.StringType())])
+        df1 = create_spark_df([schema1, ("val",)])
+        df2 = create_spark_df([schema2, ("val",)])
+
+        with pytest.raises(ValueError) as excinfo:
+            assert_same_distinct_values(df1, df2, col_name="col_a")
+
+        assert "Column 'col_a' not found in the second DataFrame" in str(excinfo.value)
