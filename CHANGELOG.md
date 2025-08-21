@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.15.0] - 2025-08-21
+
+### Added
 - Added functions `check_year_range` & `assert_same_distinct_value`
   to `helpers/pyspark.py`.
 
@@ -902,6 +914,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.15.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.15.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.15.0/)
 - rdsa-utils v0.14.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.14.1) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.14.1/)
 - rdsa-utils v0.14.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.14.0) |
