@@ -9,9 +9,10 @@ from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Union
 
 import pandas as pd
+import tomli
 from codetiming import Timer
 from more_itertools import always_iterable
 from pandas.tseries.offsets import MonthEnd
@@ -1017,3 +1018,65 @@ def dump_environment_requirements(
         f"with args={args}",
     )
     output_path.write_text(result.stdout)
+
+
+def parse_pyproject_metadata(pyproject_path: Path) -> Dict[str, Optional[str]]:
+    """Parse project metadata from a `pyproject.toml` file.
+
+    This function reads the TOML file at pyproject_path and extracts a subset
+    of fields from the [project] table: the project name, required Python
+    version, and package version.
+
+    Parameters
+    ----------
+    pyproject_path
+        Path to the `pyproject.toml` file.
+
+    Returns
+    -------
+    Dict[str, Optional[str]]
+        A dictionary with the following keys:
+        - name : str or None
+            The project name.
+        - requires_python : str or None
+            The Python version specifier (from requires-python).
+        - package_version : str or None
+            The package version.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+    tomli.TOMLDecodeError
+        If the file content is not valid TOML.
+
+    Examples
+    --------
+    >>> from pathlib import Path
+    >>> meta = parse_pyproject_metadata(Path("pyproject.toml"))
+    >>> meta["name"]  # doctest: +SKIP
+    'my-package'
+    """
+    try:
+        raw_text = pyproject_path.read_text(encoding="utf-8")
+    except FileNotFoundError as e:
+        msg = f"pyproject_path='{pyproject_path}' cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg) from e
+
+    try:
+        data = tomli.loads(raw_text)
+    except tomli.TOMLDecodeError as e:
+        msg = f"Invalid TOML in '{pyproject_path}': {e}"
+        logger.error(msg)
+        raise
+
+    proj = data.get("project", {})
+    meta = {
+        "name": proj.get("name"),
+        "requires_python": proj.get("requires-python"),
+        "package_version": proj.get("version"),
+    }
+
+    logger.info(f"Parsed pyproject.toml metadata from '{pyproject_path}': {meta}")
+    return meta

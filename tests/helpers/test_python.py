@@ -1073,3 +1073,47 @@ class TestDumpEnvironmentRequirements:
         ):
             with pytest.raises(subprocess.CalledProcessError):
                 dump_environment_requirements(str(output_file))
+
+
+class TestParsePyprojectMetadata:
+    """Tests for parse_pyproject_metadata function."""
+
+    def test_parses_expected_fields(self, tmp_path):
+        """Parses expected fields."""
+        py = tmp_path / "pyproject.toml"
+        py.write_text(
+            "[project]\nname = 'my-package'\nrequires-python = '>=3.10'\nversion = '1.2.3'\n",
+            encoding="utf-8",
+        )
+
+        meta = parse_pyproject_metadata(py)
+
+        assert meta["name"] == "my-package"
+        assert meta["requires_python"] == ">=3.10"
+        assert meta["package_version"] == "1.2.3"
+
+    def test_missing_project_table_returns_none_fields(self, tmp_path):
+        """Returns None fields when [project] missing."""
+        py = tmp_path / "pyproject.toml"
+        py.write_text("# no project table here\n", encoding="utf-8")
+
+        meta = parse_pyproject_metadata(py)
+
+        assert meta["name"] is None
+        assert meta["requires_python"] is None
+        assert meta["package_version"] is None
+
+    def test_file_not_found_raises(self, tmp_path):
+        """Raises FileNotFoundError for missing file."""
+        missing = tmp_path / "does_not_exist.toml"
+        with pytest.raises(FileNotFoundError) as excinfo:
+            parse_pyproject_metadata(missing)
+        assert "cannot be found" in str(excinfo.value)
+
+    def test_invalid_toml_raises(self, tmp_path):
+        """Raises TOMLDecodeError for invalid TOML."""
+        py = tmp_path / "pyproject.toml"
+        py.write_text("[project\nname = 'oops'\n", encoding="utf-8")  # broken TOML
+
+        with pytest.raises(tomli.TOMLDecodeError):
+            parse_pyproject_metadata(py)
