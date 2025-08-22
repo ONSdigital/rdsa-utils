@@ -8,6 +8,18 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Fixed
+
+### Removed
+
+## [0.16.0] - 2025-08-22
+
+### Added
 - Added `sha256_sum`, `parse_pyproject_metadata`, `validate_env_vars`,
   to `helpers/python.py`.
 - Added `create_s3_uri` & `split_s3_uri` to `cdp/helpers/s3_utils.py`.
@@ -919,6 +931,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 > due to bugs in the GitHub Action `deploy_pypi.yaml`, which deploys to PyPI
 > and GitHub Releases.
 
+- rdsa-utils v0.16.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.16.0) |
+  [PyPI](https://pypi.org/project/rdsa-utils/0.16.0/)
 - rdsa-utils v0.15.0: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.15.0) |
   [PyPI](https://pypi.org/project/rdsa-utils/0.15.0/)
 - rdsa-utils v0.14.1: [GitHub Release](https://github.com/ONSdigital/rdsa-utils/releases/tag/v0.14.1) |
