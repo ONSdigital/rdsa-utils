@@ -10,6 +10,7 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `sha256_sum`, `parse_pyproject_metadata`, `validate_env_vars`,
   to `helpers/python.py`.
+- Added `create_s3_uri` & `split_s3_uri` to `cdp/helpers/s3_utils.py`.
 
 ### Changed
 - Reordered docstrings to place Returns above Raises in `check_year_range`
