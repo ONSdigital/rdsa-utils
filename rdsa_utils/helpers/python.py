@@ -4,14 +4,16 @@ import hashlib
 import itertools
 import json
 import logging
+import os
 import subprocess
 from datetime import datetime, time
 from functools import reduce, wraps
 from itertools import tee
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Union
 
 import pandas as pd
+import tomli
 from codetiming import Timer
 from more_itertools import always_iterable
 from pandas.tseries.offsets import MonthEnd
@@ -730,6 +732,45 @@ def md5_sum(
         raise FileNotFoundError(msg)
 
 
+def sha256_sum(
+    filepath: str,
+) -> str:
+    """Get SHA256 hash of a specific file on the local file system.
+
+    Parameters
+    ----------
+    filepath
+        Filepath of file to create SHA256 hash from.
+
+    Returns
+    -------
+    str
+        The SHA256 hash of the file.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
+    Example
+    -------
+    >>> sha256_sum("folder/file.txt")
+    "9c56cc51b374c3b6e7b8e1e8b4e1e8b4e1e8b4e1e8b4e1e8b4e1e8b4e1e8b4e1e8"
+    >>> sha256_sum("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='../folder/non_existing_file.txt' cannot be found.
+    """
+    if Path(filepath).exists():
+        h = hashlib.sha256()
+        with open(filepath, "rb") as f:
+            for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                h.update(chunk)
+        return h.hexdigest()
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
 def file_exists(
     filepath: str,
 ) -> bool:
@@ -978,3 +1019,146 @@ def dump_environment_requirements(
         f"with args={args}",
     )
     output_path.write_text(result.stdout)
+
+
+def parse_pyproject_metadata(pyproject_path: Path) -> Dict[str, Optional[str]]:
+    """Parse project metadata from a `pyproject.toml` file.
+
+    This function reads the TOML file at pyproject_path and extracts a subset
+    of fields from the [project] table: the project name, required Python
+    version, and package version.
+
+    Parameters
+    ----------
+    pyproject_path
+        Path to the `pyproject.toml` file.
+
+    Returns
+    -------
+    Dict[str, Optional[str]]
+        A dictionary with the following keys:
+        - name : str or None
+            The project name.
+        - requires_python : str or None
+            The Python version specifier (from requires-python).
+        - package_version : str or None
+            The package version.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+    tomli.TOMLDecodeError
+        If the file content is not valid TOML.
+
+    Examples
+    --------
+    >>> from pathlib import Path
+    >>> meta = parse_pyproject_metadata(Path("pyproject.toml"))
+    >>> meta["name"]  # doctest: +SKIP
+    'my-package'
+    """
+    try:
+        raw_text = pyproject_path.read_text(encoding="utf-8")
+    except FileNotFoundError as e:
+        msg = f"pyproject_path='{pyproject_path}' cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg) from e
+
+    try:
+        data = tomli.loads(raw_text)
+    except tomli.TOMLDecodeError as e:
+        msg = f"Invalid TOML in '{pyproject_path}': {e}"
+        logger.error(msg)
+        raise
+
+    proj = data.get("project", {})
+    meta = {
+        "name": proj.get("name"),
+        "requires_python": proj.get("requires-python"),
+        "package_version": proj.get("version"),
+    }
+
+    logger.info(f"Parsed pyproject.toml metadata from '{pyproject_path}': {meta}")
+    return meta
+
+
+def validate_env_vars(required_vars: List[str]) -> None:
+    """Validate that required environment variables are present and non-empty.
+
+    This function checks whether each name in `required_vars` exists in the
+    current process environment (`os.environ`) and has a non-empty value.
+    Variable names are stripped of surrounding whitespace and de-duplicated
+    before validation. If any variables are missing (unset or empty), the
+    function logs an error and exits by raising `SystemExit`.
+
+    Parameters
+    ----------
+    required_vars
+        Environment variable names to validate.
+
+    Returns
+    -------
+    None
+        This function is intended for its side effects (validation and logging).
+
+    Raises
+    ------
+    TypeError
+        If `required_vars` is not a list of non-empty strings.
+    SystemExit
+        If one or more required environment variables are missing or empty.
+
+    Examples
+    --------
+    Success case
+    ^^^^^^^^^^^^
+    >>> import os
+    >>> os.environ["DB_HOST"] = "localhost"
+    >>> os.environ["DB_PORT"] = "5432"
+    >>> validate_env_vars(["DB_HOST", "DB_PORT"])  # no exception
+
+    Missing variable
+    ^^^^^^^^^^^^^^^^
+    >>> import os
+    >>> os.environ["DB_HOST"] = "localhost"
+    >>> validate_env_vars(["DB_HOST", "DB_PORT"])
+    Traceback (most recent call last):
+    ...
+    SystemExit: [ERROR] Missing environment variables: DB_PORT
+
+    Empty value counts as missing
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    >>> import os
+    >>> os.environ["API_KEY"] = ""   # empty string -> missing
+    >>> validate_env_vars(["API_KEY"])
+    Traceback (most recent call last):
+    ...
+    SystemExit: [ERROR] Missing environment variables: API_KEY
+    """
+    if not isinstance(required_vars, list):
+        error_msg = "required_vars must be a list of strings."
+        raise TypeError(error_msg)
+    cleaned: list[str] = []
+    for name in required_vars:
+        if not isinstance(name, str):
+            error_msg = "All environment variable names must be strings."
+            raise TypeError(error_msg)
+        stripped = name.strip()
+        if not stripped:
+            error_msg = "Environment variable names must be non-empty strings."
+            raise TypeError(error_msg)
+        cleaned.append(stripped)
+
+    # De-duplicate while preserving readable order in logs
+    unique_names = sorted(set(cleaned))
+
+    # Treat unset or empty-string values as missing
+    missing = [n for n in unique_names if os.environ.get(n, "").strip() == ""]
+
+    if missing:
+        msg = f"[ERROR] Missing environment variables: {', '.join(missing)}"
+        logger.error(msg)
+        raise SystemExit(msg)
+
+    logger.info(f"Environment OK: {', '.join(unique_names)}")

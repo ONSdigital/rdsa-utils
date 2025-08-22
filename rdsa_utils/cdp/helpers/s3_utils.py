@@ -29,7 +29,7 @@ import zipfile
 from datetime import datetime, timedelta, timezone
 from io import BytesIO, StringIO, TextIOWrapper
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import boto3
 import pandas as pd
@@ -1980,3 +1980,67 @@ def zip_s3_directory_to_s3(
     except Exception as e:
         logger.error(f"Error zipping S3 directory and uploading to S3: {e}")
         return False
+
+
+def create_s3_uri(bucket: str, key: str, scheme: str = "s3") -> str:
+    """Create an S3 URI from a bucket, key, and scheme.
+
+    Parameters
+    ----------
+    bucket
+        The S3 bucket name.
+    key
+        The S3 object key.
+    scheme
+        The URI scheme to use ('s3' or 's3a').
+        Default is "s3".
+
+    Returns
+    -------
+    str
+        The formatted S3 URI.
+
+    Examples
+    --------
+    >>> create_s3_uri("my-bucket", "folder/file.txt")
+    's3://my-bucket/folder/file.txt'
+    >>> create_s3_uri("my-bucket", "folder/file.txt", scheme="s3a")
+    's3a://my-bucket/folder/file.txt'
+    """
+    return f"{scheme}://{bucket}/{key}"
+
+
+def split_s3_uri(uri: str) -> Tuple[str, str]:
+    """Split an S3 URI into bucket and key.
+
+    Supports both `s3://` and `s3a://` schemes.
+
+    Parameters
+    ----------
+    uri
+        The S3 URI to split, e.g., "s3://my-bucket/path/to/object.txt".
+
+    Returns
+    -------
+    Tuple[str, str]
+        A tuple containing the bucket name and the object key.
+
+    Raises
+    ------
+    ValueError
+        If the URI is malformed or does not use the s3:// or s3a:// scheme.
+
+    Examples
+    --------
+    >>> split_s3_uri("s3://my-bucket/data/file.csv")
+    ('my-bucket', 'data/file.csv')
+    """
+    if not uri or not (uri.startswith("s3://") or uri.startswith("s3a://")):
+        error_msg = f"Invalid S3 URI scheme in '{uri}'. Expected 's3://' or 's3a://'."
+        raise ValueError(error_msg)
+    no_scheme = uri.split("://", 1)[1]
+    parts = no_scheme.split("/", 1)
+    if len(parts) != 2 or not all(parts):
+        error_msg = f"Malformed S3 URI: '{uri}'"
+        raise ValueError(error_msg)
+    return parts[0], parts[1]
