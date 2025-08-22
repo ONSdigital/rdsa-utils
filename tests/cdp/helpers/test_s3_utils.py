@@ -15,6 +15,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     check_file,
     copy_file,
     create_folder,
+    create_s3_uri,
     delete_file,
     delete_folder,
     delete_old_objects_and_folders,
@@ -31,6 +32,7 @@ from rdsa_utils.cdp.helpers.s3_utils import (
     read_header,
     remove_leading_slash,
     s3_walk,
+    split_s3_uri,
     upload_file,
     upload_folder,
     validate_bucket_name,
@@ -1808,3 +1810,76 @@ class TestZipS3DirectoryToS3:
         response = s3_client.get_object(Bucket="destination-bucket", Key="folder1.zip")
         content = response["Body"].read()
         assert content == b"existing content"
+
+
+class TestCreateS3Uri:
+    """Tests for create_s3_uri function."""
+
+    def test_default_scheme(self):
+        """Builds s3:// URI by default."""
+        assert (
+            create_s3_uri("my-bucket", "folder/file.txt")
+            == "s3://my-bucket/folder/file.txt"
+        )
+
+    def test_s3a_scheme(self):
+        """Builds s3a:// when requested."""
+        assert (
+            create_s3_uri("my-bucket", "folder/file.txt", scheme="s3a")
+            == "s3a://my-bucket/folder/file.txt"
+        )
+
+    def test_roundtrip_with_split(self):
+        """Round-trips through split_s3_uri."""
+        bucket, key = "bucket-name", "a/b/c.txt"
+        uri = create_s3_uri(bucket, key)
+        assert split_s3_uri(uri) == (bucket, key)
+
+
+class TestSplitS3Uri:
+    """Tests for split_s3_uri function."""
+
+    def test_valid_s3(self):
+        """Parses valid s3:// URI."""
+        assert split_s3_uri("s3://my-bucket/data/file.csv") == (
+            "my-bucket",
+            "data/file.csv",
+        )
+
+    def test_valid_s3a(self):
+        """Parses valid s3a:// URI."""
+        assert split_s3_uri("s3a://bucket-x.y/data/2025/08/22.parquet") == (
+            "bucket-x.y",
+            "data/2025/08/22.parquet",
+        )
+
+    @pytest.mark.parametrize(
+        "uri",
+        [
+            "",  # empty
+            "http://my-bucket/key",  # wrong scheme
+            "s4://my-bucket/key",  # wrong scheme
+            "s3:/my-bucket/key",  # malformed scheme
+            "my-bucket/key",  # missing scheme
+        ],
+    )
+    def test_invalid_scheme_raises(self, uri):
+        """Raises ValueError for invalid/missing scheme."""
+        with pytest.raises(ValueError) as exc:
+            split_s3_uri(uri)
+        assert "Expected 's3://' or 's3a://'" in str(exc.value)
+
+    @pytest.mark.parametrize(
+        "uri",
+        [
+            "s3://bucket",  # no slash after bucket
+            "s3://bucket/",  # empty key
+            "s3:///key",  # empty bucket
+            "s3a:///",  # empty bucket and key
+        ],
+    )
+    def test_malformed_uri_parts_raises(self, uri):
+        """Raises ValueError for missing bucket or key."""
+        with pytest.raises(ValueError) as exc:
+            split_s3_uri(uri)
+        assert "Malformed S3 URI" in str(exc.value)
