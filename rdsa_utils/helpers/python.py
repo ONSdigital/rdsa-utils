@@ -730,6 +730,45 @@ def md5_sum(
         raise FileNotFoundError(msg)
 
 
+def sha256_sum(
+    filepath: str,
+) -> str:
+    """Get SHA256 hash of a specific file on the local file system.
+
+    Parameters
+    ----------
+    filepath
+        Filepath of file to create SHA256 hash from.
+
+    Returns
+    -------
+    str
+        The SHA256 hash of the file.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file does not exist.
+
+    Example
+    -------
+    >>> sha256_sum("folder/file.txt")
+    "9c56cc51b374c3b6e7b8e1e8b4e1e8b4e1e8b4e1e8b4e1e8b4e1e8b4e1e8b4e1e8"
+    >>> sha256_sum("folder/non_existing_file.txt")
+    FileNotFoundError: filepath='../folder/non_existing_file.txt' cannot be found.
+    """
+    if Path(filepath).exists():
+        h = hashlib.sha256()
+        with open(filepath, "rb") as f:
+            for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                h.update(chunk)
+        return h.hexdigest()
+    else:
+        msg = f"{filepath=} cannot be found."
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
+
 def file_exists(
     filepath: str,
 ) -> bool:

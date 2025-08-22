@@ -812,6 +812,31 @@ class TestMd5Sum:
             md5_sum("non_existent_file.txt")
 
 
+class TestSha256Sum:
+    """Tests for sha256_sum function."""
+
+    def test_expected(self, tmp_path):
+        """Test expected functionality."""
+        # Create a temporary file
+        temp_file = tmp_path / "test_file.txt"
+        content = "This is a test file."
+        temp_file.write_text(content)
+
+        # Calculate the expected sha256 sum
+        expected_sha256 = hashlib.sha256(content.encode()).hexdigest()
+
+        # Get the actual sha256 sum
+        actual_sha256 = sha256_sum(str(temp_file))
+
+        # Assert the sha256 sums match
+        assert actual_sha256 == expected_sha256
+
+    def test_file_not_found(self):
+        """Test behavior when file does not exist."""
+        with pytest.raises(FileNotFoundError):
+            sha256_sum("non_existent_file.txt")
+
+
 class TestFileExists:
     """Tests for file_exists function."""
 
