@@ -4,6 +4,7 @@ import hashlib
 import itertools
 import json
 import logging
+import os
 import subprocess
 from datetime import datetime, time
 from functools import reduce, wraps
@@ -1080,3 +1081,84 @@ def parse_pyproject_metadata(pyproject_path: Path) -> Dict[str, Optional[str]]:
 
     logger.info(f"Parsed pyproject.toml metadata from '{pyproject_path}': {meta}")
     return meta
+
+
+def validate_env_vars(required_vars: List[str]) -> None:
+    """Validate that required environment variables are present and non-empty.
+
+    This function checks whether each name in `required_vars` exists in the
+    current process environment (`os.environ`) and has a non-empty value.
+    Variable names are stripped of surrounding whitespace and de-duplicated
+    before validation. If any variables are missing (unset or empty), the
+    function logs an error and exits by raising `SystemExit`.
+
+    Parameters
+    ----------
+    required_vars
+        Environment variable names to validate.
+
+    Returns
+    -------
+    None
+        This function is intended for its side effects (validation and logging).
+
+    Raises
+    ------
+    TypeError
+        If `required_vars` is not a list of non-empty strings.
+    SystemExit
+        If one or more required environment variables are missing or empty.
+
+    Examples
+    --------
+    Success case
+    ^^^^^^^^^^^^
+    >>> import os
+    >>> os.environ["DB_HOST"] = "localhost"
+    >>> os.environ["DB_PORT"] = "5432"
+    >>> validate_env_vars(["DB_HOST", "DB_PORT"])  # no exception
+
+    Missing variable
+    ^^^^^^^^^^^^^^^^
+    >>> import os
+    >>> os.environ["DB_HOST"] = "localhost"
+    >>> validate_env_vars(["DB_HOST", "DB_PORT"])
+    Traceback (most recent call last):
+    ...
+    SystemExit: [ERROR] Missing environment variables: DB_PORT
+
+    Empty value counts as missing
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    >>> import os
+    >>> os.environ["API_KEY"] = ""   # empty string -> missing
+    >>> validate_env_vars(["API_KEY"])
+    Traceback (most recent call last):
+    ...
+    SystemExit: [ERROR] Missing environment variables: API_KEY
+    """
+    if not isinstance(required_vars, list):
+        error_msg = "required_vars must be a list of strings."
+        raise TypeError(error_msg)
+    cleaned: list[str] = []
+    for name in required_vars:
+        if not isinstance(name, str):
+            error_msg = "All environment variable names must be strings."
+            raise TypeError(error_msg)
+        stripped = name.strip()
+        if not stripped:
+            error_msg = "Environment variable names must be non-empty strings."
+            raise TypeError(error_msg)
+        cleaned.append(stripped)
+
+    # De-duplicate while preserving readable order in logs
+    unique_names = sorted(set(cleaned))
+
+    # Treat unset or empty-string values as missing
+    missing = [n for n in unique_names if os.environ.get(n, "").strip() == ""]
+
+    if missing:
+        msg = f"[ERROR] Missing environment variables: {', '.join(missing)}"
+        logger.error(msg)
+        raise SystemExit(msg)
+
+    logger.info(f"Environment OK: {', '.join(unique_names)}")

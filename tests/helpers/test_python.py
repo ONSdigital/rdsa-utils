@@ -1117,3 +1117,65 @@ class TestParsePyprojectMetadata:
 
         with pytest.raises(tomli.TOMLDecodeError):
             parse_pyproject_metadata(py)
+
+
+class TestValidateEnvVars:
+    """Tests for validate_env_vars function."""
+
+    def test_success_when_all_present(self, monkeypatch):
+        """Succeeds when all vars are present."""
+        monkeypatch.setenv("DB_HOST", "localhost")
+        monkeypatch.setenv("DB_PORT", "5432")
+        validate_env_vars(["DB_HOST", "DB_PORT"])  # no exception
+
+    def test_missing_var_raises(self, monkeypatch):
+        """Raises SystemExit when a var is missing."""
+        monkeypatch.setenv("DB_HOST", "localhost")
+        monkeypatch.delenv("DB_PORT", raising=False)
+        with pytest.raises(SystemExit) as exc:
+            validate_env_vars(["DB_HOST", "DB_PORT"])
+        msg = str(exc.value)
+        assert "Missing environment variables" in msg
+        assert "DB_PORT" in msg
+        assert "DB_HOST" not in msg  # DB_HOST is present
+
+    def test_empty_value_counts_as_missing(self, monkeypatch):
+        """Treats empty string as missing."""
+        monkeypatch.setenv("API_KEY", "")
+        with pytest.raises(SystemExit) as exc:
+            validate_env_vars(["API_KEY"])
+        assert "API_KEY" in str(exc.value)
+
+    def test_whitespace_value_counts_as_missing(self, monkeypatch):
+        """Treats whitespace-only value as missing."""
+        monkeypatch.setenv("TOKEN", "   ")
+        with pytest.raises(SystemExit) as exc:
+            validate_env_vars(["TOKEN"])
+        assert "TOKEN" in str(exc.value)
+
+    def test_names_are_stripped(self, monkeypatch):
+        """Strips whitespace around variable names."""
+        monkeypatch.setenv("SERVICE_URL", "https://example.com")
+        validate_env_vars(["  SERVICE_URL  "])  # no exception
+
+    def test_duplicates_do_not_break(self, monkeypatch):
+        """Handles duplicate names gracefully."""
+        monkeypatch.setenv("REGION", "eu-west-1")
+        validate_env_vars(["REGION", "REGION"])  # no exception
+
+    def test_type_error_non_list(self):
+        """Raises TypeError if input is not a list."""
+        with pytest.raises(TypeError):
+            validate_env_vars(("DB_HOST", "DB_PORT"))  # type: ignore[arg-type]
+
+    def test_type_error_non_string_item(self):
+        """Raises TypeError if any name is not a string."""
+        with pytest.raises(TypeError):
+            validate_env_vars(["DB_HOST", 123])  # type: ignore[list-item]
+
+    def test_type_error_empty_name(self):
+        """Raises TypeError for empty/whitespace-only names."""
+        with pytest.raises(TypeError):
+            validate_env_vars([""])  # empty
+        with pytest.raises(TypeError):
+            validate_env_vars(["   "])  # whitespace only

@@ -8,7 +8,8 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added `sha256_sum`, `parse_pyproject_metadata` to `helpers/python.py`.
+- Added `sha256_sum`, `parse_pyproject_metadata`, `validate_env_vars`,
+  to `helpers/python.py`.
 
 ### Changed
 - Reordered docstrings to place Returns above Raises in `check_year_range`
