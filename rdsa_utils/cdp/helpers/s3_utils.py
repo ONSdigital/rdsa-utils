@@ -1083,7 +1083,7 @@ def download_folder(
                 if not target.parent.exists():
                     target.parent.mkdir(parents=True)
                 client.download_file(bucket_name, obj["Key"], str(target))
-                logger.info(f'Downloaded {obj["Key"]} to {target}')
+                logger.info(f"Downloaded {obj['Key']} to {target}")
         return True
     except client.exceptions.ClientError as e:
         logger.error(f"Failed to download folder: {str(e)}")
@@ -1207,8 +1207,7 @@ def delete_folder(
         return True
     except client.exceptions.ClientError as e:
         logger.error(
-            f"Failed to delete folder {folder_path} "
-            f"in bucket {bucket_name}: {str(e)}",
+            f"Failed to delete folder {folder_path} in bucket {bucket_name}: {str(e)}",
         )
         return False
 

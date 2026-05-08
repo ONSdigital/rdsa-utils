@@ -522,10 +522,7 @@ def interleave_iterables(iterable1: Iterable, iterable2: Iterable) -> List:
         iterable2,
         (list, tuple, str, range),
     ):
-        msg = (
-            "Both inputs must be iterable types such as list, tuple,"
-            "string, or range."
-        )
+        msg = "Both inputs must be iterable types such as list, tuple,string, or range."
         raise TypeError(msg)
 
     if len(iterable1) != len(iterable2):
@@ -1015,8 +1012,7 @@ def dump_environment_requirements(
         text=True,
     )
     logger.info(
-        f"Dumping environment to '{output_path}' using tool='{tool}' "
-        f"with args={args}",
+        f"Dumping environment to '{output_path}' using tool='{tool}' with args={args}",
     )
     output_path.write_text(result.stdout)
 

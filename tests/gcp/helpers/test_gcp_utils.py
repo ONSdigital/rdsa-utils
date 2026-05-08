@@ -439,9 +439,9 @@ class TestListFiles:
             "rdsa_utils.gcp.helpers.gcp_utils.validate_bucket_name",
         ), mock.patch("rdsa_utils.gcp.helpers.gcp_utils.remove_leading_slash"):
             mock_client.list_blobs.return_value = iter([])
-            assert (
-                list_files(mock_client, "bucket", "prefix") == []
-            ), "Expected to return an empty list as no files match the prefix."
+            assert list_files(mock_client, "bucket", "prefix") == [], (
+                "Expected to return an empty list as no files match the prefix."
+            )
 
 
 class TestDownloadFolder:

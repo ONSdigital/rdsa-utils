@@ -341,7 +341,6 @@ def fetch_from_aws() -> List[InstanceType]:
                 and attrs.get("tenancy") == "Dedicated"
                 and attrs.get("capacitystatus") == "Used"
             ):
-
                 instance_type = attrs.get("instanceType")
                 if instance_type:
                     instance_products[sku] = {
@@ -367,7 +366,6 @@ def fetch_from_aws() -> List[InstanceType]:
                             instance_type not in unique_instances
                             or base_price < unique_instances[instance_type].ec2_price
                         ):
-
                             unique_instances[instance_type] = InstanceType(
                                 name=instance_type,
                                 vcpu=specs["vcpu"],

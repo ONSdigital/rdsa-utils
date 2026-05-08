@@ -368,7 +368,7 @@ def log_spark_df_schema(
                     logger.warning(
                         dedent(
                             f"""
-                    {func_name} keyword argument `df` has type {type(kwargs['df'])}.
+                    {func_name} keyword argument `df` has type {type(kwargs["df"])}.
 
                     Cannot print spark schema for this type of object.
                     """,
@@ -483,7 +483,7 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
             logger.warning(
                 dedent(
                     f"""
-            {func_name} keyword argument `df` has type {type(kwargs['df'])}.
+            {func_name} keyword argument `df` has type {type(kwargs["df"])}.
 
             Cannot count rows for this type of object.
             """,

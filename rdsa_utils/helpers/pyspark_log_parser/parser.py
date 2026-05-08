@@ -167,9 +167,12 @@ def parse_pyspark_logs(
 
         elif event_type == "SparkListenerStageSubmitted":
             props = event.get("Properties", {})
-            mem, overhead = props.get("spark.executor.memory", "0g"), props.get(
-                "spark.yarn.executor.memoryOverhead",
-                "0g",
+            mem, overhead = (
+                props.get("spark.executor.memory", "0g"),
+                props.get(
+                    "spark.yarn.executor.memoryOverhead",
+                    "0g",
+                ),
             )
 
             # Keep memory values in gigabytes

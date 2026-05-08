@@ -92,7 +92,7 @@ def read_table(
         if list_cols_not_in_table_cols:
             message = f"""
             Columns: {list_cols_not_in_table_cols} are not in dateset.
-            Choose columns from: {', '.join(table_cols)}.
+            Choose columns from: {", ".join(table_cols)}.
             """
             logger.error(message)
             raise ColumnNotInDataframeError(message)
