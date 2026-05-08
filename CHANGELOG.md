@@ -7,15 +7,24 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-05-08
+
 ### Added
 
 ### Changed
-
+- Switched build system from setuptools to uv with hatchling backend.
+- Consolidated `setup.cfg`, `setup.py`, `.ruff.toml`, `.isort.cfg`, and `.bumpversion.cfg` into a single `pyproject.toml`.
+- Updated all GitHub Actions workflows (`deploy_pypi.yaml`, `pull_request_workflow.yaml`, `deploy_mkdocs.yaml`) to use uv.
+- Replaced black and isort pre-commit hooks with ruff-format.
+- Updated `contribution_guide.md` and `branch_and_deploy_guide.md` to reflect uv-based workflow.
+- Bumped `ons-mkdocs-theme` minimum version from `>=1.1.3` to `>=1.2.4` and added Python version markers to doc dependencies.
 ### Deprecated
-
+ 
 ### Fixed
-
+ 
 ### Removed
+- Removed `setup.cfg`, `setup.py`, `.bumpversion.cfg`, `.ruff.toml`, and `.isort.cfg` (consolidated into `pyproject.toml`).
+- Removed `bump2version`, `black`, and `isort` from dev dependencies (replaced by uv version management and ruff).
 
 ## [0.16.1] - 2026-02-19
 
