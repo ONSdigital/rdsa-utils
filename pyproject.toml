@@ -114,8 +114,8 @@ select = [
     "T20",
     "W",
     "YTT",
-]
-ignore = ["N812", "PD901", "E712", "E721"]
+
+ignore = ["N812", "E712", "E721", "COM812"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
