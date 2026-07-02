@@ -593,7 +593,7 @@ class TestSaveCSVToS3:
         # Mock the relevant methods
         mock_write.return_value.csv.return_value = None
         mock_list_files.return_value = [
-            f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv',
+            f"{file_path.rstrip('/')}/temp_1234_data_output.csv/part-00000.csv",
         ]
         mock_delete_folder.return_value = None
         mock_file_exists.side_effect = lambda client, bucket, key: (
@@ -620,7 +620,7 @@ class TestSaveCSVToS3:
         mock_copy_file.side_effect = copy_file_side_effect
 
         # Create the temporary file in the bucket to simulate the write operation
-        temp_key = f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv'
+        temp_key = f"{file_path.rstrip('/')}/temp_1234_data_output.csv/part-00000.csv"
         s3_client.put_object(Bucket=bucket_name, Key=temp_key, Body="data")
 
         # Call the function
@@ -670,7 +670,7 @@ class TestSaveCSVToS3:
         # Mock the relevant methods
         mock_write.return_value.csv.return_value = None
         mock_list_files.return_value = [
-            f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv',
+            f"{file_path.rstrip('/')}/temp_1234_data_output.csv/part-00000.csv",
         ]
         mock_delete_folder.return_value = None
 
@@ -694,7 +694,7 @@ class TestSaveCSVToS3:
         mock_copy_file.side_effect = copy_file_side_effect
 
         # Create the temporary file in the bucket to simulate the write operation
-        temp_key = f'{file_path.rstrip("/")}/temp_1234_data_output.csv/part-00000.csv'
+        temp_key = f"{file_path.rstrip('/')}/temp_1234_data_output.csv/part-00000.csv"
         s3_client.put_object(Bucket=bucket_name, Key=temp_key, Body="data")
 
         # Set up file_exists to return False initially, then True

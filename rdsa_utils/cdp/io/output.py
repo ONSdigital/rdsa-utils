@@ -402,8 +402,7 @@ def save_csv_to_hdfs(
 
     if not overwrite and file_exists(destination_path):
         error_msg = (
-            f"File '{destination_path}' already exists "
-            "and overwrite is set to False."
+            f"File '{destination_path}' already exists and overwrite is set to False."
         )
         raise IOError(error_msg)
 
@@ -517,8 +516,7 @@ def save_csv_to_s3(
 
     if not overwrite and file_exists(s3_client, bucket_name, destination_path):
         error_msg = (
-            f"File '{destination_path}' already exists "
-            "and overwrite is set to False."
+            f"File '{destination_path}' already exists and overwrite is set to False."
         )
         raise IOError(error_msg)
 

@@ -18,23 +18,18 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: debug-statements
-
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.1
     hooks:
-      - id: black
+      - id: ruff-format
+      - id: ruff
+        args: ["--fix"]
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.13.2
     hooks:
       - id: isort
         args: ["--profile", "black"]
-
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.1
-    hooks:
-      - id: ruff
-        args: ["--config", ".ruff.toml"]
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.23.1

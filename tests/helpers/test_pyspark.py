@@ -1063,9 +1063,9 @@ class TestCreateSparkSession:
         """Test create_spark_session with extra configurations."""
         extra_configs = {"spark.ui.enabled": "false"}
         spark = create_spark_session(app_name="default", extra_configs=extra_configs)
-        assert (
-            spark.conf.get("spark.ui.enabled") == "false"
-        ), "Extra configurations should be applied."
+        assert spark.conf.get("spark.ui.enabled") == "false", (
+            "Extra configurations should be applied."
+        )
         spark.stop()
 
 
