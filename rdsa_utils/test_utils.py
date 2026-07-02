@@ -134,7 +134,7 @@ def parametrize_cases(*cases: Case):
         args = case.kwargs.keys()
 
         # Make sure all keys are in each case, otherwise initialise with None.
-        diff = dict.fromkeys(set(all_args) - set(args))
+        diff = {k: None for k in set(all_args) - set(args)}
         case_kwargs.update(diff)
 
         case_tuple = tuple(value for key, value in sorted(case_kwargs.items()))

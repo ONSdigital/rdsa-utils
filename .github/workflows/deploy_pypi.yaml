@@ -20,17 +20,16 @@ jobs:
 
     - name: Build package
       run: uv build
-      
+
     - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      run: uv publish
+      env:
+        UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
     - name: Extract package version
       id: package_version
       run: |
-        echo "PACKAGE_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
+        echo "PACKAGE_VERSION=$(python -c 'from rdsa_utils import __version__; print(__version__)')" >> $GITHUB_ENV
 
     - name: Bump version and push tag
       id: tag_version

@@ -25,6 +25,12 @@ repos:
       - id: ruff
         args: ["--fix"]
 
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.23.1
     hooks:
