@@ -843,7 +843,6 @@ def delete_folder(
         return True
     except Exception as e:
         logger.error(
-            f"Failed to delete folder {folder_path} "
-            f"in bucket {bucket_name}: {str(e)}",
+            f"Failed to delete folder {folder_path} in bucket {bucket_name}: {str(e)}",
         )
         return False

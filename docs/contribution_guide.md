@@ -201,22 +201,28 @@ cd rdsa-utils
 
 ### Set Up the Development Environment
 
-We use a traditional `setup.py` approach for managing dependencies. To set up your development environment, first, ensure you have Python 3.8 to 3.13 installed.
+We use [uv](https://docs.astral.sh/uv/) for dependency management and builds. To set up your development environment, first, ensure you have Python 3.8 to 3.13 installed.
 
-Then, to install the package in editable mode along with all development dependencies, run the following command:
+1. **Install uv** (if you haven't already):
 
 ```bash
-pip3 install -e .[dev]
+pip install uv
 ```
 
-The `-e` (or `--editable`) option is used to install the package in a way that allows you to modify the source code and see the changes directly without having to reinstall the package. This is particularly useful for development.
+2. **Sync the project with dev dependencies**:
+
+```bash
+uv sync --group dev
+```
+
+This will create a virtual environment and install all dependencies (including development tools) in one step.
 
 ### Running Tests
 
 To run tests, ensure you're in the top-level directory of the project and execute:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 This will run all the tests using the configurations set in the project.
@@ -227,16 +233,10 @@ Pre-commit hooks are used to automate checks and formatting before commits. Foll
 
 #### Installation Steps
 
-1. **Install pre-commit**: If you haven't already, install the pre-commit package:
+1. **Install pre-commit hooks**: Install the hooks defined in `.pre-commit-config.yaml`:
 
 ```bash
-pip install pre-commit
-```
-
-2. **Install pre-commit hooks**: Install the hooks defined in `.pre-commit-config.yaml`:
-
-```bash
-pre-commit install
+uv run pre-commit install
 ```
 
    This sets up the hooks to run automatically before each commit.
@@ -246,7 +246,7 @@ pre-commit install
 The pre-commit hooks will automatically run on your modified files whenever you commit. To manually run all hooks on all files, use:
 
 ```bash
-pre-commit run --all-files
+uv run pre-commit run --all-files
 ```
 
 This can be useful for checking your codebase.
