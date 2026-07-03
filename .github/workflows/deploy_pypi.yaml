@@ -19,7 +19,9 @@ jobs:
         python-version: '3.11'
 
     - name: Build package
-      run: uv build
+      run: |
+        uv lock --default-index https://pypi.org/simple
+        uv build
 
     - name: Publish to PyPI
       run: uv publish
