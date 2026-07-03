@@ -22,7 +22,9 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: uv sync --group doc
+        run: |
+          uv lock --default-index https://pypi.org/simple
+          uv sync --group doc
       
       - name: Build the MkDocs site
         run: uv run mkdocs build

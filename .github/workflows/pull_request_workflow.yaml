@@ -42,7 +42,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --group dev
+        run: |
+          uv lock --default-index https://pypi.org/simple
+          uv sync --group dev
 
       - name: Run tests
         run: uv run pytest
