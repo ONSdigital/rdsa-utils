@@ -10,8 +10,6 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated `deploy_pypi.yaml`, `pull_request_workflow.yaml`, and `deploy_mkdocs.yaml` to re-solve dependencies against PyPI before `uv sync`/`uv build` using `uv lock --default-index https://pypi.org/simple`, fixing CI failures caused by the internal Artifactory index not being accessible from GitHub Actions.
 - Regenerated `uv.lock` to use PyPI package URLs instead of internal Artifactory URLs.
-- Reverted unintentional dict comprehension change in `test_utils.py` back to `dict.fromkeys(...)`.
-- Applied `ruff-format` to `helpers/pyspark_log_parser/parser.py` to fix pre-commit formatting check.
 
 ## [0.17.0] - 2026-05-08
 
