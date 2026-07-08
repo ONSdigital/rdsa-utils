@@ -1179,3 +1179,93 @@ class TestValidateEnvVars:
             validate_env_vars([""])  # empty
         with pytest.raises(TypeError):
             validate_env_vars(["   "])  # whitespace only
+
+
+class TestGenerateRunId:
+    """Tests for generate_run_id."""
+
+    def test_formats_prefix_date_and_time(self):
+        """Encode the prefix and timestamp as prefix-yymmdd-hhmm."""
+        ts = datetime(2026, 7, 6, 10, 40)
+        assert generate_run_id("bb26", timestamp=ts) == "bb26-260706-1040"
+
+    def test_accepts_a_different_prefix(self):
+        """Any alphanumeric prefix is carried through unchanged."""
+        ts = datetime(2026, 7, 6, 10, 40)
+        assert generate_run_id("irt01", timestamp=ts) == "irt01-260706-1040"
+
+    def test_zero_pads_single_digit_components(self):
+        """Single-digit months, days, hours and minutes are zero-padded."""
+        ts = datetime(2026, 1, 2, 3, 4)
+        assert generate_run_id("x", timestamp=ts) == "x-260102-0304"
+
+    def test_defaults_to_now_when_no_timestamp(self):
+        """Omitting the timestamp uses the current time."""
+        fixed = datetime(2026, 7, 6, 10, 40)
+        with patch("rdsa_utils.helpers.python.datetime") as mock_dt:
+            mock_dt.now.return_value = fixed
+            assert generate_run_id("bb26") == "bb26-260706-1040"
+
+    def test_rejects_empty_prefix(self):
+        """An empty prefix raises ValueError."""
+        with pytest.raises(ValueError):
+            generate_run_id("")
+
+    def test_rejects_non_alphanumeric_prefix(self):
+        """A prefix with the delimiter or other symbols raises ValueError."""
+        with pytest.raises(ValueError):
+            generate_run_id("bb-26")
+
+
+class TestValidateRunId:
+    """Tests for validate_run_id."""
+
+    def test_accepts_a_well_formed_id(self):
+        """A generated ID validates as True."""
+        assert validate_run_id("bb26-260706-1040") is True
+
+    def test_rejects_an_impossible_date(self):
+        """A syntactically correct but impossible date is rejected."""
+        assert validate_run_id("bb26-261306-1040") is False
+
+    def test_rejects_an_impossible_time(self):
+        """An out-of-range time is rejected."""
+        assert validate_run_id("bb26-260706-2599") is False
+
+    def test_rejects_wrong_shape(self):
+        """A string that does not match the pattern is rejected."""
+        assert validate_run_id("not-a-run-id") is False
+
+    def test_rejects_empty_string(self):
+        """An empty string is rejected without raising."""
+        assert validate_run_id("") is False
+
+    def test_round_trips_with_generate(self):
+        """Anything generate_run_id produces validates."""
+        ts = datetime(2026, 12, 31, 23, 59)
+        assert validate_run_id(generate_run_id("run", timestamp=ts)) is True
+
+
+class TestParseRunId:
+    """Tests for parse_run_id."""
+
+    def test_returns_prefix_and_timestamp(self):
+        """A valid ID is split into its prefix and decoded timestamp."""
+        result = parse_run_id("bb26-260706-1040")
+        assert result == {
+            "prefix": "bb26",
+            "timestamp": datetime(2026, 7, 6, 10, 40),
+        }
+
+    def test_is_inverse_of_generate(self):
+        """parse_run_id recovers what generate_run_id encoded."""
+        ts = datetime(2026, 7, 6, 10, 40)
+        run_id = generate_run_id("irt01", timestamp=ts)
+        parsed = parse_run_id(run_id)
+        assert parsed["prefix"] == "irt01"
+        assert parsed["timestamp"] == ts
+
+    def test_raises_on_invalid_id(self):
+        """An invalid ID raises ValueError."""
+        with pytest.raises(ValueError):
+            parse_run_id("not-a-run-id")

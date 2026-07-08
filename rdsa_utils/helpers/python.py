@@ -5,6 +5,7 @@ import itertools
 import json
 import logging
 import os
+import re
 import subprocess
 from datetime import datetime, time
 from functools import reduce, wraps
@@ -1158,3 +1159,138 @@ def validate_env_vars(required_vars: List[str]) -> None:
         raise SystemExit(msg)
 
     logger.info(f"Environment OK: {', '.join(unique_names)}")
+
+
+# Run ID pattern: <prefix>-<yymmdd>-<hhmm>, where the prefix is alphanumeric.
+_RUN_ID_PATTERN = re.compile(
+    r"^(?P<prefix>[a-zA-Z0-9]+)-(?P<date>\d{6})-(?P<time>\d{4})$",
+)
+
+
+def generate_run_id(
+    prefix: str,
+    timestamp: Optional[datetime] = None,
+) -> str:
+    """Generate a human-readable run ID of the form ``prefix-yymmdd-hhmm``.
+
+    The ID encodes a caller-supplied prefix and a timestamp, giving a value
+    that labels a pipeline run while staying readable and sortable, for
+    example ``bb26-260706-1040``.
+
+    Parameters
+    ----------
+    prefix
+        A short alphanumeric label for the run, such as a project or pipeline
+        code. Must contain only ASCII letters and digits.
+    timestamp
+        The time to encode. Defaults to the current local time when not given;
+        pass an explicit value for reproducible IDs, for example in tests.
+
+    Returns
+    -------
+    str
+        The run ID, formatted as ``<prefix>-<yymmdd>-<hhmm>``.
+
+    Raises
+    ------
+    ValueError
+        If ``prefix`` is empty or contains characters other than ASCII
+        letters and digits.
+
+    Examples
+    --------
+    >>> from datetime import datetime
+    >>> generate_run_id("bb26", timestamp=datetime(2026, 7, 6, 10, 40))
+    'bb26-260706-1040'
+    >>> generate_run_id("irt01", timestamp=datetime(2026, 7, 6, 10, 40))
+    'irt01-260706-1040'
+    """
+    if not re.fullmatch(r"[a-zA-Z0-9]+", prefix or ""):
+        msg = f"prefix must be a non-empty alphanumeric string, got {prefix!r}."
+        raise ValueError(msg)
+
+    if timestamp is None:
+        # Run IDs use naive local time, matching add_runlog_entry.
+        timestamp = datetime.now()  # noqa: DTZ005
+
+    return f"{prefix}-{timestamp:%y%m%d-%H%M}"
+
+
+def validate_run_id(run_id: str) -> bool:
+    """Check whether a string is a well-formed run ID.
+
+    A valid run ID has the form produced by :func:`generate_run_id`,
+    ``<prefix>-<yymmdd>-<hhmm>``, where the date and time components together
+    describe a real calendar time.
+
+    Parameters
+    ----------
+    run_id
+        The string to check.
+
+    Returns
+    -------
+    bool
+        ``True`` if ``run_id`` is well-formed, ``False`` otherwise.
+
+    Examples
+    --------
+    >>> validate_run_id("bb26-260706-1040")
+    True
+    >>> validate_run_id("bb26-261306-1040")  # month 13 does not exist
+    False
+    >>> validate_run_id("not-a-run-id")
+    False
+    """
+    match = _RUN_ID_PATTERN.fullmatch(run_id or "")
+    if not match:
+        return False
+
+    try:
+        datetime.strptime(  # noqa: DTZ007
+            f"{match['date']}-{match['time']}",
+            "%y%m%d-%H%M",
+        )
+    except ValueError:
+        return False
+
+    return True
+
+
+def parse_run_id(run_id: str) -> Dict[str, Union[str, datetime]]:
+    """Split a run ID into its prefix and timestamp.
+
+    Parameters
+    ----------
+    run_id
+        A run ID produced by :func:`generate_run_id`.
+
+    Returns
+    -------
+    Dict[str, Union[str, datetime]]
+        A mapping with keys ``"prefix"`` and ``"timestamp"``, holding the
+        prefix string and the decoded :class:`~datetime.datetime`.
+
+    Raises
+    ------
+    ValueError
+        If ``run_id`` is not a well-formed run ID.
+
+    Examples
+    --------
+    >>> result = parse_run_id("bb26-260706-1040")
+    >>> result["prefix"]
+    'bb26'
+    >>> result["timestamp"]
+    datetime.datetime(2026, 7, 6, 10, 40)
+    """
+    if not validate_run_id(run_id):
+        msg = f"{run_id!r} is not a well-formed run ID."
+        raise ValueError(msg)
+
+    match = _RUN_ID_PATTERN.fullmatch(run_id)
+    timestamp = datetime.strptime(  # noqa: DTZ007
+        f"{match['date']}-{match['time']}",
+        "%y%m%d-%H%M",
+    )
+    return {"prefix": match["prefix"], "timestamp": timestamp}

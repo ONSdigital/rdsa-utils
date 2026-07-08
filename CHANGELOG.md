@@ -7,6 +7,12 @@ and this project adheres to [semantic versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `generate_run_id`, `validate_run_id` and `parse_run_id` in
+  `rdsa_utils.helpers.python`: human-readable, sortable run IDs of the form
+  `prefix-yymmdd-hhmm` that any pipeline can use, with validation and parsing.
+
 ## [0.17.0] - 2026-05-08
 
 ### Added
