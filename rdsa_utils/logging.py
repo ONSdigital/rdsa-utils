@@ -240,7 +240,7 @@ def print_full_table_and_raise_error(
     ValueError
         Raises error and stops pipeline if switch applied.
     """
-    if show_records & stop_pipeline:
+    if show_records and stop_pipeline:
         logger.error(df.to_string())
         logger.error(message)
         raise ValueError
@@ -490,34 +490,35 @@ def log_rows_in_spark_df(func: Callable) -> Callable:
                 ),
             )
 
+        try:
         # Run the decorated function in its normal way, but catch its output
         # so it can be counted.
         df_return = func(*args, **kwargs)
-
-        # Check to ensure that the function returns a single value that is a
-        # spark dataframe, as otherwise the count operation will fail.
-        if isinstance(df_return, SparkDF):
-            # Persist the dataframe to be returned prior to counting to allow
-            # more efficient processing downstream. We persist here as we will
-            # not be removing this dataframe from the in-memory cache in this
-            # decorator. Therefore, we don't want it to get pushed onto disk
-            # (and incur an expensive swap operation).
-            df_return.persist(StorageLevel.MEMORY_ONLY)
-            logger.info(
-                f"Rows in dataframe after {func_name}  : {df_return.count()}",
-            )  # noqa: E501
-
-        else:
-            logger.warning(
-                f"{func_name} should return a spark dataframe for decorator, "
-                f"but returned {type(df_return)}",
-            )
-
-        if kwargs.get("df"):
-            # Unpersist the cached input df to manage memory.
+    finally:
+        # Ensure input df cache is always released, even if func raises
+        if kwargs.get("df") and isinstance(kwargs["df"], SparkDF):
             kwargs["df"].unpersist()
 
-        return df_return
+    # Check to ensure that the function returns a single value that is a
+    # spark dataframe, as otherwise the count operation will fail.
+    if isinstance(df_return, SparkDF):
+        # Persist the dataframe to be returned prior to counting to allow
+        # more efficient processing downstream. We persist here as we will
+        # not be removing this dataframe from the in-memory cache in this
+        # decorator. Therefore, we don't want it to get pushed onto disk
+        # (and incur an expensive swap operation).
+        df_return.persist(StorageLevel.MEMORY_ONLY)
+        logger.info(
+            f"Rows in dataframe after {func_name}  : {df_return.count()}",
+        )  # noqa: E501
+
+    else:
+        logger.warning(
+            f"{func_name} should return a spark dataframe for decorator, "
+            f"but returned {type(df_return)}",
+        )
+
+    return df_return
 
     return wrapper_decorator
 
