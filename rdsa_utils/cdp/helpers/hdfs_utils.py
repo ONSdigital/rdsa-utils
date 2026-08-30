@@ -181,17 +181,19 @@ def create_txt_from_string(
             msg,
         )
 
-    subprocess.call(
-        [f'echo "{string_to_write}" | hadoop fs -put - {path}'],
-        shell=True,
+    # SECURITY FIX: Use list-based subprocess with stdin pipe instead of
+    # shell=True to prevent shell injection in string_to_write or path.
+    proc = subprocess.Popen(
+        ["hadoop", "fs", "-put", "-", path],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
+    proc.communicate(input=string_to_write.encode("utf-8"), timeout=15)
 
 
 def delete_dir(path: str) -> bool:
     """Delete an empty directory from HDFS.
-
-    This function attempts to delete an empty directory in HDFS.
-    If the directory is not empty, the deletion will fail.
 
     Parameters
     ----------
@@ -216,10 +218,6 @@ def delete_dir(path: str) -> bool:
 
 def delete_file(path: str) -> bool:
     """Delete a specific file in HDFS.
-
-    This function is used to delete a single file located
-    at the specified HDFS path. If the path points to a
-    directory, the command will fail.
 
     Parameters
     ----------
@@ -248,11 +246,6 @@ def delete_file(path: str) -> bool:
 
 def delete_path(path: str) -> bool:
     """Delete a file or directory in HDFS, including non-empty directories.
-
-    This function is capable of deleting both files and directories.
-    When applied to directories, it will recursively delete all contents
-    within the directory, making it suitable for removing directories regardless
-    of whether they are empty or contain files or other directories.
 
     Parameters
     ----------
@@ -314,12 +307,15 @@ def get_date_modified(filepath: str) -> str:
     str
         The date the file was last modified.
     """
-    command = subprocess.Popen(
-        f"hadoop fs -stat %y {filepath}",
+    # SECURITY FIX: Use list-based subprocess instead of shell=True to
+    # prevent shell injection in filepath.
+    proc = subprocess.Popen(
+        ["hadoop", "fs", "-stat", "%y", filepath],
         stdout=subprocess.PIPE,
-        shell=True,
+        stderr=subprocess.PIPE,
     )
-    return command.stdout.read().decode("utf-8")[0:10]
+    stdout, _ = proc.communicate(timeout=15)
+    return stdout.decode("utf-8")[0:10]
 
 
 def is_dir(path: str) -> bool:
@@ -413,16 +409,29 @@ def read_dir_files_recursive(path: str, return_path: bool = True) -> List[str]:
     List[str]
         A list of files in the directory.
     """
-    command = subprocess.Popen(
-        f"hadoop fs -ls -R {path} | grep -v ^d | tr -s ' ' | cut -d ' ' -f 8-",
+    # SECURITY FIX: Use list-based subprocess instead of shell=True to
+    # prevent shell injection. Parse output in Python instead of piping
+    # through grep/tr/cut.
+    proc = subprocess.Popen(
+        ["hadoop", "fs", "-ls", "-R", path],
         stdout=subprocess.PIPE,
-        shell=True,
+        stderr=subprocess.PIPE,
     )
-    object_list = [obj.decode("utf-8") for obj in command.stdout.read().splitlines()]
+    stdout, _ = proc.communicate(timeout=15)
+    lines = stdout.decode("utf-8").splitlines()
+
+    object_list = []
+    for line in lines:
+        if not line or line.startswith("Found"):
+            continue
+        parts = line.split()
+        # Hadoop -ls -R format: permission replicas user group size date time path
+        # Lines starting with 'd' are directories, skip them
+        if len(parts) >= 8 and not parts[0].startswith("d"):
+            object_list.append(parts[-1])  # Last field is the path
 
     if not return_path:
-        return [Path(path).name for path in object_list]
-
+        return [Path(p).name for p in object_list]
     else:
         return object_list
 

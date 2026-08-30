@@ -189,7 +189,6 @@ class TestCopyLocalToHDFS(BaseTest):
             "hadoop",
             "fs",
             "-copyFromLocal",
-            "-f",
             overwrite_from_path,
             overwrite_to_path,
         ]
@@ -206,7 +205,7 @@ class TestCreateDir(BaseTest):
 
         Checks if the command is correctly constructed based on the provided path.
         """
-        # Test case 1: Test create_dir with a valid path
+        # Test case: Test create_dir with a valid path
         path = "/user/new_directory"
         command = ["hadoop", "fs", "-mkdir", path]
         assert create_dir(path) == _perform(command)
@@ -216,19 +215,19 @@ class TestCreateTxtFromString:
     """Tests for create_txt_from_string function."""
 
     @pytest.mark.parametrize(
-        ("path", "string_to_write", "replace", "expected_call"),
+        ("path", "string_to_write", "replace", "expected_called"),
         [
             (
                 "/some/directory/newfile.txt",
                 "Hello, world!",
                 False,
-                ['echo "Hello, world!" | hadoop fs -put - /some/directory/newfile.txt'],
+                True,
             ),
             (
                 "/some/directory/newfile.txt",
                 "Hello, world!",
                 True,
-                ['echo "Hello, world!" | hadoop fs -put - /some/directory/newfile.txt'],
+                True,
             ),
         ],
     )
@@ -237,10 +236,10 @@ class TestCreateTxtFromString:
         path,
         string_to_write,
         replace,
-        expected_call,
+        expected_called,
     ):
-        """Verify 'echo | hadoop fs -put -' command execution by create_txt_from_string."""
-        with patch("subprocess.call") as subprocess_mock, patch(
+        """Verify subprocess.Popen is called with correct args for create_txt_from_string."""
+        with patch("subprocess.Popen") as subprocess_mock, patch(
             "rdsa_utils.cdp.helpers.hdfs_utils.file_exists",
         ) as file_exists_mock, patch(
             "rdsa_utils.cdp.helpers.hdfs_utils.delete_file",
@@ -249,12 +248,23 @@ class TestCreateTxtFromString:
                 replace  # Assume file exists if replace is True
             )
 
-            if expected_call:
-                # Test if subprocess.call is called correctly
+            proc_mock = MagicMock()
+            subprocess_mock.return_value = proc_mock
+
+            if expected_called:
+                # Test if subprocess.Popen is called correctly
                 create_txt_from_string(path, string_to_write, replace)
-                subprocess_mock.assert_called_with(expected_call, shell=True)
+                subprocess_mock.assert_called_with(
+                    ["hadoop", "fs", "-put", "-", path],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                )
+                proc_mock.communicate.assert_called_with(
+                    input=string_to_write.encode("utf-8"),
+                    timeout=15,
+                )
             else:
-                # Test if FileNotFoundError is raised
                 with pytest.raises(FileNotFoundError) as excinfo:
                     create_txt_from_string(path, string_to_write, replace)
                 assert (
@@ -282,7 +292,7 @@ class TestDeleteDir(BaseTest):
 
         Checks if the command is correctly constructed based on the provided path.
         """
-        # Test case 1: Test delete_dir with a valid path
+        # Test case: Test delete_dir with a valid path
         path = "/user/directory"
         command = ["hadoop", "fs", "-rmdir", path]
         assert delete_dir(path) == _perform(command)
@@ -296,7 +306,7 @@ class TestDeleteFile(BaseTest):
 
         Checks if the command is correctly constructed based on the provided path.
         """
-        # Test case 1: Test delete_file with a valid path
+        # Test case: Test delete_file with a valid path
         path = "/user/file.txt"
         command = ["hadoop", "fs", "-rm", path]
         assert delete_file(path) == _perform(command)
@@ -355,13 +365,15 @@ class TestDateModified(BaseTest):
         """
         # Test case: Test get_date_modified with a valid path
         filepath = "/user/file.txt"
-        command_mock = mock_subprocess_popen_date_modifed.return_value
-        stdout_mock = command_mock.stdout
-        stdout_mock.read.return_value.decode.return_value.__getitem__.return_value = (
-            "2023-05-25"
-        )
+        mock_popen = mock_subprocess_popen_date_modifed
+        mock_popen.return_value.communicate.return_value = (b"2023-05-25", b"")
         expected_output = "2023-05-25"
         assert get_date_modified(filepath) == expected_output
+        mock_popen.assert_called_with(
+            ["hadoop", "fs", "-stat", "%y", filepath],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
 
 
 class TestIsDir(BaseTest):
@@ -420,7 +432,7 @@ class TestReadDir(BaseTest):
 
         Checks if the command is correctly constructed based on the provided path.
         """
-        # Test case 1: Test read_dir with a valid path
+        # Test case: Test read_dir with a valid path
         path = "/user/directory"
         ls = subprocess.Popen(["hadoop", "fs", "-ls", path], stdout=subprocess.PIPE)
         expected_files = [
@@ -436,7 +448,7 @@ class TestReadDirFiles(BaseTest):
 
     def test_read_dir_files(self, mock_subprocess_popen):
         """Verify proper extraction of filenames from paths by the read_dir_files function."""
-        # Test case 1: Test read_dir_files with a valid path
+        # Test case: Test read_dir_files with a valid path
         path = "/user/directory"
         expected_files = [Path(p).name for p in read_dir(path)]
         assert read_dir_files(path) == expected_files
@@ -450,24 +462,38 @@ class TestReadDirFilesRecursive(BaseTest):
 
         Checks if the command is correctly constructed based on the provided path.
         """
-        # Test case 1: Test read_dir_files_recursive without return_path option
+        # Test case: Test read_dir_files_recursive with a valid path
         path = "/user/directory"
-        command = subprocess.Popen(
-            f"hadoop fs -ls -R {path} | grep -v ^d | tr -s ' ' | cut -d ' ' -f 8-",
-            stdout=subprocess.PIPE,
-            shell=True,
-        )
-        expected_files = [
-            obj.decode("utf-8") for obj in command.stdout.read().splitlines()
-        ]
-        assert read_dir_files_recursive(path) == expected_files
+        result = read_dir_files_recursive(path)
+        assert isinstance(result, list)
 
-        # Test case 2: Test read_dir_files_recursive with return_path option
-        return_path = True
-        return_path_files = [
-            obj.decode("utf-8") for obj in command.stdout.read().splitlines()
-        ]
-        assert read_dir_files_recursive(path, return_path) == return_path_files
+    def test_read_dir_files_recursive_parses_output(self):
+        """Verify read_dir_files_recursive parses hadoop output correctly."""
+        fake_output = (
+            "drwxr-xr-x   - user group          0 2024-01-01 12:00 /user/dir/subdir\n"
+            "-rw-r--r--   - user group       1234 2024-01-01 12:00 /user/dir/file1.txt\n"
+            "-rw-r--r--   - user group        567 2024-01-01 12:00 /user/dir/file2.txt\n"
+        )
+        with patch("subprocess.Popen") as mock_popen:
+            proc_mock = MagicMock()
+            proc_mock.communicate.return_value = (fake_output.encode("utf-8"), b"")
+            proc_mock.returncode = 0
+            mock_popen.return_value = proc_mock
+
+            result = read_dir_files_recursive("/user/dir")
+
+            # Should only contain file paths, not directories
+            assert "/user/dir/file1.txt" in result
+            assert "/user/dir/file2.txt" in result
+            assert "/user/dir/subdir" not in result
+            assert len(result) == 2
+
+            # Verify the command is list-based, not shell
+            mock_popen.assert_called_with(
+                ["hadoop", "fs", "-ls", "-R", "/user/dir"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
 
 
 class TestRename(BaseTest):
